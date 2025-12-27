@@ -45,7 +45,16 @@
     },
     "web": {
       "favicon": "./assets/teacup.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "name": "Tea With God",
+      "shortName": "TWG",
+      "description": "A 40-Day Healing Companion for Women",
+      "backgroundColor": "#0D0D0D",
+      "themeColor": "#D4AF37",
+      "display": "standalone",
+      "orientation": "portrait",
+      "scope": "/",
+      "startUrl": "/"
     },
     "extra": {
       "eas": {

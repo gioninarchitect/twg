@@ -1,0 +1,94 @@
+{
+  "modules": [
+    {
+      "dayNumber": 1,
+      "title": "Why Starting Hurts",
+      "subtitle": "The Science of Grief",
+      "science": "When we experience heartbreak, our brain processes it similarly to physical pain. The anterior cingulate cortex—the same region activated during physical injury—lights up during emotional loss. This isn't weakness; it's biology. Your brain is literally wounded.",
+      "application": "Treat yourself as you would someone healing from surgery. Rest is not laziness—it's medicine.",
+      "keyInsight": "Emotional pain is real pain. Your struggle is valid.",
+      "phase": "VALLEY"
+    },
+    {
+      "dayNumber": 7,
+      "title": "Habit Formation",
+      "subtitle": "The 7-Day Threshold",
+      "science": "Research shows that showing up for 7 consecutive days begins forming neural pathways. Each time you complete a daily practice, you strengthen synaptic connections. This isn't just routine—you're literally rewiring your brain for healing.",
+      "application": "You've just crossed a significant threshold. These 7 days have planted seeds of change in your neural architecture.",
+      "keyInsight": "Repetition creates transformation. You're building new pathways.",
+      "phase": "VALLEY",
+      "unlockMessage": "You've unlocked the Habit Formation module. Seven days of showing up for yourself."
+    },
+    {
+      "dayNumber": 14,
+      "title": "Momentum & Memory",
+      "subtitle": "Two Weeks of Rewiring",
+      "science": "After two weeks of consistent emotional work, the hippocampus begins reconsolidating memories. This means your brain is starting to file away painful memories differently—not erasing them, but changing how they're stored and accessed.",
+      "application": "You may notice memories feeling slightly less sharp. This is healing, not forgetting.",
+      "keyInsight": "Your brain is learning to hold pain differently.",
+      "phase": "VALLEY",
+      "unlockMessage": "Two weeks complete. The Momentum audio track is now available."
+    },
+    {
+      "dayNumber": 15,
+      "title": "Understanding Your Anger",
+      "subtitle": "The Amygdala Response",
+      "science": "Anger after heartbreak isn't a character flaw—it's your amygdala doing its job. This almond-shaped structure triggers fight-or-flight responses when it perceives threat. Loss registers as danger, and anger is your brain's protective response.",
+      "application": "Write your anger out loud. Research shows that naming emotions ('I feel furious because...') reduces amygdala activation by up to 50%. The anger needs somewhere to go.",
+      "keyInsight": "Anger is grief's bodyguard. It's protecting your wounded heart.",
+      "phase": "WAITING"
+    },
+    {
+      "dayNumber": 21,
+      "title": "Identity Shift",
+      "subtitle": "The Self After Loss",
+      "science": "Heartbreak disrupts our sense of self because relationships become encoded in our neural identity. Brain scans show that thinking about a former partner activates the same regions as thinking about ourselves. Part of 'you' was stored in 'we.'",
+      "application": "This week, practice sentences that start with 'I am...' without referencing the relationship. You're rebuilding your singular self.",
+      "keyInsight": "You're not losing yourself. You're discovering who you are alone.",
+      "phase": "WAITING",
+      "unlockMessage": "Identity Shift journal prompts are now available."
+    },
+    {
+      "dayNumber": 22,
+      "title": "When You Feel Nothing",
+      "subtitle": "Understanding Numbness",
+      "science": "Emotional numbness is dissociation—your brain's circuit breaker. When pain overwhelms the system, the prefrontal cortex dampens emotional signals. This isn't broken; it's a sophisticated protection mechanism that prevents system overload.",
+      "application": "If you feel numb today, don't force feeling. Your brain is doing exactly what it needs to. Gentle movement (walking, stretching) can slowly reconnect body and emotion.",
+      "keyInsight": "Numbness isn't failure. It's your brain protecting you from flooding.",
+      "phase": "RISING"
+    },
+    {
+      "dayNumber": 28,
+      "title": "The Science of Change",
+      "subtitle": "Neuroplasticity in Action",
+      "science": "Neuroplasticity proves that the brain can rewire itself at any age. Each day you've shown up, you've been strengthening new neural pathways. The old pain pathways are weakening through disuse while new, healthier patterns grow stronger.",
+      "application": "Visualize your healing as literal brain renovation. The rooms of pain are being transformed into spaces of wisdom.",
+      "keyInsight": "You are not stuck. Your brain is changing every single day.",
+      "phase": "RISING"
+    },
+    {
+      "dayNumber": 35,
+      "title": "Integration",
+      "subtitle": "Making Meaning from Pain",
+      "science": "Post-traumatic growth is a documented phenomenon where adversity leads to positive psychological change. Studies show that 70% of trauma survivors report some form of growth—deeper relationships, greater appreciation for life, increased personal strength.",
+      "application": "Begin asking: 'What has this taught me?' Not to justify the pain, but to honor your survival.",
+      "keyInsight": "Pain can become wisdom. You're not just surviving—you're transforming.",
+      "phase": "BECOMING"
+    },
+    {
+      "dayNumber": 40,
+      "title": "The Healed Self",
+      "subtitle": "Completion & Continuation",
+      "science": "Healing isn't returning to who you were before—research shows that's neurologically impossible. Instead, you've become a new version of yourself, one that carries the wisdom of survival. The Japanese call this kintsugi: broken pottery repaired with gold, more beautiful for having been broken.",
+      "application": "You are the gold in your own cracks. This isn't the end of healing—it's the beginning of living as someone who knows how to heal.",
+      "keyInsight": "You are not who you were. You are who you've become. And she is remarkable.",
+      "phase": "BECOMING",
+      "unlockMessage": "The Final Prayer and Certificate of Becoming are now available."
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "lastUpdated": "2025-12-25",
+    "description": "Psychology modules that explain the science behind healing. Only shown on specific days after 90% scroll completion."
+  }
+}

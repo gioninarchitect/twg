@@ -1,69 +1,70 @@
 # Tea With God - Next Session Handoff
 
-**Session Date:** December 27, 2025
+**Session Date:** December 27, 2025 (Updated)
 **Project:** Tea With God - Mental Wellness App
 
 ---
 
 ## What We Accomplished This Session
 
-### 1. Brain Games Engagement System (COMPLETE)
-All 6 brain games now have "Why This Works" educational modals:
-- `BreatheWithGod.tsx` - Breathing exercise with science explanation
-- `GratitudeGarden.tsx` - Gratitude journaling with research backing
-- `ScripturePalace.tsx` - Memory palace technique explained
-- `ThoughtDetective.tsx` - CBT-based thought reframing
-- `BodyScanRelease.tsx` - Progressive muscle relaxation science
-- `PatternPeace.tsx` - Pattern recognition calming effects
+### 1. TypeScript Build Fixes (COMPLETE)
+Fixed 25+ TypeScript errors across the mobile app:
+- Made `onClose` prop optional in all 5 brain game screens with navigation fallback
+- Fixed `AccessContext.tsx` guestStartDate persistence
+- Fixed `BodyScanRelease.tsx` style types and TensionEntry format
+- Fixed `GameAnimations.tsx` Animated.Value access pattern
+- Fixed `PatternPeace.tsx` missing exports and dispatch calls
+- Fixed `JournalInput.tsx` expo-file-system legacy import
+- Fixed `DisclaimerModal` prop name (message -> content)
 
-Supporting components created:
-- `MoodCheckIn.tsx` - Pre/post session mood tracking
-- `KintsugiProgress.tsx` - Visual healing journey progress
-- `HealingToolkit.tsx` - Personalized tool dashboard
-- `CrisisQuickAccess.tsx` - SA crisis resources (SADAG 0800 567 567, Lifeline 0861 322 322, Emergency 10111)
-- `Celebrations.tsx` - Milestone celebration system
+### 2. PWA Build & Deployment (COMPLETE)
+- Added PWA configuration to `app.json`
+- Built with `npx expo export -p web`
+- Created `manifest.json` and `sw.js` service worker
+- Deployed to https://twg.cleva-ai.co.za/app
 
-### 2. Design System Document (COMPLETE)
-Created comprehensive design system at:
-**`/Users/florisolivier/TWGAPP/tea-with-God/DESIGN_SYSTEM.md`**
+### 3. APK Build & Upload (COMPLETE)
+- Built APK via EAS: `eas build -p android --profile preview`
+- APK: TeaWithGod-v1.0.1.apk (87MB)
+- Uploaded to: https://twg.cleva-ai.co.za/TeaWithGod-v1.0.1.apk
 
-Includes:
-- Colors (dark theme: #0D0D0D background, #D4AF37 gold accent)
-- Typography (Playfair Display, Inter, Georgia)
-- Spacing scale (4px base: xs:4, sm:8, md:16, lg:24, xl:32, xxl:48)
-- Border radius (sm:8px to full:9999px)
-- Shadows and glow effects
-- CSS variables for web
-- Component examples (buttons, cards, inputs, badges)
-- Phase colors (Valley #8B7355, Waiting #9DAAB8, Rising #8FBC8F, Becoming #D4AF37)
+### 4. Supabase Database Integration (COMPLETE)
+Created tables in Supabase (SQL in `backend/supabase-admin-setup.sql`):
+- `social_posts` - Content calendar with platforms array, themes
+- `contacts` - CRM with status tracking
+- `crm_activities` - Activity log
+- `invoices` - Invoice records
+- `invoice_line_items` - Line items with foreign key
 
-**Ready for presentation handoff to "learned friend".**
+All tables have:
+- RLS enabled with open policies for admin access
+- Triggers for `updated_at` timestamps
+- Proper indexes
 
-### 3. Admin Dashboard Features (UI COMPLETE - Needs Database)
-Added to `/Users/florisolivier/TWGAPP/tea-with-God/website/admin/index.html`:
+### 5. Admin Dashboard Supabase Integration (COMPLETE)
+Updated `/website/admin/index.html`:
+- Added Supabase JS client via CDN
+- All CRUD operations now persist to Supabase
+- Fallback to localStorage if Supabase fails
+- Auto-loads data on login and page refresh
+- Deployed to https://twg.cleva-ai.co.za/admin
 
-- **Social Calendar Section** - Calendar view with 40-day journey themes, content templates
-- **CRM Section** - Contact management with activity log, status tracking
-- **Invoices Section** - Invoice generation with line items, branded preview
+### 6. Git Repos Organized
+- **Mobile repo:** `feature/brain-games-enhancements-dec27` (engagement components, TS fixes, PWA)
+- **Parent repo:** `feature/admin-supabase-dec27` (website, backend, docs)
+- Mobile excluded from parent repo (separate git history)
 
-**6 Weekly Themes defined:**
-1. Week 1: Acknowledging Brokenness (Days 1-7)
-2. Week 2: Releasing Pain (Days 8-14)
-3. Week 3: Finding Strength (Days 15-21)
-4. Week 4: Embracing Transformation (Days 22-28)
-5. Week 5: Living Renewed (Days 29-35)
-6. Week 6: Sharing Your Story (Days 36-40)
+---
 
-**WARNING:** Currently using localStorage only. User explicitly stated this is dangerous and needs database integration.
+## Live Deployments
 
-### 4. Kindle/KDP Research (IN PROGRESS)
-Findings so far:
-- **Supported formats:** DOC/DOCX, KPF (recommended via Kindle Create), EPUB, HTML, RTF, TXT, PDF
-- **MOBI deprecated:** March 2025 for fixed-layout eBooks
-- **Kindle Create:** Free tool to create KPF files
-- **Paperback trim sizes:** Common 6x9", options from 5x8" to 8.5x11"
-- **Bleed:** 0.125" (3.2mm) if images extend to edge
-- **Margins:** Minimum 0.25" (no bleed) or 0.375" (with bleed)
+| Asset | URL |
+|-------|-----|
+| Marketing Site | https://twg.cleva-ai.co.za |
+| PWA | https://twg.cleva-ai.co.za/app |
+| APK Download | https://twg.cleva-ai.co.za/TeaWithGod-v1.0.1.apk |
+| Admin Dashboard | https://twg.cleva-ai.co.za/admin |
+| B2B Portal | https://twg.cleva-ai.co.za/b2b |
 
 ---
 
@@ -74,38 +75,21 @@ User will provide:
 - **New book content as TEXT FILE** (not Word doc)
 - Previous Word doc had character encoding issues
 - Must go through character checking workflow
-- Content must be "mint" - no character problems
 
-### PRIORITY 2: Database Integration (User emphasized this multiple times)
-User explicitly said: "Local storage is very dangerous to use"
-
-Replace localStorage with proper persistence:
-
-1. **Add Supabase Tables:**
-   - `social_posts` - Social media content calendar
-   - `contacts` - CRM contacts
-   - `invoices` - Invoice records
-   - `invoice_line_items` - Invoice line items
-
-2. **Create API Endpoints:**
-   - POST/GET/PUT/DELETE for each resource
-   - Add to existing backend
-
-3. **Consider IndexedDB:**
-   - User mentioned this as alternative
-   - For offline capability
-   - Sync with Supabase when online
+### PRIORITY 2: Test Supabase Integration
+- Verify admin dashboard data persists across sessions
+- Test all CRUD operations (social posts, contacts, invoices)
+- Check data appears in Supabase dashboard
 
 ### PRIORITY 3: Social Media Strategy
 - Define all platforms (Instagram, Facebook, TikTok, YouTube, LinkedIn, X/Twitter)
-- **Lonnie's LinkedIn** needs setup for credibility (user specifically mentioned)
-- Create 12-month content plan
-- Populate calendar with strategic posts
+- **Lonnie's LinkedIn** needs setup for credibility
+- Populate calendar with strategic posts using 6 weekly themes
 
-### PRIORITY 4: Localization Strategy
-- Create documentation for translation workflow
-- Define supported languages
-- Plan implementation approach
+### PRIORITY 4: App Store Preparation
+- APK ready for internal testing
+- Prepare Play Store listing assets
+- iOS build when ready
 
 ---
 
@@ -115,54 +99,50 @@ Replace localStorage with proper persistence:
 ```
 /Users/florisolivier/TWGAPP/tea-with-God/mobile/
 ├── src/
-│   ├── components/brainGames/
-│   │   ├── BreatheWithGod.tsx
-│   │   ├── GratitudeGarden.tsx
-│   │   ├── ScripturePalace.tsx
-│   │   ├── ThoughtDetective.tsx
-│   │   ├── BodyScanRelease.tsx
-│   │   ├── PatternPeace.tsx
-│   │   ├── MoodCheckIn.tsx
-│   │   ├── KintsugiProgress.tsx
-│   │   ├── HealingToolkit.tsx
-│   │   ├── CrisisQuickAccess.tsx
-│   │   └── Celebrations.tsx
-│   └── theme/
-│       └── colors.ts (design tokens source of truth)
+│   ├── screens/brainGames/    (game screens - fixed onClose props)
+│   ├── components/brainGames/ (shared components + new engagement system)
+│   └── context/AccessContext.tsx (fixed guestStartDate)
+├── app.json                   (PWA config added)
+└── dist/                      (PWA build output)
 ```
 
 ### Website/Admin
 ```
 /Users/florisolivier/TWGAPP/tea-with-God/website/
-├── admin/
-│   └── index.html (admin dashboard - has Social, CRM, Invoices sections)
-├── b2b/
-│   └── index.html (B2B portal for organizations)
-└── images/
-    └── teacup.png (official logo)
+├── admin/index.html           (Supabase integrated)
+├── b2b/index.html
+└── images/teacup.png
 ```
 
-### Design System
+### Backend
 ```
-/Users/florisolivier/TWGAPP/tea-with-God/DESIGN_SYSTEM.md
+/Users/florisolivier/TWGAPP/tea-with-God/backend/
+├── src/server.js
+├── src/supabase.js
+├── supabase-admin-setup.sql   (run this in Supabase SQL editor)
+└── .env                       (Supabase keys)
 ```
 
 ---
 
-## Theme/Design Tokens
+## Supabase Config
 
-From `mobile/src/theme/colors.ts`:
-- **Background:** #0D0D0D (dark)
-- **Gold Accent:** #D4AF37
-- **Text Primary:** #FAFAFA
-- **Text Secondary:** rgba(250, 250, 250, 0.6)
-- **Text Muted:** rgba(250, 250, 250, 0.4)
-- **Borders:** rgba(255, 255, 255, 0.08)
-- **Phase Colors:**
-  - Valley: #8B7355
-  - Waiting: #9DAAB8
-  - Rising: #8FBC8F
-  - Becoming: #D4AF37
+**Project URL:** https://hqzyzioyospxwfzrdwkj.supabase.co
+
+Tables created:
+- social_posts
+- contacts
+- crm_activities
+- invoices
+- invoice_line_items
+
+---
+
+## Server Info
+
+| Server | IP | Domain | Web Root |
+|--------|----|----|----------|
+| TWG UAT | 154.66.196.12 | twg.cleva-ai.co.za | /var/www/twg |
 
 ---
 
@@ -174,29 +154,12 @@ From `mobile/src/theme/colors.ts`:
 
 ---
 
-## Server Info
-
-| Server | Domain | Web Root |
-|--------|--------|----------|
-| TWG UAT | twg.cleva-ai.co.za | /var/www/twg |
-
----
-
-## User Frustrations to Avoid
-
-1. **Don't use localStorage for important data** - User was emphatic about this
-2. **Design system was urgently needed** - Now complete, don't delay deliverables
-3. **Character encoding issues** - Next session gets TEXT file, not Word doc
-4. **Stay focused** - Don't get sidetracked, deliver what's asked
-
----
-
 ## Next Session Checklist
 
 - [ ] Read this document first
-- [ ] User will provide book content as TEXT file
-- [ ] Run character checking workflow on new content
-- [ ] Continue with database integration for admin features
+- [ ] Test admin dashboard Supabase persistence
+- [ ] User may provide book content as TEXT file
+- [ ] Continue with social media content planning
 - [ ] Ask user what the priority is if unclear
 
 ---

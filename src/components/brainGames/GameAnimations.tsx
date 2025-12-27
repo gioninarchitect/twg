@@ -386,19 +386,23 @@ export function Confetti({
   duration = 2000,
 }: ConfettiProps) {
   const particles = useRef(
-    Array.from({ length: count }).map((_, i) => ({
-      x: new Animated.Value(Math.random() * SCREEN_WIDTH),
-      y: new Animated.Value(-20),
-      rotation: new Animated.Value(0),
-      color: colors[i % colors.length],
-      size: 6 + Math.random() * 8,
-    }))
+    Array.from({ length: count }).map((_, i) => {
+      const initialX = Math.random() * SCREEN_WIDTH;
+      return {
+        x: new Animated.Value(initialX),
+        initialX, // Store initial value for animation target calculation
+        y: new Animated.Value(-20),
+        rotation: new Animated.Value(0),
+        color: colors[i % colors.length],
+        size: 6 + Math.random() * 8,
+      };
+    })
   ).current;
 
   useEffect(() => {
     particles.forEach((particle, index) => {
       const delay = Math.random() * 500;
-      const targetX = particle.x._value + (Math.random() - 0.5) * 200;
+      const targetX = particle.initialX + (Math.random() - 0.5) * 200;
 
       Animated.parallel([
         Animated.timing(particle.y, {

@@ -16,6 +16,7 @@ import {
   Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS, GRADIENTS } from '../../theme/colors';
@@ -347,10 +348,12 @@ function ReviewScriptureModal({
 // ============================================
 
 interface ScripturePalaceProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function ScripturePalace({ onClose }: ScripturePalaceProps) {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
   const [scriptures, setScriptures] = useState<StoredScripture[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<PalaceRoom | null>(null);
@@ -469,7 +472,7 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
       gameId="scripture_palace"
       title="Scripture Palace"
       subtitle="Method of Loci"
-      onClose={onClose}
+      onClose={handleClose}
       headerRight={
         scriptureCount > 0 ? (
           <TouchableOpacity onPress={startReview}>

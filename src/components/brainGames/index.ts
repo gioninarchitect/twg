@@ -57,3 +57,16 @@ export { GameRecommendation } from './GameRecommendation';
 
 // Educational Components
 export { WhyThisWorks, WhyThisWorksButton } from './WhyThisWorks';
+
+// Engagement System Components (NEW)
+export { MoodCheckIn } from './MoodCheckIn';
+export { KintsugiProgress } from './KintsugiProgress';
+export { HealingToolkit } from './HealingToolkit';
+export { CrisisQuickAccess, CrisisFloatingButton } from './CrisisQuickAccess';
+export {
+  MicroCelebration,
+  FullCelebration,
+  StreakCelebration,
+  GardenLevelUp,
+  type CelebrationType,
+} from './Celebrations';

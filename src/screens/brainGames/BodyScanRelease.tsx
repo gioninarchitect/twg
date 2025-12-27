@@ -15,6 +15,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -204,14 +205,14 @@ function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhou
       {/* Simple body outline representation */}
       <View style={styles.bodyOutline}>
         {/* Head */}
-        <View style={[styles.bodyPart, styles.bodyHead, tensionMap.head && { backgroundColor: getTensionColor(tensionMap.head) }]}>
+        <View style={[styles.bodyPart, styles.bodyHead, tensionMap.head ? { backgroundColor: getTensionColor(tensionMap.head) } : undefined]}>
           {currentRegion === 'head' && <PulsingDot size={16} color={colors.primary} />}
         </View>
 
         {/* Torso */}
         <View style={styles.bodyTorso}>
           {/* Neck */}
-          <View style={[styles.bodyNeck, tensionMap.neck && { backgroundColor: getTensionColor(tensionMap.neck) }]}>
+          <View style={[styles.bodyNeck, tensionMap.neck ? { backgroundColor: getTensionColor(tensionMap.neck) } : undefined]}>
             {currentRegion === 'neck' && <PulsingDot size={12} color={colors.primary} />}
           </View>
 
@@ -221,20 +222,20 @@ function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhou
           </View>
 
           {/* Chest */}
-          <View style={[styles.bodyChest, tensionMap.chest && { backgroundColor: getTensionColor(tensionMap.chest) }]}>
+          <View style={[styles.bodyChest, tensionMap.chest ? { backgroundColor: getTensionColor(tensionMap.chest) } : undefined]}>
             {currentRegion === 'chest' && <PulsingDot size={16} color={colors.primary} />}
           </View>
 
           {/* Stomach */}
-          <View style={[styles.bodyStomach, tensionMap.stomach && { backgroundColor: getTensionColor(tensionMap.stomach) }]}>
+          <View style={[styles.bodyStomach, tensionMap.stomach ? { backgroundColor: getTensionColor(tensionMap.stomach) } : undefined]}>
             {currentRegion === 'stomach' && <PulsingDot size={16} color={colors.primary} />}
           </View>
         </View>
 
         {/* Arms */}
         <View style={styles.bodyArms}>
-          <View style={[styles.bodyArm, tensionMap.hands && { backgroundColor: getTensionColor(tensionMap.hands) }]} />
-          <View style={[styles.bodyArm, tensionMap.hands && { backgroundColor: getTensionColor(tensionMap.hands) }]} />
+          <View style={[styles.bodyArm, tensionMap.hands ? { backgroundColor: getTensionColor(tensionMap.hands) } : undefined]} />
+          <View style={[styles.bodyArm, tensionMap.hands ? { backgroundColor: getTensionColor(tensionMap.hands) } : undefined]} />
           {currentRegion === 'hands' && (
             <View style={styles.armsDot}>
               <PulsingDot size={12} color={colors.primary} />
@@ -244,8 +245,8 @@ function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhou
 
         {/* Legs */}
         <View style={styles.bodyLegs}>
-          <View style={[styles.bodyLeg, tensionMap.legs && { backgroundColor: getTensionColor(tensionMap.legs) }]} />
-          <View style={[styles.bodyLeg, tensionMap.legs && { backgroundColor: getTensionColor(tensionMap.legs) }]} />
+          <View style={[styles.bodyLeg, tensionMap.legs ? { backgroundColor: getTensionColor(tensionMap.legs) } : undefined]} />
+          <View style={[styles.bodyLeg, tensionMap.legs ? { backgroundColor: getTensionColor(tensionMap.legs) } : undefined]} />
           {currentRegion === 'legs' && (
             <View style={styles.legsDot}>
               <PulsingDot size={12} color={colors.primary} />
@@ -255,8 +256,8 @@ function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhou
 
         {/* Feet */}
         <View style={styles.bodyFeet}>
-          <View style={[styles.bodyFoot, tensionMap.feet && { backgroundColor: getTensionColor(tensionMap.feet) }]} />
-          <View style={[styles.bodyFoot, tensionMap.feet && { backgroundColor: getTensionColor(tensionMap.feet) }]} />
+          <View style={[styles.bodyFoot, tensionMap.feet ? { backgroundColor: getTensionColor(tensionMap.feet) } : undefined]} />
+          <View style={[styles.bodyFoot, tensionMap.feet ? { backgroundColor: getTensionColor(tensionMap.feet) } : undefined]} />
           {currentRegion === 'feet' && (
             <View style={styles.feetDot}>
               <PulsingDot size={12} color={colors.primary} />
@@ -273,10 +274,12 @@ function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhou
 // ============================================
 
 interface BodyScanReleaseProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
   const [phase, setPhase] = useState<'intro' | 'scan' | 'complete'>('intro');
   const [currentRegionIndex, setCurrentRegionIndex] = useState(0);
@@ -331,12 +334,18 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
     });
     const avgImprovement = improvements.reduce((a, b) => a + b, 0) / improvements.length;
 
-    // Create tension entry
+    // Create tension entry - map body regions to proper format
+    const bodyPartsData = Object.keys(preTension).map((region) => ({
+      part: region as any, // Region IDs used in this component
+      level: Math.round(preTension[region] as number) as 1 | 2 | 3 | 4 | 5,
+    }));
+
     const tensionEntry: TensionEntry = {
       timestamp: Date.now(),
+      bodyParts: bodyPartsData,
       preSessionScore: Object.values(preTension).reduce((a, b) => a + b, 0) / Object.values(preTension).length,
       postSessionScore: Object.values(postTension).reduce((a, b) => a + b, 0) / Object.values(postTension).length,
-      areasAddressed: Object.keys(preTension),
+      releaseSuccess: avgImprovement,
     };
 
     emitBodyScanCompleted(tensionEntry, duration);
@@ -361,7 +370,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       gameId="body_scan"
       title="Body Scan Release"
       subtitle="Somatic Awareness"
-      onClose={onClose}
+      onClose={handleClose}
     >
       {phase === 'intro' && (
         <ScrollView
@@ -545,7 +554,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
         encouragement="Your body is a temple. By listening to it with compassion, you honor the gift you've been given."
         onContinue={() => {
           setShowComplete(false);
-          onClose();
+          handleClose();
         }}
         continueLabel="Return to Games"
       />

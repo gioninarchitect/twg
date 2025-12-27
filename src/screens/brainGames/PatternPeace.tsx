@@ -22,9 +22,18 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
+import { useNavigation } from '@react-navigation/native';
 import { useWorldModel } from '../../worldModel';
 import { GAME_COLORS, GAME_ANIMATIONS } from '../../theme/brainGames';
-import { GameContainer, GameProgress, GameFeedback, GameAnimations, WhyThisWorks, WhyThisWorksButton } from '../../components/brainGames';
+import {
+  GameContainer,
+  SessionComplete,
+  AnimatedProgressBar,
+  FadeInView,
+  DisclaimerModal,
+  WhyThisWorks,
+  WhyThisWorksButton,
+} from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -308,9 +317,16 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, difficulty }) => {
 // Main Component
 // ============================================================================
 
-export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
+interface PatternPeaceProps {
+  onClose?: () => void;
+}
+
+export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
+
   // World Model integration
-  const { state, emitEvent, recommendations } = useWorldModel();
+  const { state, dispatch, recommendations } = useWorldModel();
 
   // Game state
   const [phase, setPhase] = useState<GamePhase>('intro');
@@ -581,16 +597,14 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
   // Emit event on completion
   useEffect(() => {
     if (phase === 'complete') {
-      emitEvent({
-        type: 'pattern_peace_completed',
-        data: {
-          difficulty,
-          stats,
-          timestamp: Date.now(),
-        },
+      dispatch({
+        type: 'PATTERN_PEACE_SESSION',
+        nBackLevel: difficulty,
+        accuracy: stats.accuracy,
+        duration: Math.round(stats.totalTrials * 2), // Approximate duration based on trials
       });
     }
-  }, [phase, difficulty, stats, emitEvent]);
+  }, [phase, difficulty, stats, dispatch]);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -715,7 +729,7 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
               </View>
 
               <View style={styles.tipBox}>
-                <Ionicons name="bulb-outline" size={20} color={GAME_COLORS.patternPeace.sequence} />
+                <Ionicons name="bulb-outline" size={20} color={GAME_COLORS.patternPeace.accent} />
                 <Text style={styles.tipText}>
                   Both matches can happen at once! If position AND symbol match, press both buttons.
                 </Text>
@@ -846,11 +860,11 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
       {renderContent()}
 
       {/* Disclaimer Modal */}
-      <GameFeedback.DisclaimerModal
+      <DisclaimerModal
         visible={showDisclaimer}
         onAccept={() => setShowDisclaimer(false)}
         title="Educational Exercise"
-        message="Pattern Peace is a cognitive training exercise based on N-back research. It is educational in nature and is not a substitute for professional mental health treatment. If you're experiencing persistent cognitive difficulties, please consult a healthcare provider."
+        content="Pattern Peace is a cognitive training exercise based on N-back research. It is educational in nature and is not a substitute for professional mental health treatment. If you're experiencing persistent cognitive difficulties, please consult a healthcare provider."
       />
 
       {/* Why This Works Modal */}

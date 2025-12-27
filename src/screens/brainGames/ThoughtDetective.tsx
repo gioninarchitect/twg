@@ -17,6 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
@@ -139,10 +140,12 @@ const STEP_LABELS = {
 // ============================================
 
 interface ThoughtDetectiveProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
   const [currentStep, setCurrentStep] = useState<Step>('capture');
   const [originalThought, setOriginalThought] = useState('');
@@ -243,8 +246,8 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   // Handle close after completion
   const handleContinue = useCallback(() => {
     setShowComplete(false);
-    onClose();
-  }, [onClose]);
+    handleClose();
+  }, [handleClose]);
 
   // Get current distortion info
   const currentDistortion = selectedDistortion ? DISTORTIONS[selectedDistortion] : null;
@@ -535,7 +538,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       gameId="thought_detective"
       title="Thought Detective"
       subtitle="Cognitive Reframing"
-      onClose={onClose}
+      onClose={handleClose}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

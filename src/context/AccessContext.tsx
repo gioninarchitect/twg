@@ -227,6 +227,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
       codeUsed: normalizedCode,
       codeDescription: codeData.description,
       unlockedAt: new Date().toISOString(),
+      guestStartDate: state.guestStartDate, // Preserve existing guest start date
     };
 
     await saveAccessState(newState);
@@ -243,6 +244,7 @@ export function AccessProvider({ children }: { children: ReactNode }) {
       codeUsed: null,
       codeDescription: null,
       unlockedAt: null,
+      guestStartDate: new Date().toISOString(), // New guest starts fresh
     };
     await saveAccessState(guestState);
   }, []);

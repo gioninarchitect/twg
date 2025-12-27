@@ -13,6 +13,7 @@ import {
   ScrollView,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -169,10 +170,12 @@ function BreathingScreen({
 // ============================================
 
 interface BreatheWithGodProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
   const [selectedPattern, setSelectedPattern] = useState<keyof typeof BREATHING_PATTERNS>('relaxing');
   const [selectedCycles, setSelectedCycles] = useState(3);
   const [showComplete, setShowComplete] = useState(false);
@@ -239,8 +242,8 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
 
   const handleContinue = useCallback(() => {
     setShowComplete(false);
-    onClose();
-  }, [onClose]);
+    handleClose();
+  }, [handleClose]);
 
   // Format duration
   const formatDuration = (seconds: number) => {
@@ -254,7 +257,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       gameId="breathing"
       title="Breathe with God"
       subtitle="Nervous System Regulation"
-      onClose={isActive ? handleStop : onClose}
+      onClose={isActive ? handleStop : handleClose}
       showHeader={!isActive}
     >
       {isActive ? (

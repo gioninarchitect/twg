@@ -17,6 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
@@ -183,10 +184,12 @@ function GardenView({ gratitudes, onRemove }: GardenViewProps) {
 // ============================================
 
 interface GratitudeGardenProps {
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
+  const navigation = useNavigation();
+  const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
   const dayNumber = state.journey.currentDay;
 
@@ -245,8 +248,8 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
 
   const handleContinue = useCallback(() => {
     setShowComplete(false);
-    onClose();
-  }, [onClose]);
+    handleClose();
+  }, [handleClose]);
 
   const handlePlayAgain = useCallback(() => {
     setShowComplete(false);
@@ -258,7 +261,7 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
       gameId="gratitude"
       title="Gratitude Garden"
       subtitle="Positive Psychology"
-      onClose={onClose}
+      onClose={handleClose}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}

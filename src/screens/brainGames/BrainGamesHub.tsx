@@ -1,9 +1,10 @@
 /**
  * Brain Games Hub
  * Entry point showing all available brain games
+ * Enhanced with Engagement System (Dec 2025)
  */
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -31,9 +32,18 @@ import {
   getGameTheme,
 } from '../../theme/brainGames';
 import { useWorldModel } from '../../worldModel';
-import { GameId } from '../../worldModel/types';
+import { GameId, MoodLevel } from '../../worldModel/types';
 import { Card, ProgressBar, Badge } from '../../components/PremiumUI';
-import { FadeInView } from '../../components/brainGames';
+import {
+  FadeInView,
+  MoodCheckIn,
+  KintsugiProgress,
+  HealingToolkit,
+  CrisisQuickAccess,
+  CrisisFloatingButton,
+  MicroCelebration,
+  StreakCelebration,
+} from '../../components/brainGames';
 
 // ============================================
 // GAME DEFINITIONS
@@ -254,20 +264,129 @@ export function BrainGamesHub() {
   const navigation = useNavigation<any>();
   const {
     state,
+    dispatch,
     checkGameUnlock,
     healingTrajectory,
     recommendations,
   } = useWorldModel();
 
   const currentDay = state.journey.currentDay;
+  const streakDays = state.journey.streakDays;
+
+  // ============================================
+  // ENGAGEMENT STATE
+  // ============================================
+
+  const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
+  const [showToolkit, setShowToolkit] = useState(false);
+  const [showCrisis, setShowCrisis] = useState(false);
+  const [showStreakCelebration, setShowStreakCelebration] = useState(false);
+  const [showMicroCelebration, setShowMicroCelebration] = useState(false);
+  const [microCelebrationMessage, setMicroCelebrationMessage] = useState('');
+  const [pendingGameId, setPendingGameId] = useState<GameId | null>(null);
+
+  // Check for streak milestone on mount
+  useEffect(() => {
+    const milestones = [7, 14, 21, 30, 40];
+    if (milestones.includes(streakDays)) {
+      // Only show if we haven't shown it recently
+      const lastCelebration = state.behavioral.lastActiveAt;
+      const hoursSince = (Date.now() - lastCelebration) / (1000 * 60 * 60);
+      if (hoursSince < 1) {
+        setShowStreakCelebration(true);
+      }
+    }
+  }, [streakDays]);
+
+  // ============================================
+  // GAME STATS FOR KINTSUGI
+  // ============================================
+
+  const gameStats = {
+    totalSessions: state.behavioral.engagementByGame.reduce(
+      (sum, g) => sum + g.totalSessions, 0
+    ),
+    breathingMinutes: state.brainGames.totalBreathingMinutes,
+    gratitudeEntries: state.brainGames.gratitudeEntries.length,
+    thoughtsReframed: state.brainGames.totalThoughtsReframed,
+    bodyScans: state.brainGames.totalBodyScans,
+    scriptureMastery: state.brainGames.scriptureMemories.filter(
+      (m) => m.mastery === 'gold'
+    ).length,
+  };
+
+  // ============================================
+  // HANDLERS
+  // ============================================
 
   // Navigate to a specific game screen
   const handleSelectGame = useCallback((gameId: GameId) => {
     const screenName = GAME_SCREEN_MAP[gameId];
     if (screenName) {
+      // Show mood check-in before first game of the session
+      const lastActive = state.behavioral.lastActiveAt;
+      const hoursSince = (Date.now() - lastActive) / (1000 * 60 * 60);
+
+      if (hoursSince > 4) {
+        // Show mood check-in if it's been a while
+        setPendingGameId(gameId);
+        setShowMoodCheckIn(true);
+      } else {
+        navigation.navigate(screenName);
+      }
+    }
+  }, [navigation, state.behavioral.lastActiveAt]);
+
+  // Handle mood check-in completion
+  const handleMoodComplete = useCallback((mood: MoodLevel, recommendedGame: GameId) => {
+    setShowMoodCheckIn(false);
+
+    // Dispatch mood event
+    dispatch({
+      type: 'MOOD_CHECK_IN',
+      mood,
+      dayNumber: currentDay,
+    });
+
+    // Navigate to the recommended or pending game
+    const gameId = recommendedGame || pendingGameId;
+    if (gameId) {
+      const screenName = GAME_SCREEN_MAP[gameId];
+      if (screenName) {
+        navigation.navigate(screenName);
+      }
+    }
+    setPendingGameId(null);
+  }, [dispatch, currentDay, pendingGameId, navigation]);
+
+  // Handle mood skip
+  const handleMoodSkip = useCallback(() => {
+    setShowMoodCheckIn(false);
+    if (pendingGameId) {
+      const screenName = GAME_SCREEN_MAP[pendingGameId];
+      if (screenName) {
+        navigation.navigate(screenName);
+      }
+    }
+    setPendingGameId(null);
+  }, [pendingGameId, navigation]);
+
+  // Handle game selection from toolkit
+  const handleToolkitSelectGame = useCallback((gameId: GameId) => {
+    setShowToolkit(false);
+    const screenName = GAME_SCREEN_MAP[gameId];
+    if (screenName) {
       navigation.navigate(screenName);
     }
   }, [navigation]);
+
+  // Handle crisis resource accessed
+  const handleCrisisAccessed = useCallback((resourceId: string) => {
+    dispatch({
+      type: 'CRISIS_ACCESSED',
+      resources: [resourceId],
+    });
+  }, [dispatch]);
 
   // Go back to previous screen
   const handleClose = useCallback(() => {
@@ -299,37 +418,49 @@ export function BrainGamesHub() {
               Day {currentDay} of 40
             </Text>
           </View>
-          <View style={styles.headerRight} />
+          <TouchableOpacity
+            onPress={() => setShowToolkit(true)}
+            style={styles.toolkitButton}
+          >
+            <Ionicons name="apps-outline" size={22} color={COLORS.gold} />
+          </TouchableOpacity>
         </View>
 
-        {/* Journey Progress */}
+        {/* Kintsugi Progress (Compact) */}
         <FadeInView delay={100}>
-          <View style={styles.progressSection}>
-            <ProgressBar
-              progress={(currentDay / 40) * 100}
-              height={6}
-              variant="gradient"
+          <TouchableOpacity
+            style={styles.kintsugiSection}
+            onPress={() => setShowToolkit(true)}
+            activeOpacity={0.8}
+          >
+            <KintsugiProgress
+              currentDay={currentDay}
+              healingTrajectory={healingTrajectory}
+              gameStats={gameStats}
+              compact={true}
+              showStats={false}
             />
-            <View style={styles.progressLabels}>
-              <Text style={styles.progressLabel}>
-                Healing: {healingTrajectory}
-              </Text>
-              <Text style={styles.progressLabel}>
-                {currentDay}/40 Days
-              </Text>
-            </View>
-          </View>
+          </TouchableOpacity>
         </FadeInView>
 
         {/* Recommendations */}
         {recommendedGameIds.length > 0 && (
           <FadeInView delay={200}>
-            <View style={styles.recommendSection}>
-              <Text style={styles.sectionTitle}>Recommended for You</Text>
-              <Text style={styles.sectionHint}>
-                {recommendations.find((r) => r.game === recommendedGameIds[0])?.reason}
-              </Text>
-            </View>
+            <TouchableOpacity
+              style={styles.recommendSection}
+              onPress={() => recommendedGameIds[0] && handleSelectGame(recommendedGameIds[0])}
+            >
+              <View style={styles.recommendIcon}>
+                <Ionicons name="bulb-outline" size={18} color={COLORS.gold} />
+              </View>
+              <View style={styles.recommendContent}>
+                <Text style={styles.sectionTitle}>Recommended for You</Text>
+                <Text style={styles.sectionHint}>
+                  {recommendations.find((r) => r.game === recommendedGameIds[0])?.reason}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={COLORS.mutedBrown} />
+            </TouchableOpacity>
           </FadeInView>
         )}
 
@@ -376,7 +507,56 @@ export function BrainGamesHub() {
             </Text>
           </View>
         </ScrollView>
+
+        {/* Crisis Floating Button */}
+        <CrisisFloatingButton onPress={() => setShowCrisis(true)} />
       </SafeAreaView>
+
+      {/* Mood Check-In Modal */}
+      <MoodCheckIn
+        visible={showMoodCheckIn}
+        onComplete={handleMoodComplete}
+        onSkip={handleMoodSkip}
+        lastMood={state.emotional.currentMood}
+      />
+
+      {/* Healing Toolkit Modal */}
+      <HealingToolkit
+        visible={showToolkit}
+        onClose={() => setShowToolkit(false)}
+        currentDay={currentDay}
+        healingTrajectory={healingTrajectory}
+        recommendations={recommendations}
+        gameStats={gameStats}
+        streakDays={streakDays}
+        onSelectGame={handleToolkitSelectGame}
+        onOpenCrisis={() => {
+          setShowToolkit(false);
+          setShowCrisis(true);
+        }}
+      />
+
+      {/* Crisis Quick Access Modal */}
+      <CrisisQuickAccess
+        visible={showCrisis}
+        onClose={() => setShowCrisis(false)}
+        onResourceAccessed={handleCrisisAccessed}
+      />
+
+      {/* Streak Celebration */}
+      <StreakCelebration
+        visible={showStreakCelebration}
+        streakDays={streakDays}
+        onDismiss={() => setShowStreakCelebration(false)}
+      />
+
+      {/* Micro Celebration */}
+      <MicroCelebration
+        visible={showMicroCelebration}
+        type="session_complete"
+        customMessage={microCelebrationMessage}
+        onComplete={() => setShowMicroCelebration(false)}
+      />
     </View>
   );
 }
@@ -427,6 +607,27 @@ const styles = StyleSheet.create({
   headerRight: {
     width: 60,
   },
+  toolkitButton: {
+    width: 60,
+    alignItems: 'flex-end',
+    padding: SPACING.xs,
+  },
+  kintsugiSection: {
+    paddingHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+  },
+  recommendIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: COLORS.goldLight + '30',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  recommendContent: {
+    flex: 1,
+  },
   progressSection: {
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
@@ -443,8 +644,10 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
   recommendSection: {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.md,
     backgroundColor: COLORS.goldLight + '30',
     marginHorizontal: SPACING.lg,
     borderRadius: RADIUS.lg,

@@ -11,6 +11,7 @@ import {
   Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY } from '../../theme/colors';
 import { GAME_ANIMATIONS } from '../../theme/brainGames';
 
@@ -175,7 +176,7 @@ export function StepProgress({
               ]}
             >
               {index < currentStep && (
-                <Text style={styles.stepCheck}>!</Text>
+                <Ionicons name="checkmark" size={12} color={COLORS.cream} />
               )}
               {index === currentStep && (
                 <View style={styles.stepCurrentInner} />

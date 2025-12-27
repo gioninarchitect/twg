@@ -17,6 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -33,6 +34,8 @@ import {
   FadeInView,
   ScaleBounce,
   ShakeView,
+  WhyThisWorks,
+  WhyThisWorksButton,
 } from '../../components/brainGames';
 
 // ============================================
@@ -150,6 +153,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   const [compassionScore, setCompassionScore] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   const scrollRef = useRef<ScrollView>(null);
 
@@ -257,6 +261,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
                 What negative thought is bothering you right now? Write it exactly
                 as it appears in your mind.
               </Text>
+              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
               <ShakeView trigger={showError}>
                 <TextInput
                   style={styles.thoughtInput}
@@ -488,7 +493,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
                 </View>
 
                 <View style={styles.journeyArrow}>
-                  <Text style={styles.arrowText}>arrow-down</Text>
+                  <Ionicons name="arrow-down" size={20} color={COLORS.mutedBrown} />
                 </View>
 
                 <View style={styles.journeyItem}>
@@ -499,7 +504,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
                 </View>
 
                 <View style={styles.journeyArrow}>
-                  <Text style={styles.arrowText}>arrow-down</Text>
+                  <Ionicons name="arrow-down" size={20} color={COLORS.mutedBrown} />
                 </View>
 
                 <View style={[styles.journeyItem, styles.journeyItemHighlight]}>
@@ -569,6 +574,13 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
         encouragement="Every time you reframe a thought, you're rewiring your brain. You're not stuck with your old thinking patterns."
         onContinue={handleContinue}
         continueLabel="Return to Games"
+      />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="thought_detective"
+        onClose={() => setShowWhyThisWorks(false)}
       />
     </GameContainer>
   );

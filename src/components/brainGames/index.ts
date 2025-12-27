@@ -54,3 +54,6 @@ export {
 
 // Integration Components
 export { GameRecommendation } from './GameRecommendation';
+
+// Educational Components
+export { WhyThisWorks, WhyThisWorksButton } from './WhyThisWorks';

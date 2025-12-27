@@ -28,6 +28,8 @@ import {
   FadeInView,
   useBreathingSession,
   BREATHING_PATTERNS,
+  WhyThisWorks,
+  WhyThisWorksButton,
   type BreathPhase,
 } from '../../components/brainGames';
 
@@ -175,6 +177,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
   const [selectedCycles, setSelectedCycles] = useState(3);
   const [showComplete, setShowComplete] = useState(false);
   const [sessionStats, setSessionStats] = useState({ duration: 0, cycles: 0 });
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   const {
     phase,
@@ -279,6 +282,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
                 system, helping you move from stress to calm. Choose a pattern
                 and let God's peace flow through you with each breath.
               </Text>
+              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
             </GameCard>
           </FadeInView>
 
@@ -370,6 +374,13 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
         onContinue={handleContinue}
         onPlayAgain={handlePlayAgain}
         continueLabel="Return to Games"
+      />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="breathing"
+        onClose={() => setShowWhyThisWorks(false)}
       />
     </GameContainer>
   );

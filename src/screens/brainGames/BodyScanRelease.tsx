@@ -31,6 +31,8 @@ import {
   AnimatedProgressBar,
   FadeInView,
   PulsingDot,
+  WhyThisWorks,
+  WhyThisWorksButton,
 } from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -284,6 +286,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   const [showRelease, setShowRelease] = useState(false);
   const [showComplete, setShowComplete] = useState(false);
   const [startTime] = useState(Date.now());
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   const currentRegion = BODY_REGIONS[currentRegionIndex];
   const progress = ((currentRegionIndex + 1) / BODY_REGIONS.length) * 100;
@@ -374,6 +377,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
                 This gentle scan will help you notice where you're holding stress
                 and guide you to release it with compassion.
               </Text>
+              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
             </GameCard>
           </FadeInView>
 
@@ -544,6 +548,13 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
           onClose();
         }}
         continueLabel="Return to Games"
+      />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="body_scan"
+        onClose={() => setShowWhyThisWorks(false)}
       />
     </GameContainer>
   );

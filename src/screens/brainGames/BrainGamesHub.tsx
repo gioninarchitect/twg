@@ -14,6 +14,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -48,6 +49,16 @@ interface GameDefinition {
   unlockDay: number;
 }
 
+// Icon mapping for Ionicons
+const GAME_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  breathing: 'leaf-outline',
+  gratitude: 'flower-outline',
+  scripture_palace: 'library-outline',
+  thought_detective: 'search-outline',
+  body_scan: 'body-outline',
+  pattern_peace: 'grid-outline',
+};
+
 const GAMES: GameDefinition[] = [
   {
     id: 'breathing',
@@ -55,7 +66,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Nervous System Regulation',
     description: 'Guided breathing exercises to calm your nervous system and find peace.',
     theory: 'Polyvagal Theory',
-    icon: 'Wind',
+    icon: 'leaf-outline',
     unlockDay: 1,
   },
   {
@@ -64,7 +75,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Positive Psychology',
     description: 'Plant seeds of thankfulness and watch your garden of blessings grow.',
     theory: 'Positive Psychology',
-    icon: 'Flower',
+    icon: 'flower-outline',
     unlockDay: 1,
   },
   {
@@ -73,7 +84,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Memory & Faith',
     description: 'Build a memory palace with scripture using ancient memorization techniques.',
     theory: 'Method of Loci',
-    icon: 'Castle',
+    icon: 'library-outline',
     unlockDay: 7,
   },
   {
@@ -82,7 +93,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Cognitive Reframing',
     description: 'Identify and transform negative thought patterns with gentle investigation.',
     theory: 'Cognitive Behavioral Therapy',
-    icon: 'Magnifier',
+    icon: 'search-outline',
     unlockDay: 15,
   },
   {
@@ -91,7 +102,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Somatic Awareness',
     description: 'Release stored tension by gently scanning and soothing your body.',
     theory: 'Somatic Therapy',
-    icon: 'Body',
+    icon: 'body-outline',
     unlockDay: 22,
   },
   {
@@ -100,7 +111,7 @@ const GAMES: GameDefinition[] = [
     subtitle: 'Focus Training',
     description: 'Strengthen working memory and focus through peaceful pattern exercises.',
     theory: 'N-Back Training',
-    icon: 'Grid',
+    icon: 'grid-outline',
     unlockDay: 28,
   },
 ];
@@ -162,12 +173,11 @@ function GameCardItem({
           styles.gameIcon,
           { backgroundColor: isUnlocked ? 'rgba(255,255,255,0.3)' : COLORS.overlayLight },
         ]}>
-          <Text style={[
-            styles.gameIconText,
-            { color: isUnlocked ? COLORS.cream : COLORS.mutedBrown },
-          ]}>
-            {game.icon}
-          </Text>
+          <Ionicons
+            name={game.icon as keyof typeof Ionicons.glyphMap}
+            size={28}
+            color={isUnlocked ? COLORS.cream : COLORS.mutedBrown}
+          />
         </View>
 
         {/* Content */}
@@ -190,14 +200,14 @@ function GameCardItem({
             <View style={styles.gameStats}>
               {streak > 0 && (
                 <View style={styles.streakBadge}>
-                  <Text style={styles.streakIcon}>Flame</Text>
+                  <Ionicons name="flame" size={14} color={COLORS.cream} />
                   <Text style={styles.streakText}>{streak}</Text>
                 </View>
               )}
             </View>
           ) : (
             <View style={styles.lockedInfo}>
-              <Text style={styles.lockIcon}>Lock</Text>
+              <Ionicons name="lock-closed" size={14} color={COLORS.mutedBrown} />
               <Text style={styles.lockText}>
                 Unlocks Day {game.unlockDay}
                 {daysUntilUnlock > 0 && ` (${daysUntilUnlock} days)`}

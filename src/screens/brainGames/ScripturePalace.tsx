@@ -16,6 +16,7 @@ import {
   Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS, GRADIENTS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -30,6 +31,8 @@ import {
   SessionComplete,
   FadeInView,
   ScaleBounce,
+  WhyThisWorks,
+  WhyThisWorksButton,
 } from '../../components/brainGames';
 
 // ============================================
@@ -44,15 +47,27 @@ interface PalaceRoom {
   color: string;
 }
 
+// Icon mapping for Ionicons
+const ROOM_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+  entrance: 'home-outline',
+  garden: 'flower-outline',
+  living: 'bed-outline',
+  kitchen: 'nutrition-outline',
+  study: 'book-outline',
+  bedroom: 'moon-outline',
+  tower: 'telescope-outline',
+  throne: 'diamond-outline',
+};
+
 const PALACE_ROOMS: PalaceRoom[] = [
-  { id: 'entrance', name: 'Entrance Hall', description: 'Where your journey begins', icon: 'Door', color: '#D4A574' },
-  { id: 'garden', name: 'Garden of Eden', description: 'A place of peace and creation', icon: 'Flower', color: '#A8B5A0' },
-  { id: 'living', name: 'Living Room', description: 'Where you gather and rest', icon: 'Sofa', color: '#88A4B8' },
-  { id: 'kitchen', name: 'Bread of Life Kitchen', description: 'Where you are nourished', icon: 'Bread', color: '#C4A882' },
-  { id: 'study', name: 'Wisdom Study', description: 'Where you grow in understanding', icon: 'Book', color: '#9B8FB8' },
-  { id: 'bedroom', name: 'Rest Chamber', description: 'Where you find peace', icon: 'Moon', color: '#8898B8' },
-  { id: 'tower', name: 'Watchtower', description: 'Where you see God\'s perspective', icon: 'Tower', color: '#88A4A8' },
-  { id: 'throne', name: 'Throne Room', description: 'Where you meet the King', icon: 'Crown', color: '#D4A574' },
+  { id: 'entrance', name: 'Entrance Hall', description: 'Where your journey begins', icon: 'home-outline', color: '#D4A574' },
+  { id: 'garden', name: 'Garden of Eden', description: 'A place of peace and creation', icon: 'flower-outline', color: '#A8B5A0' },
+  { id: 'living', name: 'Living Room', description: 'Where you gather and rest', icon: 'bed-outline', color: '#88A4B8' },
+  { id: 'kitchen', name: 'Bread of Life Kitchen', description: 'Where you are nourished', icon: 'nutrition-outline', color: '#C4A882' },
+  { id: 'study', name: 'Wisdom Study', description: 'Where you grow in understanding', icon: 'book-outline', color: '#9B8FB8' },
+  { id: 'bedroom', name: 'Rest Chamber', description: 'Where you find peace', icon: 'moon-outline', color: '#8898B8' },
+  { id: 'tower', name: 'Watchtower', description: 'Where you see God\'s perspective', icon: 'telescope-outline', color: '#88A4A8' },
+  { id: 'throne', name: 'Throne Room', description: 'Where you meet the King', icon: 'diamond-outline', color: '#D4A574' },
 ];
 
 // ============================================
@@ -94,7 +109,7 @@ function RoomCard({ room, scripture, isSelected, onPress }: RoomCardProps) {
       activeOpacity={0.8}
     >
       <View style={[styles.roomIcon, { backgroundColor: room.color + '30' }]}>
-        <Text style={styles.roomIconText}>{room.icon}</Text>
+        <Ionicons name={room.icon as keyof typeof Ionicons.glyphMap} size={24} color={room.color} />
       </View>
       <View style={styles.roomContent}>
         <Text style={styles.roomName}>{room.name}</Text>
@@ -108,7 +123,7 @@ function RoomCard({ room, scripture, isSelected, onPress }: RoomCardProps) {
       </View>
       {scripture?.mastered && (
         <View style={styles.masteredBadge}>
-          <Text style={styles.masteredText}>Star</Text>
+          <Ionicons name="star" size={18} color={COLORS.gold} />
         </View>
       )}
     </TouchableOpacity>
@@ -253,7 +268,7 @@ function ReviewScriptureModal({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <View style={[styles.reviewRoomHeader, { backgroundColor: room.color + '20' }]}>
-            <Text style={styles.reviewRoomIcon}>{room.icon}</Text>
+            <Ionicons name={room.icon as keyof typeof Ionicons.glyphMap} size={24} color={room.color} style={{ marginRight: SPACING.sm }} />
             <Text style={styles.reviewRoomName}>{room.name}</Text>
           </View>
 
@@ -346,6 +361,7 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
   const [reviewIndex, setReviewIndex] = useState(0);
   const [reviewScore, setReviewScore] = useState(0);
   const [showComplete, setShowComplete] = useState(false);
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   // Get scripture for a room
   const getScriptureForRoom = (roomId: string) => {
@@ -483,6 +499,9 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
               <Text style={styles.statLabel}>Empty Rooms</Text>
             </View>
           </View>
+          <View style={styles.whyButtonRow}>
+            <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
+          </View>
         </FadeInView>
 
         {/* Introduction */}
@@ -563,6 +582,13 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
         }}
         continueLabel="Continue"
       />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="scripture_palace"
+        onClose={() => setShowWhyThisWorks(false)}
+      />
     </GameContainer>
   );
 }
@@ -602,6 +628,11 @@ const styles = StyleSheet.create({
     color: COLORS.richBrown,
     fontFamily: TYPOGRAPHY.ui,
     marginTop: 2,
+  },
+  whyButtonRow: {
+    alignItems: 'center',
+    marginTop: SPACING.sm,
+    marginBottom: SPACING.md,
   },
 
   // Intro

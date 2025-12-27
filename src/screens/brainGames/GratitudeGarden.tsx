@@ -17,6 +17,7 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -34,6 +35,8 @@ import {
   ScaleBounce,
   FloatingElement,
   useGratitudeSession,
+  WhyThisWorks,
+  WhyThisWorksButton,
 } from '../../components/brainGames';
 
 // ============================================
@@ -115,7 +118,7 @@ function Flower({ index, text, onRemove }: FlowerProps) {
             colors={[colors.flower, colors.accent]}
             style={styles.flowerGradient}
           >
-            <Text style={styles.flowerIcon}>Flower</Text>
+            <Ionicons name="flower" size={24} color={COLORS.cream} />
           </LinearGradient>
         </View>
       </FloatingElement>
@@ -130,7 +133,7 @@ function Flower({ index, text, onRemove }: FlowerProps) {
             onPress={onRemove}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
-            <Text style={styles.removeText}>x</Text>
+            <Ionicons name="close" size={12} color={COLORS.cream} />
           </TouchableOpacity>
         )}
       </View>
@@ -192,6 +195,7 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
   );
   const [showComplete, setShowComplete] = useState(false);
   const [encouragement, setEncouragement] = useState('');
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   const {
     gratitudes,
@@ -269,11 +273,16 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
           {/* Progress */}
           <FadeInView delay={100}>
             <View style={styles.progressSection}>
-              <AnimatedProgressBar
-                progress={progress * 100}
-                height={8}
-                colors={GAME_GRADIENTS.gratitude.colors}
-              />
+              <View style={styles.progressHeader}>
+                <View style={styles.progressBarWrapper}>
+                  <AnimatedProgressBar
+                    progress={progress * 100}
+                    height={8}
+                    colors={GAME_GRADIENTS.gratitude.colors}
+                  />
+                </View>
+                <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
+              </View>
               <Text style={styles.progressText}>
                 {gratitudes.length} of 3 gratitudes planted
               </Text>
@@ -374,6 +383,13 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
         onContinue={handleContinue}
         continueLabel="Return to Games"
       />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="gratitude"
+        onClose={() => setShowWhyThisWorks(false)}
+      />
     </GameContainer>
   );
 }
@@ -396,6 +412,14 @@ const styles = StyleSheet.create({
   // Progress
   progressSection: {
     marginBottom: SPACING.lg,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+  },
+  progressBarWrapper: {
+    flex: 1,
   },
   progressText: {
     fontSize: TYPOGRAPHY.sizes.sm,

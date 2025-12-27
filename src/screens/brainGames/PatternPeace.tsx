@@ -24,7 +24,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { useWorldModel } from '../../worldModel';
 import { GAME_COLORS, GAME_ANIMATIONS } from '../../theme/brainGames';
-import { GameContainer, GameProgress, GameFeedback, GameAnimations } from '../../components/brainGames';
+import { GameContainer, GameProgress, GameFeedback, GameAnimations, WhyThisWorks, WhyThisWorksButton } from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -323,6 +323,7 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
   const [positionPressed, setPositionPressed] = useState(false);
   const [symbolPressed, setSymbolPressed] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
+  const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
   const [currentScripture] = useState(SCRIPTURES[Math.floor(Math.random() * SCRIPTURES.length)]);
   const [encouragement, setEncouragement] = useState('');
 
@@ -839,7 +840,7 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
           <Ionicons name="arrow-back" size={24} color={GAME_COLORS.patternPeace.primary} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Pattern Peace</Text>
-        <View style={styles.headerRight} />
+        <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
       </View>
 
       {renderContent()}
@@ -850,6 +851,13 @@ export const PatternPeace: React.FC<{ navigation: any }> = ({ navigation }) => {
         onAccept={() => setShowDisclaimer(false)}
         title="Educational Exercise"
         message="Pattern Peace is a cognitive training exercise based on N-back research. It is educational in nature and is not a substitute for professional mental health treatment. If you're experiencing persistent cognitive difficulties, please consult a healthcare provider."
+      />
+
+      {/* Why This Works Modal */}
+      <WhyThisWorks
+        visible={showWhyThisWorks}
+        gameId="pattern_peace"
+        onClose={() => setShowWhyThisWorks(false)}
       />
     </LinearGradient>
   );
@@ -888,9 +896,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: GAME_COLORS.patternPeace.primary,
-  },
-  headerRight: {
-    width: 40,
   },
 
   // Intro styles

@@ -13,6 +13,7 @@ import {
   Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS, GRADIENTS } from '../../theme/colors';
 import { GAME_ANIMATIONS, HAPTIC_PATTERNS } from '../../theme/brainGames';
@@ -99,7 +100,7 @@ export function SessionComplete({
               colors={GRADIENTS.gold.colors as [string, string, ...string[]]}
               style={styles.successGradient}
             >
-              <Text style={styles.successCheck}>!</Text>
+              <Ionicons name="checkmark" size={36} color={COLORS.earth} />
             </LinearGradient>
           </View>
 
@@ -285,7 +286,7 @@ export function StreakNotification({
         colors={GRADIENTS.gold.colors as [string, string, ...string[]]}
         style={styles.streakGradient}
       >
-        <Text style={styles.streakEmoji}>Flame</Text>
+        <Ionicons name="flame" size={32} color={COLORS.earth} />
         <Text style={styles.streakCount}>{streakCount}</Text>
         <Text style={styles.streakLabel}>Day Streak</Text>
         {message && <Text style={styles.streakMessage}>{message}</Text>}
@@ -364,7 +365,7 @@ export function AchievementToast({
       ]}
     >
       <View style={styles.achievementIcon}>
-        <Text style={styles.achievementStar}>Star</Text>
+        <Ionicons name="star" size={24} color={COLORS.gold} />
       </View>
       <View style={styles.achievementContent}>
         <Text style={styles.achievementTitle}>{title}</Text>

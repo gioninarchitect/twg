@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Tea With God</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-glass: rgba(255, 255, 255, 0.05);
+      --bg-input: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(212, 175, 55, 0.5);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --text-muted: rgba(250, 250, 250, 0.4);
+      --gold: #D4AF37;
+      --gold-light: #F4E4BC;
+      --gold-glow: rgba(212, 175, 55, 0.3);
+      --sage: #8FBC8F;
+      --error: #E57373;
+      --success: #81C784;
+      --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: var(--bg-dark);
+    }
+
+    .bg-gradient::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 60%;
+      height: 60%;
+      background: radial-gradient(circle at top right, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+    }
+
+    /* Nav */
+    nav {
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--sage);
+    }
+
+    .secure-badge svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Main Layout */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 48px;
+    }
+
+    /* Progress Steps */
+    .progress {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 48px;
+    }
+
+    .progress-step {
+      flex: 1;
+      text-align: center;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border-subtle);
+      border-radius: 2px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.5s var(--ease-out);
+    }
+
+    .progress-step.active .progress-bar-fill { width: 100%; }
+    .progress-step.completed .progress-bar-fill { width: 100%; background: var(--sage); }
+    .progress-step:not(.active):not(.completed) .progress-bar-fill { width: 0; }
+
+    .progress-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .progress-step.active .progress-label { color: var(--gold); }
+    .progress-step.completed .progress-label { color: var(--sage); }
+
+    /* Section */
+    .checkout-section {
+      display: none;
+    }
+
+    .checkout-section.active {
+      display: block;
+      animation: fadeIn 0.5s var(--ease-out);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 8px;
+    }
+
+    .section-desc {
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-hint {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    /* Checkbox */
+    .checkbox-wrap {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .checkbox-wrap input {
+      display: none;
+    }
+
+    .checkbox-box {
+      width: 20px;
+      height: 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .checkbox-wrap input:checked + .checkbox-box {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .checkbox-box svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--bg-dark);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .checkbox-wrap input:checked + .checkbox-box svg {
+      opacity: 1;
+    }
+
+    .checkbox-label {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .checkbox-label a {
+      color: var(--gold);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 18px 36px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.4s var(--ease-out);
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--bg-dark);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px var(--gold-glow);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn-group .btn-secondary {
+      width: auto;
+      padding: 18px 24px;
+    }
+
+    .btn-group .btn-primary {
+      flex: 1;
+    }
+
+    /* Bank Details */
+    .bank-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .bank-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .bank-row:last-child {
+      border-bottom: none;
+    }
+
+    .bank-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .bank-value {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bank-row.highlight {
+      background: rgba(212, 175, 55, 0.1);
+      margin: 8px -24px;
+      padding: 16px 24px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    .bank-row.highlight .bank-value {
+      color: var(--gold);
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+    }
+
+    .copy-btn.copied {
+      background: var(--sage);
+      color: var(--bg-dark);
+      border-color: var(--sage);
+    }
+
+    .bank-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+    }
+
+    .bank-note svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* Upload Area */
+    .upload-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .upload-desc {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--border-subtle);
+      border-radius: 16px;
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .upload-area.dragover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .upload-area.has-file {
+      border-style: solid;
+      border-color: var(--sage);
+      background: rgba(129, 199, 132, 0.05);
+    }
+
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      background: var(--bg-glass);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+    }
+
+    .upload-text {
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .upload-hint {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    .upload-preview {
+      display: none;
+    }
+
+    .upload-area.has-file .upload-placeholder { display: none; }
+    .upload-area.has-file .upload-preview { display: block; }
+
+    .preview-image {
+      max-width: 200px;
+      max-height: 150px;
+      border-radius: 8px;
+      margin: 0 auto 16px;
+    }
+
+    .preview-name {
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .preview-remove {
+      color: var(--error);
+      font-size: 0.875rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Confirmation */
+    .confirmation {
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    .confirmation-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, var(--sage) 0%, #6B9E6B 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirmation-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: white;
+      stroke-width: 3;
+    }
+
+    .confirmation h2 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .confirmation-message {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .order-ref {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 32px;
+    }
+
+    .order-ref-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .order-ref-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .next-steps {
+      text-align: left;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+    }
+
+    .next-steps h3 {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      margin-bottom: 16px;
+    }
+
+    .next-steps ol {
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .next-steps li {
+      counter-increment: steps;
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .next-steps li:last-child {
+      border-bottom: none;
+    }
+
+    .next-steps li::before {
+      content: counter(steps);
+      width: 28px;
+      height: 28px;
+      background: var(--bg-glass);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .step-content strong {
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .step-content span {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .confirmation-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .confirmation-actions .btn {
+      width: auto;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+    }
+
+    .btn-whatsapp:hover {
+      background: #20BD5A;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      position: sticky;
+      top: 48px;
+    }
+
+    .order-summary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 28px;
+    }
+
+    .order-summary h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 24px;
+    }
+
+    .order-item {
+      display: flex;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+
+    .item-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--gradient-gold);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .item-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--bg-dark);
+    }
+
+    .item-details {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .item-plan {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .item-price {
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .order-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 20px;
+    }
+
+    .total-label {
+      font-weight: 500;
+    }
+
+    .total-amount {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--text-primary);
+    }
+
+    .order-includes h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .order-includes ul {
+      list-style: none;
+    }
+
+    .order-includes li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    .order-includes svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--sage);
+    }
+
+    .trust-badges {
+      margin-top: 24px;
+      display: flex;
+      gap: 16px;
+    }
+
+    .trust-badge {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      background: var(--bg-glass);
+      border-radius: 10px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .trust-badge svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--sage);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+        padding: 24px;
+      }
+
+      nav { padding: 16px 24px; }
+
+      .sidebar { order: -1; position: static; }
+
+      .btn-group { flex-direction: column; }
+      .btn-group .btn-secondary { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
+      <span>Tea With God</span>
+    </a>
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <a href="b2b/" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-secondary)'">For Organizations</a>
+      <div class="secure-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Secure Checkout
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    <div class="checkout-content">
+      <!-- Progress -->
+      <div class="progress">
+        <div class="progress-step active" data-step="1">
+          <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+          <span class="progress-label">Your Details</span>
+        </div>
+        <div class="progress-step" data-step="2">
+          <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+          <span class="progress-label">Payment</span>
+        </div>
+        <div class="progress-step" data-step="3">
+          <div class="progress-bar"><div class="progress-bar-fill"></div></div>
+          <span class="progress-label">Confirmation</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Details -->
+      <section class="checkout-section active" id="step-1">
+        <h2 class="section-title">Your Details</h2>
+        <p class="section-desc">We'll use this to send your access code after payment.</p>
+
+        <form id="details-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="e.g. Nomsa" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="e.g. Dlamini" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="your@email.com" required>
+            <p class="form-hint">Your access code will be sent here</p>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">WhatsApp Number</label>
+            <input type="tel" id="phone" placeholder="e.g. 082 123 4567" required>
+            <p class="form-hint">For payment confirmation & support</p>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-wrap">
+              <input type="checkbox" id="terms" required>
+              <span class="checkbox-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
+              </span>
+              <span class="checkbox-label">I agree to the <a href="mailto:twg@cleva-ai.co.za?subject=Terms">Terms of Service</a> and <a href="mailto:twg@cleva-ai.co.za?subject=Privacy">Privacy Policy</a></span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Continue to Payment
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+      </section>
+
+      <!-- Step 2: Payment -->
+      <section class="checkout-section" id="step-2">
+        <h2 class="section-title">Complete Payment</h2>
+        <p class="section-desc">Transfer the amount below, then upload your proof of payment.</p>
+
+        <div class="bank-card">
+          <div class="bank-row">
+            <span class="bank-label">Bank</span>
+            <span class="bank-value">First National Bank (FNB)</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-label">Account Name</span>
+            <span class="bank-value">Tea With God</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-label">Account Number</span>
+            <span class="bank-value">
+              <span id="account-number">62812345678</span>
+              <button class="copy-btn" data-copy="62812345678">Copy</button>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-label">Branch Code</span>
+            <span class="bank-value">250655</span>
+          </div>
+          <div class="bank-row highlight">
+            <span class="bank-label">Reference</span>
+            <span class="bank-value">
+              <span id="payment-ref">TWG-XXXXXX</span>
+              <button class="copy-btn" data-copy="" id="copy-ref">Copy</button>
+            </span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-label">Amount</span>
+            <span class="bank-value" id="payment-amount">R149.00</span>
+          </div>
+        </div>
+
+        <p class="bank-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Use the reference above so we can identify your payment
+        </p>
+
+        <div style="margin-top: 32px;">
+          <h3 class="upload-title">Upload Proof of Payment</h3>
+          <p class="upload-desc">Screenshot or photo of your payment confirmation</p>
+
+          <div class="upload-area" id="upload-area">
+            <input type="file" id="file-input" accept="image/*,.pdf" hidden>
+            <div class="upload-placeholder">
+              <div class="upload-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <p class="upload-text">Click to upload or drag and drop</p>
+              <p class="upload-hint">PNG, JPG or PDF (max 5MB)</p>
+            </div>
+            <div class="upload-preview">
+              <img id="preview-img" class="preview-image" src="" alt="">
+              <p class="preview-name" id="preview-name"></p>
+              <button type="button" class="preview-remove" id="remove-file">Remove file</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary" id="back-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          </button>
+          <button type="button" class="btn btn-primary" id="submit-btn" disabled>
+            Submit Payment Proof
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 3: Confirmation -->
+      <section class="checkout-section" id="step-3">
+        <div class="confirmation">
+          <div class="confirmation-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+          </div>
+          <h2>Payment Submitted!</h2>
+          <p class="confirmation-message">Thank you, <span id="customer-name">Friend</span>. We've received your proof of payment.</p>
+
+          <div class="order-ref">
+            <p class="order-ref-label">Order Reference</p>
+            <p class="order-ref-value" id="order-ref-display">TWG-XXXXXX</p>
+          </div>
+
+          <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <ol>
+              <li>
+                <div class="step-content">
+                  <strong>We verify your payment</strong>
+                  <span>Usually within 1-2 hours during business hours</span>
+                </div>
+              </li>
+              <li>
+                <div class="step-content">
+                  <strong>You receive your access code</strong>
+                  <span>Via email and WhatsApp</span>
+                </div>
+              </li>
+              <li>
+                <div class="step-content">
+                  <strong>Download the app & enter your code</strong>
+                  <span>Begin your 40-day healing journey</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="confirmation-actions">
+            <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            <a href="#" class="btn btn-whatsapp" id="whatsapp-btn" target="_blank">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp Us
+            </a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="order-summary">
+        <h3>Order Summary</h3>
+
+        <div class="order-item">
+          <div class="item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          </div>
+          <div class="item-details">
+            <p class="item-name">Tea With God</p>
+            <p class="item-plan" id="plan-name">Journey Access</p>
+          </div>
+          <p class="item-price" id="plan-price">R149</p>
+        </div>
+
+        <div class="order-total">
+          <span class="total-label">Total</span>
+          <span class="total-amount" id="total-amount">R149</span>
+        </div>
+
+        <div class="order-includes">
+          <h4>Includes</h4>
+          <ul id="plan-features">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 40 devotionals</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Private journal</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Progress tracking</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline access</li>
+          </ul>
+        </div>
+
+        <div class="trust-badges">
+          <div class="trust-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secure
+          </div>
+          <div class="trust-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            24hr Verify
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Plan data
+    const plans = {
+      book: { name: 'Book Access', price: 99, features: ['All 40 devotionals', 'Read at your pace', 'Offline access'] },
+      journey: { name: 'Journey Access', price: 149, features: ['All 40 devotionals', 'Private journal', 'Progress tracking', 'Offline access'] },
+      premium: { name: 'Premium Access', price: 249, features: ['All 40 devotionals', 'Private journal', 'Voice recordings', 'Crisis support', 'All future updates'] }
+    };
+
+    // Get plan from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedPlan = urlParams.get('plan') || 'journey';
+    const plan = plans[selectedPlan] || plans.journey;
+
+    // Update UI with plan
+    document.getElementById('plan-name').textContent = plan.name;
+    document.getElementById('plan-price').textContent = `R${plan.price}`;
+    document.getElementById('total-amount').textContent = `R${plan.price}`;
+    document.getElementById('payment-amount').textContent = `R${plan.price}.00`;
+
+    const featuresList = document.getElementById('plan-features');
+    featuresList.innerHTML = plan.features.map(f =>
+      `<li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> ${f}</li>`
+    ).join('');
+
+    // Generate order reference
+    const orderRef = 'TWG-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    document.getElementById('payment-ref').textContent = orderRef;
+    document.getElementById('copy-ref').dataset.copy = orderRef;
+    document.getElementById('order-ref-display').textContent = orderRef;
+
+    // Form data
+    let customerData = {};
+
+    // Step navigation
+    function showStep(step) {
+      document.querySelectorAll('.checkout-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+
+      document.querySelectorAll('.progress-step').forEach(s => {
+        const stepNum = parseInt(s.dataset.step);
+        s.classList.remove('active', 'completed');
+        if (stepNum < step) s.classList.add('completed');
+        if (stepNum === step) s.classList.add('active');
+      });
+    }
+
+    // Step 1: Details form
+    document.getElementById('details-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      customerData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value
+      };
+      showStep(2);
+    });
+
+    // Back button
+    document.getElementById('back-btn').addEventListener('click', () => showStep(1));
+
+    // Copy buttons
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(btn.dataset.copy);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    });
+
+    // File upload
+    const uploadArea = document.getElementById('upload-area');
+    const fileInput = document.getElementById('file-input');
+    const submitBtn = document.getElementById('submit-btn');
+    let uploadedFile = null;
+
+    uploadArea.addEventListener('click', () => fileInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      handleFile(e.dataTransfer.files[0]);
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files[0]) handleFile(fileInput.files[0]);
+    });
+
+    function handleFile(file) {
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) {
+        alert('File too large. Maximum 5MB.');
+        return;
+      }
+
+      uploadedFile = file;
+      uploadArea.classList.add('has-file');
+      document.getElementById('preview-name').textContent = file.name;
+      submitBtn.disabled = false;
+
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('preview-img').src = e.target.result;
+          document.getElementById('preview-img').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        document.getElementById('preview-img').style.display = 'none';
+      }
+    }
+
+    document.getElementById('remove-file').addEventListener('click', (e) => {
+      e.stopPropagation();
+      uploadedFile = null;
+      fileInput.value = '';
+      uploadArea.classList.remove('has-file');
+      submitBtn.disabled = true;
+    });
+
+    // API URL (change for production)
+    const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000/api/v1'
+      : '/api/v1';
+
+    // Submit
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Submitting...</span>';
+
+      try {
+        // Step 1: Create order
+        const orderResponse = await fetch(`${API_URL}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: customerData.firstName,
+            lastName: customerData.lastName,
+            email: customerData.email,
+            phone: customerData.phone,
+            plan: selectedPlan,
+            orderRef: orderRef
+          })
+        });
+
+        if (!orderResponse.ok) {
+          throw new Error('Failed to create order');
+        }
+
+        // Step 2: Upload proof of payment
+        if (uploadedFile) {
+          const formData = new FormData();
+          formData.append('proof', uploadedFile);
+
+          const proofResponse = await fetch(`${API_URL}/orders/${orderRef}/proof`, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!proofResponse.ok) {
+            console.warn('Proof upload failed, but order created');
+          }
+        }
+
+        // Success - show confirmation
+        document.getElementById('customer-name').textContent = customerData.firstName;
+
+        const whatsappMsg = encodeURIComponent(
+          `Hi! I just purchased Tea With God (${plan.name}).\n\nOrder: ${orderRef}\nName: ${customerData.firstName} ${customerData.lastName}\nEmail: ${customerData.email}`
+        );
+        document.getElementById('whatsapp-btn').href = `https://wa.me/27821234567?text=${whatsappMsg}`;
+
+        showStep(3);
+      } catch (error) {
+        console.error('Order error:', error);
+        alert('Something went wrong. Please try again or contact us on WhatsApp.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Payment Proof <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+      }
+    });
+  </script>
+</body>
+</html>

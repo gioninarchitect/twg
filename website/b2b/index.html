@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea With God - For Churches & Organizations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Dark Premium Theme - matching main website */
+            --bg-dark: #0D0D0D;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-glass: rgba(255, 255, 255, 0.05);
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --text-primary: #FAFAFA;
+            --text-secondary: rgba(250, 250, 250, 0.6);
+            --text-muted: rgba(250, 250, 250, 0.4);
+            --gold: #D4AF37;
+            --gold-light: #F4E4BC;
+            --gold-dark: #B8860B;
+            --gold-glow: rgba(212, 175, 55, 0.3);
+            --sage: #8FBC8F;
+            --warm: #E8C39E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 16px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .nav-cta {
+            background: transparent;
+            color: var(--gold);
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: 2px solid var(--gold);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .nav-cta:hover {
+            background: var(--gold);
+            color: #0D0D0D;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 48px 80px;
+            text-align: center;
+            background: linear-gradient(180deg, #0D0D0D 0%, #1A1A1A 100%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            max-width: 800px;
+            margin: 0 auto 24px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: #0D0D0D;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        /* Organization Types */
+        .org-types {
+            padding: 80px 48px;
+            background: #1A1A1A;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .org-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .org-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .org-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.15);
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .org-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(212, 175, 55, 0.15);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .org-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .org-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Regional Pricing */
+        .pricing-section {
+            padding: 80px 48px;
+            background: var(--bg-dark);
+        }
+
+        .region-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+
+        .region-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border-subtle);
+            background: var(--bg-card);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .region-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .region-btn.active {
+            border-color: var(--gold);
+            background: var(--gold);
+            color: #0D0D0D;
+        }
+
+        .region-btn .flag {
+            font-size: 1.25rem;
+        }
+
+        .pricing-note {
+            text-align: center;
+            padding: 16px 24px;
+            background: rgba(143, 188, 143, 0.1);
+            border-radius: 8px;
+            color: var(--sage);
+            font-size: 0.875rem;
+            max-width: 800px;
+            margin: 0 auto 32px;
+            border: 1px solid rgba(143, 188, 143, 0.2);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            border: 2px solid var(--border-subtle);
+            transition: all 0.2s;
+        }
+
+        .pricing-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--gold);
+            transform: scale(1.05);
+            box-shadow: 0 0 40px var(--gold-glow);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gold);
+            color: #0D0D0D;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .pricing-tier {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pricing-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .pricing-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .pricing-price .currency {
+            font-size: 1.5rem;
+            vertical-align: super;
+        }
+
+        .pricing-price .period {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .pricing-per-user {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 32px;
+        }
+
+        .pricing-features li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        .pricing-features i {
+            color: var(--sage);
+            margin-top: 3px;
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 48px;
+            background: #1A1A1A;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-card::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            right: -16px;
+            width: calc(100% - 80px);
+            height: 2px;
+            background: var(--border-subtle);
+        }
+
+        .step-card:last-child::after {
+            display: none;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #0D0D0D;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        .step-card h3 {
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .step-card p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 80px 48px;
+            background: var(--bg-dark);
+        }
+
+        .testimonials .section-header h2 {
+            color: var(--text-primary);
+        }
+
+        .testimonials .section-header p {
+            color: var(--text-secondary);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 32px;
+        }
+
+        .testimonial-quote {
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 24px;
+            color: var(--text-secondary);
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .testimonial-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #0D0D0D;
+        }
+
+        .testimonial-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .testimonial-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* FAQ Section */
+        .faq {
+            padding: 80px 48px;
+            background: #1A1A1A;
+        }
+
+        .faq-grid {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--bg-card);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .faq-question {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .faq-question i {
+            color: var(--gold);
+            transition: transform 0.2s;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 24px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 24px 20px;
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 48px;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(184, 134, 11, 0.1) 100%);
+            text-align: center;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .cta-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+            color: var(--gold);
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-section .btn {
+            background: var(--gold);
+            color: #0D0D0D;
+        }
+
+        .cta-section .btn:hover {
+            background: var(--gold-light);
+            box-shadow: 0 0 30px var(--gold-glow);
+        }
+
+        /* Contact Form Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1A1A1A;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow: auto;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-card);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 6px;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .modal-footer .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Footer */
+        footer {
+            padding: 48px;
+            background: #1A1A1A;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--gold-light);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .org-grid, .pricing-grid, .testimonial-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .step-card::after {
+                display: none;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 120px 24px 60px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .org-grid, .pricing-grid, .testimonial-grid, .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="../index.html" class="nav-logo"><img src="../images/teacup.png" alt="Tea With God">Tea With God</a>
+        <ul class="nav-links">
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a href="#" class="nav-cta" onclick="openContactModal()">Get Started</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <span class="hero-badge"><i class="fas fa-hands-holding-heart"></i> For Organizations</span>
+        <h1>Bring Healing to Your Community</h1>
+        <p>Equip your organization with a proven 40-day healing journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.</p>
+        <div class="hero-cta">
+            <a href="#pricing" class="btn btn-primary"><i class="fas fa-tag"></i> View Pricing</a>
+            <a href="#" class="btn btn-secondary" onclick="openContactModal()"><i class="fas fa-calendar"></i> Book a Demo</a>
+        </div>
+    </section>
+
+    <!-- Organization Types -->
+    <section class="org-types">
+        <div class="section-header">
+            <h2>Perfect for Every Organization</h2>
+            <p>Tea With God serves organizations of all sizes across the globe</p>
+        </div>
+        <div class="org-grid" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-church"></i></div>
+                <h3>Churches</h3>
+                <p>Women's ministries and small groups seeking structured healing resources</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-heart-pulse"></i></div>
+                <h3>Counseling Centers</h3>
+                <p>Christian counselors and therapists supplementing client care</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-house-chimney-heart"></i></div>
+                <h3>Shelters</h3>
+                <p>Women's shelters and safe houses for trauma recovery support</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-hands-holding-child"></i></div>
+                <h3>NGOs</h3>
+                <p>Non-profits serving vulnerable women and communities</p>
+            </div>
+        </div>
+        <div class="org-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 24px;">
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-hands-praying"></i></div>
+                <h3>Retreat Centers</h3>
+                <p>Healing ministries and spiritual formation retreats</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-hospital"></i></div>
+                <h3>Healthcare</h3>
+                <p>Hospitals and clinics with spiritual care programs</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Education</h3>
+                <p>Schools, colleges, and universities for student wellness</p>
+            </div>
+            <div class="org-card">
+                <div class="org-icon"><i class="fas fa-building"></i></div>
+                <h3>Corporates</h3>
+                <p>Faith-based companies for employee wellness programs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section" id="pricing">
+        <div class="section-header">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Choose the plan that fits your organization's needs</p>
+        </div>
+
+        <!-- Region Selector -->
+        <div class="region-selector">
+            <button class="region-btn active" data-region="za">
+                <span class="flag">za</span> South Africa
+            </button>
+            <button class="region-btn" data-region="us">
+                <span class="flag">us</span> United States
+            </button>
+            <button class="region-btn" data-region="uk">
+                <span class="flag">gb</span> United Kingdom
+            </button>
+            <button class="region-btn" data-region="ng">
+                <span class="flag">ng</span> Nigeria
+            </button>
+            <button class="region-btn" data-region="ke">
+                <span class="flag">ke</span> Kenya
+            </button>
+            <button class="region-btn" data-region="au">
+                <span class="flag">au</span> Australia
+            </button>
+        </div>
+
+        <div class="pricing-note" id="pricingNote">
+            <i class="fas fa-info-circle"></i>
+            Pricing is adjusted for local purchasing power. All plans include the same features regardless of region.
+        </div>
+
+        <div class="pricing-grid" id="pricingGrid">
+            <!-- Pricing cards will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Seamless Onboarding Promise -->
+    <section style="padding: 60px 48px; background: linear-gradient(135deg, rgba(135,168,120,0.05) 0%, transparent 100%);">
+        <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
+            <span class="section-label">Zero Friction</span>
+            <h2 class="section-title" style="margin-bottom: 16px;">Seamless Self-Service Onboarding</h2>
+            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 48px;">No sales calls. No waiting. Get your entire organization set up in under 10 minutes.</p>
+
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px;">
+                <div style="text-align: center;">
+                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-credit-card"></i></div>
+                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Instant Payment</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">EFT, card, or invoice</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-key"></i></div>
+                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Codes in Seconds</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Bulk generate instantly</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-envelope"></i></div>
+                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Email Templates</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy-paste distribution</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-chart-line"></i></div>
+                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Dashboard Access</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Same-day analytics</p>
+                </div>
+                <div style="text-align: center;">
+                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-headset"></i></div>
+                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Support Ready</h4>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Help when you need it</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="section-header">
+            <h2>How It Works</h2>
+            <p>Get your organization set up in four simple steps</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-number">1</div>
+                <h3>Choose Your Plan</h3>
+                <p>Select a tier based on your organization size and needs</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">2</div>
+                <h3>Receive Access Codes</h3>
+                <p>Codes generated instantly - no waiting for approval</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">3</div>
+                <h3>Distribute to Members</h3>
+                <p>Use our email templates or your own distribution method</p>
+            </div>
+            <div class="step-card">
+                <div class="step-number">4</div>
+                <h3>Track & Support</h3>
+                <p>View engagement metrics and support your community</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <h2>Trusted by Organizations Worldwide</h2>
+            <p>Hear from leaders who've used Tea With God</p>
+        </div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"Our women's ministry has been transformed. The combination of Scripture and psychology gave our members tools they could actually use in their daily struggles."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">PS</div>
+                    <div>
+                        <div class="testimonial-name">Pastor Sarah M.</div>
+                        <div class="testimonial-role">Grace Community Church, Cape Town</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"For our shelter residents, this program offers structure and hope. The offline functionality means they can use it even without stable internet access."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">TN</div>
+                    <div>
+                        <div class="testimonial-name">Thandiwe N.</div>
+                        <div class="testimonial-role">Director, Hope House Women's Shelter</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-quote">"I recommend it to clients between sessions. The psychology modules reinforce what we work on in therapy, and they love the privacy-first approach."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">DR</div>
+                    <div>
+                        <div class="testimonial-name">Dr. Rachel M.</div>
+                        <div class="testimonial-role">Christian Counseling Practice, Johannesburg</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="section-header">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about our B2B plans</p>
+        </div>
+        <div class="faq-grid">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What data can our organization see about members?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Privacy is paramount. Your organization dashboard shows aggregate metrics only: total active users, average progress day, phase completion rates, and general engagement. You will never see individual journal entries, personal notes, or specific emotional data.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can we customize the app with our branding?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Our Ministry Plus and Enterprise tiers include white-label options. You can add your organization's logo to the welcome screen, customize the primary color scheme, and add a personalized welcome message for your members.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do access codes work?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>When you purchase a plan, you receive unique access codes to distribute to your members. Each member downloads the Tea With God app and enters their code to unlock their access level. Codes can only be used once and are linked to the member's device.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What happens if we need more codes?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You can purchase additional codes at any time at the same per-user rate. Enterprise customers can also upgrade to unlimited codes. Contact us to add more codes to your existing plan.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is there a free trial for organizations?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! We offer a 14-day pilot program with 10 free Premium access codes for qualifying organizations. This allows your leadership team to experience the journey firsthand before committing to a full rollout.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Why is pricing different in different countries?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We believe healing tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means a church in Nigeria pays what's affordable in Nigeria, not a US-dollar equivalent that might be out of reach.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Transform Your Ministry?</h2>
+        <p>Join hundreds of churches bringing evidence-based healing to their communities.</p>
+        <a href="#" class="btn" onclick="openContactModal()"><i class="fas fa-paper-plane"></i> Contact Us Today</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Tea With God. All rights reserved. | <a href="../index.html">Individual Access</a> | <a href="../admin">Admin Login</a></p>
+    </footer>
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Get Started</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>Organization Name *</label>
+                        <input type="text" name="orgName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Organization Type *</label>
+                        <select name="orgType" required>
+                            <option value="">Select type...</option>
+                            <option value="church">Church / Women's Ministry</option>
+                            <option value="counseling">Counseling / Therapy Center</option>
+                            <option value="shelter">Women's Shelter / Safe House</option>
+                            <option value="ngo">NGO / Non-Profit</option>
+                            <option value="retreat">Retreat / Healing Center</option>
+                            <option value="healthcare">Hospital / Healthcare</option>
+                            <option value="education">School / College / University</option>
+                            <option value="corporate">Corporate / Workplace Wellness</option>
+                            <option value="correctional">Correctional / Rehabilitation</option>
+                            <option value="support">Support Group / Recovery Program</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Name *</label>
+                        <input type="text" name="contactName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Country *</label>
+                        <select name="country" required>
+                            <option value="">Select country...</option>
+                            <option value="za">South Africa</option>
+                            <option value="us">United States</option>
+                            <option value="uk">United Kingdom</option>
+                            <option value="ng">Nigeria</option>
+                            <option value="ke">Kenya</option>
+                            <option value="au">Australia</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Estimated Number of Users</label>
+                        <select name="userCount">
+                            <option value="10-50">10-50</option>
+                            <option value="50-100">50-100</option>
+                            <option value="100-200">100-200</option>
+                            <option value="200+">200+</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" rows="3" placeholder="Tell us about your organization and goals..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" form="contactForm" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Send Inquiry
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Regional Pricing Data
+        // Pricing is based on purchasing power parity (PPP), not direct currency conversion
+        // Goal: Make it affordable in each market while being sustainable
+        const REGIONAL_PRICING = {
+            za: {
+                currency: 'R',
+                currencyName: 'ZAR',
+                flag: 'za',
+                starter: { price: 4950, codes: 50, perUser: 99 },
+                plus: { price: 9950, codes: 100, perUser: 99.5 },
+                enterprise: { price: 24950, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'Pricing for South African organizations'
+            },
+            us: {
+                currency: '$',
+                currencyName: 'USD',
+                flag: 'us',
+                starter: { price: 499, codes: 50, perUser: 9.98 },
+                plus: { price: 999, codes: 100, perUser: 9.99 },
+                enterprise: { price: 2499, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'US pricing based on local market rates'
+            },
+            uk: {
+                currency: '£',
+                currencyName: 'GBP',
+                flag: 'gb',
+                starter: { price: 399, codes: 50, perUser: 7.98 },
+                plus: { price: 799, codes: 100, perUser: 7.99 },
+                enterprise: { price: 1999, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'UK pricing based on local market rates'
+            },
+            ng: {
+                currency: '₦',
+                currencyName: 'NGN',
+                flag: 'ng',
+                starter: { price: 149000, codes: 50, perUser: 2980 },
+                plus: { price: 299000, codes: 100, perUser: 2990 },
+                enterprise: { price: 749000, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'Nigerian pricing adjusted for local purchasing power'
+            },
+            ke: {
+                currency: 'KSh',
+                currencyName: 'KES',
+                flag: 'ke',
+                starter: { price: 29900, codes: 50, perUser: 598 },
+                plus: { price: 59900, codes: 100, perUser: 599 },
+                enterprise: { price: 149900, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'Kenyan pricing adjusted for local purchasing power'
+            },
+            au: {
+                currency: 'A$',
+                currencyName: 'AUD',
+                flag: 'au',
+                starter: { price: 749, codes: 50, perUser: 14.98 },
+                plus: { price: 1499, codes: 100, perUser: 14.99 },
+                enterprise: { price: 3749, codes: 'Unlimited', perUser: 'Custom' },
+                note: 'Australian pricing based on local market rates'
+            }
+        };
+
+        let currentRegion = 'za';
+
+        // Initialize pricing
+        function renderPricing() {
+            const pricing = REGIONAL_PRICING[currentRegion];
+            const grid = document.getElementById('pricingGrid');
+
+            grid.innerHTML = `
+                <!-- Starter -->
+                <div class="pricing-card">
+                    <div class="pricing-tier">Starter</div>
+                    <h3 class="pricing-name">Starter</h3>
+                    <p class="pricing-desc">Perfect for small organizations and groups</p>
+                    <div class="pricing-price">
+                        <span class="currency">${pricing.currency}</span>${pricing.starter.price.toLocaleString()}
+                        <span class="period">/year</span>
+                    </div>
+                    <p class="pricing-per-user">${pricing.currency}${pricing.starter.perUser} per user (${pricing.starter.codes} codes)</p>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to ${pricing.starter.codes} access codes</li>
+                        <li><i class="fas fa-check"></i> Full Premium app access for all users</li>
+                        <li><i class="fas fa-check"></i> Group progress dashboard</li>
+                        <li><i class="fas fa-check"></i> Monthly usage reports</li>
+                        <li><i class="fas fa-check"></i> Email support</li>
+                        <li><i class="fas fa-check"></i> Leader's guide (PDF)</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="selectPlan('starter')">Get Started</button>
+                </div>
+
+                <!-- Growth (Featured) -->
+                <div class="pricing-card featured">
+                    <div class="pricing-tier">Most Popular</div>
+                    <h3 class="pricing-name">Growth</h3>
+                    <p class="pricing-desc">For growing organizations with more reach</p>
+                    <div class="pricing-price">
+                        <span class="currency">${pricing.currency}</span>${pricing.plus.price.toLocaleString()}
+                        <span class="period">/year</span>
+                    </div>
+                    <p class="pricing-per-user">${pricing.currency}${pricing.plus.perUser} per user (${pricing.plus.codes} codes)</p>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Up to ${pricing.plus.codes} access codes</li>
+                        <li><i class="fas fa-check"></i> Everything in Starter</li>
+                        <li><i class="fas fa-check"></i> Custom welcome message</li>
+                        <li><i class="fas fa-check"></i> White-label option (remove TWG branding)</li>
+                        <li><i class="fas fa-check"></i> Priority support</li>
+                        <li><i class="fas fa-check"></i> Quarterly strategy call</li>
+                    </ul>
+                    <button class="btn btn-primary" onclick="selectPlan('plus')">Get Started</button>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="pricing-card">
+                    <div class="pricing-tier">Enterprise</div>
+                    <h3 class="pricing-name">Enterprise</h3>
+                    <p class="pricing-desc">For large organizations and networks</p>
+                    <div class="pricing-price">
+                        <span class="currency">${pricing.currency}</span>${pricing.enterprise.price.toLocaleString()}
+                        <span class="period">/year</span>
+                    </div>
+                    <p class="pricing-per-user">Unlimited codes</p>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> Unlimited access codes</li>
+                        <li><i class="fas fa-check"></i> Everything in Plus</li>
+                        <li><i class="fas fa-check"></i> Full white-label branding</li>
+                        <li><i class="fas fa-check"></i> API integration</li>
+                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
+                        <li><i class="fas fa-check"></i> Custom content modules</li>
+                        <li><i class="fas fa-check"></i> SSO/SAML integration</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="selectPlan('enterprise')">Contact Sales</button>
+                </div>
+            `;
+
+            document.getElementById('pricingNote').innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                ${pricing.note}. All plans include the same features regardless of region.
+            `;
+        }
+
+        // Region selector
+        document.querySelectorAll('.region-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentRegion = btn.dataset.region;
+                renderPricing();
+            });
+        });
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const item = question.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        // Modal functions
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('contactModal').classList.remove('active');
+        }
+
+        function selectPlan(plan) {
+            openContactModal();
+            // Could pre-fill plan selection here
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            console.log('Form submission:', data);
+
+            // In production, send to backend API
+            alert('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
+            closeModal();
+            e.target.reset();
+        }
+
+        // Close modal on overlay click
+        document.getElementById('contactModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('contactModal')) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        renderPricing();
+    </script>
+</body>
+</html>

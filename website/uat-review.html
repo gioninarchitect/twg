@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tea With God - UAT Review Dashboard</title>
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: #1A1A1A;
+      --gold: #D4AF37;
+      --gold-light: #E8C547;
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --success: #4CAF50;
+      --warning: #FF9800;
+      --error: #F44336;
+      --border: rgba(255, 255, 255, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #252525 100%);
+      border-bottom: 1px solid var(--gold);
+      padding: 24px 48px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 48px;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .stat-card .label {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-top: 4px;
+    }
+
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: rgba(212, 175, 55, 0.1);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .section-header h2 {
+      font-size: 1.125rem;
+      color: var(--gold);
+    }
+
+    .section-header .badge {
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-critical { background: var(--error); color: white; }
+    .badge-warning { background: var(--warning); color: black; }
+    .badge-success { background: var(--success); color: white; }
+
+    .section-content {
+      padding: 24px;
+    }
+
+    .test-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .test-item:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .test-item.passed {
+      border-color: var(--success);
+      background: rgba(76, 175, 80, 0.1);
+    }
+
+    .test-item.failed {
+      border-color: var(--error);
+      background: rgba(244, 67, 54, 0.1);
+    }
+
+    .checkbox {
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--gold);
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .checkbox.checked {
+      background: var(--success);
+      border-color: var(--success);
+    }
+
+    .checkbox.checked::after {
+      content: '✓';
+      color: white;
+      font-weight: bold;
+    }
+
+    .test-content {
+      flex: 1;
+    }
+
+    .test-content h3 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .test-content p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+
+    .test-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .test-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .test-link.secondary {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .issue-list {
+      list-style: none;
+    }
+
+    .issue-list li {
+      padding: 12px 16px;
+      border-left: 3px solid var(--error);
+      background: rgba(244, 67, 54, 0.1);
+      margin-bottom: 8px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .issue-list li.warning {
+      border-left-color: var(--warning);
+      background: rgba(255, 152, 0, 0.1);
+    }
+
+    .issue-list li strong {
+      color: var(--text-primary);
+    }
+
+    .issue-list li span {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .api-table th,
+    .api-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .api-table th {
+      color: var(--gold);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .api-table td {
+      font-size: 0.875rem;
+    }
+
+    .api-table code {
+      background: rgba(212, 175, 55, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      color: var(--gold-light);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .status-dot.green { background: var(--success); }
+    .status-dot.yellow { background: var(--warning); }
+    .status-dot.red { background: var(--error); }
+
+    .notes-area {
+      width: 100%;
+      min-height: 100px;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      color: var(--text-primary);
+      font-family: inherit;
+      resize: vertical;
+      margin-top: 12px;
+    }
+
+    .notes-area:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--gold);
+      padding: 16px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--bg-dark);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-right: 24px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+
+    .btn-primary {
+      padding: 12px 32px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    }
+
+    .mobile-note {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px dashed var(--gold);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .mobile-note strong {
+      color: var(--gold);
+    }
+
+    footer {
+      padding-bottom: 100px;
+    }
+
+    @media (max-width: 768px) {
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .container {
+        padding: 16px;
+      }
+      .header {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>Tea With God - UAT Review Dashboard</h1>
+    <p>Owner Testing Checklist | Server: 154.66.196.12 | Last Updated: <span id="timestamp"></span></p>
+  </header>
+
+  <div class="container">
+    <!-- Stats Overview -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="number" id="total-tests">32</div>
+        <div class="label">Total Tests</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="passed-tests">0</div>
+        <div class="label">Passed</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="critical-issues">4</div>
+        <div class="label">Critical Issues</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" id="completion">0%</div>
+        <div class="label">Completion</div>
+      </div>
+    </div>
+
+    <!-- Critical Issues Section -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Critical Issues Found</h2>
+        <span class="badge badge-critical">Must Fix Before Launch</span>
+      </div>
+      <div class="section-content">
+        <ul class="issue-list">
+          <li>
+            <strong>Admin API Unprotected</strong><br>
+            <span>Location: backend/src/server.js | Admin endpoints have no authentication middleware</span>
+          </li>
+          <li>
+            <strong>Admin Dashboard Port Mismatch</strong><br>
+            <span>Location: admin/index.html line 945 | Frontend expects port 3001, backend runs on 3000</span>
+          </li>
+          <li>
+            <strong>Crisis Hotlines US-Only</strong><br>
+            <span>Location: CrisisModal.tsx lines 28-43 | Only 988 and 741741 configured - need SA numbers</span>
+          </li>
+          <li class="warning">
+            <strong>Bank Details Hardcoded</strong><br>
+            <span>Location: checkout.html lines 895-903 | FNB account number hardcoded in HTML</span>
+          </li>
+          <li class="warning">
+            <strong>Plan Pricing Duplicated</strong><br>
+            <span>Location: checkout.html + server.js | Pricing defined in two places - risk of mismatch</span>
+          </li>
+          <li class="warning">
+            <strong>WhatsApp Number Hardcoded</strong><br>
+            <span>Location: checkout.html line 1232 | Contact number embedded in HTML</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Website Testing -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Website Testing</h2>
+        <span class="badge badge-warning">6 Tests</span>
+      </div>
+      <div class="section-content">
+        <div class="test-item" data-test="web-1">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Homepage Loads Correctly</h3>
+            <p>Verify hero, navigation, all sections render. Check logo displays teacup.png image.</p>
+            <a href="index.html" class="test-link" target="_blank">Open Homepage →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="web-2">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Checkout Flow - Order Creation</h3>
+            <p>Fill form, select plan, verify order created. Check API call returns order reference.</p>
+            <a href="checkout.html" class="test-link" target="_blank">Test Checkout →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="web-3">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Checkout Flow - Proof Upload</h3>
+            <p>Upload payment proof image. Verify file uploads to server/Supabase storage.</p>
+            <a href="checkout.html" class="test-link" target="_blank">Test Upload →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="web-4">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>B2B Portal</h3>
+            <p>Verify organization pricing, FAQ accordion, contact forms work.</p>
+            <a href="b2b/index.html" class="test-link" target="_blank">Open B2B Portal →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="web-5">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Admin Dashboard - Login</h3>
+            <p>Test admin login with credentials. Verify orders list loads.</p>
+            <a href="admin/index.html" class="test-link" target="_blank">Open Admin →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="web-6">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>All Navigation Links</h3>
+            <p>Click every nav link on homepage. Verify no 404s, all anchors scroll correctly.</p>
+            <a href="index.html" class="test-link" target="_blank">Check Links →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Endpoints Testing -->
+    <div class="section">
+      <div class="section-header">
+        <h2>API Endpoints</h2>
+        <span class="badge badge-warning">21 Endpoints</span>
+      </div>
+      <div class="section-content">
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Method</th>
+              <th>Endpoint</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>GET</td>
+              <td><code>/health</code></td>
+              <td>Server health check</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>GET</td>
+              <td><code>/api/v1/content/phases</code></td>
+              <td>Get 4 healing phases</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>GET</td>
+              <td><code>/api/v1/content/days</code></td>
+              <td>Get all 40 days</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>GET</td>
+              <td><code>/api/v1/content/days/:dayNumber</code></td>
+              <td>Get specific day content</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>POST</td>
+              <td><code>/api/v1/auth/register</code></td>
+              <td>Register new user</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>POST</td>
+              <td><code>/api/v1/auth/login</code></td>
+              <td>Login user</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>GET</td>
+              <td><code>/api/v1/auth/me</code></td>
+              <td>Get current user</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>POST</td>
+              <td><code>/api/v1/auth/redeem-code</code></td>
+              <td>Redeem access code</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>GET</td>
+              <td><code>/api/v1/journey/progress</code></td>
+              <td>Get user progress</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>GET</td>
+              <td><code>/api/v1/journey/days/:dayNumber</code></td>
+              <td>Get day completion</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>PATCH</td>
+              <td><code>/api/v1/journey/days/:dayNumber</code></td>
+              <td>Update day progress</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>POST</td>
+              <td><code>/api/v1/journey/days/:dayNumber/complete</code></td>
+              <td>Mark day complete</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>GET</td>
+              <td><code>/api/v1/journal/entries</code></td>
+              <td>Get journal entries</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot yellow"></span>Auth</td>
+              <td>POST</td>
+              <td><code>/api/v1/journal/entries</code></td>
+              <td>Save journal entry</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>POST</td>
+              <td><code>/api/v1/crisis/log</code></td>
+              <td>Log crisis access</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>POST</td>
+              <td><code>/api/v1/orders</code></td>
+              <td>Create order</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>GET</td>
+              <td><code>/api/v1/orders/:orderRef</code></td>
+              <td>Get order status</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot green"></span>Public</td>
+              <td>POST</td>
+              <td><code>/api/v1/orders/:orderRef/proof</code></td>
+              <td>Upload payment proof</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot red"></span>UNPROTECTED</td>
+              <td>POST</td>
+              <td><code>/api/v1/admin/generate-codes</code></td>
+              <td>Generate access codes</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot red"></span>UNPROTECTED</td>
+              <td>GET</td>
+              <td><code>/api/v1/admin/orders</code></td>
+              <td>Get pending orders</td>
+            </tr>
+            <tr>
+              <td><span class="status-dot red"></span>UNPROTECTED</td>
+              <td>POST</td>
+              <td><code>/api/v1/admin/orders/:orderRef/verify</code></td>
+              <td>Verify payment</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="test-item" data-test="api-1" style="margin-top: 24px;">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Test Health Endpoint</h3>
+            <p>Verify server responds with status and day count.</p>
+            <a href="/health" class="test-link" target="_blank">Check /health →</a>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="api-2">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Test Content API</h3>
+            <p>Verify all 40 days of content load from database.</p>
+            <a href="/api/v1/content/days" class="test-link" target="_blank">Check /api/v1/content/days →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile App Testing -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Mobile App Testing</h2>
+        <span class="badge badge-warning">12 Tests</span>
+      </div>
+      <div class="section-content">
+        <div class="mobile-note">
+          <strong>Note:</strong> Mobile app testing requires Expo Go on your device or iOS/Android simulator.
+          Run <code>npx expo start</code> from the mobile directory.
+        </div>
+
+        <div class="test-item" data-test="mobile-1">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Auth Screen - Guest Login</h3>
+            <p>Tap "Continue as Guest". Verify dashboard loads with first 3 days accessible.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-2">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Auth Screen - Email Registration</h3>
+            <p>Register with email. Verify account created, dashboard loads.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-3">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Dashboard - Timeline Accordion</h3>
+            <p>Expand/collapse each phase. Verify all 40 days visible when expanded.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-4">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Dashboard - Tea Cup Logo</h3>
+            <p>Verify teacup.png image displays (not CSS-generated icon).</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-5">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Day Module - Content Loads</h3>
+            <p>Open Day 1. Verify devotional, scripture, prayer, journal prompt all load from database.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-6">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Day Module - Journal Entry</h3>
+            <p>Write journal entry. Verify saves to database, persists after app restart.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-7">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Day Module - Complete Day</h3>
+            <p>Tap "Complete Day". Verify progress saved, next day unlocks.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-8">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Crisis Modal - Lifebuoy Button</h3>
+            <p>Tap pulsing heart button. Verify crisis modal opens with prayers and hotlines.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-9">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Brain Games Hub</h3>
+            <p>Open Brain Games. Verify all 6 games are listed and accessible.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-10">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Brain Game - Breathe With God</h3>
+            <p>Complete a breathing session. Verify animation works, session logs.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-11">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Access Code Redemption</h3>
+            <p>Tap Unlock button, enter valid code. Verify full access granted.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="mobile-12">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Settings Modal</h3>
+            <p>Open settings. Verify all options functional.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Database Verification -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Database Verification</h2>
+        <span class="badge badge-warning">6 Tests</span>
+      </div>
+      <div class="section-content">
+        <div class="test-item" data-test="db-1">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>40 Days Content Loaded</h3>
+            <p>Verify journey_days table has 40 rows with complete content.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="db-2">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>4 Phases Configured</h3>
+            <p>Verify content_phases table: Valley, Waiting, Rising, Becoming.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="db-3">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>User Registration Persists</h3>
+            <p>Register user, restart server, verify user still exists.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="db-4">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Journal Entries Encrypted</h3>
+            <p>Write entry, check database - content should be encrypted blob.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="db-5">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Access Codes Generate</h3>
+            <p>Use admin endpoint to generate codes, verify stored in database.</p>
+          </div>
+        </div>
+
+        <div class="test-item" data-test="db-6">
+          <div class="checkbox" onclick="toggleTest(this)"></div>
+          <div class="test-content">
+            <h3>Orders Persist</h3>
+            <p>Create order via checkout, verify saved to database/Supabase.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Owner Notes -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Owner Notes</h2>
+      </div>
+      <div class="section-content">
+        <p style="color: var(--text-secondary); margin-bottom: 12px;">Add any observations, bugs found, or feedback during testing:</p>
+        <textarea class="notes-area" id="owner-notes" placeholder="Type your notes here..."></textarea>
+        <button class="btn-primary" style="margin-top: 16px;" onclick="saveNotes()">Save Notes</button>
+      </div>
+    </div>
+
+    <footer></footer>
+  </div>
+
+  <!-- Bottom Action Bar -->
+  <div class="action-bar">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+    </div>
+    <span id="progress-text" style="margin-right: 24px; color: var(--text-secondary);">0 of 32 complete</span>
+    <button class="btn-primary" onclick="exportReport()">Export Report</button>
+  </div>
+
+  <script>
+    // Initialize timestamp
+    document.getElementById('timestamp').textContent = new Date().toLocaleString();
+
+    // Load saved state
+    let testState = JSON.parse(localStorage.getItem('uat-tests') || '{}');
+    let notes = localStorage.getItem('uat-notes') || '';
+    document.getElementById('owner-notes').value = notes;
+
+    // Restore checkbox states
+    document.querySelectorAll('.test-item').forEach(item => {
+      const testId = item.dataset.test;
+      if (testState[testId]) {
+        item.querySelector('.checkbox').classList.add('checked');
+        item.classList.add('passed');
+      }
+    });
+
+    updateStats();
+
+    function toggleTest(checkbox) {
+      checkbox.classList.toggle('checked');
+      const testItem = checkbox.closest('.test-item');
+      testItem.classList.toggle('passed');
+
+      const testId = testItem.dataset.test;
+      testState[testId] = checkbox.classList.contains('checked');
+      localStorage.setItem('uat-tests', JSON.stringify(testState));
+
+      updateStats();
+    }
+
+    function updateStats() {
+      const total = document.querySelectorAll('.test-item').length;
+      const passed = document.querySelectorAll('.checkbox.checked').length;
+      const percentage = Math.round((passed / total) * 100);
+
+      document.getElementById('passed-tests').textContent = passed;
+      document.getElementById('completion').textContent = percentage + '%';
+      document.getElementById('progress-fill').style.width = percentage + '%';
+      document.getElementById('progress-text').textContent = `${passed} of ${total} complete`;
+    }
+
+    function saveNotes() {
+      const notes = document.getElementById('owner-notes').value;
+      localStorage.setItem('uat-notes', notes);
+      alert('Notes saved!');
+    }
+
+    function exportReport() {
+      const total = document.querySelectorAll('.test-item').length;
+      const passed = document.querySelectorAll('.checkbox.checked').length;
+      const notes = document.getElementById('owner-notes').value;
+
+      let report = `TEA WITH GOD - UAT REPORT\n`;
+      report += `Generated: ${new Date().toLocaleString()}\n`;
+      report += `Server: 154.66.196.12\n`;
+      report += `========================\n\n`;
+      report += `SUMMARY: ${passed}/${total} tests passed (${Math.round((passed/total)*100)}%)\n\n`;
+
+      report += `PASSED TESTS:\n`;
+      document.querySelectorAll('.test-item.passed').forEach(item => {
+        report += `✓ ${item.querySelector('h3').textContent}\n`;
+      });
+
+      report += `\nFAILED/PENDING TESTS:\n`;
+      document.querySelectorAll('.test-item:not(.passed)').forEach(item => {
+        report += `✗ ${item.querySelector('h3').textContent}\n`;
+      });
+
+      report += `\nOWNER NOTES:\n${notes || '(none)'}\n`;
+
+      // Download as text file
+      const blob = new Blob([report], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `uat-report-${new Date().toISOString().split('T')[0]}.txt`;
+      a.click();
+    }
+  </script>
+</body>
+</html>

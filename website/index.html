@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tea With God - A 40-Day Healing Companion</title>
+  <meta name="description" content="Begin your 40-day healing journey. A gentle companion app for the beautifully broken.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Modern Premium Design System */
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-glass: rgba(255, 255, 255, 0.05);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --text-muted: rgba(250, 250, 250, 0.4);
+      --gold: #D4AF37;
+      --gold-light: #F4E4BC;
+      --gold-glow: rgba(212, 175, 55, 0.3);
+      --sage: #8FBC8F;
+      --warm: #E8C39E;
+      --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
+      --gradient-warm: linear-gradient(135deg, #1a1512 0%, #0D0D0D 100%);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animated Background */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: var(--bg-dark);
+    }
+
+    .bg-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(143, 188, 143, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(232, 195, 158, 0.03) 0%, transparent 70%);
+      animation: bgMove 30s ease-in-out infinite;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-5%, 5%) rotate(1deg); }
+      66% { transform: translate(5%, -5%) rotate(-1deg); }
+    }
+
+    /* Grain Overlay */
+    .grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.5s var(--ease-out);
+    }
+
+    nav.scrolled {
+      background: rgba(13, 13, 13, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 48px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s var(--ease-out);
+    }
+
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      padding: 12px 28px;
+      background: var(--gradient-gold);
+      color: var(--bg-dark) !important;
+      border-radius: 100px;
+      font-weight: 600;
+      transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px var(--gold-glow);
+    }
+
+    .nav-cta::after { display: none; }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 48px;
+      position: relative;
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 900px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 100px;
+      font-size: 0.875rem;
+      color: var(--gold);
+      margin-bottom: 32px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+      background: linear-gradient(180deg, var(--text-primary) 0%, var(--text-secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero h1 span {
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 36px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 100px;
+      text-decoration: none;
+      transition: all 0.4s var(--ease-spring);
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: var(--bg-dark);
+      box-shadow: 0 4px 30px var(--gold-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 50px var(--gold-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-glass);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.3s;
+    }
+
+    .btn:hover svg { transform: translateX(4px); }
+
+    /* Floating Visual */
+    .hero-visual {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .float-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--gold);
+      top: 10%;
+      right: 10%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--sage);
+      bottom: 20%;
+      left: 5%;
+      animation-delay: -5s;
+    }
+
+    .orb-3 {
+      width: 200px;
+      height: 200px;
+      background: var(--warm);
+      top: 60%;
+      right: 20%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(30px, -30px) scale(1.05); }
+      50% { transform: translate(-20px, 20px) scale(0.95); }
+      75% { transform: translate(20px, 30px) scale(1.02); }
+    }
+
+    /* Scroll Indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 48px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.5); opacity: 0.5; }
+    }
+
+    /* Section Styles */
+    section {
+      padding: 160px 48px;
+      position: relative;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    .section-desc {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    /* Journey Section */
+    .journey {
+      background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.02) 50%, transparent 100%);
+    }
+
+    .journey-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .journey-header .section-desc {
+      margin: 0 auto;
+    }
+
+    .journey-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .journey-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 40px 32px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s var(--ease-out);
+    }
+
+    .journey-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .journey-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-8px);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .journey-card:hover::before { opacity: 1; }
+
+    .card-number {
+      font-family: var(--font-display);
+      font-size: 4rem;
+      font-weight: 400;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.3) 0%, transparent 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .card-days {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .journey-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    .journey-card p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Features Section */
+    .features {
+      background: var(--bg-dark);
+    }
+
+    .features-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .features-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: end;
+      margin-bottom: 80px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 40px;
+      transition: all 0.5s var(--ease-out);
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .feature-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--gold);
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      background: linear-gradient(180deg, transparent 0%, rgba(143, 188, 143, 0.02) 50%, transparent 100%);
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .testimonial-content {
+      flex: 1;
+      font-size: 1.0625rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--sage), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--bg-dark);
+    }
+
+    .author-name {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .author-meta {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* CTA Section */
+    .cta {
+      text-align: center;
+    }
+
+    .cta-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.02) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 32px;
+      padding: 80px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, var(--gold-glow) 0%, transparent 50%);
+      opacity: 0.3;
+      animation: ctaGlow 10s ease-in-out infinite;
+    }
+
+    @keyframes ctaGlow {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-price {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 16px;
+    }
+
+    .cta-price .currency {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .cta-price .amount {
+      font-family: var(--font-display);
+      font-size: 5rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .cta-price .period {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-left: 8px;
+    }
+
+    .cta-note {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+
+    .cta-features {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .cta-features span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    .cta-features svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--sage);
+    }
+
+    .cta .btn-primary {
+      padding: 20px 48px;
+      font-size: 1.125rem;
+    }
+
+    .cta-guarantee {
+      margin-top: 24px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .cta-guarantee svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--sage);
+    }
+
+    /* Pricing Section */
+    .pricing {
+      background: var(--bg-dark);
+    }
+
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .pricing-header .section-desc {
+      margin: 0 auto;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.5s var(--ease-out);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .pricing-card.featured {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-color: rgba(212, 175, 55, 0.3);
+    }
+
+    .pricing-card.premium {
+      background: linear-gradient(135deg, rgba(143, 188, 143, 0.1) 0%, rgba(143, 188, 143, 0.02) 100%);
+      border-color: rgba(143, 188, 143, 0.2);
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-gold);
+      color: var(--bg-dark);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+
+    .pricing-tier {
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .pricing-card.featured .pricing-tier {
+      color: var(--gold);
+    }
+
+    .pricing-card.premium .pricing-tier {
+      color: var(--sage);
+    }
+
+    .pricing-price {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      margin-bottom: 8px;
+    }
+
+    .pricing-price .currency {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .pricing-price .amount {
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .pricing-desc {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .pricing-features {
+      list-style: none;
+      flex: 1;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .pricing-features li:last-child {
+      border-bottom: none;
+    }
+
+    .pricing-features li svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .pricing-features li.included svg {
+      stroke: var(--sage);
+    }
+
+    .pricing-features li.excluded {
+      color: var(--text-muted);
+    }
+
+    .pricing-features li.excluded svg {
+      stroke: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--sage) 0%, #6B9E6B 100%);
+      color: white;
+      box-shadow: 0 4px 20px rgba(143, 188, 143, 0.3);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(143, 188, 143, 0.4);
+    }
+
+    .pricing-guarantee {
+      text-align: center;
+      margin-top: 48px;
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .pricing-guarantee svg {
+      width: 18px;
+      height: 18px;
+      stroke: var(--sage);
+    }
+
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 600px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Music Section */
+    .music {
+      background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.03) 50%, transparent 100%);
+    }
+
+    .music-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .music-features {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .music-feature {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .music-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .music-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+    }
+
+    .music-feature h4 {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      margin-bottom: 4px;
+    }
+
+    .music-feature p {
+      font-size: 0.9375rem;
+      color: var(--text-secondary);
+    }
+
+    .music-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .music-player {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 40px;
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .player-art {
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 32px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .art-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid var(--border-subtle);
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    .art-circle:nth-child(1) {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      animation-delay: 0s;
+    }
+
+    .art-circle:nth-child(2) {
+      width: 140px;
+      height: 140px;
+      animation-delay: 0.5s;
+    }
+
+    .art-circle:nth-child(3) {
+      width: 200px;
+      height: 200px;
+      animation-delay: 1s;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.7; }
+    }
+
+    .player-info {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .now-playing {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .player-info h4 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin: 8px 0 4px;
+    }
+
+    .player-info p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .player-wave {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      height: 32px;
+      align-items: flex-end;
+    }
+
+    .player-wave span {
+      width: 4px;
+      background: var(--gold);
+      border-radius: 2px;
+      animation: wave 1s ease-in-out infinite;
+    }
+
+    .player-wave span:nth-child(1) { height: 12px; animation-delay: 0s; }
+    .player-wave span:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+    .player-wave span:nth-child(3) { height: 28px; animation-delay: 0.2s; }
+    .player-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+    .player-wave span:nth-child(5) { height: 24px; animation-delay: 0.4s; }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.5); }
+    }
+
+    @media (max-width: 900px) {
+      .music-container {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      .music-visual { order: -1; }
+    }
+
+    /* Footer */
+    footer {
+      padding: 80px 48px 40px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      margin-top: 16px;
+      max-width: 300px;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 80px;
+    }
+
+    .footer-column h4 {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 8px 0;
+      transition: color 0.3s;
+    }
+
+    .footer-column a:hover { color: var(--text-primary); }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .journey-grid { grid-template-columns: repeat(2, 1fr); }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* Mobile Menu */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1002;
+      position: relative;
+    }
+
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(13, 13, 13, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 1000;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s var(--ease-out);
+    }
+
+    .mobile-menu.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-size: 2rem;
+      color: var(--text-primary);
+      cursor: pointer;
+      padding: 8px;
+      line-height: 1;
+    }
+
+    .mobile-menu a {
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 1.5rem;
+      font-weight: 500;
+      padding: 12px 24px;
+      transition: color 0.3s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--gold);
+    }
+
+    .mobile-menu .nav-cta {
+      margin-top: 16px;
+      padding: 16px 40px;
+      background: var(--gradient-gold);
+      color: var(--bg-dark) !important;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      section { padding: 100px 24px; }
+      .hero { padding: 100px 24px; }
+      .journey-grid,
+      .features-grid,
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .features-header { grid-template-columns: 1fr; gap: 40px; }
+      .cta-card { padding: 48px 24px; }
+      .footer-content { flex-direction: column; gap: 48px; }
+      .footer-links { flex-direction: column; gap: 32px; }
+    }
+
+    /* Animations */
+    [data-animate] {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s var(--ease-out);
+    }
+
+    [data-animate].visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+  <div class="grain"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="/" class="logo">
+      <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
+      <span>Tea With God</span>
+    </a>
+    <div class="nav-links">
+      <a href="#journey">Journey</a>
+      <a href="#features">Features</a>
+      <a href="#music">Music</a>
+      <a href="#download">Download</a>
+      <a href="#pricing">Pricing</a>
+      <a href="b2b/">For Organizations</a>
+      <a href="checkout.html" class="nav-cta">Begin Now</a>
+    </div>
+    <div class="hamburger" onclick="toggleMobileMenu()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" onclick="closeMobileMenu()">
+    <div class="mobile-menu-close" onclick="closeMobileMenu(); event.stopPropagation();">✕</div>
+    <a href="#journey" onclick="closeMobileMenu()">Journey</a>
+    <a href="#features" onclick="closeMobileMenu()">Features</a>
+    <a href="#music" onclick="closeMobileMenu()">Music</a>
+    <a href="#download" onclick="closeMobileMenu()">Download</a>
+    <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
+    <a href="b2b/" onclick="closeMobileMenu()">For Organizations</a>
+    <a href="checkout.html" class="nav-cta" onclick="closeMobileMenu()">Begin Now</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-visual">
+      <div class="float-orb orb-1"></div>
+      <div class="float-orb orb-2"></div>
+      <div class="float-orb orb-3"></div>
+    </div>
+
+    <div class="hero-content" data-animate>
+      <div class="hero-badge">40-Day Healing Companion</div>
+      <h1>Tea With <span>God</span></h1>
+      <p class="hero-subtitle">A sacred space for the beautifully broken. No rush, no shame, just grace. Your healing journey begins with a single step.</p>
+      <div class="hero-actions">
+        <a href="checkout.html" class="btn btn-primary">
+          Start Your Journey
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#journey" class="btn btn-secondary">Explore the Journey</a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Journey Section -->
+  <section id="journey" class="journey">
+    <div class="journey-header" data-animate>
+      <span class="section-label">The Path</span>
+      <h2 class="section-title">40 Days of Gentle Transformation</h2>
+      <p class="section-desc">Like kintsugi - the Japanese art of repairing broken pottery with gold - your cracks become your most beautiful features.</p>
+    </div>
+
+    <div class="journey-grid">
+      <div class="journey-card" data-animate>
+        <div class="card-number">01</div>
+        <div class="card-days">Days 1-10</div>
+        <h3>Acknowledging</h3>
+        <p>Gently recognizing the broken pieces without judgment. Creating space to simply be present.</p>
+      </div>
+      <div class="journey-card" data-animate>
+        <div class="card-number">02</div>
+        <div class="card-days">Days 11-20</div>
+        <h3>Sitting With</h3>
+        <p>Learning to be present with your pain. Not fixing, just witnessing with compassion.</p>
+      </div>
+      <div class="journey-card" data-animate>
+        <div class="card-number">03</div>
+        <div class="card-days">Days 21-30</div>
+        <h3>Repairing</h3>
+        <p>Applying golden truths to the broken places. Transformation begins in earnest.</p>
+      </div>
+      <div class="journey-card" data-animate>
+        <div class="card-number">04</div>
+        <div class="card-days">Days 31-40</div>
+        <h3>Becoming</h3>
+        <p>Emerging whole. Your scars now shine with gold - beautiful, strong, restored.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="features">
+    <div class="features-container">
+      <div class="features-header" data-animate>
+        <div>
+          <span class="section-label">Features</span>
+          <h2 class="section-title">Everything You Need for Healing</h2>
+        </div>
+        <p class="section-desc">Thoughtfully designed tools to support your journey, without overwhelming you.</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+          </div>
+          <h3>Daily Devotionals</h3>
+          <p>40 beautifully written reflections that meet you exactly where you are.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
+          </div>
+          <h3>Private Journal</h3>
+          <p>A secure, encrypted space for your deepest thoughts and reflections.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <h3>Anti-Shame Progress</h3>
+          <p>Miss a day? No guilt. The app celebrates your return, not your absence.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+          </div>
+          <h3>Crisis Support</h3>
+          <p>One-tap access to comfort prayers when you need them most.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
+          </div>
+          <h3>Works Offline</h3>
+          <p>Your sanctuary travels with you. No internet required.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
+          <h3>Gentle Reminders</h3>
+          <p>Optional daily nudges. An invitation, never a demand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Music Section -->
+  <section id="music" class="music">
+    <div class="music-container">
+      <div class="music-content" data-animate>
+        <span class="section-label">Original Music</span>
+        <h2 class="section-title">Songs for Your Soul</h2>
+        <p class="section-desc">Original worship songs and instrumental pieces created specifically for this journey. Let the music carry you deeper into your healing.</p>
+
+        <div class="music-features">
+          <div class="music-feature">
+            <div class="music-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+            </div>
+            <div>
+              <h4>Original Tracks</h4>
+              <p>Exclusive songs written for each phase of healing</p>
+            </div>
+          </div>
+          <div class="music-feature">
+            <div class="music-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            </div>
+            <div>
+              <h4>Background Play</h4>
+              <p>Music continues while you journal and reflect</p>
+            </div>
+          </div>
+          <div class="music-feature">
+            <div class="music-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
+            </div>
+            <div>
+              <h4>Worship & Instrumental</h4>
+              <p>Peaceful sounds to accompany your prayers</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="music-visual" data-animate>
+        <div class="music-player">
+          <div class="player-art">
+            <div class="art-circle"></div>
+            <div class="art-circle"></div>
+            <div class="art-circle"></div>
+          </div>
+          <div class="player-info">
+            <span class="now-playing">Now Playing</span>
+            <h4>Be Still My Soul</h4>
+            <p>Healing Instrumentals</p>
+          </div>
+          <div class="player-wave">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="testimonials">
+    <div class="testimonials-header" data-animate>
+      <span class="section-label">Stories</span>
+      <h2 class="section-title">Voices from the Journey</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card" data-animate>
+        <p class="testimonial-content">"For the first time, I didn't feel shame for missing days. The app welcomed me back like a friend, not a judge. That changed everything."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">S</div>
+          <div>
+            <div class="author-name">Sarah M.</div>
+            <div class="author-meta">Completed Day 40</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-animate>
+        <p class="testimonial-content">"The crisis prayers got me through my darkest night. Knowing help was one tap away made all the difference."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">N</div>
+          <div>
+            <div class="author-name">Nomsa T.</div>
+            <div class="author-meta">Day 28</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-animate>
+        <p class="testimonial-content">"This is the only devotional app that understood healing isn't about perfection. It's about showing up, broken and all."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">L</div>
+          <div>
+            <div class="author-name">Lindiwe N.</div>
+            <div class="author-meta">Completed Day 40</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section id="download" class="download" style="padding: 120px 48px; text-align: center;">
+    <div data-animate>
+      <span class="section-label">Download</span>
+      <h2 class="section-title">Get the App</h2>
+      <p class="section-desc">Your healing journey in your pocket. Available on mobile.</p>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 24px; margin-top: 48px; flex-wrap: wrap;">
+      <!-- Android Download -->
+      <a href="downloads/TeaWithGod.apk" style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.03)'">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+          <path d="M5 16V8a7 7 0 0114 0v8M12 2v2M7 20h10a2 2 0 002-2v-2H5v2a2 2 0 002 2z"/>
+          <circle cx="8" cy="6" r="1" fill="var(--gold)"/>
+          <circle cx="16" cy="6" r="1" fill="var(--gold)"/>
+        </svg>
+        <div style="text-align: left;">
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Download for</div>
+          <div style="font-size: 1.25rem; color: var(--text-primary); font-weight: 600;">Android</div>
+        </div>
+      </a>
+
+      <!-- Web App (PWA) -->
+      <a href="app/" style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.03)'">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+        </svg>
+        <div style="text-align: left;">
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Open in Browser</div>
+          <div style="font-size: 1.25rem; color: var(--text-primary); font-weight: 600;">Web App</div>
+        </div>
+      </a>
+
+      <!-- iOS Coming Soon -->
+      <div style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; opacity: 0.6;">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5">
+          <path d="M12 2a8.5 8.5 0 00-8.5 8.5v5a8.5 8.5 0 0017 0v-5A8.5 8.5 0 0012 2z"/>
+          <path d="M12 2c1.5 0 3-1 3-2"/>
+        </svg>
+        <div style="text-align: left;">
+          <div style="font-size: 0.75rem; color: var(--text-secondary);">Coming Soon</div>
+          <div style="font-size: 1.25rem; color: var(--text-secondary); font-weight: 600;">iOS</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top: 32px; color: var(--text-secondary); font-size: 0.875rem;">
+      <strong>Android:</strong> Download APK and install (allow unknown sources).<br>
+      <strong>Web App:</strong> Works on any device - add to home screen for app-like experience.<br>
+      <strong style="color: var(--gold);">Review Code: REVIEW</strong> - Unlocks all 40 days for testing.
+    </p>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="pricing">
+    <div class="pricing-header" data-animate>
+      <span class="section-label">Pricing</span>
+      <h2 class="section-title">Choose Your Path</h2>
+      <p class="section-desc">Start free. Upgrade when you're ready. No pressure.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Free Tier -->
+      <div class="pricing-card" data-animate>
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price">
+          <span class="currency">R</span>
+          <span class="amount">0</span>
+        </div>
+        <p class="pricing-desc">Taste the journey</p>
+        <ul class="pricing-features">
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Days 1-3 devotionals</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Sample the experience</li>
+          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No journal access</li>
+          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No crisis support</li>
+        </ul>
+        <a href="#" class="btn btn-secondary btn-full">Download App</a>
+      </div>
+
+      <!-- Book Tier -->
+      <div class="pricing-card" data-animate>
+        <div class="pricing-tier">Book</div>
+        <div class="pricing-price">
+          <span class="currency">R</span>
+          <span class="amount">99</span>
+        </div>
+        <p class="pricing-desc">The complete devotional</p>
+        <ul class="pricing-features">
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 40 devotionals</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Read at your pace</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline access</li>
+          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No journal</li>
+        </ul>
+        <a href="checkout.html?plan=book" class="btn btn-secondary btn-full">Get Book Access</a>
+      </div>
+
+      <!-- Journey Tier -->
+      <div class="pricing-card featured" data-animate>
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-tier">Journey</div>
+        <div class="pricing-price">
+          <span class="currency">R</span>
+          <span class="amount">149</span>
+        </div>
+        <p class="pricing-desc">The interactive experience</p>
+        <ul class="pricing-features">
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 40 devotionals</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Private journal</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Progress tracking</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline access</li>
+        </ul>
+        <a href="checkout.html?plan=journey" class="btn btn-primary btn-full">Start Your Journey</a>
+      </div>
+
+      <!-- Premium Tier -->
+      <div class="pricing-card premium" data-animate>
+        <div class="pricing-tier">Premium</div>
+        <div class="pricing-price">
+          <span class="currency">R</span>
+          <span class="amount">249</span>
+        </div>
+        <p class="pricing-desc">The complete sanctuary</p>
+        <ul class="pricing-features">
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Everything in Journey</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Voice note recordings</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Crisis support prayers</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All future updates</li>
+        </ul>
+        <a href="checkout.html?plan=premium" class="btn btn-gold btn-full">Get Premium</a>
+      </div>
+    </div>
+
+    <p class="pricing-guarantee" data-animate>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Secure EFT payment. Lifetime access. No subscriptions.
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-brand">
+        <a href="/" class="logo">
+          <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
+          <span>Tea With God</span>
+        </a>
+        <p>A 40-day companion for the beautifully broken. Made with love in South Africa.</p>
+      </div>
+
+      <div class="footer-links">
+        <div class="footer-column">
+          <h4>Product</h4>
+          <a href="#journey">The Journey</a>
+          <a href="#features">Features</a>
+          <a href="checkout.html">Get Access</a>
+        </div>
+        <div class="footer-column">
+          <h4>Organizations</h4>
+          <a href="b2b/">Bulk Licensing</a>
+          <a href="b2b/#pricing">Pricing Tiers</a>
+          <a href="b2b/#faq">FAQ</a>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <a href="mailto:twg@cleva-ai.co.za">Contact</a>
+          <a href="mailto:twg@cleva-ai.co.za?subject=FAQ">FAQ</a>
+          <a href="mailto:twg@cleva-ai.co.za?subject=Privacy">Privacy</a>
+          <a href="admin/">Admin Login</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2025 Tea With God. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    function toggleMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+      document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+    }
+
+    function closeMobileMenu() {
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.getElementById('mobileMenu');
+      hamburger.classList.remove('active');
+      mobileMenu.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    // Scroll animation
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('[data-animate]').forEach(el => observer.observe(el));
+
+    // Nav scroll effect
+    window.addEventListener('scroll', () => {
+      document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 50);
+    });
+  </script>
+</body>
+</html>

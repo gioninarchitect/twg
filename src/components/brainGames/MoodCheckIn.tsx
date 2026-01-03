@@ -538,3 +538,468 @@ const styles = StyleSheet.create({
 });
 
 export default MoodCheckIn;
+
+// ============================================
+// SESSION MOOD CHECK-IN (Simpler, Therapeutic)
+// For pre/post session gentle check-ins
+// ============================================
+
+export type SessionMoodLevel = 'struggling' | 'okay' | 'lighter';
+export type SessionCheckInType = 'pre' | 'post';
+
+interface SessionMoodOption {
+  level: SessionMoodLevel;
+  icon: keyof typeof Ionicons.glyphMap;
+  label: string;
+  subtext: string;
+  color: string;
+}
+
+const PRE_SESSION_MOODS: SessionMoodOption[] = [
+  {
+    level: 'struggling',
+    icon: 'cloud-outline',
+    label: 'Heavy today',
+    subtext: 'And that\'s okay',
+    color: COLORS.dustyBlue,
+  },
+  {
+    level: 'okay',
+    icon: 'partly-sunny-outline',
+    label: 'Getting by',
+    subtext: 'One step at a time',
+    color: COLORS.warm,
+  },
+  {
+    level: 'lighter',
+    icon: 'sunny-outline',
+    label: 'Lighter',
+    subtext: 'Grateful for this moment',
+    color: COLORS.sage,
+  },
+];
+
+const POST_SESSION_MOODS: SessionMoodOption[] = [
+  {
+    level: 'struggling',
+    icon: 'cloud-outline',
+    label: 'Still heavy',
+    subtext: 'Healing takes time',
+    color: COLORS.dustyBlue,
+  },
+  {
+    level: 'okay',
+    icon: 'partly-sunny-outline',
+    label: 'A little shift',
+    subtext: 'Every bit counts',
+    color: COLORS.warm,
+  },
+  {
+    level: 'lighter',
+    icon: 'sunny-outline',
+    label: 'More peaceful',
+    subtext: 'You showed up for yourself',
+    color: COLORS.sage,
+  },
+];
+
+export interface SessionMoodCheckInProps {
+  visible: boolean;
+  type: SessionCheckInType;
+  gameName?: string;
+  preMood?: SessionMoodLevel;
+  onSelect: (mood: SessionMoodLevel) => void;
+  onSkip: () => void;
+}
+
+export function SessionMoodCheckIn({
+  visible,
+  type,
+  gameName,
+  preMood,
+  onSelect,
+  onSkip,
+}: SessionMoodCheckInProps) {
+  const [selectedMood, setSelectedMood] = useState<SessionMoodLevel | null>(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      fadeAnim.setValue(0);
+      setSelectedMood(null);
+    }
+  }, [visible]);
+
+  const moods = type === 'pre' ? PRE_SESSION_MOODS : POST_SESSION_MOODS;
+
+  const getTitle = () => {
+    if (type === 'pre') {
+      return 'How are you arriving?';
+    }
+    return 'Notice any shift?';
+  };
+
+  const getSubtitle = () => {
+    if (type === 'pre') {
+      return 'There\'s no wrong answer';
+    }
+    return 'Whatever you feel is valid';
+  };
+
+  const handleSelect = (mood: SessionMoodLevel) => {
+    setSelectedMood(mood);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setTimeout(() => {
+      onSelect(mood);
+      setSelectedMood(null);
+    }, 300);
+  };
+
+  const handleSkip = () => {
+    onSkip();
+    setSelectedMood(null);
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+    >
+      <View style={sessionStyles.overlay}>
+        <Animated.View style={[sessionStyles.container, { opacity: fadeAnim }]}>
+          {/* Header */}
+          <View style={sessionStyles.header}>
+            <Text style={sessionStyles.title}>{getTitle()}</Text>
+            <Text style={sessionStyles.subtitle}>{getSubtitle()}</Text>
+          </View>
+
+          {/* Mood Options */}
+          <View style={sessionStyles.moodsContainer}>
+            {moods.map((mood) => (
+              <TouchableOpacity
+                key={mood.level}
+                style={[
+                  sessionStyles.moodOption,
+                  selectedMood === mood.level && sessionStyles.moodOptionSelected,
+                ]}
+                onPress={() => handleSelect(mood.level)}
+                activeOpacity={0.7}
+              >
+                <View
+                  style={[
+                    sessionStyles.moodIconContainer,
+                    { backgroundColor: `${mood.color}20` },
+                    selectedMood === mood.level && {
+                      backgroundColor: `${mood.color}40`,
+                    },
+                  ]}
+                >
+                  <Ionicons
+                    name={mood.icon}
+                    size={32}
+                    color={mood.color}
+                  />
+                </View>
+                <Text style={sessionStyles.moodLabel}>{mood.label}</Text>
+                <Text style={sessionStyles.moodSubtext}>{mood.subtext}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Skip Option */}
+          <TouchableOpacity style={sessionStyles.skipButton} onPress={handleSkip}>
+            <Text style={sessionStyles.skipText}>
+              {type === 'pre' ? 'Just begin' : 'Skip for now'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Gentle Reminder */}
+          <Text style={sessionStyles.reminder}>
+            {type === 'pre'
+              ? 'This is just for you. We don\'t judge or track.'
+              : 'Change isn\'t always immediate. You did something brave.'}
+          </Text>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+// ============================================
+// SESSION COMPLETE AFFIRMATION
+// ============================================
+
+interface SessionCompleteProps {
+  visible: boolean;
+  gameName: string;
+  duration?: number; // in seconds
+  onClose: () => void;
+}
+
+const AFFIRMATIONS = [
+  'You showed up for yourself today.',
+  'Healing happens in small moments like this.',
+  'You\'re doing something brave.',
+  'Every step matters, even the small ones.',
+  'You honored your need for peace.',
+  'This is what self-compassion looks like.',
+  'You chose yourself today. That matters.',
+  'Rest is part of the journey.',
+  'You\'re learning to be gentle with yourself.',
+  'This moment of stillness is a gift you gave yourself.',
+];
+
+export function SessionComplete({
+  visible,
+  gameName,
+  duration,
+  onClose,
+}: SessionCompleteProps) {
+  const [affirmation] = useState(
+    () => AFFIRMATIONS[Math.floor(Math.random() * AFFIRMATIONS.length)]
+  );
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.parallel([
+        Animated.spring(scaleAnim, {
+          toValue: 1,
+          friction: 8,
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      scaleAnim.setValue(0.8);
+      opacityAnim.setValue(0);
+    }
+  }, [visible]);
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    if (mins === 0) {
+      return `${secs} seconds`;
+    }
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  if (!visible) return null;
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+    >
+      <View style={sessionStyles.overlay}>
+        <Animated.View
+          style={[
+            sessionStyles.completeContainer,
+            {
+              transform: [{ scale: scaleAnim }],
+              opacity: opacityAnim,
+            },
+          ]}
+        >
+          {/* Heart Icon */}
+          <View style={sessionStyles.completeIconContainer}>
+            <Ionicons name="heart" size={40} color={COLORS.sage} />
+          </View>
+
+          {/* Title */}
+          <Text style={sessionStyles.completeTitle}>Well done</Text>
+
+          {/* Affirmation */}
+          <Text style={sessionStyles.completeAffirmation}>{affirmation}</Text>
+
+          {/* Duration (if available) */}
+          {duration && duration > 0 && (
+            <Text style={sessionStyles.completeDuration}>
+              You spent {formatDuration(duration)} in stillness
+            </Text>
+          )}
+
+          {/* Continue Button */}
+          <TouchableOpacity
+            style={sessionStyles.completeButton}
+            onPress={onClose}
+            activeOpacity={0.8}
+          >
+            <Text style={sessionStyles.completeButtonText}>Continue</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
+    </Modal>
+  );
+}
+
+// ============================================
+// SESSION STYLES
+// ============================================
+
+const sessionStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: SPACING.lg,
+  },
+  container: {
+    backgroundColor: COLORS.warmBeige,
+    borderRadius: RADIUS.xxl,
+    padding: SPACING.xl,
+    width: '100%',
+    maxWidth: 360,
+    alignItems: 'center',
+    ...SHADOWS.strong,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
+  },
+  title: {
+    fontSize: TYPOGRAPHY.sizes.xl,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.display,
+    marginBottom: SPACING.xs,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+  },
+  moodsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.md,
+    marginBottom: SPACING.xl,
+  },
+  moodOption: {
+    alignItems: 'center',
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    backgroundColor: COLORS.backgroundCard,
+    borderWidth: 2,
+    borderColor: COLORS.borderSubtle,
+    width: 100,
+  },
+  moodOptionSelected: {
+    borderColor: COLORS.gold,
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+  },
+  moodIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.sm,
+  },
+  moodLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+    marginBottom: 2,
+  },
+  moodSubtext: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+  },
+  skipButton: {
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    marginBottom: SPACING.md,
+  },
+  skipText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  reminder: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    paddingHorizontal: SPACING.md,
+  },
+  // Session Complete
+  completeContainer: {
+    backgroundColor: COLORS.warmBeige,
+    borderRadius: RADIUS.xxl,
+    padding: SPACING.xl,
+    width: '100%',
+    maxWidth: 320,
+    alignItems: 'center',
+    ...SHADOWS.strong,
+  },
+  completeIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(143, 188, 143, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.lg,
+  },
+  completeTitle: {
+    fontSize: TYPOGRAPHY.sizes.xxl,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.display,
+    marginBottom: SPACING.sm,
+  },
+  completeAffirmation: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.devotional,
+    textAlign: 'center',
+    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
+    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.sm,
+  },
+  completeDuration: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    marginBottom: SPACING.lg,
+  },
+  completeButton: {
+    backgroundColor: COLORS.sage,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.xxl,
+    borderRadius: RADIUS.full,
+  },
+  completeButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    color: COLORS.background,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+});

@@ -13,11 +13,12 @@ import {
   StyleSheet,
   SafeAreaView,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import {
   COLORS,
   SHADOWS,
@@ -37,8 +38,6 @@ import { Card, ProgressBar, Badge } from '../../components/PremiumUI';
 import {
   FadeInView,
   MoodCheckIn,
-  KintsugiProgress,
-  HealingToolkit,
   CrisisQuickAccess,
   CrisisFloatingButton,
   MicroCelebration,
@@ -152,10 +151,10 @@ function GameCardItem({
 
   const handlePress = useCallback(() => {
     if (isUnlocked) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
       onPress();
     } else {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+      safeHaptics.notificationAsync(NotificationFeedbackType.Warning);
     }
   }, [isUnlocked, onPress]);
 
@@ -278,7 +277,6 @@ export function BrainGamesHub() {
   // ============================================
 
   const [showMoodCheckIn, setShowMoodCheckIn] = useState(false);
-  const [showToolkit, setShowToolkit] = useState(false);
   const [showCrisis, setShowCrisis] = useState(false);
   const [showStreakCelebration, setShowStreakCelebration] = useState(false);
   const [showMicroCelebration, setShowMicroCelebration] = useState(false);
@@ -297,23 +295,6 @@ export function BrainGamesHub() {
       }
     }
   }, [streakDays]);
-
-  // ============================================
-  // GAME STATS FOR KINTSUGI
-  // ============================================
-
-  const gameStats = {
-    totalSessions: state.behavioral.engagementByGame.reduce(
-      (sum, g) => sum + g.totalSessions, 0
-    ),
-    breathingMinutes: state.brainGames.totalBreathingMinutes,
-    gratitudeEntries: state.brainGames.gratitudeEntries.length,
-    thoughtsReframed: state.brainGames.totalThoughtsReframed,
-    bodyScans: state.brainGames.totalBodyScans,
-    scriptureMastery: state.brainGames.scriptureMemories.filter(
-      (m) => m.mastery === 'gold'
-    ).length,
-  };
 
   // ============================================
   // HANDLERS
@@ -371,15 +352,6 @@ export function BrainGamesHub() {
     setPendingGameId(null);
   }, [pendingGameId, navigation]);
 
-  // Handle game selection from toolkit
-  const handleToolkitSelectGame = useCallback((gameId: GameId) => {
-    setShowToolkit(false);
-    const screenName = GAME_SCREEN_MAP[gameId];
-    if (screenName) {
-      navigation.navigate(screenName);
-    }
-  }, [navigation]);
-
   // Handle crisis resource accessed
   const handleCrisisAccessed = useCallback((resourceId: string) => {
     dispatch({
@@ -419,28 +391,38 @@ export function BrainGamesHub() {
             </Text>
           </View>
           <TouchableOpacity
-            onPress={() => setShowToolkit(true)}
+            onPress={() => setShowCrisis(true)}
             style={styles.toolkitButton}
           >
-            <Ionicons name="apps-outline" size={22} color={COLORS.gold} />
+            <Ionicons name="heart-outline" size={22} color={COLORS.gold} />
           </TouchableOpacity>
         </View>
 
-        {/* Kintsugi Progress (Compact) */}
+        {/* Journey Progress - Potter's Clay Theme */}
         <FadeInView delay={100}>
-          <TouchableOpacity
-            style={styles.kintsugiSection}
-            onPress={() => setShowToolkit(true)}
-            activeOpacity={0.8}
-          >
-            <KintsugiProgress
-              currentDay={currentDay}
-              healingTrajectory={healingTrajectory}
-              gameStats={gameStats}
-              compact={true}
-              showStats={false}
+          <View style={styles.progressSection}>
+            <View style={styles.progressHeader}>
+              <Text style={styles.progressTitle}>
+                {currentDay <= 10 ? 'Gathering' :
+                 currentDay <= 20 ? 'Shaping' :
+                 currentDay <= 30 ? 'Refining' : 'Becoming'}
+              </Text>
+              <Text style={styles.progressDay}>Day {currentDay} of 40</Text>
+            </View>
+            <ProgressBar
+              progress={(currentDay / 40) * 100}
+              height={8}
             />
-          </TouchableOpacity>
+            <Text style={styles.progressVerse}>
+              "The potter formed it into another pot, shaping it as seemed best to him."
+            </Text>
+            {streakDays > 0 && (
+              <View style={styles.streakInfo}>
+                <Ionicons name="flame-outline" size={16} color={COLORS.gold} />
+                <Text style={styles.streakInfoText}>{streakDays} day streak</Text>
+              </View>
+            )}
+          </View>
         </FadeInView>
 
         {/* Recommendations */}
@@ -520,21 +502,6 @@ export function BrainGamesHub() {
         lastMood={state.emotional.currentMood}
       />
 
-      {/* Healing Toolkit Modal */}
-      <HealingToolkit
-        visible={showToolkit}
-        onClose={() => setShowToolkit(false)}
-        currentDay={currentDay}
-        healingTrajectory={healingTrajectory}
-        recommendations={recommendations}
-        gameStats={gameStats}
-        streakDays={streakDays}
-        onSelectGame={handleToolkitSelectGame}
-        onOpenCrisis={() => {
-          setShowToolkit(false);
-          setShowCrisis(true);
-        }}
-      />
 
       {/* Crisis Quick Access Modal */}
       <CrisisQuickAccess
@@ -612,10 +579,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     padding: SPACING.xs,
   },
-  kintsugiSection: {
-    paddingHorizontal: SPACING.lg,
-    marginBottom: SPACING.md,
-  },
   recommendIcon: {
     width: 36,
     height: 36,
@@ -631,6 +594,48 @@ const styles = StyleSheet.create({
   progressSection: {
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
+    backgroundColor: COLORS.warmBeige,
+    marginHorizontal: SPACING.lg,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.md,
+  },
+  progressHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+  },
+  progressTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '600',
+    color: COLORS.earth,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  progressDay: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.mutedBrown,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  progressVerse: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.richBrown,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+  },
+  streakInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: SPACING.sm,
+    gap: SPACING.xs,
+  },
+  streakInfoText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.gold,
+    fontWeight: '600',
+    fontFamily: TYPOGRAPHY.ui,
   },
   progressLabels: {
     flexDirection: 'row',

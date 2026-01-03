@@ -59,7 +59,13 @@ export { GameRecommendation } from './GameRecommendation';
 export { WhyThisWorks, WhyThisWorksButton } from './WhyThisWorks';
 
 // Engagement System Components (NEW)
-export { MoodCheckIn } from './MoodCheckIn';
+export {
+  MoodCheckIn,
+  SessionMoodCheckIn,
+  SessionComplete as SessionAffirmation,
+  type SessionMoodLevel,
+  type SessionCheckInType,
+} from './MoodCheckIn';
 export { KintsugiProgress } from './KintsugiProgress';
 export { HealingToolkit } from './HealingToolkit';
 export { CrisisQuickAccess, CrisisFloatingButton } from './CrisisQuickAccess';

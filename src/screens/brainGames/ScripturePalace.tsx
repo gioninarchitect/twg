@@ -18,11 +18,17 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS, GRADIENTS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
 import { emitScriptureAdded, emitScriptureReviewed } from '../../worldModel';
 import { useWorldModel } from '../../worldModel';
+import {
+  saveScripturePalace,
+  loadScripturePalace,
+  recordGameSession,
+  type StoredScripture as PersistedScripture,
+} from '../../services/gameDataService';
 import { Button, GradientButton, Badge, ProgressBar } from '../../components/PremiumUI';
 import {
   GameContainer,
@@ -34,6 +40,8 @@ import {
   ScaleBounce,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 // ============================================
@@ -85,6 +93,58 @@ interface StoredScripture {
   timesReviewed: number;
   lastReviewed: number | null;
   mastered: boolean;
+  // Spaced Repetition Fields
+  masteryLevel: 1 | 2 | 3 | 4 | 5; // 1=new, 5=mastered
+  nextReviewDate: number; // Timestamp for next review
+  easeFactor: number; // 1.3-2.5, affects interval growth
+}
+
+// ============================================
+// SPACED REPETITION ALGORITHM
+// Based on SM-2 algorithm, simplified for scripture memorization
+// ============================================
+
+const MASTERY_LABELS: Record<number, string> = {
+  1: 'Planting',
+  2: 'Sprouting',
+  3: 'Growing',
+  4: 'Blooming',
+  5: 'Rooted',
+};
+
+const MASTERY_COLORS: Record<number, string> = {
+  1: '#B5888D', // New - dusty rose
+  2: '#A8956F', // Learning - warm brown
+  3: '#88A4A8', // Familiar - sage
+  4: '#8BA5B5', // Strong - blue-gray
+  5: COLORS.gold, // Mastered - gold
+};
+
+// Calculate next review interval based on mastery level
+function calculateNextReview(masteryLevel: number, easeFactor: number): number {
+  const baseIntervals = {
+    1: 1,    // 1 day
+    2: 3,    // 3 days
+    3: 7,    // 1 week
+    4: 14,   // 2 weeks
+    5: 30,   // 1 month
+  };
+  const days = baseIntervals[masteryLevel as keyof typeof baseIntervals] || 1;
+  const intervalMs = days * 24 * 60 * 60 * 1000 * easeFactor;
+  return Date.now() + intervalMs;
+}
+
+// Check if scripture needs review
+function needsReview(scripture: StoredScripture): boolean {
+  if (!scripture.lastReviewed) return true;
+  return Date.now() >= scripture.nextReviewDate;
+}
+
+// Calculate how overdue a scripture is (for priority sorting)
+function getReviewPriority(scripture: StoredScripture): number {
+  if (!scripture.lastReviewed) return 1000; // New scriptures first
+  const overdue = Date.now() - scripture.nextReviewDate;
+  return Math.max(0, overdue / (24 * 60 * 60 * 1000)); // Days overdue
 }
 
 // ============================================
@@ -99,12 +159,17 @@ interface RoomCardProps {
 }
 
 function RoomCard({ room, scripture, isSelected, onPress }: RoomCardProps) {
+  const masteryLevel = scripture?.masteryLevel || 1;
+  const masteryColor = MASTERY_COLORS[masteryLevel];
+  const needsReviewNow = scripture ? needsReview(scripture) : false;
+
   return (
     <TouchableOpacity
       style={[
         styles.roomCard,
         isSelected && styles.roomCardSelected,
         { borderColor: room.color },
+        needsReviewNow && styles.roomCardNeedsReview,
       ]}
       onPress={onPress}
       activeOpacity={0.8}
@@ -115,14 +180,25 @@ function RoomCard({ room, scripture, isSelected, onPress }: RoomCardProps) {
       <View style={styles.roomContent}>
         <Text style={styles.roomName}>{room.name}</Text>
         {scripture ? (
-          <Text style={styles.roomScripture} numberOfLines={1}>
-            {scripture.reference}
-          </Text>
+          <>
+            <Text style={styles.roomScripture} numberOfLines={1}>
+              {scripture.reference}
+            </Text>
+            <View style={styles.masteryIndicator}>
+              <View style={[styles.masteryDot, { backgroundColor: masteryColor }]} />
+              <Text style={[styles.masteryLabel, { color: masteryColor }]}>
+                {MASTERY_LABELS[masteryLevel]}
+              </Text>
+              {needsReviewNow && (
+                <Text style={styles.reviewBadge}>Review</Text>
+              )}
+            </View>
+          </>
         ) : (
           <Text style={styles.roomEmpty}>Empty - Add scripture</Text>
         )}
       </View>
-      {scripture?.mastered && (
+      {scripture?.masteryLevel === 5 && (
         <View style={styles.masteredBadge}>
           <Ionicons name="star" size={18} color={COLORS.gold} />
         </View>
@@ -286,7 +362,7 @@ function ReviewScriptureModal({
             <TouchableOpacity
               style={styles.revealButton}
               onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
                 setShowAnswer(true);
               }}
             >
@@ -308,7 +384,7 @@ function ReviewScriptureModal({
                 <TouchableOpacity
                   style={[styles.recallButton, styles.recallButtonNo]}
                   onPress={() => {
-                    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
                     onRecalled(false);
                     onClose();
                   }}
@@ -318,7 +394,7 @@ function ReviewScriptureModal({
                 <TouchableOpacity
                   style={[styles.recallButton, styles.recallButtonYes]}
                   onPress={() => {
-                    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                    safeHaptics.notificationAsync(NotificationFeedbackType.Success);
                     onRecalled(true);
                     onClose();
                   }}
@@ -363,8 +439,37 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
   const [mode, setMode] = useState<'explore' | 'review'>('explore');
   const [reviewIndex, setReviewIndex] = useState(0);
   const [reviewScore, setReviewScore] = useState(0);
+  const [reviewQueue, setReviewQueue] = useState<StoredScripture[]>([]);
   const [showComplete, setShowComplete] = useState(false);
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
+
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(true); // Show on entry
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load saved scriptures on mount
+  useEffect(() => {
+    async function loadData() {
+      const savedScriptures = await loadScripturePalace();
+      if (savedScriptures.length > 0) {
+        setScriptures(savedScriptures);
+      }
+      setIsLoaded(true);
+      // Record game session
+      recordGameSession('scripture_palace');
+    }
+    loadData();
+  }, []);
+
+  // Save scriptures when they change
+  useEffect(() => {
+    if (isLoaded && scriptures.length > 0) {
+      saveScripturePalace(scriptures);
+    }
+  }, [scriptures, isLoaded]);
 
   // Get scripture for a room
   const getScriptureForRoom = (roomId: string) => {
@@ -385,11 +490,15 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
       timesReviewed: 0,
       lastReviewed: null,
       mastered: false,
+      // Spaced repetition initial values
+      masteryLevel: 1,
+      nextReviewDate: Date.now() + (24 * 60 * 60 * 1000), // Review in 1 day
+      easeFactor: 2.0, // Default ease factor
     };
 
     setScriptures((prev) => [...prev, newScripture]);
     emitScriptureAdded(reference, text, selectedRoom.id, visualAssociation);
-    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    safeHaptics.notificationAsync(NotificationFeedbackType.Success);
   }, [selectedRoom]);
 
   // Handle room press
@@ -407,22 +516,44 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
     }
   }, [scriptures]);
 
-  // Handle recall result
+  // Handle recall result with spaced repetition algorithm
   const handleRecalled = useCallback((recalled: boolean) => {
     if (!reviewingScripture) return;
 
-    // Update scripture stats
+    // Update scripture stats with spaced repetition
     setScriptures((prev) =>
-      prev.map((s) =>
-        s.id === reviewingScripture.id
-          ? {
-              ...s,
-              timesReviewed: s.timesReviewed + 1,
-              lastReviewed: Date.now(),
-              mastered: recalled && s.timesReviewed >= 4,
-            }
-          : s
-      )
+      prev.map((s) => {
+        if (s.id !== reviewingScripture.id) return s;
+
+        // Calculate new mastery level based on recall success
+        let newMasteryLevel = s.masteryLevel;
+        let newEaseFactor = s.easeFactor;
+
+        if (recalled) {
+          // Success: increase mastery level (max 5)
+          newMasteryLevel = Math.min(5, s.masteryLevel + 1) as 1 | 2 | 3 | 4 | 5;
+          // Increase ease factor slightly for successful recall
+          newEaseFactor = Math.min(2.5, s.easeFactor + 0.1);
+        } else {
+          // Struggle: decrease mastery level (min 1) and ease factor
+          newMasteryLevel = Math.max(1, s.masteryLevel - 1) as 1 | 2 | 3 | 4 | 5;
+          // Decrease ease factor for difficult recall
+          newEaseFactor = Math.max(1.3, s.easeFactor - 0.2);
+        }
+
+        // Calculate next review date
+        const nextReviewDate = calculateNextReview(newMasteryLevel, newEaseFactor);
+
+        return {
+          ...s,
+          timesReviewed: s.timesReviewed + 1,
+          lastReviewed: Date.now(),
+          mastered: newMasteryLevel === 5,
+          masteryLevel: newMasteryLevel,
+          easeFactor: newEaseFactor,
+          nextReviewDate,
+        };
+      })
     );
 
     emitScriptureReviewed(reviewingScripture.reference, recalled);
@@ -432,32 +563,63 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
         setReviewScore((prev) => prev + 1);
       }
 
-      // Move to next scripture
-      const scripturesWithContent = scriptures.filter((s) => s.text);
-      if (reviewIndex < scripturesWithContent.length - 1) {
+      // Move to next scripture in the prioritized queue
+      if (reviewIndex < reviewQueue.length - 1) {
         setReviewIndex((prev) => prev + 1);
-        const nextScripture = scripturesWithContent[reviewIndex + 1];
+        const nextScripture = reviewQueue[reviewIndex + 1];
         const nextRoom = PALACE_ROOMS.find((r) => r.id === nextScripture.roomId);
         setReviewingScripture(nextScripture);
         setSelectedRoom(nextRoom || null);
         setShowReviewModal(true);
       } else {
-        // Review complete
-        setShowComplete(true);
+        // Review complete - show post-mood check
+        setShowPostMoodCheck(true);
       }
     }
-  }, [reviewingScripture, scriptures, mode, reviewIndex]);
+  }, [reviewingScripture, scriptures, mode, reviewIndex, reviewQueue]);
 
-  // Start review mode
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Start review mode - prioritize scriptures that need review (spaced repetition)
   const startReview = useCallback(() => {
     const scripturesWithContent = scriptures.filter((s) => s.text);
     if (scripturesWithContent.length === 0) return;
 
+    // Sort by review priority: scriptures needing review come first
+    const sortedScriptures = [...scripturesWithContent].sort((a, b) => {
+      const priorityA = getReviewPriority(a);
+      const priorityB = getReviewPriority(b);
+      return priorityB - priorityA; // Higher priority first
+    });
+
+    setReviewQueue(sortedScriptures);
     setMode('review');
     setReviewIndex(0);
     setReviewScore(0);
 
-    const firstScripture = scripturesWithContent[0];
+    const firstScripture = sortedScriptures[0];
     const room = PALACE_ROOMS.find((r) => r.id === firstScripture.roomId);
     setReviewingScripture(firstScripture);
     setSelectedRoom(room || null);
@@ -466,6 +628,7 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
 
   const scriptureCount = scriptures.filter((s) => s.text).length;
   const masteredCount = scriptures.filter((s) => s.mastered).length;
+  const needsReviewCount = scriptures.filter((s) => s.text && needsReview(s)).length;
 
   return (
     <GameContainer
@@ -494,12 +657,14 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
               <Text style={styles.statLabel}>Scriptures</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{masteredCount}</Text>
-              <Text style={styles.statLabel}>Mastered</Text>
+              <Text style={[styles.statValue, needsReviewCount > 0 && { color: COLORS.gold }]}>
+                {needsReviewCount}
+              </Text>
+              <Text style={styles.statLabel}>Due Review</Text>
             </View>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{PALACE_ROOMS.length - scriptureCount}</Text>
-              <Text style={styles.statLabel}>Empty Rooms</Text>
+              <Text style={styles.statValue}>{masteredCount}</Text>
+              <Text style={styles.statLabel}>Rooted</Text>
             </View>
           </View>
           <View style={styles.whyButtonRow}>
@@ -592,6 +757,23 @@ export function ScripturePalace({ onClose }: ScripturePalaceProps) {
         gameId="scripture_palace"
         onClose={() => setShowWhyThisWorks(false)}
       />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
+      />
     </GameContainer>
   );
 }
@@ -670,6 +852,10 @@ const styles = StyleSheet.create({
   roomCardSelected: {
     backgroundColor: COLORS.warmBeige,
   },
+  roomCardNeedsReview: {
+    borderLeftColor: COLORS.gold,
+    borderLeftWidth: 4,
+  },
   roomIcon: {
     width: 44,
     height: 44,
@@ -702,6 +888,33 @@ const styles = StyleSheet.create({
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
     marginTop: 2,
+  },
+  masteryIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    gap: 6,
+  },
+  masteryDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  masteryLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '500',
+  },
+  reviewBadge: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '600',
+    color: COLORS.gold,
+    backgroundColor: COLORS.gold + '20',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
   masteredBadge: {
     marginLeft: SPACING.sm,

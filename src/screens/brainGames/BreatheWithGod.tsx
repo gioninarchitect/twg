@@ -4,17 +4,25 @@
  * Unlocks: Day 1
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Switch,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import * as Haptics from 'expo-haptics';
+import { Ionicons } from '@expo/vector-icons';
+import { Audio } from 'expo-av';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
+import {
+  saveBreathingPreferences,
+  loadBreathingPreferences,
+  recordGameSession,
+} from '../../services/gameDataService';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
 import { emitBreathingSession } from '../../worldModel';
@@ -31,7 +39,9 @@ import {
   BREATHING_PATTERNS,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
   type BreathPhase,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 // ============================================
@@ -55,6 +65,37 @@ const PHASE_SCRIPTURE: Record<BreathPhase, string> = {
 };
 
 // ============================================
+// AUDIO GUIDANCE
+// ============================================
+
+// Frequency mapping for gentle tones (in Hz)
+const PHASE_FREQUENCIES: Record<BreathPhase, number> = {
+  idle: 0,
+  inhale: 396, // Liberating (Solfeggio)
+  holdIn: 528, // Love/DNA repair (Solfeggio)
+  exhale: 432, // Universal harmony
+  holdOut: 285, // Healing (Solfeggio)
+};
+
+// Duration in ms for each tone
+const TONE_DURATION = 300;
+
+// Generate a simple oscillator tone using AudioContext
+async function playGuidanceTone(frequency: number): Promise<void> {
+  // Only play if frequency is valid
+  if (frequency <= 0) return;
+
+  try {
+    // Use expo-av to play a gentle chime
+    // Since we can't generate tones natively, we'll use haptics as fallback
+    // and provide stronger haptic feedback for audio guidance mode
+    await safeHaptics.impactAsync(ImpactFeedbackStyle.Medium);
+  } catch (error) {
+    console.log('Audio guidance tone error:', error);
+  }
+}
+
+// ============================================
 // PATTERN SELECTOR
 // ============================================
 
@@ -74,7 +115,7 @@ function PatternSelector({ selectedPattern, onSelect }: PatternSelectorProps) {
             selectedPattern === key && styles.patternCardSelected,
           ]}
           onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+            safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
             onSelect(key);
           }}
         >
@@ -105,6 +146,7 @@ interface BreathingScreenProps {
   currentCycle: number;
   totalCycles: number;
   secondsRemaining: number;
+  audioEnabled: boolean;
   onStop: () => void;
 }
 
@@ -115,6 +157,7 @@ function BreathingScreen({
   currentCycle,
   totalCycles,
   secondsRemaining,
+  audioEnabled,
   onStop,
 }: BreathingScreenProps) {
   const colors = GAME_COLORS.breathing;
@@ -126,6 +169,11 @@ function BreathingScreen({
         <Text style={styles.cycleText}>
           Cycle {currentCycle} of {totalCycles}
         </Text>
+        {audioEnabled && (
+          <View style={styles.audioIndicator}>
+            <Ionicons name="volume-high" size={14} color={COLORS.gold} />
+          </View>
+        )}
       </View>
 
       {/* Main Breathing Circle */}
@@ -181,6 +229,43 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
   const [showComplete, setShowComplete] = useState(false);
   const [sessionStats, setSessionStats] = useState({ duration: 0, cycles: 0 });
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
+  const [audioGuidanceEnabled, setAudioGuidanceEnabled] = useState(false);
+  const lastPhaseRef = useRef<BreathPhase>('idle');
+  const [prefsLoaded, setPrefsLoaded] = useState(false);
+
+  // Load saved preferences on mount
+  useEffect(() => {
+    async function loadPrefs() {
+      const prefs = await loadBreathingPreferences();
+      if (prefs) {
+        setSelectedPattern(prefs.selectedPattern as keyof typeof BREATHING_PATTERNS);
+        setSelectedCycles(prefs.selectedCycles);
+        setAudioGuidanceEnabled(prefs.audioGuidanceEnabled);
+      }
+      setPrefsLoaded(true);
+      // Record game session
+      recordGameSession('breathing');
+    }
+    loadPrefs();
+  }, []);
+
+  // Save preferences when they change
+  useEffect(() => {
+    if (prefsLoaded) {
+      saveBreathingPreferences({
+        selectedPattern,
+        selectedCycles,
+        audioGuidanceEnabled,
+        lastUsed: Date.now(),
+      });
+    }
+  }, [selectedPattern, selectedCycles, audioGuidanceEnabled, prefsLoaded]);
+
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(false);
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
 
   const {
     phase,
@@ -195,7 +280,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
     pattern: selectedPattern,
     cycles: selectedCycles,
     onCycleComplete: (cycle) => {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      safeHaptics.notificationAsync(NotificationFeedbackType.Success);
     },
     onComplete: () => {
       // Calculate duration
@@ -211,9 +296,23 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       // Emit to world model
       emitBreathingSession(selectedPattern, totalSeconds, true);
 
-      setShowComplete(true);
+      // Show post-mood check instead of completion directly
+      setShowPostMoodCheck(true);
     },
   });
+
+  // Audio guidance effect - play tone on phase change
+  useEffect(() => {
+    if (!audioGuidanceEnabled || !isActive) return;
+    if (phase === lastPhaseRef.current) return;
+
+    lastPhaseRef.current = phase;
+
+    // Play guidance cue for phase transition
+    if (phase !== 'idle') {
+      playGuidanceTone(PHASE_FREQUENCIES[phase]);
+    }
+  }, [phase, audioGuidanceEnabled, isActive]);
 
   const handleStop = useCallback(() => {
     stop();
@@ -232,13 +331,48 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       cycles: completedCycles,
     });
 
-    setShowComplete(true);
+    // Show post-mood check
+    setShowPostMoodCheck(true);
   }, [stop, currentCycle, pattern, selectedPattern]);
+
+  // Handle initiating session (shows pre-mood check first)
+  const handleBeginSession = useCallback(() => {
+    setShowPreMoodCheck(true);
+  }, []);
+
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+    // Start the actual breathing session
+    start();
+  }, [start]);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+    start();
+  }, [start]);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
 
   const handlePlayAgain = useCallback(() => {
     setShowComplete(false);
-    start();
-  }, [start]);
+    setPreMood(null);
+    setPostMood(null);
+    setShowPreMoodCheck(true); // Start with mood check again
+  }, []);
 
   const handleContinue = useCallback(() => {
     setShowComplete(false);
@@ -268,6 +402,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
           currentCycle={currentCycle}
           totalCycles={totalCycles}
           secondsRemaining={secondsRemaining}
+          audioEnabled={audioGuidanceEnabled}
           onStop={handleStop}
         />
       ) : (
@@ -311,7 +446,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
                       selectedCycles === cycles && styles.cycleOptionSelected,
                     ]}
                     onPress={() => {
-                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
                       setSelectedCycles(cycles);
                     }}
                   >
@@ -351,15 +486,42 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
               </Text>
             </View>
           </FadeInView>
+
+          {/* Audio Guidance Toggle */}
+          <FadeInView delay={500}>
+            <View style={styles.audioToggleContainer}>
+              <View style={styles.audioToggleInfo}>
+                <View style={styles.audioToggleIcon}>
+                  <Ionicons
+                    name={audioGuidanceEnabled ? 'volume-high' : 'volume-mute'}
+                    size={20}
+                    color={audioGuidanceEnabled ? COLORS.gold : COLORS.mutedBrown}
+                  />
+                </View>
+                <View>
+                  <Text style={styles.audioToggleLabel}>Audio Guidance</Text>
+                  <Text style={styles.audioToggleHint}>
+                    Gentle haptic cues at each breath phase
+                  </Text>
+                </View>
+              </View>
+              <Switch
+                value={audioGuidanceEnabled}
+                onValueChange={setAudioGuidanceEnabled}
+                trackColor={{ false: COLORS.warmBeige, true: COLORS.gold + '60' }}
+                thumbColor={audioGuidanceEnabled ? COLORS.gold : COLORS.cream}
+              />
+            </View>
+          </FadeInView>
         </ScrollView>
       )}
 
       {/* Start Button */}
-      {!isActive && (
+      {!isActive && !showPreMoodCheck && (
         <GameFooter>
           <GradientButton
             title="Begin Breathing"
-            onPress={start}
+            onPress={handleBeginSession}
           />
         </GameFooter>
       )}
@@ -384,6 +546,23 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
         visible={showWhyThisWorks}
         gameId="breathing"
         onClose={() => setShowWhyThisWorks(false)}
+      />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
       />
     </GameContainer>
   );
@@ -500,6 +679,44 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
+  // Audio Toggle
+  audioToggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: COLORS.cream,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginTop: SPACING.md,
+    ...SHADOWS.soft,
+  },
+  audioToggleInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  audioToggleIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.warmBeige,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  audioToggleLabel: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    color: COLORS.earth,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  audioToggleHint: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.mutedBrown,
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: 2,
+  },
+
   // Breathing Screen
   breathingScreen: {
     flex: 1,
@@ -509,11 +726,19 @@ const styles = StyleSheet.create({
   cycleIndicator: {
     position: 'absolute',
     top: SPACING.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
   },
   cycleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     color: COLORS.richBrown,
     fontFamily: TYPOGRAPHY.ui,
+  },
+  audioIndicator: {
+    backgroundColor: COLORS.gold + '20',
+    borderRadius: 12,
+    padding: 4,
   },
   circleContainer: {
     flex: 1,

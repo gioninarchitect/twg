@@ -38,6 +38,8 @@ import {
   useGratitudeSession,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 // ============================================
@@ -200,6 +202,12 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
   const [encouragement, setEncouragement] = useState('');
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(true); // Show on entry
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
+
   const {
     gratitudes,
     currentInput,
@@ -213,9 +221,34 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
     targetCount: 3,
     dayNumber,
     onComplete: (finalGratitudes) => {
-      setShowComplete(true);
+      // Show post-mood check instead of completion directly
+      setShowPostMoodCheck(true);
     },
   });
+
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
 
   const inputRef = useRef<TextInput>(null);
 
@@ -242,7 +275,8 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
   const handleSubmit = useCallback(() => {
     if (gratitudes.length > 0) {
       submitGratitudes();
-      setShowComplete(true);
+      // Show post-mood check
+      setShowPostMoodCheck(true);
     }
   }, [gratitudes, submitGratitudes]);
 
@@ -253,6 +287,9 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
 
   const handlePlayAgain = useCallback(() => {
     setShowComplete(false);
+    setPreMood(null);
+    setPostMood(null);
+    setShowPreMoodCheck(true); // Start with mood check again
     // Reset would need to be added to useGratitudeSession
   }, []);
 
@@ -392,6 +429,23 @@ export function GratitudeGarden({ onClose }: GratitudeGardenProps) {
         visible={showWhyThisWorks}
         gameId="gratitude"
         onClose={() => setShowWhyThisWorks(false)}
+      />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
       />
     </GameContainer>
   );

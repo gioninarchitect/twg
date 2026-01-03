@@ -19,7 +19,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
 import { emitThoughtReframed, detectDistortions, scoreCompassion } from '../../worldModel';
@@ -37,87 +37,143 @@ import {
   ShakeView,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 // ============================================
-// COGNITIVE DISTORTIONS
+// DR. AMEN'S 9 ANT TYPES
+// ANT = Automatic Negative Thoughts
+// Based on Dr. Daniel Amen's research from Amen Clinics
 // ============================================
 
-interface DistortionInfo {
+interface ANTInfo {
   id: string;
+  antNumber: number; // Dr. Amen's ANT type number
   name: string;
+  shortName: string; // For compact display
   description: string;
   example: string;
   reframePrompt: string;
+  selfCompassionPrompt: string; // Kristin Neff-inspired
   scripture: string;
+  keywords: string[]; // For detection
 }
 
-const DISTORTIONS: Record<string, DistortionInfo> = {
+// The 9 ANT Types (Dr. Daniel Amen)
+const ANT_TYPES: Record<string, ANTInfo> = {
   all_or_nothing: {
     id: 'all_or_nothing',
+    antNumber: 1,
     name: 'All-or-Nothing Thinking',
-    description: 'Seeing things in black and white, with no middle ground.',
-    example: '"I always fail" or "Nothing ever works out"',
+    shortName: 'All-or-Nothing',
+    description: 'Seeing things in black and white, with no middle ground. Everything is perfect or a complete failure.',
+    example: '"If I can\'t do it perfectly, I shouldn\'t do it at all"',
     reframePrompt: 'What\'s a more balanced way to see this? Is there any gray area?',
+    selfCompassionPrompt: 'What would you say to a friend who made the same mistake?',
     scripture: '"His mercies are new every morning." - Lamentations 3:23',
+    keywords: ['always', 'never', 'completely', 'totally', 'perfect', 'ruined', 'every time'],
   },
-  catastrophizing: {
-    id: 'catastrophizing',
-    name: 'Catastrophizing',
-    description: 'Expecting the worst possible outcome.',
-    example: '"This will be a disaster" or "I can\'t handle this"',
-    reframePrompt: 'What\'s more likely to happen? What evidence do you have?',
-    scripture: '"Do not worry about tomorrow." - Matthew 6:34',
+  always_never: {
+    id: 'always_never',
+    antNumber: 2,
+    name: 'Always/Never Thinking',
+    shortName: 'Always/Never',
+    description: 'Using words like "always," "never," "everyone," or "no one" to overgeneralize.',
+    example: '"You never listen to me" or "I always mess things up"',
+    reframePrompt: 'Is this really always or never? Can you think of one exception?',
+    selfCompassionPrompt: 'We all struggle sometimes. What\'s actually true most of the time?',
+    scripture: '"Weeping may endure for a night, but joy comes in the morning." - Psalm 30:5',
+    keywords: ['always', 'never', 'everyone', 'no one', 'nothing', 'everything', 'every time'],
   },
-  should_statements: {
-    id: 'should_statements',
-    name: 'Should Statements',
-    description: 'Putting pressure on yourself with rigid rules.',
-    example: '"I should be better" or "I must not make mistakes"',
-    reframePrompt: 'What if you replaced "should" with "I would like to"?',
-    scripture: '"My grace is sufficient for you." - 2 Corinthians 12:9',
-  },
-  mind_reading: {
-    id: 'mind_reading',
-    name: 'Mind Reading',
-    description: 'Assuming you know what others are thinking.',
-    example: '"They think I\'m stupid" or "Everyone is judging me"',
-    reframePrompt: 'What do you actually know for certain? Could there be another explanation?',
-    scripture: '"Man looks at the outward appearance, but the Lord looks at the heart." - 1 Samuel 16:7',
+  focusing_negative: {
+    id: 'focusing_negative',
+    antNumber: 3,
+    name: 'Focusing on the Negative',
+    shortName: 'Negative Focus',
+    description: 'Only seeing the bad in a situation while ignoring the good.',
+    example: 'Getting 9 compliments and 1 criticism, but only remembering the criticism',
+    reframePrompt: 'What good things are you overlooking? What went well?',
+    selfCompassionPrompt: 'Your brain is wired to notice threats. What would a balanced view look like?',
+    scripture: '"Whatever is true, noble, right, pure, lovely... think about such things." - Philippians 4:8',
+    keywords: ['but', 'however', 'except', 'bad', 'wrong', 'terrible', 'awful'],
   },
   fortune_telling: {
     id: 'fortune_telling',
+    antNumber: 4,
     name: 'Fortune Telling',
-    description: 'Predicting negative outcomes without evidence.',
-    example: '"I will never get better" or "This will always be this way"',
-    reframePrompt: 'Is this prediction based on facts or fears?',
-    scripture: '"For I know the plans I have for you." - Jeremiah 29:11',
+    shortName: 'Fortune Telling',
+    description: 'Predicting the future negatively without evidence to support it.',
+    example: '"I know this won\'t work out" or "They\'re going to reject me"',
+    reframePrompt: 'Is this prediction based on facts or fears? What evidence do you have?',
+    selfCompassionPrompt: 'Uncertainty is hard. What if you stayed open to positive possibilities?',
+    scripture: '"For I know the plans I have for you... plans to give you hope and a future." - Jeremiah 29:11',
+    keywords: ['will', 'going to', 'know', 'certain', 'bet', 'predict', 'won\'t'],
+  },
+  mind_reading: {
+    id: 'mind_reading',
+    antNumber: 5,
+    name: 'Mind Reading',
+    shortName: 'Mind Reading',
+    description: 'Assuming you know what others are thinking, usually something negative about you.',
+    example: '"They think I\'m stupid" or "She doesn\'t like me"',
+    reframePrompt: 'What do you actually know for certain? Could there be another explanation?',
+    selfCompassionPrompt: 'We can\'t read minds. What would you need to feel more secure?',
+    scripture: '"Man looks at the outward appearance, but the Lord looks at the heart." - 1 Samuel 16:7',
+    keywords: ['think', 'thinks', 'knows', 'believes', 'probably', 'must think', 'judging'],
+  },
+  thinking_with_feelings: {
+    id: 'thinking_with_feelings',
+    antNumber: 6,
+    name: 'Thinking with Your Feelings',
+    shortName: 'Feeling = Fact',
+    description: 'Believing something is true just because you feel it strongly.',
+    example: '"I feel like a burden, so I must be one" or "I feel stupid, so I am stupid"',
+    reframePrompt: 'Just because you feel it, does that make it true? What are the facts?',
+    selfCompassionPrompt: 'Feelings are real but they\'re not always accurate. What\'s actually true?',
+    scripture: '"The heart is deceitful above all things." - Jeremiah 17:9',
+    keywords: ['feel like', 'feels like', 'I feel', 'must be', 'sense that'],
+  },
+  guilt_beating: {
+    id: 'guilt_beating',
+    antNumber: 7,
+    name: 'Guilt Beating',
+    shortName: 'Guilt/Should',
+    description: 'Using words like "should," "must," "ought to," or "have to" to beat yourself up.',
+    example: '"I should be over this by now" or "I ought to be stronger"',
+    reframePrompt: 'What if you replaced "should" with "I would like to" or "It would be nice if"?',
+    selfCompassionPrompt: 'You\'re being hard on yourself. What do you actually need right now?',
+    scripture: '"My grace is sufficient for you, for my power is made perfect in weakness." - 2 Corinthians 12:9',
+    keywords: ['should', 'shouldn\'t', 'must', 'have to', 'ought', 'need to', 'supposed to'],
   },
   labeling: {
     id: 'labeling',
+    antNumber: 8,
     name: 'Labeling',
-    description: 'Putting harsh labels on yourself or others.',
-    example: '"I\'m a failure" or "I\'m worthless"',
-    reframePrompt: 'Would you say this to a friend? What would be kinder?',
+    shortName: 'Labeling',
+    description: 'Attaching a negative label to yourself or others instead of describing the behavior.',
+    example: '"I\'m a failure" instead of "I made a mistake" or "I\'m worthless"',
+    reframePrompt: 'Would you say this to a friend? What would be a kinder, more accurate description?',
+    selfCompassionPrompt: 'You are not your worst moment. Who are you beyond this label?',
     scripture: '"You are fearfully and wonderfully made." - Psalm 139:14',
+    keywords: ['I\'m a', 'I am', 'loser', 'failure', 'worthless', 'stupid', 'idiot', 'terrible'],
   },
-  emotional_reasoning: {
-    id: 'emotional_reasoning',
-    name: 'Emotional Reasoning',
-    description: 'Believing something is true because you feel it.',
-    example: '"I feel like a burden, so I must be one"',
-    reframePrompt: 'Just because you feel it, does that make it true?',
-    scripture: '"The heart is deceitful above all things." - Jeremiah 17:9',
-  },
-  personalization: {
-    id: 'personalization',
-    name: 'Personalization',
-    description: 'Blaming yourself for things outside your control.',
-    example: '"It\'s all my fault" or "I caused this"',
-    reframePrompt: 'What factors were actually in your control?',
-    scripture: '"Cast your burden on the Lord." - Psalm 55:22',
+  blame: {
+    id: 'blame',
+    antNumber: 9,
+    name: 'Blame',
+    shortName: 'Blame',
+    description: 'Blaming others for your problems or blaming yourself for things outside your control.',
+    example: '"It\'s all my fault" or "If only they hadn\'t..." or "You make me feel..."',
+    reframePrompt: 'What parts were in your control? What parts were not? What can you do now?',
+    selfCompassionPrompt: 'Taking responsibility is different from taking blame. What\'s the difference here?',
+    scripture: '"Cast your burden on the Lord, and He shall sustain you." - Psalm 55:22',
+    keywords: ['fault', 'blame', 'because of', 'made me', 'caused', 'your fault', 'my fault'],
   },
 };
+
+// Legacy alias for backward compatibility
+const DISTORTIONS = ANT_TYPES;
 
 // ============================================
 // STEPS
@@ -158,6 +214,12 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   const [showError, setShowError] = useState(false);
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(true); // Show on entry
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
+
   const scrollRef = useRef<ScrollView>(null);
 
   // Move to next step
@@ -166,7 +228,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
     if (currentIndex < STEPS.length - 1) {
       setCurrentStep(STEPS[currentIndex + 1]);
       scrollRef.current?.scrollTo({ y: 0, animated: true });
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
     }
   }, [currentStep]);
 
@@ -240,8 +302,33 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       compassionScore
     );
 
-    setShowComplete(true);
+    // Show post-mood check instead of completion directly
+    setShowPostMoodCheck(true);
   }, [selectedDistortion, originalThought, reframedThought, compassionScore]);
+
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+  }, []);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
 
   // Handle close after completion
   const handleContinue = useCallback(() => {
@@ -308,41 +395,62 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
                 </View>
               )}
 
-              {/* Distortion options */}
+              {/* Dr. Amen Attribution */}
+              <View style={styles.amenAttribution}>
+                <Text style={styles.amenAttributionText}>
+                  Based on Dr. Daniel Amen's 9 ANT Types
+                </Text>
+              </View>
+
+              {/* ANT Type options */}
               <View style={styles.distortionList}>
-                {Object.values(DISTORTIONS).map((distortion) => {
-                  const isDetected = detectedDistortions.includes(distortion.id);
-                  const isSelected = selectedDistortion === distortion.id;
+                {Object.values(ANT_TYPES).map((ant) => {
+                  const isDetected = detectedDistortions.includes(ant.id);
+                  const isSelected = selectedDistortion === ant.id;
 
                   return (
                     <TouchableOpacity
-                      key={distortion.id}
+                      key={ant.id}
                       style={[
                         styles.distortionCard,
                         isDetected && styles.distortionCardDetected,
                         isSelected && styles.distortionCardSelected,
                       ]}
                       onPress={() => {
-                        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                        setSelectedDistortion(distortion.id);
+                        safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
+                        setSelectedDistortion(ant.id);
                       }}
                     >
                       <View style={styles.distortionHeader}>
+                        {/* ANT Type Number Badge */}
+                        <View style={[
+                          styles.antBadge,
+                          isSelected && styles.antBadgeSelected,
+                        ]}>
+                          <Text style={[
+                            styles.antBadgeText,
+                            isSelected && styles.antBadgeTextSelected,
+                          ]}>
+                            ANT {ant.antNumber}
+                          </Text>
+                        </View>
                         <Text style={[
                           styles.distortionName,
                           isSelected && styles.distortionNameSelected,
                         ]}>
-                          {distortion.name}
+                          {ant.shortName}
                         </Text>
                         {isDetected && (
-                          <Text style={styles.detectedLabel}>Detected</Text>
+                          <View style={styles.detectedBadgeSmall}>
+                            <Ionicons name="checkmark-circle" size={16} color={COLORS.gold} />
+                          </View>
                         )}
                       </View>
                       <Text style={styles.distortionDescription}>
-                        {distortion.description}
+                        {ant.description}
                       </Text>
                       <Text style={styles.distortionExample}>
-                        {distortion.example}
+                        {ant.example}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -390,6 +498,19 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
               <Text style={styles.investigatePrompt}>
                 {currentDistortion?.reframePrompt}
               </Text>
+
+              {/* Self-Compassion Prompt */}
+              {currentDistortion?.selfCompassionPrompt && (
+                <View style={styles.selfCompassionBox}>
+                  <View style={styles.selfCompassionHeader}>
+                    <Ionicons name="heart-outline" size={18} color={COLORS.sage} />
+                    <Text style={styles.selfCompassionLabel}>Self-Compassion Check</Text>
+                  </View>
+                  <Text style={styles.selfCompassionText}>
+                    {currentDistortion.selfCompassionPrompt}
+                  </Text>
+                </View>
+              )}
 
               <TextInput
                 style={styles.notesInput}
@@ -585,6 +706,23 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
         gameId="thought_detective"
         onClose={() => setShowWhyThisWorks(false)}
       />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
+      />
     </GameContainer>
   );
 }
@@ -669,6 +807,46 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
+  // Dr. Amen Attribution
+  amenAttribution: {
+    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+    borderRadius: RADIUS.md,
+    padding: SPACING.sm,
+    marginBottom: SPACING.md,
+    alignItems: 'center',
+  },
+  amenAttributionText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.gold,
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+  },
+
+  // ANT Badge
+  antBadge: {
+    backgroundColor: COLORS.backgroundCard,
+    borderRadius: RADIUS.sm,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 2,
+    marginRight: SPACING.sm,
+  },
+  antBadgeSelected: {
+    backgroundColor: GAME_COLORS.thoughtDetective.primary,
+  },
+  antBadgeText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '700',
+  },
+  antBadgeTextSelected: {
+    color: COLORS.background,
+  },
+  detectedBadgeSmall: {
+    marginLeft: 'auto',
+  },
+
   // Distortion List
   detectedBadge: {
     marginBottom: SPACING.md,
@@ -692,7 +870,6 @@ const styles = StyleSheet.create({
   },
   distortionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: SPACING.xs,
   },
@@ -701,6 +878,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: COLORS.earth,
     fontFamily: TYPOGRAPHY.ui,
+    flex: 1,
   },
   distortionNameSelected: {
     color: GAME_COLORS.thoughtDetective.accent,
@@ -722,6 +900,37 @@ const styles = StyleSheet.create({
     color: COLORS.mutedBrown,
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
+  },
+
+  // Self-Compassion
+  selfCompassionBox: {
+    backgroundColor: 'rgba(143, 188, 143, 0.15)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.sage,
+  },
+  selfCompassionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.xs,
+  },
+  selfCompassionLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.sage,
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  selfCompassionText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    lineHeight: TYPOGRAPHY.sizes.md * 1.5,
   },
 
   // Investigate Step

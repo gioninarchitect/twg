@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
-import * as Haptics from 'expo-haptics';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
 import { emitBodyScanCompleted } from '../../worldModel';
@@ -34,6 +34,8 @@ import {
   PulsingDot,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
@@ -150,7 +152,7 @@ function TensionSlider({ value, onChange, label }: TensionSliderProps) {
   const colors = GAME_COLORS.bodyScan;
 
   const handlePress = (newValue: number) => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
     onChange(newValue);
   };
 
@@ -290,13 +292,20 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   const [showComplete, setShowComplete] = useState(false);
   const [startTime] = useState(Date.now());
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
+  const [skippedRegions, setSkippedRegions] = useState<string[]>([]);
+
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(false);
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
 
   const currentRegion = BODY_REGIONS[currentRegionIndex];
   const progress = ((currentRegionIndex + 1) / BODY_REGIONS.length) * 100;
 
   // Handle recording tension
   const handleRecordTension = useCallback(() => {
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    safeHaptics.impactAsync(ImpactFeedbackStyle.Medium);
 
     if (!showRelease) {
       // Record pre-tension and show release phase
@@ -316,6 +325,24 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       }
     }
   }, [currentRegion, currentTension, showRelease, currentRegionIndex]);
+
+  // Handle skipping a region (trauma-informed option)
+  const handleSkipRegion = useCallback(() => {
+    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
+
+    // Record this region as skipped
+    setSkippedRegions((prev) => [...prev, currentRegion.id]);
+
+    // Move to next region
+    if (currentRegionIndex < BODY_REGIONS.length - 1) {
+      setCurrentRegionIndex((prev) => prev + 1);
+      setShowRelease(false);
+      setCurrentTension(5);
+    } else {
+      // Scan complete
+      setPhase('complete');
+    }
+  }, [currentRegion, currentRegionIndex]);
 
   // Handle completion
   const handleComplete = useCallback(() => {
@@ -349,19 +376,62 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
     };
 
     emitBodyScanCompleted(tensionEntry, duration);
-    setShowComplete(true);
+    // Show post-mood check instead of completion directly
+    setShowPostMoodCheck(true);
   }, [preTension, postTension, startTime]);
 
-  // Calculate stats
+  // Handle initiating session (shows pre-mood check first)
+  const handleBeginScan = useCallback(() => {
+    setShowPreMoodCheck(true);
+  }, []);
+
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+    setPhase('scan');
+  }, []);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+    setPhase('scan');
+  }, []);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+    setShowComplete(true);
+  }, []);
+
+  // Calculate stats (excluding skipped regions)
   const calculateStats = () => {
-    const avgPre = Object.values(preTension).reduce((a, b) => a + b, 0) / Object.values(preTension).length;
-    const avgPost = Object.values(postTension).reduce((a, b) => a + b, 0) / Object.values(postTension).length;
+    // Filter out skipped regions from calculations
+    const scannedRegions = Object.keys(preTension).filter(
+      (region) => !skippedRegions.includes(region)
+    );
+
+    if (scannedRegions.length === 0) {
+      return { avgPre: '0', avgPost: '0', improvement: '0', scannedCount: 0, skippedCount: skippedRegions.length };
+    }
+
+    const avgPre = scannedRegions.reduce((sum, r) => sum + (preTension[r] || 0), 0) / scannedRegions.length;
+    const avgPost = scannedRegions.reduce((sum, r) => sum + (postTension[r] || 0), 0) / scannedRegions.length;
     const improvement = Math.round((avgPre - avgPost) * 10) / 10;
 
     return {
       avgPre: avgPre.toFixed(1),
       avgPost: avgPost.toFixed(1),
       improvement: improvement > 0 ? `+${improvement}` : improvement.toString(),
+      scannedCount: scannedRegions.length,
+      skippedCount: skippedRegions.length,
     };
   };
 
@@ -459,6 +529,15 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
                     onChange={setCurrentTension}
                     label="How much tension do you feel?"
                   />
+                  {/* Trauma-informed skip option */}
+                  <TouchableOpacity
+                    style={styles.skipButton}
+                    onPress={handleSkipRegion}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.skipButtonText}>Skip this area</Text>
+                    <Text style={styles.skipButtonSubtext}>It's okay to move on</Text>
+                  </TouchableOpacity>
                 </>
               ) : (
                 <>
@@ -475,6 +554,15 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
                     onChange={setCurrentTension}
                     label="How does it feel now?"
                   />
+                  {/* Trauma-informed skip option during release phase too */}
+                  <TouchableOpacity
+                    style={styles.skipButton}
+                    onPress={handleSkipRegion}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.skipButtonText}>Skip this area</Text>
+                    <Text style={styles.skipButtonSubtext}>You can return another time</Text>
+                  </TouchableOpacity>
                 </>
               )}
             </GameCard>
@@ -521,10 +609,10 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
 
       {/* Footer buttons */}
       <GameFooter>
-        {phase === 'intro' && (
+        {phase === 'intro' && !showPreMoodCheck && (
           <GradientButton
             title="Begin Body Scan"
-            onPress={() => setPhase('scan')}
+            onPress={handleBeginScan}
           />
         )}
         {phase === 'scan' && (
@@ -546,12 +634,16 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       <SessionComplete
         visible={showComplete}
         title="Body Scan Complete"
-        subtitle="You've released tension with awareness"
+        subtitle={skippedRegions.length > 0
+          ? "You honored your boundaries today"
+          : "You've released tension with awareness"}
         stats={[
-          { label: 'Regions', value: BODY_REGIONS.length },
+          { label: 'Scanned', value: calculateStats().scannedCount || BODY_REGIONS.length - skippedRegions.length },
           { label: 'Improvement', value: calculateStats().improvement },
         ]}
-        encouragement="Your body is a temple. By listening to it with compassion, you honor the gift you've been given."
+        encouragement={skippedRegions.length > 0
+          ? "Some areas weren't ready today, and that's perfectly okay. Healing happens in your own time. You showed courage just by showing up."
+          : "Your body is a temple. By listening to it with compassion, you honor the gift you've been given."}
         onContinue={() => {
           setShowComplete(false);
           handleClose();
@@ -564,6 +656,23 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
         visible={showWhyThisWorks}
         gameId="body_scan"
         onClose={() => setShowWhyThisWorks(false)}
+      />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
       />
     </GameContainer>
   );
@@ -884,6 +993,28 @@ const styles = StyleSheet.create({
   bodyResultPreview: {
     height: 150,
     width: 100,
+  },
+
+  // Skip Button (trauma-informed)
+  skipButton: {
+    marginTop: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: COLORS.warmBeige,
+  },
+  skipButtonText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.mutedBrown,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  skipButtonSubtext: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.mutedBrown,
+    fontFamily: TYPOGRAPHY.ui,
+    fontStyle: 'italic',
+    marginTop: 2,
+    opacity: 0.7,
   },
 });
 

@@ -21,7 +21,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import * as Haptics from 'expo-haptics';
+import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { useNavigation } from '@react-navigation/native';
 import { useWorldModel } from '../../worldModel';
 import { GAME_COLORS, GAME_ANIMATIONS } from '../../theme/brainGames';
@@ -33,6 +33,8 @@ import {
   DisclaimerModal,
   WhyThisWorks,
   WhyThisWorksButton,
+  SessionMoodCheckIn,
+  type SessionMoodLevel,
 } from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -343,6 +345,12 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
   const [currentScripture] = useState(SCRIPTURES[Math.floor(Math.random() * SCRIPTURES.length)]);
   const [encouragement, setEncouragement] = useState('');
 
+  // Mood check-in states
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(false);
+  const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
+  const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
+  const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
+
   // Stats tracking
   const [stats, setStats] = useState<GameStats>({
     correctPositionMatches: 0,
@@ -476,6 +484,35 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
     setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
   }, [generateTrials]);
 
+  // Handle initiating session (shows pre-mood check first)
+  const handleBeginGame = useCallback(() => {
+    setShowPreMoodCheck(true);
+  }, []);
+
+  // Handle pre-mood selection
+  const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPreMood(mood);
+    setShowPreMoodCheck(false);
+    startGame();
+  }, [startGame]);
+
+  // Handle pre-mood skip
+  const handlePreMoodSkip = useCallback(() => {
+    setShowPreMoodCheck(false);
+    startGame();
+  }, [startGame]);
+
+  // Handle post-mood selection
+  const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
+    setPostMood(mood);
+    setShowPostMoodCheck(false);
+  }, []);
+
+  // Handle post-mood skip
+  const handlePostMoodSkip = useCallback(() => {
+    setShowPostMoodCheck(false);
+  }, []);
+
   // Process response for current trial
   const processResponse = useCallback((type: 'position' | 'symbol', pressed: boolean) => {
     const currentTrial = trials[currentTrialIndex];
@@ -490,19 +527,19 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
       if (type === 'position') {
         if (pressed && isMatch) {
           newStats.correctPositionMatches++;
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          safeHaptics.notificationAsync(NotificationFeedbackType.Success);
         } else if (pressed && !isMatch) {
           newStats.incorrectPositionMatches++;
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          safeHaptics.notificationAsync(NotificationFeedbackType.Error);
         }
         // Missed matches are calculated at end of trial
       } else {
         if (pressed && isMatch) {
           newStats.correctSymbolMatches++;
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          safeHaptics.notificationAsync(NotificationFeedbackType.Success);
         } else if (pressed && !isMatch) {
           newStats.incorrectSymbolMatches++;
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          safeHaptics.notificationAsync(NotificationFeedbackType.Error);
         }
       }
 
@@ -538,7 +575,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
     setPositionPressed(false);
     setSymbolPressed(false);
 
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
 
     // Hide stimulus after duration
     stimulusTimeoutRef.current = setTimeout(() => {
@@ -581,9 +618,10 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
             setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
           }
         } else {
-          // Game complete
+          // Game complete - show post-mood check first
+          setShowPostMoodCheck(true);
           setPhase('complete');
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          safeHaptics.notificationAsync(NotificationFeedbackType.Success);
         }
       }, settings.interStimulusInterval);
     }, settings.stimulusDuration);
@@ -737,7 +775,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
 
               <TouchableOpacity
                 style={styles.startButton}
-                onPress={startGame}
+                onPress={handleBeginGame}
               >
                 <Text style={styles.startButtonText}>Begin Training</Text>
                 <Ionicons name="play" size={20} color="#fff" />
@@ -872,6 +910,23 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
         visible={showWhyThisWorks}
         gameId="pattern_peace"
         onClose={() => setShowWhyThisWorks(false)}
+      />
+
+      {/* Pre-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPreMoodCheck}
+        type="pre"
+        onSelect={handlePreMoodSelect}
+        onSkip={handlePreMoodSkip}
+      />
+
+      {/* Post-Session Mood Check-In */}
+      <SessionMoodCheckIn
+        visible={showPostMoodCheck}
+        type="post"
+        preMood={preMood || undefined}
+        onSelect={handlePostMoodSelect}
+        onSkip={handlePostMoodSkip}
       />
     </LinearGradient>
   );

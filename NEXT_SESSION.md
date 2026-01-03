@@ -1,167 +1,181 @@
 # Tea With God - Next Session Handoff
 
-**Session Date:** December 27, 2025 (Updated)
+**Session Date:** January 3, 2026 (Evening)
 **Project:** Tea With God - Mental Wellness App
+**Branch:** `feature/brain-games-enhancements-dec27`
 
 ---
 
-## What We Accomplished This Session
+## SERVER CONFIGURATION
 
-### 1. TypeScript Build Fixes (COMPLETE)
-Fixed 25+ TypeScript errors across the mobile app:
-- Made `onClose` prop optional in all 5 brain game screens with navigation fallback
-- Fixed `AccessContext.tsx` guestStartDate persistence
-- Fixed `BodyScanRelease.tsx` style types and TensionEntry format
-- Fixed `GameAnimations.tsx` Animated.Value access pattern
-- Fixed `PatternPeace.tsx` missing exports and dispatch calls
-- Fixed `JournalInput.tsx` expo-file-system legacy import
-- Fixed `DisclaimerModal` prop name (message -> content)
+| Environment | Domain | Folder | Notes |
+|-------------|--------|--------|-------|
+| **Staging** | twg.cleva-ai.co.za | /var/www/twg | Testing |
+| **Production** | teawithgod.com | /var/www/twg | Live |
 
-### 2. PWA Build & Deployment (COMPLETE)
-- Added PWA configuration to `app.json`
-- Built with `npx expo export -p web`
-- Created `manifest.json` and `sw.js` service worker
-- Deployed to https://twg.cleva-ai.co.za/app
+Both domains point to the **same folder** with different nginx configs.
 
-### 3. APK Build & Upload (COMPLETE)
-- Built APK via EAS: `eas build -p android --profile preview`
-- APK: TeaWithGod-v1.0.1.apk (87MB)
-- Uploaded to: https://twg.cleva-ai.co.za/TeaWithGod-v1.0.1.apk
-
-### 4. Supabase Database Integration (COMPLETE)
-Created tables in Supabase (SQL in `backend/supabase-admin-setup.sql`):
-- `social_posts` - Content calendar with platforms array, themes
-- `contacts` - CRM with status tracking
-- `crm_activities` - Activity log
-- `invoices` - Invoice records
-- `invoice_line_items` - Line items with foreign key
-
-All tables have:
-- RLS enabled with open policies for admin access
-- Triggers for `updated_at` timestamps
-- Proper indexes
-
-### 5. Admin Dashboard Supabase Integration (COMPLETE)
-Updated `/website/admin/index.html`:
-- Added Supabase JS client via CDN
-- All CRUD operations now persist to Supabase
-- Fallback to localStorage if Supabase fails
-- Auto-loads data on login and page refresh
-- Deployed to https://twg.cleva-ai.co.za/admin
-
-### 6. Git Repos Organized
-- **Mobile repo:** `feature/brain-games-enhancements-dec27` (engagement components, TS fixes, PWA)
-- **Parent repo:** `feature/admin-supabase-dec27` (website, backend, docs)
-- Mobile excluded from parent repo (separate git history)
+**Server IP:** 154.66.196.12
 
 ---
 
-## Live Deployments
+## What We Did This Session (Jan 3, 2026 - Evening)
 
-| Asset | URL |
-|-------|-----|
-| Marketing Site | https://twg.cleva-ai.co.za |
-| PWA | https://twg.cleva-ai.co.za/app |
-| APK Download | https://twg.cleva-ai.co.za/TeaWithGod-v1.0.1.apk |
-| Admin Dashboard | https://twg.cleva-ai.co.za/admin |
-| B2B Portal | https://twg.cleva-ai.co.za/b2b |
+### Brain Games 2.0 - COMPLETE
 
----
+#### Phase 1: SessionMoodCheckIn Integration
+- Added pre/post session mood check-ins to ALL 6 brain games
+- Three gentle mood options: "Heavy today", "Getting by", "Lighter"
+- Trauma-informed skip option for BodyScanRelease (can skip body regions)
+- Compassionate messaging throughout
 
-## Priority for Next Session
+#### Phase 2: Major Enhancements
+1. **Potter's Clay Theme** (replaced Kintsugi)
+   - Biblical metaphor from Jeremiah 18:4
+   - Journey stages: Gathering (1-10), Shaping (11-20), Refining (21-30), Becoming (31-40)
+   - Updated BrainGamesHub with progress display
 
-### PRIORITY 1: Book Content Re-Import
-User will provide:
-- **New book content as TEXT FILE** (not Word doc)
-- Previous Word doc had character encoding issues
-- Must go through character checking workflow
+2. **ScripturePalace Spaced Repetition**
+   - SM-2 algorithm for optimal review scheduling
+   - Mastery levels: Planting → Sprouting → Growing → Blooming → Rooted
+   - Visual indicators on room cards
+   - "Due Review" badge for scriptures needing attention
+   - Data persists to AsyncStorage
 
-### PRIORITY 2: Test Supabase Integration
-- Verify admin dashboard data persists across sessions
-- Test all CRUD operations (social posts, contacts, invoices)
-- Check data appears in Supabase dashboard
+3. **BreatheWithGod Audio Guidance**
+   - Toggle switch for haptic guidance on phase transitions
+   - Visual indicator during session
+   - Preferences persist to AsyncStorage
 
-### PRIORITY 3: Social Media Strategy
-- Define all platforms (Instagram, Facebook, TikTok, YouTube, LinkedIn, X/Twitter)
-- **Lonnie's LinkedIn** needs setup for credibility
-- Populate calendar with strategic posts using 6 weekly themes
+4. **Game Data Persistence Service**
+   - New `src/services/gameDataService.ts`
+   - Saves: scriptures, breathing prefs, gratitude history, game stats
+   - Streak tracking across sessions
 
-### PRIORITY 4: App Store Preparation
-- APK ready for internal testing
-- Prepare Play Store listing assets
-- iOS build when ready
+### Website Updates
+- `science.html` - Updated journey phases to Potter's Clay terminology
+- Removed "kintsugi complete" reference
 
----
+### Deployed
+- PWA to https://twg.cleva-ai.co.za/app
+- Website updates to https://twg.cleva-ai.co.za
 
-## Important File Locations
-
-### Mobile App
+### Git Commit
 ```
-/Users/florisolivier/TWGAPP/tea-with-God/mobile/
-├── src/
-│   ├── screens/brainGames/    (game screens - fixed onClose props)
-│   ├── components/brainGames/ (shared components + new engagement system)
-│   └── context/AccessContext.tsx (fixed guestStartDate)
-├── app.json                   (PWA config added)
-└── dist/                      (PWA build output)
-```
-
-### Website/Admin
-```
-/Users/florisolivier/TWGAPP/tea-with-God/website/
-├── admin/index.html           (Supabase integrated)
-├── b2b/index.html
-└── images/teacup.png
-```
-
-### Backend
-```
-/Users/florisolivier/TWGAPP/tea-with-God/backend/
-├── src/server.js
-├── src/supabase.js
-├── supabase-admin-setup.sql   (run this in Supabase SQL editor)
-└── .env                       (Supabase keys)
+9a10e20 Add Brain Games 2.0 enhancements
+10 files changed, 1866 insertions(+), 198 deletions(-)
 ```
 
 ---
 
-## Supabase Config
+## Files Changed This Session
 
-**Project URL:** https://hqzyzioyospxwfzrdwkj.supabase.co
+| File | Change |
+|------|--------|
+| `src/components/brainGames/MoodCheckIn.tsx` | SessionMoodCheckIn component + props fix |
+| `src/components/brainGames/index.ts` | Exports for new components |
+| `src/screens/brainGames/BrainGamesHub.tsx` | Potter's Clay theme, removed Kintsugi |
+| `src/screens/brainGames/ScripturePalace.tsx` | Spaced repetition algorithm, persistence |
+| `src/screens/brainGames/BreatheWithGod.tsx` | Audio guidance toggle, persistence |
+| `src/screens/brainGames/BodyScanRelease.tsx` | Trauma-informed skip, mood check-ins |
+| `src/screens/brainGames/GratitudeGarden.tsx` | SessionMoodCheckIn integration |
+| `src/screens/brainGames/PatternPeace.tsx` | SessionMoodCheckIn integration |
+| `src/screens/brainGames/ThoughtDetective.tsx` | SessionMoodCheckIn integration |
+| `src/services/gameDataService.ts` | NEW - AsyncStorage persistence |
+| `website/science.html` | Potter's Clay journey phases |
 
-Tables created:
-- social_posts
-- contacts
-- crm_activities
-- invoices
-- invoice_line_items
+---
+
+## Brain Games Technical Summary
+
+### SessionMoodCheckIn Props
+```typescript
+interface SessionMoodCheckInProps {
+  visible: boolean;
+  type: 'pre' | 'post';
+  gameName?: string;
+  preMood?: SessionMoodLevel;
+  onSelect: (mood: SessionMoodLevel) => void;
+  onSkip: () => void;
+}
+```
+
+### Spaced Repetition (ScripturePalace)
+- Base intervals: 1, 3, 7, 14, 30 days per mastery level
+- Ease factor: 1.3-2.5 (adjusts based on recall success)
+- Mastery levels: 1-5 (Planting to Rooted)
+
+### Data Persistence Keys
+- `@twg:scripture_palace` - Scriptures array
+- `@twg:breathing_prefs` - Pattern, cycles, audio toggle
+- `@twg:gratitude_history` - Up to 40 entries
+- `@twg:game_stats` - Last played, totals, streak
 
 ---
 
 ## Server Info
 
-| Server | IP | Domain | Web Root |
-|--------|----|----|----------|
-| TWG UAT | 154.66.196.12 | twg.cleva-ai.co.za | /var/www/twg |
+| Item | Value |
+|------|-------|
+| Server IP | 154.66.196.12 |
+| Staging Domain | twg.cleva-ai.co.za |
+| Production Domain | teawithgod.com |
+| Frontend Path | /var/www/twg |
+| PWA Path | /var/www/twg/app |
+| Flipbook Path | /var/www/twg/flipbook |
+| Backend Path | /var/www/twg/backend |
+| PM2 Process | twg-api |
+| Backend Port | 3000 |
 
 ---
 
-## Access Codes (For Testing)
-- `TEAWITHGOD2025` - Full access
-- `HEALING40DAYS` - Full access
-- `KINTSUGI2025` - Full access
-- `BETAREVIEW` - Full access
+## Deployment Commands
+
+### Full Website Deploy
+```bash
+cd /Users/florisolivier/TWGAPP/tea-with-God/website && tar --exclude='._*' --exclude='.DS_Store' --exclude='*.txt' -czf /tmp/twg-website-deploy.tar.gz . && scp /tmp/twg-website-deploy.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /var/www/twg && tar -xzf /tmp/twg-website-deploy.tar.gz && chown -R www-data:www-data /var/www/twg && chmod -R 755 /var/www/twg && rm /tmp/twg-website-deploy.tar.gz && echo 'Deployment complete'"
+```
+
+### PWA Only Deploy
+```bash
+cd /Users/florisolivier/TWGAPP/tea-with-God/mobile && npx expo export -p web && rm -rf ../website/app/* && cp -r dist/* ../website/app/
+```
+Then run full website deploy.
 
 ---
 
-## Next Session Checklist
+## Test URLs
 
-- [ ] Read this document first
-- [ ] Test admin dashboard Supabase persistence
-- [ ] User may provide book content as TEXT file
-- [ ] Continue with social media content planning
-- [ ] Ask user what the priority is if unclear
+| What | URL |
+|------|-----|
+| PWA (staging) | https://twg.cleva-ai.co.za/app |
+| Science Page | https://twg.cleva-ai.co.za/science.html |
+| Brain Games Hub | Access via PWA Dashboard |
 
 ---
 
-*"She was broken, but beautiful. Like pottery mended with gold."* - Kintsugi proverb
+## Next Steps
+
+1. Test Brain Games 2.0 features on staging
+2. Verify spaced repetition persists between sessions
+3. Test mood check-ins across all games
+4. User testing at Optima Psychiatric Institution (upcoming trial)
+
+---
+
+## Important Context
+
+- **Theme changed from Kintsugi to Potter's Clay** (Jeremiah 18:4)
+- **Brain Games unlock progressively:**
+  - Day 1: Breathe with God, Gratitude Garden
+  - Day 7: Scripture Palace
+  - Day 15: Thought Detective
+  - Day 22: Body Scan Release
+  - Day 28: Pattern Peace
+- Users can only see/access games they've unlocked
+- Website and mobile app are separate git repos
+- Both staging and production use same folder
+
+---
+
+*"The potter formed it into another pot, shaping it as seemed best to him."* - Jeremiah 18:4

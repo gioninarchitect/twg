@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Analysis | Tea With God</title>
+    <link rel="icon" type="image/png" href="images/teacup.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #1A1A1A;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --gold: #D4AF37;
+            --gold-light: #E8D48A;
+            --gold-dark: #B8960C;
+            --text-primary: #FAFAFA;
+            --text-secondary: rgba(250, 250, 250, 0.7);
+            --text-muted: rgba(250, 250, 250, 0.5);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-gold: rgba(212, 175, 55, 0.3);
+            --valley: #8B4513;
+            --waiting: #CD853F;
+            --rising: #DAA520;
+            --becoming: #D4AF37;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, rgba(212, 175, 55, 0.1) 0%, transparent 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+        }
+
+        .brand-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .document-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .document-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .document-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-item i {
+            width: 16px;
+            height: 16px;
+            color: var(--gold);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Executive Summary */
+        .executive-summary {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid var(--border-gold);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .executive-summary h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .executive-summary p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        /* Accordion */
+        .accordion {
+            margin-bottom: 1rem;
+        }
+
+        .accordion-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: var(--border-gold);
+        }
+
+        .accordion-item.active {
+            border-color: var(--gold);
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .accordion-title h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .accordion-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .accordion-icon i {
+            width: 20px;
+            height: 20px;
+            color: var(--gold);
+        }
+
+        .accordion-chevron {
+            width: 24px;
+            height: 24px;
+            color: var(--text-muted);
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-item.active .accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .accordion-item.active .accordion-content {
+            max-height: 5000px;
+        }
+
+        .accordion-body {
+            padding: 0 1.5rem 1.5rem;
+        }
+
+        /* Section Styles */
+        .section-intro {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        th {
+            text-align: left;
+            padding: 0.875rem 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            border-bottom: 1px solid var(--border-gold);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .highlight-cell {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* Pro/Con Tags */
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tag-pro {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+        }
+
+        .tag-con {
+            background: rgba(255, 152, 0, 0.2);
+            color: #FF9800;
+        }
+
+        /* Diagrams */
+        .diagram {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .diagram-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            color: var(--gold-light);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+        }
+
+        .info-card h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Dimension List */
+        .dimension-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .dimension-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .dimension-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .dimension-icon i {
+            width: 18px;
+            height: 18px;
+        }
+
+        .dimension-info h5 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .dimension-info p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Phase Colors */
+        .phase-valley { background: rgba(139, 69, 19, 0.2); }
+        .phase-valley i { color: #8B4513; }
+        .phase-waiting { background: rgba(205, 133, 63, 0.2); }
+        .phase-waiting i { color: #CD853F; }
+        .phase-rising { background: rgba(218, 165, 32, 0.2); }
+        .phase-rising i { color: #DAA520; }
+        .phase-becoming { background: rgba(212, 175, 55, 0.2); }
+        .phase-becoming i { color: #D4AF37; }
+
+        /* Roadmap */
+        .roadmap {
+            position: relative;
+            padding-left: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .roadmap::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--gold) 0%, var(--border) 100%);
+        }
+
+        .roadmap-phase {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .roadmap-phase::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--bg-primary);
+            border: 3px solid var(--gold);
+        }
+
+        .roadmap-phase.completed::before {
+            background: var(--gold);
+        }
+
+        .roadmap-phase h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-phase .phase-status {
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-items {
+            list-style: none;
+        }
+
+        .roadmap-items li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            padding: 0.25rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .roadmap-items li i {
+            width: 16px;
+            height: 16px;
+        }
+
+        .roadmap-items li.done i {
+            color: var(--success);
+        }
+
+        .roadmap-items li.pending i {
+            color: var(--text-muted);
+        }
+
+        /* Comparison Table */
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .comparison-col {
+            text-align: center;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .comparison-col.typical {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .comparison-col.twg {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-gold);
+        }
+
+        .comparison-col h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .comparison-col.typical h4 {
+            color: var(--text-muted);
+        }
+
+        .comparison-col.twg h4 {
+            color: var(--gold);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        .footer-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-reference {
+            font-size: 0.85rem;
+            color: var(--gold);
+        }
+
+        .footer-meta {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: #333;
+            }
+
+            .accordion-content {
+                max-height: none !important;
+            }
+
+            .accordion-chevron {
+                display: none;
+            }
+
+            .header {
+                background: none;
+            }
+
+            .accordion-item {
+                break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .document-title {
+                font-size: 1.75rem;
+            }
+
+            .document-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .accordion-header {
+                padding: 1rem;
+            }
+
+            .accordion-body {
+                padding: 0 1rem 1rem;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="images/teacup.png" alt="Tea With God" class="logo">
+                <span class="brand-name">Tea With God</span>
+            </div>
+            <h1 class="document-title">Architecture Analysis</h1>
+            <p class="document-subtitle">Technical Deep-Dive & Strategic Assessment</p>
+            <div class="document-meta">
+                <div class="meta-item">
+                    <i data-lucide="calendar"></i>
+                    <span>January 5, 2026</span>
+                </div>
+                <div class="meta-item">
+                    <i data-lucide="file-text"></i>
+                    <span>Version 1.0</span>
+                </div>
+                <div class="meta-item">
+                    <i data-lucide="shield"></i>
+                    <span>Internal - Strategic</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Executive Summary -->
+        <section class="executive-summary">
+            <h2><i data-lucide="sparkles"></i> Executive Summary</h2>
+            <p>Tea With God employs a sophisticated <strong>World Model Architecture</strong> combined with an <strong>Offline-First Design Pattern</strong> that positions it as a technically advanced mental wellness application. The World Model serves as the app's competitive moat - a local-first AI system that enables personalized healing journeys, proactive interventions, and cross-game insights while maintaining complete user privacy. This document analyzes the architectural decisions, their trade-offs, and the strategic benefits for both business growth and user outcomes.</p>
+        </section>
+
+        <!-- Accordion Sections -->
+        <div class="accordion">
+            <!-- Section 1: Architecture Overview -->
+            <div class="accordion-item active">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="layers"></i>
+                        </div>
+                        <h3>1. Architecture Overview</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="section-intro">The app is built on a layered architecture with the World Model as its intelligent core, enabling offline-first operation with optional cloud synchronization.</p>
+
+                        <h4 style="color: var(--gold); margin: 1.5rem 0 1rem; font-size: 1.1rem;">The World Model - 7 Dimensions of User State</h4>
+
+                        <div class="dimension-list">
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-valley">
+                                    <i data-lucide="compass"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Journey</h5>
+                                    <p>Current day, streaks, completion rates</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-waiting">
+                                    <i data-lucide="heart"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Emotional</h5>
+                                    <p>Mood levels, distortions, resilience</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-rising">
+                                    <i data-lucide="brain"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Cognitive</h5>
+                                    <p>Working memory, focus, reframing ability</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-becoming">
+                                    <i data-lucide="activity"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Physical</h5>
+                                    <p>Tension hotspots, breathing, body awareness</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-valley">
+                                    <i data-lucide="target"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Behavioral</h5>
+                                    <p>Time preferences, engagement patterns</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-waiting">
+                                    <i data-lucide="sparkles"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Spiritual</h5>
+                                    <p>Prayer engagement, scripture retention</p>
+                                </div>
+                            </div>
+                            <div class="dimension-item">
+                                <div class="dimension-icon phase-rising">
+                                    <i data-lucide="gamepad-2"></i>
+                                </div>
+                                <div class="dimension-info">
+                                    <h5>Brain Games</h5>
+                                    <p>Game progress, scores, unlocks</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 style="color: var(--gold); margin: 1.5rem 0 1rem; font-size: 1.1rem;">System Architecture</h4>
+
+                        <div class="diagram">
+<span class="diagram-title">Layered Architecture Diagram</span>
+┌─────────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                        │
+│  Dashboard │ Day Module │ Brain Games │ Journal │ Settings  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    STATE MANAGEMENT LAYER                    │
+│  World Model │ Progress │ Access │ Journal │ Sync Contexts  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                      SERVICES LAYER                          │
+│  API Service │ Game Data │ Audio │ Supabase │ Storage       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    PERSISTENCE LAYER                         │
+│  AsyncStorage (Local) ←───────→ Supabase (Cloud Backup)     │
+└─────────────────────────────────────────────────────────────┘</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Pros & Cons -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="scale"></i>
+                        </div>
+                        <h3>2. Pros & Cons Analysis</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <h4 style="color: var(--gold); margin: 0 0 1rem; font-size: 1.1rem;">World Model Architecture</h4>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Aspect</th>
+                                        <th>Description</th>
+                                        <th>Impact</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Personalization</td>
+                                        <td>Learns user patterns over time</td>
+                                        <td>Higher engagement, better outcomes</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Proactive Care</td>
+                                        <td>Predicts struggles before they happen</td>
+                                        <td>Early intervention, reduced drop-off</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Offline Intelligence</td>
+                                        <td>Works without internet connection</td>
+                                        <td>Accessible in low-connectivity areas</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Privacy-First</td>
+                                        <td>All analysis happens on-device</td>
+                                        <td>GDPR/POPIA compliant by design</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Cross-Game Insights</td>
+                                        <td>Games inform each other</td>
+                                        <td>Holistic healing recommendations</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-con">CON</span></td>
+                                        <td class="highlight-cell">Complexity</td>
+                                        <td>More code to maintain</td>
+                                        <td>Mitigated by modular design</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-con">CON</span></td>
+                                        <td class="highlight-cell">Cold Start</td>
+                                        <td>New users have no data</td>
+                                        <td>Default recommendations until Day 3</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Offline-First Design</h4>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Aspect</th>
+                                        <th>Description</th>
+                                        <th>Impact</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Accessibility</td>
+                                        <td>Works in areas with poor connectivity</td>
+                                        <td>Reaches underserved markets</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Speed</td>
+                                        <td>Instant response, no network latency</td>
+                                        <td>Better user experience</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Reliability</td>
+                                        <td>No dependency on server uptime</td>
+                                        <td>100% availability</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-pro">PRO</span></td>
+                                        <td class="highlight-cell">Data Costs</td>
+                                        <td>Minimal bandwidth usage</td>
+                                        <td>Affordable in emerging markets</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-con">CON</span></td>
+                                        <td class="highlight-cell">Sync Conflicts</td>
+                                        <td>Data can diverge across devices</td>
+                                        <td>Local-wins policy resolves</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="tag tag-con">CON</span></td>
+                                        <td class="highlight-cell">Code Validation</td>
+                                        <td>Must be online to validate codes</td>
+                                        <td>Graceful offline handling</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Owner Benefits -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="briefcase"></i>
+                        </div>
+                        <h3>3. Benefits for App Owner</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <h4 style="color: var(--gold); margin: 0 0 1rem; font-size: 1.1rem;">Business Benefits</h4>
+
+                        <div class="cards-grid">
+                            <div class="info-card">
+                                <h4><i data-lucide="trending-down"></i> Lower Operating Costs</h4>
+                                <p>Offline-first means minimal server load. Users don't hammer your API constantly.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="maximize"></i> Scalability</h4>
+                                <p>Server only handles auth + code validation. Scale to millions with basic infrastructure.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="shield-check"></i> Data Compliance</h4>
+                                <p>Journal content never touches servers. No liability for sensitive data.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="globe"></i> Market Expansion</h4>
+                                <p>Works in Africa, Latin America, SE Asia where connectivity is unreliable.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="building"></i> B2B Ready</h4>
+                                <p>Organization codes + aggregate metrics enable enterprise sales.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="lock"></i> IP Protection</h4>
+                                <p>World Model algorithms are proprietary, bundled in app, hard to reverse-engineer.</p>
+                            </div>
+                        </div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Competitive Advantages</h4>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Advantage</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight-cell">First-Mover in Faith + AI</td>
+                                        <td>No major competitor has local-first World Model for faith-based mental wellness</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Evidence-Based + Spiritual</td>
+                                        <td>Bridges gap between clinical apps (cold) and prayer apps (no outcomes tracking)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Anti-Shame Philosophy</td>
+                                        <td>Accumulated progress, not streaks - differentiated positioning</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Premium Positioning</td>
+                                        <td>Architecture enables premium pricing - not "just another devotional app"</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">12-18 Month Moat</td>
+                                        <td>Time required for competitors to replicate the World Model system</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Future Monetization Enabled</h4>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Revenue Stream</th>
+                                        <th>How Architecture Supports It</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight-cell">Subscription Tiers</td>
+                                        <td>Access levels already built (GUEST/FULL), easy to add PREMIUM</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">B2B Licensing</td>
+                                        <td>Organization codes ready, aggregate dashboards possible</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">White-Label</td>
+                                        <td>Modular design allows theming/branding customization</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">API Access</td>
+                                        <td>Could license World Model inference to other apps</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Therapist Portal</td>
+                                        <td>World Model data (anonymized) valuable for clinical integration</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: User Benefits -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="users"></i>
+                        </div>
+                        <h3>4. Benefits for Users</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <h4 style="color: var(--gold); margin: 0 0 1rem; font-size: 1.1rem;">User Experience Benefits</h4>
+
+                        <div class="cards-grid">
+                            <div class="info-card">
+                                <h4><i data-lucide="zap"></i> Instant Loading</h4>
+                                <p>No spinners waiting for server. Content loads immediately.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="wifi-off"></i> Works Anywhere</h4>
+                                <p>Use on airplane, in rural areas, during load-shedding.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="eye-off"></i> Private by Default</h4>
+                                <p>Journal stays on their device. Complete confidentiality.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="sparkles"></i> Personalized Journey</h4>
+                                <p>App learns their patterns and adapts recommendations.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="database"></i> No Data Anxiety</h4>
+                                <p>Minimal mobile data usage. Won't eat their bundle.</p>
+                            </div>
+                            <div class="info-card">
+                                <h4><i data-lucide="heart-handshake"></i> No Shame</h4>
+                                <p>Progress accumulates, doesn't break. Gentle approach.</p>
+                            </div>
+                        </div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Mental Health Benefits</h4>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Benefit</th>
+                                        <th>How Architecture Enables It</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight-cell">Proactive Support</td>
+                                        <td>World Model detects struggles early, offers help before crisis</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Gentle Progress</td>
+                                        <td>Accumulated days (not streaks) reduces shame and pressure</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Evidence-Based</td>
+                                        <td>CBT, Polyvagal, Positive Psychology built into recommendations</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Holistic View</td>
+                                        <td>Cross-game insights provide comprehensive healing approach</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Crisis Safety Net</td>
+                                        <td>Anonymous crisis logging ensures help is available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Technical Innovations -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="cpu"></i>
+                        </div>
+                        <h3>5. Technical Innovations</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <h4 style="color: var(--gold); margin: 0 0 1rem; font-size: 1.1rem;">Moving Average Mood Tracking</h4>
+                        <p class="section-intro">Instead of raw mood values, the World Model uses exponential smoothing to prevent "mood whiplash" from single bad entries and show meaningful trends.</p>
+
+                        <div class="code-block">newValue = current * 0.7 + latestInput * 0.3</div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Three-Tier Inference Strategy</h4>
+
+                        <div class="diagram">
+<span class="diagram-title">AI Inference Tiers</span>
+┌─────────────────────────────────────────┐
+│  TIER 1: Rule-Based (Always Available)  │
+│  • Pattern matching, keywords           │
+│  • Instant, deterministic               │
+│  • Works 100% offline                   │
+└─────────────────────────────────────────┘
+                    │
+                    ▼ (if device capable)
+┌─────────────────────────────────────────┐
+│  TIER 2: Small Language Model (Future)  │
+│  • On-device AI (llama.cpp/ONNX)        │
+│  • More nuanced analysis                │
+│  • Still works offline                  │
+└─────────────────────────────────────────┘
+                    │
+                    ▼ (if online + high-stakes)
+┌─────────────────────────────────────────┐
+│  TIER 3: Cloud LLM (Future)             │
+│  • Complex reasoning                    │
+│  • When accuracy critical               │
+│  • Graceful degradation if offline      │
+└─────────────────────────────────────────┘</div>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">Journal Encryption Model</h4>
+
+                        <div class="diagram">
+<span class="diagram-title">Privacy Architecture</span>
+User's Device:
+┌─────────────────────────────────────────┐
+│  Journal Entry (plaintext)              │
+│           ↓                             │
+│  XOR Encryption (random per-user key)   │
+│           ↓                             │
+│  Encrypted Entry (base64)               │
+│           ↓                             │
+│  AsyncStorage (local only)              │
+└─────────────────────────────────────────┘
+
+Server:
+┌─────────────────────────────────────────┐
+│  Never receives journal content         │
+│  Only receives: mood score, distortion  │
+│  counts, engagement metrics             │
+└─────────────────────────────────────────┘</div>
+
+                        <p class="section-intro" style="margin-top: 1rem;">The encryption key is generated on first use and stored in SecureStore (iOS Keychain / Android Keystore). It never leaves the device.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Comparison -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="git-compare"></i>
+                        </div>
+                        <h3>6. Tea With God vs. Typical Apps</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Aspect</th>
+                                        <th>Typical Wellness App</th>
+                                        <th style="color: var(--gold);">Tea With God</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="highlight-cell">Data Storage</td>
+                                        <td>Cloud-first, server-dependent</td>
+                                        <td style="color: var(--gold);">Local-first, cloud backup</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Personalization</td>
+                                        <td>Basic (if any)</td>
+                                        <td style="color: var(--gold);">World Model with 7 dimensions</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Offline Support</td>
+                                        <td>Limited or none</td>
+                                        <td style="color: var(--gold);">Full functionality offline</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Privacy</td>
+                                        <td>Data on servers</td>
+                                        <td style="color: var(--gold);">Sensitive data stays on device</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Intelligence</td>
+                                        <td>None or cloud-dependent AI</td>
+                                        <td style="color: var(--gold);">On-device inference engine</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Streak Philosophy</td>
+                                        <td>Shame-inducing "don't break streak"</td>
+                                        <td style="color: var(--gold);">Gentle "accumulated progress"</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Game Integration</td>
+                                        <td>Standalone features</td>
+                                        <td style="color: var(--gold);">Cross-game insights via World Model</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="highlight-cell">Crisis Handling</td>
+                                        <td>Popup with hotline</td>
+                                        <td style="color: var(--gold);">Proactive detection + anonymous logging</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 7: Roadmap -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="map"></i>
+                        </div>
+                        <h3>7. Architecture Roadmap</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="roadmap">
+                            <div class="roadmap-phase completed">
+                                <h4>Phase 1: Foundation</h4>
+                                <span class="phase-status">COMPLETE</span>
+                                <ul class="roadmap-items">
+                                    <li class="done"><i data-lucide="check-circle"></i> World Model with rule-based inference</li>
+                                    <li class="done"><i data-lucide="check-circle"></i> Offline-first with cloud sync</li>
+                                    <li class="done"><i data-lucide="check-circle"></i> 6 Brain Games with event integration</li>
+                                    <li class="done"><i data-lucide="check-circle"></i> Journal encryption</li>
+                                    <li class="done"><i data-lucide="check-circle"></i> Time-locked guest access</li>
+                                    <li class="done"><i data-lucide="check-circle"></i> B2B organization codes</li>
+                                </ul>
+                            </div>
+
+                            <div class="roadmap-phase">
+                                <h4>Phase 2: Intelligence</h4>
+                                <span class="phase-status">3-6 MONTHS</span>
+                                <ul class="roadmap-items">
+                                    <li class="pending"><i data-lucide="circle"></i> Small Language Model integration (on-device)</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Multi-language content (Afrikaans, Zulu)</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Voice journaling transcription</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Therapist portal MVP</li>
+                                </ul>
+                            </div>
+
+                            <div class="roadmap-phase">
+                                <h4>Phase 3: Growth</h4>
+                                <span class="phase-status">6-12 MONTHS</span>
+                                <ul class="roadmap-items">
+                                    <li class="pending"><i data-lucide="circle"></i> AI companion conversations</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Group/family journeys</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Wearable integration (Apple Watch, Fitbit)</li>
+                                    <li class="pending"><i data-lucide="circle"></i> White-label platform for churches</li>
+                                </ul>
+                            </div>
+
+                            <div class="roadmap-phase">
+                                <h4>Phase 4: Scale</h4>
+                                <span class="phase-status">12+ MONTHS</span>
+                                <ul class="roadmap-items">
+                                    <li class="pending"><i data-lucide="circle"></i> Clinical research partnerships</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Outcome measurement certifications</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Global expansion (5+ languages)</li>
+                                    <li class="pending"><i data-lucide="circle"></i> Enterprise wellness programs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 8: Conclusion -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title">
+                        <div class="accordion-icon">
+                            <i data-lucide="flag"></i>
+                        </div>
+                        <h3>8. Conclusion</h3>
+                    </div>
+                    <i data-lucide="chevron-down" class="accordion-chevron"></i>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <h4 style="color: var(--gold); margin: 0 0 1rem; font-size: 1.1rem;">For the Owner</h4>
+                        <p class="section-intro">The Tea With God architecture is a <strong>strategic asset</strong>, not just technical infrastructure. It enables:</p>
+
+                        <ul style="list-style: none; margin: 1rem 0;">
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Low operating costs</strong> through offline-first design</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Market differentiation</strong> through the World Model</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Regulatory compliance</strong> through privacy-first approach</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Multiple revenue streams</strong> through modular, extensible design</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Global scalability</strong> through low-bandwidth requirements</li>
+                        </ul>
+
+                        <p class="section-intro">The World Model specifically is <strong style="color: var(--gold);">intellectual property</strong> that would take competitors 12-18 months to replicate.</p>
+
+                        <h4 style="color: var(--gold); margin: 2rem 0 1rem; font-size: 1.1rem;">For Users</h4>
+                        <p class="section-intro">Users benefit from an app that:</p>
+
+                        <ul style="list-style: none; margin: 1rem 0;">
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Respects their privacy</strong> - journals never leave their device</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Works anywhere</strong> - no internet required</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Learns their patterns</strong> - personalized healing journey</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Doesn't shame them</strong> - progress accumulates, doesn't break</li>
+                            <li style="padding: 0.5rem 0; color: var(--text-secondary);"><i data-lucide="check" style="width: 16px; height: 16px; color: var(--gold); display: inline; vertical-align: middle; margin-right: 0.5rem;"></i> <strong>Offers real help</strong> - evidence-based psychology, not just platitudes</li>
+                        </ul>
+
+                        <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid var(--border-gold); border-radius: 12px; padding: 1.5rem; margin-top: 2rem; text-align: center;">
+                            <h4 style="color: var(--gold); font-size: 1.1rem; margin-bottom: 0.5rem;">Bottom Line</h4>
+                            <p style="color: var(--text-secondary); font-size: 1rem;">This architecture transforms Tea With God from <em>"a devotional app"</em> into <strong style="color: var(--text-primary);">"an intelligent healing companion."</strong> The investment in World Model infrastructure pays dividends in user outcomes, business defensibility, and future expansion capability.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p class="footer-quote">"The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him."</p>
+        <p class="footer-reference">Jeremiah 18:4</p>
+        <div class="footer-meta">
+            <p>Document prepared by Architecture Analysis Team</p>
+            <p>Classification: Internal - Strategic</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasActive = item.classList.contains('active');
+
+            // Close all other accordions (optional - remove for multi-open)
+            // document.querySelectorAll('.accordion-item').forEach(i => i.classList.remove('active'));
+
+            // Toggle current
+            if (wasActive) {
+                item.classList.remove('active');
+            } else {
+                item.classList.add('active');
+            }
+        }
+
+        // Open first accordion by default
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

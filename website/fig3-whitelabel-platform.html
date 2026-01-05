@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>eBook + Companion App Platform - White Label Solution | Fig3.online</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --card: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.1);
+      --primary: #6366F1;
+      --primary-light: #818CF8;
+      --accent: #10B981;
+      --gold: #F59E0B;
+      --text: #FAFAFA;
+      --text-muted: rgba(250,250,250,0.6);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 60px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(99,102,241,0.1) 0%, transparent 100%);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(99,102,241,0.2);
+      color: var(--primary-light);
+      font-size: 0.875rem;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 30px;
+      margin-bottom: 24px;
+    }
+    h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* Sections */
+    section { padding: 80px 0; }
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      max-width: 600px;
+    }
+    h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    /* Cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99,102,241,0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .card-icon i,
+    .card-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--primary-light);
+      stroke: var(--primary-light);
+    }
+    .card p { color: var(--text-muted); margin: 0; }
+
+    /* Feature List */
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+    .feature-list li {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .feature-list li:last-child { border: none; }
+    .check {
+      width: 24px;
+      height: 24px;
+      background: rgba(16,185,129,0.15);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.875rem;
+    }
+
+    /* Tech Stack */
+    .tech-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+    .tech-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .tech-item strong { display: block; margin-bottom: 4px; }
+    .tech-item span { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* Pricing */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .pricing-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--primary);
+      background: linear-gradient(180deg, rgba(99,102,241,0.1) 0%, var(--card) 100%);
+    }
+    .pricing-card.featured::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+    }
+    .pricing-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .pricing-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .pricing-amount {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+    .pricing-period {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    .pricing-features {
+      list-style: none;
+      padding: 0;
+      margin: 24px 0;
+    }
+    .pricing-features li {
+      padding: 10px 0;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--accent);
+      font-weight: bold;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 14px 24px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .btn:hover { background: var(--primary-light); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+
+    /* Admin Section */
+    .admin-feature {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      padding: 40px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .admin-feature:last-child { border: none; }
+    .admin-feature:nth-child(even) { flex-direction: row-reverse; }
+    .admin-content { flex: 1; }
+    .admin-visual {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      min-height: 200px;
+    }
+    @media (max-width: 768px) {
+      .admin-feature, .admin-feature:nth-child(even) {
+        flex-direction: column;
+      }
+      h1 { font-size: 2rem; }
+      .hero-stats { gap: 30px; }
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--primary-light); font-weight: 600; }
+    td { color: var(--text-muted); }
+
+    /* Use Cases Banner */
+    .use-cases-banner {
+      background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(16,185,129,0.1));
+      border: 1px solid var(--primary);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+    .use-cases-banner h3 {
+      color: var(--primary-light);
+      margin-bottom: 16px;
+    }
+    .use-case-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .use-case-tag {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(16,185,129,0.1));
+      border: 1px solid var(--primary);
+      border-radius: 24px;
+      padding: 60px 40px;
+      text-align: center;
+      margin: 60px 0;
+    }
+    .cta h2 { margin-bottom: 16px; }
+    .cta p { color: var(--text-muted); max-width: 500px; margin: 0 auto 30px; }
+
+    /* Footer */
+    footer {
+      padding: 40px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+    }
+    footer a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero-badge">FIG3.ONLINE WHITE LABEL PLATFORM</span>
+      <h1>Turn Your eBook Into an<br>Interactive App Experience</h1>
+      <p>A complete, production-ready platform for authors, coaches, publishers, and organizations. Customizable for any topic - wellness, self-help, education, spirituality, and more.</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-value">40+</div>
+          <div class="stat-label">Day Journey Structure</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">6</div>
+          <div class="stat-label">Interactive Games</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">R492K</div>
+          <div class="stat-label">Development Value</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section style="padding-top: 40px;">
+    <div class="container">
+      <div class="use-cases-banner">
+        <h3>Works For Any Topic or Industry</h3>
+        <div class="use-case-tags">
+          <span class="use-case-tag">Self-Help Guides</span>
+          <span class="use-case-tag">Wellness Programs</span>
+          <span class="use-case-tag">Fitness Journeys</span>
+          <span class="use-case-tag">Mental Health Courses</span>
+          <span class="use-case-tag">Personal Development</span>
+          <span class="use-case-tag">Coaching Programs</span>
+          <span class="use-case-tag">Educational Content</span>
+          <span class="use-case-tag">Habit Building</span>
+          <span class="use-case-tag">Recovery Programs</span>
+          <span class="use-case-tag">Meditation Series</span>
+          <span class="use-case-tag">Leadership Training</span>
+          <span class="use-case-tag">Onboarding Programs</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What You Get -->
+  <section>
+    <div class="container">
+      <h2>Complete Platform Features</h2>
+      <p class="section-subtitle">Everything you need to launch a premium interactive content experience.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon"><i data-lucide="smartphone"></i></div>
+          <h3>Progressive Web App (PWA)</h3>
+          <p>Works on any device - iOS, Android, desktop. No app store approval needed. Installable with native-like install prompt, offline-capable.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="download"></i></div>
+          <h3>Smart Install Prompt</h3>
+          <p>Automatic "Add to Home Screen" prompt guides users to install the app. Native app experience without app store fees or approval delays.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="brain"></i></div>
+          <h3>6 Psychology-Based Games</h3>
+          <p>Interactive exercises for engagement: breathing, gratitude, memory palace, cognitive reframing, body awareness, and pattern recognition.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="book-open"></i></div>
+          <h3>Digital Flipbook</h3>
+          <p>Beautiful page-turning book viewer with QR code deep links. Access-controlled for paid users only.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="key-round"></i></div>
+          <h3>Access Code System</h3>
+          <p>Sell book + app bundles. Generate codes for organizations. Track redemptions and usage.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="building-2"></i></div>
+          <h3>B2B Portal</h3>
+          <p>Self-service portal for businesses, schools, organizations, and groups to buy bulk licenses.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="credit-card"></i></div>
+          <h3>Payment Integration</h3>
+          <p>Yoco (Africa) and Stripe-ready. Multi-currency pricing. Automatic access code delivery.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="layout-dashboard"></i></div>
+          <h3>Admin Dashboard</h3>
+          <p>Full control over users, orders, organizations, content, and analytics. No coding required.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="globe"></i></div>
+          <h3>Global Ready</h3>
+          <p>Multi-currency, offline-first, deep linking. Ready for international audiences.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin Dashboard -->
+  <section style="background: rgba(99,102,241,0.03);">
+    <div class="container">
+      <h2>Powerful Admin Dashboard</h2>
+      <p class="section-subtitle">Manage your entire business from one place.</p>
+
+      <div class="admin-feature">
+        <div class="admin-content">
+          <h3>Order Management</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>View all orders</strong> - Filter by status, date, plan type</div></li>
+            <li><span class="check">✓</span><div><strong>Manual verification</strong> - Approve EFT/bank transfers</div></li>
+            <li><span class="check">✓</span><div><strong>Auto-generated codes</strong> - Sent via email on payment</div></li>
+            <li><span class="check">✓</span><div><strong>Revenue tracking</strong> - Daily, weekly, monthly reports</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <table>
+            <tr><th>Order</th><th>Plan</th><th>Amount</th><th>Status</th></tr>
+            <tr><td>#1234</td><td>Premium</td><td>R249</td><td style="color: var(--accent);">Verified</td></tr>
+            <tr><td>#1235</td><td>Journey</td><td>R149</td><td style="color: var(--gold);">Pending</td></tr>
+            <tr><td>#1236</td><td>Book</td><td>R99</td><td style="color: var(--accent);">Verified</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-feature">
+        <div class="admin-content">
+          <h3>Organization Management (B2B)</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Add organizations</strong> - Any type of business, group, or team</div></li>
+            <li><span class="check">✓</span><div><strong>Bulk code generation</strong> - 25, 75, or 200+ codes</div></li>
+            <li><span class="check">✓</span><div><strong>Usage tracking</strong> - See how many codes redeemed</div></li>
+            <li><span class="check">✓</span><div><strong>Email distribution</strong> - Send codes directly to org</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <table>
+            <tr><th>Organization</th><th>Type</th><th>Codes</th><th>Used</th></tr>
+            <tr><td>Acme Inc</td><td>Corporate</td><td>75</td><td>42</td></tr>
+            <tr><td>Peak Performance</td><td>Coaching</td><td>25</td><td>18</td></tr>
+            <tr><td>Growth Labs</td><td>Training</td><td>200</td><td>156</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-feature">
+        <div class="admin-content">
+          <h3>User Analytics</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Active users</strong> - Daily, weekly, monthly</div></li>
+            <li><span class="check">✓</span><div><strong>Journey completion</strong> - Track multi-day progress</div></li>
+            <li><span class="check">✓</span><div><strong>Game usage</strong> - Which games are popular</div></li>
+            <li><span class="check">✓</span><div><strong>Retention metrics</strong> - Re-engagement tracking</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div style="background: rgba(99,102,241,0.1); padding: 20px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: 700; color: var(--primary);">847</div>
+              <div style="color: var(--text-muted);">Total Users</div>
+            </div>
+            <div style="background: rgba(16,185,129,0.1); padding: 20px; border-radius: 12px; text-align: center;">
+              <div style="font-size: 2rem; font-weight: 700; color: var(--accent);">42%</div>
+              <div style="color: var(--text-muted);">Completion Rate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-feature">
+        <div class="admin-content">
+          <h3>Email & CRM</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Automated emails</strong> - Order confirmations, welcome series</div></li>
+            <li><span class="check">✓</span><div><strong>Contact form CRM</strong> - Track inquiries and follow-ups</div></li>
+            <li><span class="check">✓</span><div><strong>Email templates</strong> - Customize all messaging</div></li>
+            <li><span class="check">✓</span><div><strong>SMTP integration</strong> - Use your own email domain</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <table>
+            <tr><th>Template</th><th>Sent</th><th>Opened</th></tr>
+            <tr><td>Welcome Email</td><td>847</td><td>72%</td></tr>
+            <tr><td>Day 7 Milestone</td><td>634</td><td>68%</td></tr>
+            <tr><td>Re-engagement</td><td>89</td><td>45%</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- User Features -->
+  <section>
+    <div class="container">
+      <h2>User-Facing Features</h2>
+      <p class="section-subtitle">What your audience experiences.</p>
+
+      <div class="card-grid">
+        <div class="card">
+          <h3>Multi-Day Journey</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span>Customizable day count (30, 40, 60+)</li>
+            <li><span class="check">✓</span>Daily content delivery</li>
+            <li><span class="check">✓</span>Quote or key message</li>
+            <li><span class="check">✓</span>Reflection or action step</li>
+            <li><span class="check">✓</span>Journal prompt</li>
+            <li><span class="check">✓</span>Audio option (Premium)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Private Journal</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span>Encrypted entries</li>
+            <li><span class="check">✓</span>Never leaves device</li>
+            <li><span class="check">✓</span>Per-day journaling</li>
+            <li><span class="check">✓</span>Optional cloud sync</li>
+            <li><span class="check">✓</span>Export capability</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Progress Tracking</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span>Visual timeline</li>
+            <li><span class="check">✓</span>Phase progression</li>
+            <li><span class="check">✓</span>Milestone celebrations</li>
+            <li><span class="check">✓</span>No-shame design</li>
+            <li><span class="check">✓</span>Re-engagement prompts</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Support Resources</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span>One-tap access</li>
+            <li><span class="check">✓</span>Works offline</li>
+            <li><span class="check">✓</span>Customizable resources</li>
+            <li><span class="check">✓</span>FAQ section</li>
+            <li><span class="check">✓</span>Contact options</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>PWA Install Experience</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span>Smart install prompt on first visit</li>
+            <li><span class="check">✓</span>Add to Home Screen guidance</li>
+            <li><span class="check">✓</span>Native app icon on device</li>
+            <li><span class="check">✓</span>Full-screen mode (no browser UI)</li>
+            <li><span class="check">✓</span>Works like native app</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack -->
+  <section style="background: rgba(99,102,241,0.03);">
+    <div class="container">
+      <h2>Technology Stack</h2>
+      <p class="section-subtitle">Built with modern, maintainable technologies.</p>
+
+      <div class="tech-grid">
+        <div class="tech-item">
+          <strong>React Native + Expo</strong>
+          <span>Cross-platform PWA</span>
+        </div>
+        <div class="tech-item">
+          <strong>TypeScript</strong>
+          <span>Type-safe codebase</span>
+        </div>
+        <div class="tech-item">
+          <strong>Express.js</strong>
+          <span>Backend API</span>
+        </div>
+        <div class="tech-item">
+          <strong>SQLite + Supabase</strong>
+          <span>Hybrid database</span>
+        </div>
+        <div class="tech-item">
+          <strong>Yoco / Stripe</strong>
+          <span>Payment processing</span>
+        </div>
+        <div class="tech-item">
+          <strong>PM2 + nginx</strong>
+          <span>Production hosting</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Deep Dive -->
+  <section>
+    <div class="container">
+      <h2>World Model Architecture</h2>
+      <p class="section-subtitle">The intelligent engine that powers personalized user experiences.</p>
+
+      <div class="use-cases-banner" style="background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(245,158,11,0.1)); border-color: var(--gold);">
+        <h3 style="color: var(--gold);">Your Competitive Advantage</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px;">Unlike simple content apps, this platform includes a sophisticated World Model - an on-device AI system that learns user patterns, predicts struggles, and delivers personalized recommendations. This is what transforms a "book app" into an "intelligent companion."</p>
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">7</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">State Dimensions</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">100%</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Offline Capable</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">0</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Data Sent to Cloud</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; font-weight: 700; color: var(--gold);">12-18mo</div>
+            <div style="color: var(--text-muted); font-size: 0.85rem;">Competitor Lead Time</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 Dimensions -->
+      <h3 style="margin: 40px 0 20px;">The World Model Tracks 7 Dimensions</h3>
+      <div class="card-grid">
+        <div class="card" style="border-left: 3px solid var(--primary);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="compass" style="width: 20px; height: 20px; color: var(--primary);"></i> Journey</h3>
+          <p>Current day, streaks, completion rates, milestone progress</p>
+        </div>
+        <div class="card" style="border-left: 3px solid #EC4899;">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="heart" style="width: 20px; height: 20px; color: #EC4899;"></i> Emotional</h3>
+          <p>Mood levels, cognitive patterns, resilience scores</p>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--accent);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="brain" style="width: 20px; height: 20px; color: var(--accent);"></i> Cognitive</h3>
+          <p>Working memory, focus capacity, learning retention</p>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--gold);">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="activity" style="width: 20px; height: 20px; color: var(--gold);"></i> Physical</h3>
+          <p>Body awareness, breathing compliance, tension tracking</p>
+        </div>
+        <div class="card" style="border-left: 3px solid #8B5CF6;">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="target" style="width: 20px; height: 20px; color: #8B5CF6;"></i> Behavioral</h3>
+          <p>Time preferences, engagement patterns, notification response</p>
+        </div>
+        <div class="card" style="border-left: 3px solid #06B6D4;">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="sparkles" style="width: 20px; height: 20px; color: #06B6D4;"></i> Content</h3>
+          <p>Reading engagement, content preferences, topic interests</p>
+        </div>
+        <div class="card" style="border-left: 3px solid #F43F5E;">
+          <h3 style="display: flex; align-items: center; gap: 10px;"><i data-lucide="gamepad-2" style="width: 20px; height: 20px; color: #F43F5E;"></i> Interactive Games</h3>
+          <p>Game access, progress tracking, scores across all 6 psychology-based games</p>
+        </div>
+      </div>
+
+      <!-- Pros & Cons Analysis -->
+      <h3 style="margin: 40px 0 20px;">Architecture Pros & Cons Analysis</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <div class="card" style="border-top: 3px solid var(--accent);">
+          <h3 style="color: var(--accent); margin-bottom: 16px;">World Model Advantages</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Personalization</strong> - Learns user patterns over time for higher engagement</div></li>
+            <li><span class="check">✓</span><div><strong>Proactive Care</strong> - Predicts struggles before they happen</div></li>
+            <li><span class="check">✓</span><div><strong>Offline Intelligence</strong> - Works without internet connection</div></li>
+            <li><span class="check">✓</span><div><strong>Privacy-First</strong> - All analysis happens on-device (GDPR/POPIA compliant)</div></li>
+            <li><span class="check">✓</span><div><strong>Cross-Game Insights</strong> - Games inform each other for holistic recommendations</div></li>
+          </ul>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--primary);">
+          <h3 style="color: var(--primary); margin-bottom: 16px;">Offline-First Advantages</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Accessibility</strong> - Works in areas with poor connectivity</div></li>
+            <li><span class="check">✓</span><div><strong>Speed</strong> - Instant response, no network latency</div></li>
+            <li><span class="check">✓</span><div><strong>Reliability</strong> - No dependency on server uptime (100% availability)</div></li>
+            <li><span class="check">✓</span><div><strong>Data Costs</strong> - Minimal bandwidth usage for emerging markets</div></li>
+            <li><span class="check">✓</span><div><strong>Battery Life</strong> - Fewer network operations, longer device battery</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Architecture Diagram -->
+      <h3 style="margin: 40px 0 20px;">System Architecture</h3>
+      <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 16px; padding: 24px; font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: pre; color: var(--text-muted); line-height: 1.6;">
+┌─────────────────────────────────────────────────────────────┐
+│                    PRESENTATION LAYER                        │
+│  Dashboard │ Content │ Games │ Journal │ Settings │ Profile │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    STATE MANAGEMENT LAYER                    │
+│  World Model │ Progress │ Access │ Journal │ Sync Contexts  │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                      SERVICES LAYER                          │
+│  API Service │ Game Data │ Audio │ Supabase │ Storage       │
+└─────────────────────────────────────────────────────────────┘
+                              │
+┌─────────────────────────────────────────────────────────────┐
+│                    PERSISTENCE LAYER                         │
+│  AsyncStorage (Local) ←───────→ Supabase (Cloud Backup)     │
+└─────────────────────────────────────────────────────────────┘</div>
+
+      <!-- Key Innovations -->
+      <h3 style="margin: 40px 0 20px;">Technical Innovations</h3>
+      <div class="admin-feature" style="border: none; padding: 0;">
+        <div class="admin-content">
+          <h3>Three-Tier AI Inference</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Tier 1: Rule-Based</strong> - Always available, instant, works 100% offline</div></li>
+            <li><span class="check">✓</span><div><strong>Tier 2: On-Device AI</strong> - Small language model for nuanced analysis (future)</div></li>
+            <li><span class="check">✓</span><div><strong>Tier 3: Cloud AI</strong> - Complex reasoning when online (future, optional)</div></li>
+          </ul>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 16px;">The system always has a fallback. Users never experience "no internet" failures.</p>
+        </div>
+        <div class="admin-visual">
+          <div style="text-align: center; padding: 20px;">
+            <div style="background: rgba(16,185,129,0.1); border: 2px solid var(--accent); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+              <strong style="color: var(--accent);">TIER 1</strong>
+              <div style="color: var(--text-muted); font-size: 0.85rem;">Rule-Based (Current)</div>
+            </div>
+            <div style="color: var(--text-muted);">↓</div>
+            <div style="background: rgba(99,102,241,0.1); border: 1px dashed var(--primary); border-radius: 12px; padding: 16px; margin: 12px 0;">
+              <strong style="color: var(--primary);">TIER 2</strong>
+              <div style="color: var(--text-muted); font-size: 0.85rem;">On-Device SLM (Future)</div>
+            </div>
+            <div style="color: var(--text-muted);">↓</div>
+            <div style="background: rgba(245,158,11,0.1); border: 1px dashed var(--gold); border-radius: 12px; padding: 16px;">
+              <strong style="color: var(--gold);">TIER 3</strong>
+              <div style="color: var(--text-muted); font-size: 0.85rem;">Cloud LLM (Future)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Privacy Architecture -->
+      <h3 style="margin: 40px 0 20px;">Privacy-First Design</h3>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon" style="background: rgba(16,185,129,0.15);"><i data-lucide="shield-check" style="color: var(--accent);"></i></div>
+          <h3>On-Device Encryption</h3>
+          <p>Journal content encrypted with per-user keys stored in secure enclave. Even if storage is accessed, data is unreadable.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background: rgba(16,185,129,0.15);"><i data-lucide="database" style="color: var(--accent);"></i></div>
+          <h3>Local-First Storage</h3>
+          <p>All sensitive data stays on device. Cloud sync is optional and user-initiated. No "phone home" behavior.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background: rgba(16,185,129,0.15);"><i data-lucide="eye-off" style="color: var(--accent);"></i></div>
+          <h3>Zero Knowledge</h3>
+          <p>Server never receives journal content. Only anonymized metrics for aggregate analytics. GDPR/POPIA compliant by design.</p>
+        </div>
+      </div>
+
+      <!-- Technical Deep Dive -->
+      <h3 style="margin: 40px 0 20px;">Technical Deep-Dive: Key Innovations</h3>
+
+      <!-- Moving Average -->
+      <div class="admin-feature" style="border: none; padding: 20px 0;">
+        <div class="admin-content">
+          <h3>Moving Average Mood Tracking</h3>
+          <p style="color: var(--text-muted); margin-bottom: 16px;">Instead of raw mood values, the World Model uses exponential smoothing for more accurate emotional state tracking:</p>
+          <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-family: monospace; color: var(--primary-light);">
+            newValue = current × 0.7 + latestInput × 0.3
+          </div>
+          <ul class="feature-list" style="margin-top: 16px;">
+            <li><span class="check">✓</span><div>Prevents "mood whiplash" from single bad entry</div></li>
+            <li><span class="check">✓</span><div>Shows trends, not spikes</div></li>
+            <li><span class="check">✓</span><div>More accurate picture of emotional state over time</div></li>
+            <li><span class="check">✓</span><div>Enables meaningful healing trajectory calculation</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <div style="text-align: center; padding: 20px;">
+            <div style="display: flex; justify-content: space-around; align-items: flex-end; height: 120px; margin-bottom: 16px;">
+              <div style="width: 30px; background: var(--primary); height: 60%; border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 30px; background: var(--primary); height: 80%; border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 30px; background: var(--primary); height: 40%; border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 30px; background: var(--accent); height: 65%; border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 30px; background: var(--accent); height: 70%; border-radius: 4px 4px 0 0;"></div>
+              <div style="width: 30px; background: var(--accent); height: 75%; border-radius: 4px 4px 0 0;"></div>
+            </div>
+            <div style="display: flex; justify-content: space-around; font-size: 0.75rem; color: var(--text-muted);">
+              <span>Raw</span>
+              <span>Raw</span>
+              <span>Raw</span>
+              <span>Smooth</span>
+              <span>Smooth</span>
+              <span>Smooth</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 12px;">Smoothed values show true trends</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Journal Encryption -->
+      <div class="admin-feature" style="border: none; padding: 20px 0;">
+        <div class="admin-content">
+          <h3>Journal Encryption Model</h3>
+          <p style="color: var(--text-muted); margin-bottom: 16px;">Multi-layer security ensures journal content is protected at rest and never transmitted:</p>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Per-user encryption key</strong> - Generated on first use, stored in iOS Keychain / Android Keystore</div></li>
+            <li><span class="check">✓</span><div><strong>XOR encryption</strong> - Journal content encrypted before storage</div></li>
+            <li><span class="check">✓</span><div><strong>Base64 encoding</strong> - Encrypted content stored safely in AsyncStorage</div></li>
+            <li><span class="check">✓</span><div><strong>Server never sees content</strong> - Only mood scores, engagement metrics</div></li>
+          </ul>
+        </div>
+        <div class="admin-visual">
+          <div style="font-family: monospace; font-size: 0.8rem; color: var(--text-muted); line-height: 1.8;">
+            <div style="background: rgba(16,185,129,0.1); border: 1px solid var(--accent); border-radius: 8px; padding: 12px; margin-bottom: 8px;">
+              <strong style="color: var(--accent);">USER'S DEVICE</strong><br>
+              Journal Entry (plaintext)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+              XOR Encryption (unique key)<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+              Base64 Encoded<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;↓<br>
+              AsyncStorage (local)
+            </div>
+            <div style="background: rgba(239,68,68,0.1); border: 1px solid #EF4444; border-radius: 8px; padding: 12px;">
+              <strong style="color: #EF4444;">SERVER</strong><br>
+              Never receives journal content<br>
+              Only: mood score, word count
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Table -->
+      <h3 style="margin: 40px 0 20px;">Platform Comparison: This vs Typical Apps</h3>
+      <table>
+        <tr>
+          <th>Aspect</th>
+          <th>Typical Wellness App</th>
+          <th style="color: var(--accent);">This Platform</th>
+        </tr>
+        <tr>
+          <td><strong>Data Storage</strong></td>
+          <td>Cloud-first, server-dependent</td>
+          <td style="color: var(--accent);">Local-first, cloud backup</td>
+        </tr>
+        <tr>
+          <td><strong>Personalization</strong></td>
+          <td>Basic (if any)</td>
+          <td style="color: var(--accent);">World Model with 7 dimensions</td>
+        </tr>
+        <tr>
+          <td><strong>Offline Support</strong></td>
+          <td>Limited or none</td>
+          <td style="color: var(--accent);">Full functionality offline</td>
+        </tr>
+        <tr>
+          <td><strong>Privacy</strong></td>
+          <td>Data on servers</td>
+          <td style="color: var(--accent);">Sensitive data stays on device</td>
+        </tr>
+        <tr>
+          <td><strong>Intelligence</strong></td>
+          <td>None or cloud-dependent AI</td>
+          <td style="color: var(--accent);">On-device inference engine</td>
+        </tr>
+        <tr>
+          <td><strong>Progress Philosophy</strong></td>
+          <td>Shame-inducing "don't break streak"</td>
+          <td style="color: var(--accent);">Gentle "accumulated progress"</td>
+        </tr>
+        <tr>
+          <td><strong>Game Integration</strong></td>
+          <td>Standalone features</td>
+          <td style="color: var(--accent);">Cross-game insights via World Model</td>
+        </tr>
+        <tr>
+          <td><strong>Support Resources</strong></td>
+          <td>Popup with hotline</td>
+          <td style="color: var(--accent);">Proactive detection + resources</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Architecture Benefits -->
+  <section style="background: rgba(99,102,241,0.03);">
+    <div class="container">
+      <h2>Why This Architecture Matters</h2>
+      <p class="section-subtitle">Strategic advantages for you and your users.</p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+        <!-- For Business -->
+        <div>
+          <h3 style="color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;"><i data-lucide="briefcase" style="width: 24px; height: 24px;"></i> For Your Business</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Lower operating costs</strong> - Offline-first means minimal server load</div></li>
+            <li><span class="check">✓</span><div><strong>Massive scalability</strong> - Handle millions of users on basic infrastructure</div></li>
+            <li><span class="check">✓</span><div><strong>Data compliance</strong> - No liability for sensitive content on servers</div></li>
+            <li><span class="check">✓</span><div><strong>Global reach</strong> - Works in low-connectivity markets (Africa, LATAM, SE Asia)</div></li>
+            <li><span class="check">✓</span><div><strong>Competitive moat</strong> - 12-18 months for competitors to replicate</div></li>
+            <li><span class="check">✓</span><div><strong>Premium positioning</strong> - Not "just another content app"</div></li>
+          </ul>
+        </div>
+
+        <!-- For Users -->
+        <div>
+          <h3 style="color: var(--accent); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;"><i data-lucide="users" style="width: 24px; height: 24px;"></i> For Your Users</h3>
+          <ul class="feature-list">
+            <li><span class="check">✓</span><div><strong>Instant loading</strong> - No spinners, content loads immediately</div></li>
+            <li><span class="check">✓</span><div><strong>Works anywhere</strong> - Airplane, rural areas, no internet needed</div></li>
+            <li><span class="check">✓</span><div><strong>Complete privacy</strong> - Journal never leaves their device</div></li>
+            <li><span class="check">✓</span><div><strong>Personalized journey</strong> - App learns their patterns</div></li>
+            <li><span class="check">✓</span><div><strong>Low data usage</strong> - Won't drain mobile data bundles</div></li>
+            <li><span class="check">✓</span><div><strong>Proactive support</strong> - Detects struggles, offers help early</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Future Ready -->
+      <div style="margin-top: 60px; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 32px;">
+        <h3 style="margin-bottom: 20px;">Future-Ready Architecture</h3>
+        <p style="color: var(--text-muted); margin-bottom: 24px;">The platform is designed to grow with your needs. Architecture supports future enhancements without rebuilding:</p>
+        <div class="tech-grid">
+          <div class="tech-item">
+            <strong>AI Companion</strong>
+            <span>Conversational guidance</span>
+          </div>
+          <div class="tech-item">
+            <strong>Therapist Portal</strong>
+            <span>Professional integration</span>
+          </div>
+          <div class="tech-item">
+            <strong>Group Journeys</strong>
+            <span>Family & team features</span>
+          </div>
+          <div class="tech-item">
+            <strong>Wearables</strong>
+            <span>Apple Watch, Fitbit</span>
+          </div>
+          <div class="tech-item">
+            <strong>Voice Input</strong>
+            <span>Audio journaling</span>
+          </div>
+          <div class="tech-item">
+            <strong>Multi-Language</strong>
+            <span>Global expansion</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section>
+    <div class="container">
+      <h2>White Label Licensing</h2>
+      <p class="section-subtitle">Choose the package that fits your needs. No rebuilding from scratch.</p>
+
+      <div class="pricing-grid">
+        <!-- Starter -->
+        <div class="pricing-card">
+          <div class="pricing-name">Starter</div>
+          <div class="pricing-desc">For individual authors & coaches</div>
+          <div class="pricing-amount">R45,000</div>
+          <div class="pricing-period">one-time + R2,500/mo hosting</div>
+          <ul class="pricing-features">
+            <li>Full PWA platform</li>
+            <li>Your branding & content</li>
+            <li>Content migration included</li>
+            <li>6 interactive games</li>
+            <li>Admin dashboard</li>
+            <li>Payment integration</li>
+            <li>Email automation</li>
+            <li>1 month support</li>
+          </ul>
+          <a href="mailto:hello@fig3.online?subject=Starter License Inquiry" class="btn btn-outline">Get Started</a>
+        </div>
+
+        <!-- Professional -->
+        <div class="pricing-card featured">
+          <div class="pricing-name">Professional</div>
+          <div class="pricing-desc">For publishers & organizations</div>
+          <div class="pricing-amount">R85,000</div>
+          <div class="pricing-period">one-time + R4,500/mo hosting</div>
+          <ul class="pricing-features">
+            <li>Everything in Starter</li>
+            <li>B2B organization portal</li>
+            <li>Bulk code generation</li>
+            <li>Digital flipbook</li>
+            <li>Multi-currency checkout</li>
+            <li>CRM integration</li>
+            <li>3 months support</li>
+            <li>4 content updates/year</li>
+          </ul>
+          <a href="mailto:hello@fig3.online?subject=Professional License Inquiry" class="btn">Get Started</a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <div class="pricing-name">Enterprise</div>
+          <div class="pricing-desc">For large organizations</div>
+          <div class="pricing-amount">R150,000</div>
+          <div class="pricing-period">one-time + R8,000/mo hosting</div>
+          <ul class="pricing-features">
+            <li>Everything in Professional</li>
+            <li>Source code ownership</li>
+            <li>Custom feature development</li>
+            <li>Multi-language support</li>
+            <li>API access</li>
+            <li>White-glove onboarding</li>
+            <li>12 months support</li>
+            <li>Unlimited content updates</li>
+            <li>Priority SLA</li>
+          </ul>
+          <a href="mailto:hello@fig3.online?subject=Enterprise License Inquiry" class="btn btn-outline">Contact Us</a>
+        </div>
+      </div>
+
+      <!-- Add-ons -->
+      <div style="margin-top: 60px;">
+        <h3 style="margin-bottom: 20px;">Optional Add-ons</h3>
+        <table>
+          <tr>
+            <th>Service</th>
+            <th>Description</th>
+            <th>Price</th>
+          </tr>
+          <tr>
+            <td><strong>Custom Interactive Game</strong></td>
+            <td>New psychology-based game tailored to your audience</td>
+            <td>R8,000 each</td>
+          </tr>
+          <tr>
+            <td><strong>Audio Recording</strong></td>
+            <td>Professional voiceover for all content days</td>
+            <td>R8,000</td>
+          </tr>
+          <tr>
+            <td><strong>Amazon KDP Setup</strong></td>
+            <td>Publish your book on Amazon globally</td>
+            <td>R2,500</td>
+          </tr>
+          <tr>
+            <td><strong>Additional Language</strong></td>
+            <td>Translate UI + content to new language</td>
+            <td>R18,000</td>
+          </tr>
+          <tr>
+            <td><strong>Custom Domain Setup</strong></td>
+            <td>SSL, DNS, email configuration</td>
+            <td>R1,500</td>
+          </tr>
+          <tr>
+            <td><strong>Monthly Maintenance</strong></td>
+            <td>Updates, backups, security patches</td>
+            <td>R1,500/mo</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section style="background: rgba(99,102,241,0.03);">
+    <div class="container">
+      <h2>Build vs Buy Comparison</h2>
+      <p class="section-subtitle">Why license instead of building from scratch?</p>
+
+      <table>
+        <tr>
+          <th>Factor</th>
+          <th>Build From Scratch</th>
+          <th>Fig3 White Label</th>
+        </tr>
+        <tr>
+          <td><strong>Development Time</strong></td>
+          <td>6-12 months</td>
+          <td style="color: var(--accent);">2-4 weeks</td>
+        </tr>
+        <tr>
+          <td><strong>Development Cost</strong></td>
+          <td>R400,000 - R600,000</td>
+          <td style="color: var(--accent);">R45,000 - R150,000</td>
+        </tr>
+        <tr>
+          <td><strong>Risk</strong></td>
+          <td>High (unproven)</td>
+          <td style="color: var(--accent);">Low (production-tested)</td>
+        </tr>
+        <tr>
+          <td><strong>Interactive Games</strong></td>
+          <td>Not included (extra R80K+)</td>
+          <td style="color: var(--accent);">6 games included</td>
+        </tr>
+        <tr>
+          <td><strong>B2B Portal</strong></td>
+          <td>Not included (extra R40K+)</td>
+          <td style="color: var(--accent);">Included (Professional+)</td>
+        </tr>
+        <tr>
+          <td><strong>Payment Integration</strong></td>
+          <td>Weeks of development</td>
+          <td style="color: var(--accent);">Ready to use</td>
+        </tr>
+        <tr>
+          <td><strong>Ongoing Bugs</strong></td>
+          <td>You fix them</td>
+          <td style="color: var(--accent);">Already fixed</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Perfect For -->
+  <section>
+    <div class="container">
+      <h2>Perfect For</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-icon"><i data-lucide="pen-tool"></i></div>
+          <h3>Authors & Writers</h3>
+          <p>Turn your book into an interactive app experience. Add journaling, progress tracking, and premium upsells for any genre.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="trophy"></i></div>
+          <h3>Coaches & Trainers</h3>
+          <p>Deliver coaching programs digitally. Track client progress, provide daily exercises, and scale your practice.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="heart-pulse"></i></div>
+          <h3>Wellness Professionals</h3>
+          <p>Create meditation, mindfulness, or wellness programs. Include breathing exercises, gratitude practices, and habit tracking.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="library"></i></div>
+          <h3>Publishers & Educators</h3>
+          <p>Enhance your catalog with app companions. Increase book value and create recurring revenue from educational content.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="target"></i></div>
+          <h3>Non-Profits & NGOs</h3>
+          <p>Deliver programs to communities at scale. Bulk licenses for outreach, training, and impact measurement.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon"><i data-lucide="building"></i></div>
+          <h3>Corporate Wellness</h3>
+          <p>Deploy employee wellness programs. Track engagement, provide mental health resources, measure outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section>
+    <div class="container">
+      <div class="cta">
+        <h2>Ready to Launch Your Interactive eBook App?</h2>
+        <p>Schedule a demo call to see the platform in action and discuss your specific content needs.</p>
+        <a href="mailto:hello@fig3.online?subject=White Label Demo Request" class="btn" style="display: inline-block; width: auto; padding: 16px 40px;">Schedule Demo Call</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p><strong>Fig3.online</strong> - Digital Solutions for Authors, Coaches & Organizations</p>
+      <p style="margin-top: 10px;">
+        <a href="mailto:hello@fig3.online">hello@fig3.online</a> |
+        <a href="https://fig3.online">fig3.online</a>
+      </p>
+      <p style="margin-top: 20px; font-size: 0.85rem;">
+        Platform value based on 1,094 development hours at R450/hour.
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

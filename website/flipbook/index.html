@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tea With God - Digital Book</title>
+    <link rel="icon" type="image/png" href="../images/teacup.png">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <!-- StPageFlip Library -->
+    <script src="https://cdn.jsdelivr.net/npm/page-flip@2.0.7/dist/js/page-flip.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0D0D0D;
+            --bg-secondary: #1A1A1A;
+            --gold: #D4AF37;
+            --gold-light: #E8C547;
+            --text-primary: #FAFAFA;
+            --text-secondary: rgba(250, 250, 250, 0.6);
+            --text-muted: rgba(250, 250, 250, 0.4);
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 16px 24px;
+            background: rgba(13, 13, 13, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .logo-container img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .logo-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--gold);
+        }
+
+        /* Main Container */
+        .container {
+            padding-top: 80px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Flipbook Container (Desktop) */
+        .flipbook-wrapper {
+            position: relative;
+            margin: 20px auto;
+            width: calc(100vw - 40px);
+            height: calc(100vh - 200px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flipbook-container {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                inset 0 0 0 1px var(--border);
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Page styling */
+        .page {
+            background: #fff;
+            overflow: hidden;
+            position: relative;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #fff;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        /* Fix for page flip animation bleeding */
+        .stf__item {
+            overflow: hidden !important;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            background: #fff;
+        }
+
+        .stf__block {
+            overflow: hidden !important;
+            background: #fff;
+        }
+
+        /* Ensure pages don't show content from behind during flip */
+        .stf__parent {
+            overflow: hidden !important;
+        }
+
+        /* Page backside should be solid */
+        .stf__back {
+            background: #fff !important;
+        }
+
+        /* Clickable hotspot on banner area */
+        .page-hotspot {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 12%;
+            cursor: pointer;
+            z-index: 10;
+            transition: background 0.2s ease;
+        }
+
+        .page-hotspot:hover {
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .page-hotspot:active {
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .page-cover {
+            background: linear-gradient(135deg, #8B4513 0%, #654321 50%, #4A2C17 100%);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            margin-top: 24px;
+            padding: 16px;
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .nav-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .page-info {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* Action buttons row */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
+            color: #0D0D0D;
+            border: none;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        .action-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Audio Player */
+        .audio-player {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            margin-top: 16px;
+        }
+
+        .audio-player.visible {
+            display: flex;
+        }
+
+        .audio-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold);
+            border: none;
+            color: var(--bg-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+        }
+
+        .audio-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .audio-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .audio-title {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .audio-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .audio-progress {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+            cursor: pointer;
+            min-width: 100px;
+        }
+
+        .audio-progress-bar {
+            height: 100%;
+            background: var(--gold);
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* Fullscreen button */
+        .fullscreen-btn {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 50;
+        }
+
+        .fullscreen-btn:hover {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            padding: 60px;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Access Denied */
+        .access-denied {
+            text-align: center;
+            padding: 60px 24px;
+            max-width: 500px;
+        }
+
+        .access-denied h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            margin-bottom: 16px;
+            color: var(--gold);
+        }
+
+        .access-denied p {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        /* Access Code Form */
+        .access-code-form {
+            display: flex;
+            gap: 12px;
+            margin: 24px 0;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .access-code-form input {
+            flex: 1;
+            padding: 14px 18px;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .access-code-form input::placeholder {
+            color: var(--text-muted);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .access-code-form input:focus {
+            border-color: var(--gold);
+        }
+
+        .unlock-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-primary);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+        }
+
+        .unlock-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .access-error {
+            color: #E57373;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .access-success {
+            color: #81C784;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .divider-text {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 400px;
+            margin: 24px 0;
+        }
+
+        .divider-text::before,
+        .divider-text::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider-text span {
+            padding: 0 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .upgrade-btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .upgrade-btn-secondary:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        /* ==================== */
+        /* MOBILE SWIPER STYLES */
+        /* ==================== */
+        .mobile-swiper {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            padding-top: 0;
+            flex-direction: column;
+            background: #000;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+        }
+
+        .swiper-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+        }
+
+        .swiper-slide {
+            flex: 0 0 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            position: relative;
+            background: #000;
+        }
+
+        /* Image wrapper to position hotspot correctly */
+        .slide-image-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 0;
+            box-shadow: none;
+            touch-action: pinch-zoom;
+            transition: transform 0.1s ease-out;
+        }
+
+        .swiper-slide img.zoomed {
+            object-fit: cover;
+            cursor: move;
+        }
+
+        /* Mobile hotspot - overlays the banner area of the image */
+        .mobile-hotspot {
+            position: absolute;
+            bottom: 8%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            max-width: 320px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            border-radius: 12px;
+            background: rgba(212, 175, 55, 0.9);
+            border: none;
+            text-decoration: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .mobile-hotspot:active {
+            background: rgba(212, 175, 55, 1);
+            transform: translateX(-50%) scale(0.98);
+        }
+
+        .mobile-hotspot-hint {
+            color: #0D0D0D;
+            font-size: 0.95rem;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .mobile-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.7) 70%, transparent 100%);
+            z-index: 100;
+        }
+
+        .mobile-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .mobile-page-info {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            color: #fff;
+            min-width: 100px;
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        .mobile-action-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .mobile-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-action-btn:hover, .mobile-action-btn:active {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .mobile-action-btn.primary {
+            background: var(--gold);
+            border-color: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .mobile-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Instructions (desktop only) */
+        .instructions {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            z-index: 50;
+            max-width: 280px;
+        }
+
+        .instructions h4 {
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .instructions ul {
+            list-style: none;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .instructions li {
+            margin-bottom: 4px;
+        }
+
+        .instructions kbd {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                display: none !important;
+            }
+
+            /* Hide desktop flipbook on mobile */
+            .flipbook-wrapper,
+            .controls,
+            .action-buttons,
+            .audio-player,
+            .instructions,
+            .fullscreen-btn {
+                display: none !important;
+            }
+
+            /* Show mobile swiper - full screen */
+            .mobile-swiper {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for mobile browsers */
+                padding-top: 0;
+            }
+
+            .container {
+                padding-top: 0;
+                min-height: 100vh;
+                min-height: 100dvh;
+            }
+
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+                background: rgba(255,255,255,0.15);
+                border-color: rgba(255,255,255,0.3);
+                color: #fff;
+            }
+
+            .nav-btn:disabled {
+                opacity: 0.3;
+            }
+
+            .mobile-page-info {
+                font-size: 0.95rem;
+                min-width: 100px;
+            }
+
+            .mobile-action-btn {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+
+            .access-code-form {
+                flex-direction: column;
+            }
+
+            .unlock-btn {
+                justify-content: center;
+            }
+
+            /* Access denied page on mobile */
+            .access-denied {
+                padding: 40px 20px;
+            }
+
+            .access-denied h2 {
+                font-size: 1.5rem;
+            }
+
+            /* Loading state on mobile */
+            .loading {
+                padding: 40px 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-btn span {
+                display: none;
+            }
+        }
+
+        /* Hide when in fullscreen */
+        :fullscreen .header,
+        :-webkit-full-screen .header {
+            display: none;
+        }
+
+        :fullscreen .container,
+        :-webkit-full-screen .container {
+            padding-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <a href="../index.html" class="logo-container">
+            <img src="../images/teacup.png" alt="Tea With God">
+            <span class="logo-text">Tea With God</span>
+        </a>
+        <a href="../app/" class="back-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>Back to App</span>
+        </a>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Loading State -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Loading your book...</p>
+        </div>
+
+        <!-- Access Denied (hidden by default) -->
+        <div id="access-denied" class="access-denied" style="display: none;">
+            <h2>Unlock Your Digital Book</h2>
+            <p>Enter your access code to read the complete Tea With God book with beautiful page-turning effects.</p>
+
+            <!-- Access Code Input -->
+            <div class="access-code-form">
+                <input
+                    type="text"
+                    id="access-code-input"
+                    placeholder="Enter your access code"
+                    autocapitalize="characters"
+                    autocomplete="off"
+                    spellcheck="false"
+                    onkeypress="if(event.key==='Enter')unlockWithCode()"
+                />
+                <button id="unlock-btn" class="unlock-btn" onclick="unlockWithCode()">
+                    Unlock
+                </button>
+            </div>
+            <p id="access-error" class="access-error" style="display: none;"></p>
+            <p id="access-success" class="access-success" style="display: none;"></p>
+
+            <div class="divider-text">
+                <span>or</span>
+            </div>
+
+            <a href="../upgrade.html" class="upgrade-btn-secondary">
+                Get Access
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <!-- ==================== -->
+        <!-- DESKTOP FLIPBOOK -->
+        <!-- ==================== -->
+        <div id="flipbook-wrapper" class="flipbook-wrapper" style="display: none;">
+            <div id="flipbook" class="flipbook-container"></div>
+        </div>
+
+        <!-- Desktop Controls -->
+        <div class="controls" id="desktop-controls" style="display: none;">
+            <button id="prev-btn" class="nav-btn" title="Previous page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <span id="page-info" class="page-info">Page 1 of 53</span>
+            <button id="next-btn" class="nav-btn" title="Next page">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Desktop Action Buttons -->
+        <div class="action-buttons" id="action-buttons" style="display: none;">
+            <a id="open-day-btn" href="#" class="action-btn primary" style="display: none;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                    <polyline points="15 3 21 3 21 9"/>
+                    <line x1="10" y1="14" x2="21" y2="3"/>
+                </svg>
+                <span id="open-day-text">Open Day 1 in App</span>
+            </a>
+            <button id="play-audio-btn" class="action-btn" style="display: none;" onclick="toggleAudio()">
+                <svg id="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+                <span id="audio-btn-text">Listen to Devotional</span>
+            </button>
+        </div>
+
+        <!-- Audio Player -->
+        <div class="audio-player" id="audio-player">
+            <button class="audio-btn" onclick="toggleAudio()">
+                <svg id="audio-play-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+            </button>
+            <div class="audio-info">
+                <span class="audio-title" id="audio-title">Day 1 Devotional</span>
+                <span class="audio-time" id="audio-time">0:00 / 0:00</span>
+            </div>
+            <div class="audio-progress" onclick="seekAudio(event)">
+                <div class="audio-progress-bar" id="audio-progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- ==================== -->
+        <!-- MOBILE SWIPER -->
+        <!-- ==================== -->
+        <div id="mobile-swiper" class="mobile-swiper" style="display: none;">
+            <div class="swiper-container" id="swiper-container">
+                <div class="swiper-track" id="swiper-track">
+                    <!-- Pages will be added dynamically -->
+                </div>
+            </div>
+            <div class="mobile-controls">
+                <div class="mobile-nav">
+                    <button id="mobile-prev-btn" class="nav-btn" title="Previous page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 18l-6-6 6-6"/>
+                        </svg>
+                    </button>
+                    <span id="mobile-page-info" class="mobile-page-info">Page 1 of 53</span>
+                    <button id="mobile-next-btn" class="nav-btn" title="Next page">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="mobile-action-row" id="mobile-action-row">
+                    <a href="../app/" class="mobile-action-btn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        <span>Back</span>
+                    </a>
+                    <a id="mobile-open-day-btn" href="#" class="mobile-action-btn primary" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                            <polyline points="15 3 21 3 21 9"/>
+                            <line x1="10" y1="14" x2="21" y2="3"/>
+                        </svg>
+                        <span id="mobile-open-day-text">Open Day 1</span>
+                    </a>
+                    <button id="mobile-audio-btn" class="mobile-action-btn" style="display: none;" onclick="toggleAudio()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        <span id="mobile-audio-text">Listen</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen Button (Desktop only) -->
+    <button id="fullscreen-btn" class="fullscreen-btn" title="Toggle fullscreen" style="display: none;">
+        <svg id="fullscreen-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+        </svg>
+    </button>
+
+    <!-- Instructions (Desktop only) -->
+    <div id="instructions" class="instructions" style="display: none;">
+        <h4>Navigation</h4>
+        <ul>
+            <li><kbd>&larr;</kbd> <kbd>&rarr;</kbd> Arrow keys</li>
+            <li>Click page edges to turn</li>
+            <li>Drag pages to flip</li>
+            <li><kbd>F</kbd> Toggle fullscreen</li>
+            <li>Click banner to open in app</li>
+        </ul>
+    </div>
+
+    <!-- Hidden audio element -->
+    <audio id="audio-element" preload="none"></audio>
+
+    <script>
+        // Configuration
+        const TOTAL_PAGES = 53;
+        const PAGE_PATH = 'pages/Tea With God - Final Copy-';
+        const AUDIO_DAYS_AVAILABLE = 31; // Days 1-31 have audio
+        const BASE_URL = 'https://teawithgod.com';
+
+        // API URL based on environment
+        const API_URL = window.location.hostname === 'localhost'
+            ? 'http://localhost:3000/api/v1'
+            : `${window.location.protocol}//${window.location.host}/api/v1`;
+
+        // State
+        let pageFlip = null;
+        let hasAccess = false;
+        let currentPage = 1;
+        let audioElement = document.getElementById('audio-element');
+        let isPlaying = false;
+        let currentAudioDay = null;
+
+        // Mobile swiper state
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let isDragging = false;
+
+        // DOM Elements
+        const loadingEl = document.getElementById('loading');
+        const accessDeniedEl = document.getElementById('access-denied');
+        const flipbookWrapper = document.getElementById('flipbook-wrapper');
+        const flipbookEl = document.getElementById('flipbook');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const pageInfoEl = document.getElementById('page-info');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const instructionsEl = document.getElementById('instructions');
+        const desktopControls = document.getElementById('desktop-controls');
+        const actionButtons = document.getElementById('action-buttons');
+
+        // Detect if mobile
+        function isMobile() {
+            return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        // Check if embedded in app
+        function isEmbedded() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('embedded') === 'true';
+        }
+
+        // Check access from localStorage
+        function checkAccess() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('access') === 'full') return true;
+
+            try {
+                const flipbookAccess = localStorage.getItem('twg_flipbook_access');
+                if (flipbookAccess) {
+                    const data = JSON.parse(flipbookAccess);
+                    if (data.accessLevel === 'FULL') return true;
+                }
+            } catch (e) {}
+
+            // Check multiple possible storage keys
+            const accessKeys = ['@twg_access_', 'twg_access', 'accessLevel'];
+            for (const key of accessKeys) {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const storageKey = localStorage.key(i);
+                    if (storageKey && storageKey.includes(key)) {
+                        try {
+                            const data = JSON.parse(localStorage.getItem(storageKey));
+                            if (data && data.accessLevel === 'FULL') return true;
+                        } catch (e) {
+                            if (localStorage.getItem(storageKey) === 'FULL') return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // Map page number to day number
+        // Book structure: 6 intro pages, then days with weekly completion pages between weeks
+        function getDayFromPage(pageNum) {
+            // Pages 7-13: Days 1-7
+            if (pageNum >= 7 && pageNum <= 13) return pageNum - 6;
+            // Page 14: Week 1 Complete (not a day)
+            // Pages 15-21: Days 8-14
+            if (pageNum >= 15 && pageNum <= 21) return pageNum - 7;
+            // Page 22: Week 2 Complete (not a day)
+            // Pages 23-29: Days 15-21
+            if (pageNum >= 23 && pageNum <= 29) return pageNum - 8;
+            // Page 30: Week 3 Complete (not a day)
+            // Pages 31-37: Days 22-28
+            if (pageNum >= 31 && pageNum <= 37) return pageNum - 9;
+            // Page 38: Week 4 Complete (not a day)
+            // Pages 39-45: Days 29-35
+            if (pageNum >= 39 && pageNum <= 45) return pageNum - 10;
+            // Page 46: Week 5 Complete (not a day)
+            // Page 47: "The Rising Begins" intro (not a day)
+            // Pages 48-52: Days 36-40
+            if (pageNum >= 48 && pageNum <= 52) return pageNum - 12;
+            return null;
+        }
+
+        // Check if day has audio
+        function dayHasAudio(dayNum) {
+            return dayNum !== null && dayNum >= 1 && dayNum <= AUDIO_DAYS_AVAILABLE;
+        }
+
+        // Deep link - use relative path with flipbook flag to skip redundant access check
+        function getDeepLink(dayNum) {
+            return `../app/day/${dayNum}?src=flipbook`;
+        }
+
+        // Handle hotspot click
+        function handleHotspotClick(pageNum) {
+            const dayNum = getDayFromPage(pageNum);
+            if (dayNum) {
+                window.location.href = getDeepLink(dayNum);
+            }
+        }
+
+        // ====================
+        // AUDIO FUNCTIONALITY
+        // ====================
+        function loadAudio(dayNum) {
+            if (!dayHasAudio(dayNum)) return;
+
+            const paddedDay = dayNum.toString().padStart(2, '0');
+            audioElement.src = `${API_URL}/audio/day-${paddedDay}.mp3`;
+            currentAudioDay = dayNum;
+
+            // Update UI
+            document.getElementById('audio-title').textContent = `Day ${dayNum} Devotional`;
+            document.getElementById('audio-time').textContent = '0:00 / 0:00';
+            document.getElementById('audio-progress-bar').style.width = '0%';
+        }
+
+        function toggleAudio() {
+            if (!currentAudioDay) return;
+
+            if (isPlaying) {
+                audioElement.pause();
+                isPlaying = false;
+                updateAudioUI(false);
+            } else {
+                audioElement.play().then(() => {
+                    isPlaying = true;
+                    updateAudioUI(true);
+                }).catch(err => {
+                    console.error('Audio play error:', err);
+                });
+            }
+        }
+
+        function updateAudioUI(playing) {
+            const playIcon = `<polygon points="5 3 19 12 5 21 5 3"/>`;
+            const pauseIcon = `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+
+            document.getElementById('audio-play-icon').innerHTML = playing ? pauseIcon : playIcon;
+            document.getElementById('audio-icon').innerHTML = playing ? pauseIcon : playIcon;
+            document.getElementById('audio-btn-text').textContent = playing ? 'Pause' : 'Listen to Devotional';
+
+            // Mobile
+            const mobileAudioBtn = document.getElementById('mobile-audio-btn');
+            if (mobileAudioBtn) {
+                mobileAudioBtn.querySelector('svg').innerHTML = playing ? pauseIcon : playIcon;
+                document.getElementById('mobile-audio-text').textContent = playing ? 'Pause' : 'Listen';
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function seekAudio(event) {
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            audioElement.currentTime = percent * audioElement.duration;
+        }
+
+        // Audio event listeners
+        audioElement.addEventListener('timeupdate', () => {
+            if (audioElement.duration) {
+                const percent = (audioElement.currentTime / audioElement.duration) * 100;
+                document.getElementById('audio-progress-bar').style.width = `${percent}%`;
+                document.getElementById('audio-time').textContent =
+                    `${formatTime(audioElement.currentTime)} / ${formatTime(audioElement.duration)}`;
+            }
+        });
+
+        audioElement.addEventListener('ended', () => {
+            isPlaying = false;
+            updateAudioUI(false);
+        });
+
+        audioElement.addEventListener('loadedmetadata', () => {
+            document.getElementById('audio-time').textContent =
+                `0:00 / ${formatTime(audioElement.duration)}`;
+        });
+
+        // ====================
+        // UPDATE PAGE ACTIONS
+        // ====================
+        function updatePageActions(pageNum) {
+            const dayNum = getDayFromPage(pageNum);
+
+            // Desktop buttons
+            const openDayBtn = document.getElementById('open-day-btn');
+            const playAudioBtn = document.getElementById('play-audio-btn');
+            const audioPlayer = document.getElementById('audio-player');
+
+            // Mobile buttons
+            const mobileOpenDayBtn = document.getElementById('mobile-open-day-btn');
+            const mobileAudioBtn = document.getElementById('mobile-audio-btn');
+
+            if (dayNum) {
+                // Show open day button
+                openDayBtn.href = getDeepLink(dayNum);
+                document.getElementById('open-day-text').textContent = `Open Day ${dayNum} in App`;
+                openDayBtn.style.display = 'flex';
+
+                mobileOpenDayBtn.href = getDeepLink(dayNum);
+                document.getElementById('mobile-open-day-text').textContent = `Open Day ${dayNum}`;
+                mobileOpenDayBtn.style.display = 'flex';
+
+                // Show audio button if available
+                if (dayHasAudio(dayNum)) {
+                    playAudioBtn.style.display = 'flex';
+                    mobileAudioBtn.style.display = 'flex';
+
+                    // Load audio if different day
+                    if (currentAudioDay !== dayNum) {
+                        if (isPlaying) {
+                            audioElement.pause();
+                            isPlaying = false;
+                            updateAudioUI(false);
+                        }
+                        loadAudio(dayNum);
+                    }
+
+                    // Show audio player if audio was playing
+                    if (isPlaying) {
+                        audioPlayer.classList.add('visible');
+                    }
+                } else {
+                    playAudioBtn.style.display = 'none';
+                    mobileAudioBtn.style.display = 'none';
+                    audioPlayer.classList.remove('visible');
+                }
+            } else {
+                // Not a day page
+                openDayBtn.style.display = 'none';
+                playAudioBtn.style.display = 'none';
+                mobileOpenDayBtn.style.display = 'none';
+                mobileAudioBtn.style.display = 'none';
+                audioPlayer.classList.remove('visible');
+            }
+        }
+
+        // ====================
+        // DESKTOP FLIPBOOK
+        // ====================
+        function getBookSize() {
+            const maxWidth = window.innerWidth - 40;
+            const maxHeight = window.innerHeight - 280;
+            const pageRatio = 0.77;
+
+            let bookHeight = maxHeight;
+            let bookWidth = bookHeight * pageRatio * 2;
+
+            if (bookWidth > maxWidth) {
+                bookWidth = maxWidth;
+                bookHeight = bookWidth / (pageRatio * 2);
+            }
+
+            return { width: Math.floor(bookWidth), height: Math.floor(bookHeight) };
+        }
+
+        function createPages() {
+            const container = flipbookEl;
+            container.innerHTML = '';
+
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
+                const page = document.createElement('div');
+                page.className = 'page';
+                page.setAttribute('data-density', i === 1 || i === TOTAL_PAGES ? 'hard' : 'soft');
+                page.setAttribute('data-page-num', i);
+
+                const img = document.createElement('img');
+                const pageNum = i.toString().padStart(2, '0');
+                img.src = `${PAGE_PATH}${pageNum}.png`;
+                img.alt = `Page ${i}`;
+                img.loading = i <= 4 ? 'eager' : 'lazy';
+
+                page.appendChild(img);
+
+                // Add hotspot for day pages
+                const dayNum = getDayFromPage(i);
+                if (dayNum) {
+                    const hotspot = document.createElement('div');
+                    hotspot.className = 'page-hotspot';
+                    hotspot.onclick = (e) => {
+                        e.stopPropagation();
+                        handleHotspotClick(i);
+                    };
+                    page.appendChild(hotspot);
+                }
+
+                container.appendChild(page);
+            }
+        }
+
+        function initFlipbook() {
+            const size = getBookSize();
+
+            pageFlip = new St.PageFlip(flipbookEl, {
+                width: size.width / 2,
+                height: size.height,
+                size: 'fixed',
+                minWidth: 100,
+                maxWidth: 2000,
+                minHeight: 100,
+                maxHeight: 2000,
+                showCover: true,
+                mobileScrollSupport: false,
+                swipeDistance: 30,
+                usePortrait: false,
+                startPage: 0,
+                drawShadow: true,
+                flippingTime: 600, // Slightly faster for smoother animation
+                useMouseEvents: true,
+                maxShadowOpacity: 0.4,
+                showPageCorners: true,
+                disableFlipByClick: false,
+                autoSize: false // Prevent auto-resizing that might cause bleed
+            });
+
+            pageFlip.loadFromHTML(document.querySelectorAll('.page'));
+
+            pageFlip.on('flip', (e) => {
+                currentPage = e.data + 1;
+                updateDesktopPageInfo();
+                updatePageActions(currentPage);
+            });
+
+            currentPage = 1;
+            updateDesktopPageInfo();
+            updatePageActions(1);
+        }
+
+        function updateDesktopPageInfo() {
+            pageInfoEl.textContent = `Page ${currentPage} of ${TOTAL_PAGES}`;
+            prevBtn.disabled = currentPage === 1;
+            nextBtn.disabled = currentPage >= TOTAL_PAGES;
+        }
+
+        // Desktop navigation
+        prevBtn.addEventListener('click', () => pageFlip && pageFlip.flipPrev());
+        nextBtn.addEventListener('click', () => pageFlip && pageFlip.flipNext());
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!pageFlip) return;
+            switch (e.key) {
+                case 'ArrowLeft': pageFlip.flipPrev(); break;
+                case 'ArrowRight': pageFlip.flipNext(); break;
+                case 'f':
+                case 'F': toggleFullscreen(); break;
+            }
+        });
+
+        // Fullscreen
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+        // ====================
+        // MOBILE SWIPER
+        // ====================
+        // Check if page is a week completion page (gray cover pages between weeks)
+        function getWeekFromPage(pageNum) {
+            const weekPages = {
+                14: 1,  // Week 1 Complete (before Day 8)
+                22: 2,  // Week 2 Complete (before Day 15)
+                30: 3,  // Week 3 Complete (before Day 22)
+                38: 4,  // Week 4 Complete (before Day 29)
+                46: 5,  // Week 5 Complete (before "The Rising Begins")
+            };
+            return weekPages[pageNum] || null;
+        }
+
+        function createMobileSwiper() {
+            const track = document.getElementById('swiper-track');
+            track.innerHTML = '';
+
+            for (let i = 1; i <= TOTAL_PAGES; i++) {
+                const slide = document.createElement('div');
+                slide.className = 'swiper-slide';
+                slide.setAttribute('data-page-num', i);
+
+                // Create wrapper for image and hotspot
+                const wrapper = document.createElement('div');
+                wrapper.className = 'slide-image-wrapper';
+
+                const img = document.createElement('img');
+                const pageNum = i.toString().padStart(2, '0');
+                img.src = `${PAGE_PATH}${pageNum}.png`;
+                img.alt = `Page ${i}`;
+                img.loading = i <= 3 ? 'eager' : 'lazy';
+
+                wrapper.appendChild(img);
+
+                // Add mobile hotspot for day pages and week completion pages
+                const dayNum = getDayFromPage(i);
+                const weekNum = getWeekFromPage(i);
+
+                console.log(`Page ${i}: dayNum=${dayNum}, weekNum=${weekNum}`);
+
+                if (dayNum !== null || weekNum !== null) {
+                    const hotspot = document.createElement('a');
+                    hotspot.className = 'mobile-hotspot';
+                    hotspot.href = dayNum ? getDeepLink(dayNum) : '../app/';
+
+                    if (dayNum) {
+                        hotspot.innerHTML = `<span class="mobile-hotspot-hint">Tap to open Day ${dayNum}</span>`;
+                    } else {
+                        hotspot.innerHTML = `<span class="mobile-hotspot-hint">Week ${weekNum} - Tap to open App</span>`;
+                    }
+
+                    wrapper.appendChild(hotspot);
+                    console.log(`Added hotspot for page ${i}`);
+                }
+
+                slide.appendChild(wrapper);
+                track.appendChild(slide);
+            }
+
+            // Touch events for swipe navigation
+            const container = document.getElementById('swiper-container');
+
+            container.addEventListener('touchstart', (e) => {
+                // Don't track swipes if tapping on a hotspot
+                if (e.target.closest('.mobile-hotspot')) {
+                    return;
+                }
+                touchStartX = e.changedTouches[0].screenX;
+                isDragging = true;
+            }, { passive: true });
+
+            container.addEventListener('touchend', (e) => {
+                // Don't swipe if zoomed in or tapping hotspot
+                if (e.target.closest('.mobile-hotspot')) return;
+                if (!isDragging || currentScale > 1) {
+                    isDragging = false;
+                    return;
+                }
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+                isDragging = false;
+            }, { passive: true });
+
+            updateMobileSwiper();
+        }
+
+        function handleSwipe() {
+            const diff = touchStartX - touchEndX;
+            const threshold = 50;
+
+            if (diff > threshold && currentPage < TOTAL_PAGES) {
+                // Swipe left - next page
+                currentPage++;
+                updateMobileSwiper();
+            } else if (diff < -threshold && currentPage > 1) {
+                // Swipe right - prev page
+                currentPage--;
+                updateMobileSwiper();
+            }
+        }
+
+        function updateMobileSwiper() {
+            const track = document.getElementById('swiper-track');
+            const offset = -(currentPage - 1) * 100;
+            track.style.transform = `translateX(${offset}%)`;
+
+            document.getElementById('mobile-page-info').textContent = `Page ${currentPage} of ${TOTAL_PAGES}`;
+            document.getElementById('mobile-prev-btn').disabled = currentPage === 1;
+            document.getElementById('mobile-next-btn').disabled = currentPage >= TOTAL_PAGES;
+
+            updatePageActions(currentPage);
+        }
+
+        // Mobile navigation buttons
+        document.getElementById('mobile-prev-btn').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                resetZoom();
+                updateMobileSwiper();
+            }
+        });
+
+        document.getElementById('mobile-next-btn').addEventListener('click', () => {
+            if (currentPage < TOTAL_PAGES) {
+                currentPage++;
+                resetZoom();
+                updateMobileSwiper();
+            }
+        });
+
+        // ====================
+        // PINCH TO ZOOM
+        // ====================
+        let currentScale = 1;
+        let lastTap = 0;
+        let initialDistance = 0;
+        let currentTranslateX = 0;
+        let currentTranslateY = 0;
+        let lastPanX = 0;
+        let lastPanY = 0;
+        let isPinching = false;
+
+        function getDistance(touches) {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function getCurrentImage() {
+            const slides = document.querySelectorAll('.swiper-slide');
+            if (slides[currentPage - 1]) {
+                return slides[currentPage - 1].querySelector('img');
+            }
+            return null;
+        }
+
+        function applyTransform(img) {
+            if (img) {
+                img.style.transform = `scale(${currentScale}) translate(${currentTranslateX}px, ${currentTranslateY}px)`;
+            }
+        }
+
+        function resetZoom() {
+            currentScale = 1;
+            currentTranslateX = 0;
+            currentTranslateY = 0;
+            const img = getCurrentImage();
+            if (img) {
+                img.style.transform = '';
+                img.classList.remove('zoomed');
+            }
+        }
+
+        function initZoom() {
+            const container = document.getElementById('swiper-container');
+            if (!container) return;
+
+            // Double tap to zoom
+            container.addEventListener('touchend', (e) => {
+                if (e.touches.length > 0) return; // Still touching
+
+                const now = Date.now();
+                const timeDiff = now - lastTap;
+
+                if (timeDiff < 300 && timeDiff > 0) {
+                    // Double tap detected
+                    e.preventDefault();
+                    const img = getCurrentImage();
+                    if (!img) return;
+
+                    if (currentScale > 1) {
+                        // Zoom out
+                        resetZoom();
+                    } else {
+                        // Zoom in to 2.5x at tap location
+                        currentScale = 2.5;
+                        img.classList.add('zoomed');
+                        applyTransform(img);
+                    }
+                }
+                lastTap = now;
+            });
+
+            // Pinch zoom
+            container.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 2) {
+                    isPinching = true;
+                    initialDistance = getDistance(e.touches);
+                } else if (e.touches.length === 1 && currentScale > 1) {
+                    lastPanX = e.touches[0].clientX;
+                    lastPanY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            container.addEventListener('touchmove', (e) => {
+                const img = getCurrentImage();
+                if (!img) return;
+
+                if (e.touches.length === 2 && isPinching) {
+                    // Pinch zoom
+                    const currentDistance = getDistance(e.touches);
+                    const scaleDiff = currentDistance / initialDistance;
+                    currentScale = Math.min(Math.max(scaleDiff * currentScale, 1), 4);
+                    initialDistance = currentDistance;
+
+                    if (currentScale > 1) {
+                        img.classList.add('zoomed');
+                    } else {
+                        img.classList.remove('zoomed');
+                        currentTranslateX = 0;
+                        currentTranslateY = 0;
+                    }
+                    applyTransform(img);
+                    e.preventDefault();
+                } else if (e.touches.length === 1 && currentScale > 1) {
+                    // Pan when zoomed
+                    const deltaX = (e.touches[0].clientX - lastPanX) / currentScale;
+                    const deltaY = (e.touches[0].clientY - lastPanY) / currentScale;
+                    currentTranslateX += deltaX;
+                    currentTranslateY += deltaY;
+
+                    // Limit panning
+                    const maxPan = 100 * (currentScale - 1);
+                    currentTranslateX = Math.min(Math.max(currentTranslateX, -maxPan), maxPan);
+                    currentTranslateY = Math.min(Math.max(currentTranslateY, -maxPan), maxPan);
+
+                    lastPanX = e.touches[0].clientX;
+                    lastPanY = e.touches[0].clientY;
+                    applyTransform(img);
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            container.addEventListener('touchend', (e) => {
+                if (e.touches.length < 2) {
+                    isPinching = false;
+                }
+                // Snap back if zoomed out too far
+                if (currentScale < 1.1) {
+                    resetZoom();
+                }
+            }, { passive: true });
+        }
+
+        // ====================
+        // INITIALIZATION
+        // ====================
+        async function init() {
+            hasAccess = checkAccess();
+            const embedded = isEmbedded();
+            const mobile = isMobile();
+
+            // Hide header when embedded
+            if (embedded) {
+                document.getElementById('header').style.display = 'none';
+                document.querySelector('.container').style.paddingTop = '20px';
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+            loadingEl.style.display = 'none';
+
+            if (hasAccess) {
+                if (mobile) {
+                    // Show mobile swiper
+                    document.getElementById('mobile-swiper').style.display = 'flex';
+                    createMobileSwiper();
+                    initZoom();
+                } else {
+                    // Show desktop flipbook
+                    createPages();
+                    flipbookWrapper.style.display = 'flex';
+                    desktopControls.style.display = 'flex';
+                    actionButtons.style.display = 'flex';
+                    fullscreenBtn.style.display = 'flex';
+                    instructionsEl.style.display = 'block';
+
+                    // Wait for images then init
+                    const firstImages = document.querySelectorAll('.page img');
+                    const imagePromises = Array.from(firstImages).slice(0, 4).map(img => {
+                        return new Promise(resolve => {
+                            if (img.complete) resolve();
+                            else {
+                                img.onload = resolve;
+                                img.onerror = resolve;
+                            }
+                        });
+                    });
+
+                    await Promise.all(imagePromises);
+                    initFlipbook();
+                }
+            } else {
+                accessDeniedEl.style.display = 'block';
+            }
+        }
+
+        // Handle resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                if (pageFlip && !isMobile()) {
+                    const size = getBookSize();
+                    pageFlip.updateFromSettings({
+                        width: size.width / 2,
+                        height: size.height
+                    });
+                }
+            }, 250);
+        });
+
+        // Start
+        init();
+
+        // ====================
+        // UNLOCK FUNCTION
+        // ====================
+        async function unlockWithCode() {
+            const accessCodeInput = document.getElementById('access-code-input');
+            const accessError = document.getElementById('access-error');
+            const accessSuccess = document.getElementById('access-success');
+            const unlockBtn = document.getElementById('unlock-btn');
+
+            const code = accessCodeInput.value.trim().toUpperCase();
+            if (!code) {
+                accessError.textContent = 'Please enter an access code';
+                accessError.style.display = 'block';
+                accessSuccess.style.display = 'none';
+                return;
+            }
+
+            unlockBtn.disabled = true;
+            unlockBtn.textContent = 'Validating...';
+
+            try {
+                const response = await fetch(`${API_URL}/access/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code })
+                });
+
+                const result = await response.json();
+
+                if (result.valid) {
+                    accessError.style.display = 'none';
+                    accessSuccess.textContent = result.firstName
+                        ? `Welcome ${result.firstName}! Loading your book...`
+                        : 'Access granted! Loading your book...';
+                    accessSuccess.style.display = 'block';
+
+                    localStorage.setItem('twg_flipbook_access', JSON.stringify({
+                        accessLevel: 'FULL',
+                        codeUsed: code,
+                        unlockedAt: new Date().toISOString()
+                    }));
+
+                    setTimeout(() => {
+                        accessDeniedEl.style.display = 'none';
+                        hasAccess = true;
+
+                        if (isMobile()) {
+                            document.getElementById('mobile-swiper').style.display = 'flex';
+                            createMobileSwiper();
+                        } else {
+                            createPages();
+                            flipbookWrapper.style.display = 'flex';
+                            desktopControls.style.display = 'flex';
+                            actionButtons.style.display = 'flex';
+                            fullscreenBtn.style.display = 'flex';
+                            instructionsEl.style.display = 'block';
+
+                            const firstImages = document.querySelectorAll('.page img');
+                            Promise.all(Array.from(firstImages).slice(0, 4).map(img => {
+                                return new Promise(resolve => {
+                                    if (img.complete) resolve();
+                                    else {
+                                        img.onload = resolve;
+                                        img.onerror = resolve;
+                                    }
+                                });
+                            })).then(() => initFlipbook());
+                        }
+                    }, 1000);
+
+                } else {
+                    accessError.textContent = result.error || 'This code is not recognized.';
+                    accessError.style.display = 'block';
+                    accessSuccess.style.display = 'none';
+                    unlockBtn.disabled = false;
+                    unlockBtn.textContent = 'Unlock';
+                }
+
+            } catch (error) {
+                console.error('Access validation error:', error);
+                accessError.textContent = 'Unable to validate code. Please try again.';
+                accessError.style.display = 'block';
+                accessSuccess.style.display = 'none';
+                unlockBtn.disabled = false;
+                unlockBtn.textContent = 'Unlock';
+            }
+        }
+    </script>
+</body>
+</html>

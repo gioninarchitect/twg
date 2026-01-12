@@ -60,21 +60,36 @@
 
     /* Nav */
     nav {
-      padding: 24px 48px;
+      padding: 16px 24px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--border-subtle);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    @media (min-width: 768px) {
+      nav {
+        padding: 24px 48px;
+        flex-wrap: nowrap;
+      }
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: clamp(0.875rem, 3vw, 1.25rem);
       color: var(--text-primary);
       text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .logo span {
+      white-space: nowrap;
     }
 
     .logo-mark {
@@ -86,14 +101,30 @@
     .secure-badge {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.875rem;
+      gap: 6px;
+      font-size: clamp(0.75rem, 2.5vw, 0.875rem);
       color: var(--sage);
+      white-space: nowrap;
     }
 
     .secure-badge svg {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .nav-org-link {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .nav-org-link {
+        display: inline;
+      }
+      .secure-badge svg {
+        width: 18px;
+        height: 18px;
+      }
     }
 
     /* Main Layout */
@@ -233,7 +264,11 @@
     }
 
     .checkbox-wrap input {
-      display: none;
+      position: absolute;
+      opacity: 0;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
     }
 
     .checkbox-box {
@@ -783,15 +818,258 @@
     @media (max-width: 900px) {
       main {
         grid-template-columns: 1fr;
-        padding: 24px;
+        padding: 16px;
+        gap: 24px;
       }
-
-      nav { padding: 16px 24px; }
 
       .sidebar { order: -1; position: static; }
 
       .btn-group { flex-direction: column; }
       .btn-group .btn-secondary { width: 100%; }
+
+      .section-title {
+        font-size: 1.5rem;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .order-summary {
+        padding: 20px;
+      }
+
+      .order-summary h3 {
+        font-size: 1.125rem;
+      }
+
+      .total-amount {
+        font-size: 1.5rem;
+      }
+
+      .bank-card {
+        padding: 16px;
+      }
+
+      .bank-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+
+      .bank-row.highlight {
+        margin: 8px -16px;
+        padding: 12px 16px;
+      }
+
+      .progress-label {
+        font-size: 0.625rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      main {
+        padding: 12px;
+      }
+
+      .logo-mark {
+        width: 28px;
+        height: 28px;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"] {
+        padding: 12px 16px;
+        font-size: 16px; /* Prevents iOS zoom */
+      }
+
+      .btn {
+        padding: 14px 24px;
+        font-size: 0.9375rem;
+      }
+    }
+
+    /* Payment Method Selector */
+    .payment-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .payment-method {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .payment-method:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .payment-method.selected {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.08);
+    }
+
+    .payment-method input[type="radio"] {
+      display: none;
+    }
+
+    .method-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .method-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+    }
+
+    .method-info {
+      flex: 1;
+    }
+
+    .method-name {
+      display: block;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .method-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary);
+    }
+
+    .method-badge {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 4px 10px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      border-radius: 20px;
+    }
+
+    .payment-section {
+      margin-top: 24px;
+    }
+
+    .card-payment-box {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .card-payment-info {
+      margin-bottom: 24px;
+    }
+
+    .card-amount {
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .card-amount strong {
+      font-size: 1.5rem;
+      color: var(--gold);
+    }
+
+    .card-note {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .card-logos {
+      margin-top: 16px;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn.loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .btn.loading::after {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top-color: currentColor;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-left: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Bank Reveal */
+    .bank-reveal {
+      background: var(--bg-glass);
+      border: 2px dashed var(--border-subtle);
+      border-radius: 16px;
+      padding: 48px 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .bank-reveal:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .reveal-icon {
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 16px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reveal-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--gold);
+    }
+
+    .reveal-text {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .reveal-hint {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
     }
   </style>
 </head>
@@ -803,11 +1081,11 @@
       <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
       <span>Tea With God</span>
     </a>
-    <div style="display: flex; align-items: center; gap: 24px;">
-      <a href="b2b/" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-secondary)'">For Organizations</a>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a href="b2b/" class="nav-org-link" style="color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; transition: color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--text-secondary)'">For Organizations</a>
       <div class="secure-badge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Secure Checkout
+        <span>Secure</span>
       </div>
     </div>
   </nav>
@@ -859,6 +1137,27 @@
             <p class="form-hint">For payment confirmation & support</p>
           </div>
 
+          <!-- Tithe Selection -->
+          <div class="form-group" id="tithe-section" style="margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border-subtle);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+              <div style="width: 40px; height: 40px; background: rgba(212, 175, 55, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" style="width: 20px; height: 20px;"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              </div>
+              <div>
+                <h3 style="font-family: var(--font-display); font-size: 1.125rem; margin-bottom: 2px;">Give Back: 10% Tithe</h3>
+                <p style="font-size: 0.875rem; color: var(--text-secondary);">We donate 10% of every purchase to a charity of your choice</p>
+              </div>
+            </div>
+
+            <label style="margin-bottom: 8px; display: block;">Choose a beneficiary organization</label>
+            <select id="beneficiaryOrg" style="width: 100%; padding: 16px 20px; background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 12px; color: var(--text-primary); font-family: var(--font-body); font-size: 1rem; cursor: pointer; appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"rgba(250,250,250,0.4)\" stroke-width=\"2\"><path d=\"M6 9l6 6 6-6\"/></svg>'); background-repeat: no-repeat; background-position: right 16px center;">
+              <option value="">Loading organizations...</option>
+            </select>
+            <p class="form-hint" style="margin-top: 8px;">
+              <span id="tithe-amount" style="color: var(--gold); font-weight: 500;">R14.90</span> of your purchase will go to the selected organization
+            </p>
+          </div>
+
           <div class="form-group">
             <label class="checkbox-wrap">
               <input type="checkbox" id="terms" required>
@@ -878,23 +1177,83 @@
 
       <!-- Step 2: Payment -->
       <section class="checkout-section" id="step-2">
-        <h2 class="section-title">Complete Payment</h2>
-        <p class="section-desc">Transfer the amount below, then upload your proof of payment.</p>
+        <h2 class="section-title">Choose Payment Method</h2>
+        <p class="section-desc">Pay instantly with card or use EFT bank transfer.</p>
 
-        <div class="bank-card">
+        <!-- Payment Method Selector -->
+        <div class="payment-methods">
+          <label class="payment-method selected" data-method="card">
+            <input type="radio" name="payment-method" value="card" checked>
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            </div>
+            <div class="method-info">
+              <span class="method-name">Pay with Card</span>
+              <span class="method-desc">Instant access via Yoco</span>
+            </div>
+            <span class="method-badge">Recommended</span>
+          </label>
+
+          <label class="payment-method" data-method="eft">
+            <input type="radio" name="payment-method" value="eft">
+            <div class="method-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+            </div>
+            <div class="method-info">
+              <span class="method-name">EFT Bank Transfer</span>
+              <span class="method-desc">Manual verification (1-2 hours)</span>
+            </div>
+          </label>
+        </div>
+
+        <!-- Card Payment Section -->
+        <div class="payment-section" id="card-payment-section">
+          <div class="card-payment-box">
+            <div class="card-payment-info">
+              <p class="card-amount">You'll pay <strong id="card-amount">R149</strong></p>
+              <p class="card-note">Secure payment powered by Yoco. Your card details are encrypted.</p>
+            </div>
+            <button type="button" class="btn btn-primary btn-full" id="pay-with-card-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;margin-right:8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Pay Securely with Card
+            </button>
+            <p class="card-logos">
+              <span style="font-size: 0.75rem; color: var(--text-secondary);">Accepts Visa, Mastercard, and more</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- EFT Payment Section -->
+        <div class="payment-section" id="eft-payment-section" style="display: none;">
+
+        <!-- Reveal Button -->
+        <div class="bank-reveal" id="bank-reveal">
+          <div class="reveal-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <p class="reveal-text">Click to reveal banking details</p>
+          <p class="reveal-hint">Your reference and amount will be shown</p>
+        </div>
+
+        <!-- Hidden Bank Details -->
+        <div class="bank-card" id="bank-details" style="display: none;">
           <div class="bank-row">
             <span class="bank-label">Bank</span>
             <span class="bank-value">First National Bank (FNB)</span>
           </div>
           <div class="bank-row">
             <span class="bank-label">Account Name</span>
-            <span class="bank-value">Tea With God</span>
+            <span class="bank-value">HL BUTLER</span>
+          </div>
+          <div class="bank-row">
+            <span class="bank-label">Account Type</span>
+            <span class="bank-value">Business</span>
           </div>
           <div class="bank-row">
             <span class="bank-label">Account Number</span>
             <span class="bank-value">
-              <span id="account-number">62812345678</span>
-              <button class="copy-btn" data-copy="62812345678">Copy</button>
+              <span id="account-number">63084271237</span>
+              <button class="copy-btn" data-copy="63084271237">Copy</button>
             </span>
           </div>
           <div class="bank-row">
@@ -949,6 +1308,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </div>
+        </div><!-- Close EFT section -->
       </section>
 
       <!-- Step 3: Confirmation -->
@@ -1048,9 +1408,9 @@
   <script>
     // Plan data
     const plans = {
-      book: { name: 'Book Access', price: 99, features: ['All 40 devotionals', 'Read at your pace', 'Offline access'] },
-      journey: { name: 'Journey Access', price: 149, features: ['All 40 devotionals', 'Private journal', 'Progress tracking', 'Offline access'] },
-      premium: { name: 'Premium Access', price: 249, features: ['All 40 devotionals', 'Private journal', 'Voice recordings', 'Crisis support', 'All future updates'] }
+      book: { name: 'Book Access', price: 99, features: ['eBook PDF download', 'Read at your pace', 'Offline reading'] },
+      journey: { name: 'Journey Access', price: 149, features: ['eBook included', '40 devotionals in app', 'Private journal', 'Progress tracking'] },
+      premium: { name: 'Premium Access', price: 249, features: ['Everything in Journey', 'Music library', 'Brain games', 'Voice recordings'] }
     };
 
     // Get plan from URL
@@ -1098,7 +1458,8 @@
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
         email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value
+        phone: document.getElementById('phone').value,
+        beneficiaryOrgId: document.getElementById('beneficiaryOrg').value || null
       };
       showStep(2);
     });
@@ -1149,7 +1510,7 @@
     function handleFile(file) {
       if (!file) return;
       if (file.size > 5 * 1024 * 1024) {
-        alert('File too large. Maximum 5MB.');
+        showToast('File too large. Maximum 5MB.', 'error');
         return;
       }
 
@@ -1200,7 +1561,8 @@
             email: customerData.email,
             phone: customerData.phone,
             plan: selectedPlan,
-            orderRef: orderRef
+            orderRef: orderRef,
+            beneficiaryOrgId: customerData.beneficiaryOrgId
           })
         });
 
@@ -1229,16 +1591,199 @@
         const whatsappMsg = encodeURIComponent(
           `Hi! I just purchased Tea With God (${plan.name}).\n\nOrder: ${orderRef}\nName: ${customerData.firstName} ${customerData.lastName}\nEmail: ${customerData.email}`
         );
-        document.getElementById('whatsapp-btn').href = `https://wa.me/27821234567?text=${whatsappMsg}`;
+        document.getElementById('whatsapp-btn').href = `https://wa.me/27664678937?text=${whatsappMsg}`;
 
         showStep(3);
       } catch (error) {
         console.error('Order error:', error);
-        alert('Something went wrong. Please try again or contact us on WhatsApp.');
+        showToast('Something went wrong. Please try again or contact us on WhatsApp.', 'error');
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Submit Payment Proof <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
       }
     });
+
+    // =========================================
+    // PAYMENT METHOD SWITCHING
+    // =========================================
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    const cardSection = document.getElementById('card-payment-section');
+    const eftSection = document.getElementById('eft-payment-section');
+
+    paymentMethods.forEach(method => {
+      method.addEventListener('click', function() {
+        // Update selection UI
+        paymentMethods.forEach(m => m.classList.remove('selected'));
+        this.classList.add('selected');
+        this.querySelector('input').checked = true;
+
+        const selectedMethod = this.dataset.method;
+
+        if (selectedMethod === 'card') {
+          cardSection.style.display = 'block';
+          eftSection.style.display = 'none';
+        } else {
+          cardSection.style.display = 'none';
+          eftSection.style.display = 'block';
+        }
+      });
+    });
+
+    // Update card amount display
+    document.getElementById('card-amount').textContent = 'R' + plans[selectedPlan].price;
+
+    // Update tithe amount display
+    document.getElementById('tithe-amount').textContent = 'R' + (plan.price * 0.10).toFixed(2);
+
+    // =========================================
+    // LOAD BENEFICIARY ORGANIZATIONS
+    // =========================================
+    async function loadBeneficiaryOrgs() {
+      try {
+        const response = await fetch(`${API_URL}/tithe/organizations`);
+        if (!response.ok) throw new Error('Failed to load organizations');
+
+        const orgs = await response.json();
+        const select = document.getElementById('beneficiaryOrg');
+
+        if (orgs.length === 0) {
+          select.innerHTML = '<option value="">No organizations available</option>';
+          return;
+        }
+
+        select.innerHTML = '<option value="">Select an organization...</option>' +
+          orgs.map(org => `<option value="${org.id}">${org.name}${org.description ? ' - ' + org.description : ''}</option>`).join('');
+      } catch (error) {
+        console.error('Error loading beneficiary orgs:', error);
+        document.getElementById('beneficiaryOrg').innerHTML = '<option value="">Unable to load organizations</option>';
+      }
+    }
+
+    loadBeneficiaryOrgs();
+
+    // =========================================
+    // BANK DETAILS REVEAL
+    // =========================================
+    const bankReveal = document.getElementById('bank-reveal');
+    const bankDetails = document.getElementById('bank-details');
+
+    if (bankReveal) {
+      bankReveal.addEventListener('click', function() {
+        this.style.display = 'none';
+        bankDetails.style.display = 'block';
+        // Show upload area and buttons
+        document.querySelector('#eft-payment-section .upload-title').parentElement.style.display = 'block';
+        document.querySelector('#eft-payment-section .btn-group').style.display = 'flex';
+      });
+    }
+
+    // =========================================
+    // YOCO CARD PAYMENT
+    // =========================================
+    const payWithCardBtn = document.getElementById('pay-with-card-btn');
+
+    payWithCardBtn.addEventListener('click', async function() {
+      // Validate we have customer data
+      if (!customerData.firstName || !customerData.email) {
+        showToast('Please complete your details first', 'error');
+        showStep(1);
+        return;
+      }
+
+      // Show loading state
+      this.classList.add('loading');
+      this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;margin-right:8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Processing...';
+
+      try {
+        const response = await fetch(`${API_URL}/yoco/checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: customerData.firstName,
+            lastName: customerData.lastName,
+            email: customerData.email,
+            phone: customerData.phone,
+            plan: selectedPlan,
+            country: 'ZA',
+            beneficiaryOrgId: customerData.beneficiaryOrgId
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.checkoutUrl) {
+          // Redirect to Yoco payment page
+          window.location.href = data.checkoutUrl;
+        } else {
+          throw new Error(data.error || 'Failed to create checkout');
+        }
+      } catch (error) {
+        console.error('Yoco checkout error:', error);
+        showToast('Payment failed. Please try again or use EFT.', 'error');
+        this.classList.remove('loading');
+        this.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px;margin-right:8px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Pay Securely with Card';
+      }
+    });
+
+    // =========================================
+    // TOAST NOTIFICATIONS (instead of alert)
+    // =========================================
+    function showToast(message, type = 'info') {
+      // Remove existing toast
+      const existing = document.querySelector('.toast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()">&times;</button>
+      `;
+      document.body.appendChild(toast);
+
+      // Auto remove after 5 seconds
+      setTimeout(() => toast.remove(), 5000);
+    }
+
+    // Add toast styles dynamically
+    const toastStyles = document.createElement('style');
+    toastStyles.textContent = `
+      .toast {
+        position: fixed;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #1A1A1A;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        z-index: 9999;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        animation: slideUp 0.3s ease;
+      }
+      .toast-error { border-color: #ff6b6b; }
+      .toast-success { border-color: #8FBC8F; }
+      .toast span { color: #FAFAFA; }
+      .toast button {
+        background: none;
+        border: none;
+        color: rgba(250,250,250,0.5);
+        font-size: 1.25rem;
+        cursor: pointer;
+      }
+      @keyframes slideUp {
+        from { transform: translateX(-50%) translateY(100%); opacity: 0; }
+        to { transform: translateX(-50%) translateY(0); opacity: 1; }
+      }
+    `;
+    document.head.appendChild(toastStyles);
+
+    // Replace alerts with toast
+    window.alert = function(msg) {
+      showToast(msg, 'info');
+    };
   </script>
 </body>
 </html>

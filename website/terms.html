@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service - Tea With God</title>
+  <meta name="description" content="Terms of Service for Tea With God - A 40-day healing companion.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-glass: rgba(255, 255, 255, 0.05);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --text-muted: rgba(250, 250, 250, 0.4);
+      --gold: #D4AF37;
+      --gold-light: #F4E4BC;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo span {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--gold-light);
+    }
+
+    .back-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--gold);
+    }
+
+    /* Main Content */
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 64px 24px 100px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .page-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+
+    .last-updated {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 16px;
+    }
+
+    /* Content Sections */
+    .content-section {
+      margin-bottom: 48px;
+    }
+
+    .content-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--gold-light);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .content-section p {
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .content-section ul {
+      list-style: none;
+      margin: 16px 0;
+    }
+
+    .content-section li {
+      color: var(--text-secondary);
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .content-section li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 16px;
+      width: 8px;
+      height: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .highlight-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--gold);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .highlight-box p {
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    .warning-box {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+
+    .warning-box p {
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 32px 48px;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+      header { padding: 16px 24px; }
+      h1 { font-size: 2rem; }
+      .logo span { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="logo">
+      <img src="images/teacup.png" alt="Tea With God">
+      <span>Tea With God</span>
+    </a>
+    <a href="index.html" class="back-link">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 12H5M12 19l-7-7 7-7"/>
+      </svg>
+      Back to Home
+    </a>
+  </header>
+
+  <main>
+    <div class="page-header">
+      <span class="page-label">Legal</span>
+      <h1>Terms of Service</h1>
+      <p class="page-subtitle">Please read these terms carefully before using Tea With God.</p>
+      <p class="last-updated">Last updated: January 12, 2026</p>
+    </div>
+
+    <div class="highlight-box">
+      <p><strong>Summary:</strong> Tea With God is a devotional companion app designed for personal spiritual growth and emotional wellness. It provides EDUCATIONAL content only and is NOT professional psychological, medical, or therapeutic advice. By using our service, you agree to these terms.</p>
+    </div>
+
+    <div class="warning-box">
+      <p><strong>IMPORTANT - EDUCATIONAL CONTENT ONLY:</strong> All content in Tea With God, including the "brain games" and psychological information, is for EDUCATIONAL and DEVOTIONAL purposes only. We do not provide professional psychological, medical, or therapeutic services. The creators of Tea With God are not psychologists, therapists, or medical professionals. Nothing in this app should be construed as professional advice or treatment.</p>
+    </div>
+
+    <section class="content-section">
+      <h2>1. Acceptance of Terms</h2>
+      <p>By accessing or using Tea With God ("the Service"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.</p>
+      <p>These terms apply to all users of the Service, including individual users and organizations accessing through our B2B program.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>2. Description of Service</h2>
+      <p>Tea With God is a 40-day digital devotional companion that includes:</p>
+      <ul>
+        <li>Daily devotional content and scripture readings</li>
+        <li>Private journaling functionality</li>
+        <li>Educational wellness exercises inspired by general scientific principles (not professional psychological treatment)</li>
+        <li>Original worship music (where available)</li>
+        <li>Progress tracking through the 40-day journey</li>
+      </ul>
+      <p><strong>Note:</strong> All references to scientific or psychological concepts within the app are drawn from publicly available, general scientific knowledge. We do not claim affiliation with, endorsement by, or partnership with any researchers, institutions, or experts. The content represents our own educational interpretation of widely-available scientific principles.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>3. Access and Payment</h2>
+      <p>Access to Tea With God requires a valid access code obtained through:</p>
+      <ul>
+        <li><strong>Direct Purchase:</strong> One-time payment processed through Yoco (our payment provider)</li>
+        <li><strong>Organization Access:</strong> Code provided by a participating church, counselor, or organization</li>
+        <li><strong>Gift Code:</strong> Code received as a gift from another user</li>
+      </ul>
+      <p>All payments are final. Due to the digital nature of the product, we do not offer refunds once an access code has been redeemed. If you experience technical issues, please contact us for support.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>4. User Responsibilities</h2>
+      <p>When using Tea With God, you agree to:</p>
+      <ul>
+        <li>Provide accurate information during registration</li>
+        <li>Keep your access code confidential</li>
+        <li>Use the Service for personal, non-commercial purposes only</li>
+        <li>Not attempt to reverse engineer or copy the Service</li>
+        <li>Not share or redistribute access codes</li>
+      </ul>
+    </section>
+
+    <div class="warning-box">
+      <p><strong>Important Mental Health Disclaimer:</strong> Tea With God is a devotional and educational resource, NOT a substitute for professional mental health treatment. If you are experiencing a mental health crisis, please contact emergency services or a qualified mental health professional immediately.</p>
+    </div>
+
+    <section class="content-section">
+      <h2>5. Mental Health and Educational Disclaimer</h2>
+      <p>Tea With God provides spiritual and educational content designed to support emotional wellness. BY USING THIS SERVICE, YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT:</p>
+      <ul>
+        <li>The Service is NOT therapy, counseling, or professional mental health treatment</li>
+        <li>The "brain games" and wellness exercises are EDUCATIONAL tools only, not clinical treatment</li>
+        <li>The creators are NOT psychologists, therapists, psychiatrists, or medical professionals</li>
+        <li>Content is NOT intended to diagnose, treat, cure, or prevent any mental or physical condition</li>
+        <li>References to scientific concepts are for general education and do NOT constitute professional advice</li>
+        <li>No content should be relied upon as a substitute for professional medical or psychological evaluation</li>
+        <li>If you are in crisis, you MUST seek professional help immediately</li>
+      </ul>
+      <p><strong>By using the Service, you acknowledge that you understand these limitations, assume full responsibility for your own mental health decisions, and agree to seek appropriate professional help when needed. You expressly waive any claims against Tea With God and its creators arising from your use of the educational content.</strong></p>
+    </section>
+
+    <section class="content-section">
+      <h2>6. Scientific and Educational Content</h2>
+      <p>Tea With God contains references to general scientific and psychological concepts. Please understand:</p>
+      <ul>
+        <li>All scientific content is based on PUBLICLY AVAILABLE, general knowledge</li>
+        <li>We do NOT claim affiliation with or endorsement by any researchers, universities, or institutions</li>
+        <li>We do NOT claim to be experts in psychology, neuroscience, or any scientific field</li>
+        <li>References to brain science, nervous system regulation, cognitive techniques, or other scientific concepts are for EDUCATIONAL purposes only</li>
+        <li>Our interpretation of scientific concepts may not reflect the views of any particular researcher or institution</li>
+        <li>The effectiveness of our exercises has not been independently verified through clinical trials</li>
+      </ul>
+      <p><strong>By using the Service, you agree that Tea With God makes no representations about professional expertise and you will not hold the Service or its creators liable for any claims related to scientific accuracy or professional expertise.</strong></p>
+    </section>
+
+    <section class="content-section">
+      <h2>7. Intellectual Property</h2>
+      <p>All content within Tea With God is protected by copyright and intellectual property laws:</p>
+      <ul>
+        <li>Devotional content written by Lani Butler</li>
+        <li>Original music compositions</li>
+        <li>Brain game designs and implementations</li>
+        <li>App design and user interface</li>
+        <li>The Tea With God brand and logo</li>
+      </ul>
+      <p>You may not copy, reproduce, distribute, or create derivative works without express written permission.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>8. Privacy</h2>
+      <p>Your privacy is important to us. Please review our <a href="privacy.html" style="color: var(--gold);">Privacy Policy</a> for information about how we collect, use, and protect your personal information.</p>
+      <p>Key points:</p>
+      <ul>
+        <li>Journal entries remain on your device</li>
+        <li>We never sell your personal data</li>
+        <li>Payment information is processed securely by Yoco</li>
+        <li>You can request deletion of your account at any time</li>
+      </ul>
+    </section>
+
+    <section class="content-section">
+      <h2>9. Limitation of Liability and Indemnification</h2>
+      <p>TO THE MAXIMUM EXTENT PERMITTED BY LAW, Tea With God, its creators, developers, affiliates, officers, directors, employees, agents, and licensors shall NOT be liable for:</p>
+      <ul>
+        <li>Any direct, indirect, incidental, special, consequential, or punitive damages</li>
+        <li>Any psychological, emotional, or mental health outcomes</li>
+        <li>Any actions taken or not taken based on content within the app</li>
+        <li>Any reliance on the educational or scientific information provided</li>
+        <li>Loss of data, content, or personal information</li>
+        <li>Service interruptions or technical issues</li>
+        <li>Any claim by third parties arising from your use of the Service</li>
+      </ul>
+      <p><strong>THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.</strong></p>
+      <p>Our total liability shall not exceed the amount you paid for access to the Service.</p>
+      <p><strong>Indemnification:</strong> You agree to indemnify and hold harmless Tea With God, its creators, and affiliates from any claims, damages, losses, or expenses arising from your use of the Service or violation of these terms.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>10. Modifications to Service</h2>
+      <p>We reserve the right to:</p>
+      <ul>
+        <li>Modify or discontinue any aspect of the Service</li>
+        <li>Update content and features</li>
+        <li>Change these Terms of Service</li>
+      </ul>
+      <p>We will notify users of significant changes through the app or email. Continued use after changes constitutes acceptance of the new terms.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>11. Governing Law</h2>
+      <p>These Terms of Service are governed by the laws of the Republic of South Africa. Any disputes shall be resolved in the courts of South Africa.</p>
+    </section>
+
+    <section class="content-section">
+      <h2>12. Contact Information</h2>
+      <p>For questions about these Terms of Service, please contact us:</p>
+      <ul>
+        <li>Email: <a href="mailto:legal@teawithgod.com" style="color: var(--gold);">legal@teawithgod.com</a></li>
+        <li>WhatsApp: <a href="https://wa.me/27664678937" style="color: var(--gold);">+27 66 467 8937</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Tea With God. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="faq.html">FAQ</a></p>
+  </footer>
+</body>
+</html>

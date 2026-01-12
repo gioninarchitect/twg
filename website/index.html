@@ -105,12 +105,18 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 8px;
       font-family: var(--font-display);
-      font-size: 1.25rem;
+      font-size: clamp(0.9rem, 3vw, 1.25rem);
       letter-spacing: -0.02em;
       color: var(--text-primary);
       text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .logo span {
+      white-space: nowrap;
     }
 
     .logo-mark {
@@ -1088,6 +1094,259 @@
       .music-visual { order: -1; }
     }
 
+    /* Download Section */
+    .download {
+      text-align: center;
+    }
+
+    .download-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 48px;
+      flex-wrap: wrap;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 28px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      text-decoration: none;
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .download-btn:hover {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .download-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-align: left;
+    }
+
+    .download-platform {
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      font-weight: 600;
+      text-align: left;
+    }
+
+    .download-note {
+      margin-top: 32px;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    /* Contact Section */
+    .contact-section {
+      padding: 100px 48px;
+      background: linear-gradient(180deg, transparent 0%, rgba(212, 175, 55, 0.02) 100%);
+    }
+
+    .contact-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .contact-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .contact-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .contact-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--gold);
+    }
+
+    .contact-icon.whatsapp {
+      background: rgba(37, 211, 102, 0.1);
+    }
+
+    .contact-icon.whatsapp svg {
+      fill: #25D366;
+      stroke: none;
+    }
+
+    .contact-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+
+    .contact-card p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .response-time {
+      font-size: 0.8125rem !important;
+      color: var(--text-muted) !important;
+      margin-top: 8px;
+    }
+
+    .whatsapp-link {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      background: #25D366;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .whatsapp-link:hover {
+      background: #20bd5a;
+      transform: translateY(-2px);
+    }
+
+    .contact-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 40px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .btn-full {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .form-note {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      margin-top: 16px;
+    }
+
+    /* WhatsApp Floating Button */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+      z-index: 99;
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-float svg {
+      width: 32px;
+      height: 32px;
+      fill: white;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 28px rgba(37, 211, 102, 0.5);
+    }
+
+    .whatsapp-tooltip {
+      position: absolute;
+      right: 70px;
+      background: #1A1A1A;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .whatsapp-float:hover .whatsapp-tooltip {
+      opacity: 1;
+    }
+
     /* Footer */
     footer {
       padding: 80px 48px 40px;
@@ -1248,6 +1507,39 @@
       .cta-card { padding: 48px 24px; }
       .footer-content { flex-direction: column; gap: 48px; }
       .footer-links { flex-direction: column; gap: 32px; }
+      footer { padding: 60px 24px 40px; }
+      .contact-section { padding: 60px 24px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+      .contact-form { padding: 28px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      nav { padding: 12px 16px; }
+      nav.scrolled { padding: 12px 16px; }
+      section { padding: 60px 16px; }
+      .hero { padding: 80px 16px 60px; }
+      .hero h1 { font-size: 2.5rem; }
+      .hero-subtitle { font-size: 1rem; }
+      .hero-actions { flex-direction: column; gap: 12px; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .section-title { font-size: 1.75rem; }
+      .section-desc { font-size: 1rem; }
+      .journey-card { padding: 24px 20px; }
+      .card-number { font-size: 3rem; }
+      .feature-card { padding: 24px 20px; }
+      .testimonial-card { padding: 24px 20px; }
+      .cta-card { padding: 32px 16px; border-radius: 20px; }
+      .cta-price .amount { font-size: 3.5rem; }
+      .cta-features { gap: 16px; flex-direction: column; }
+      .pricing-card { padding: 32px 20px; }
+      .pricing-price .amount { font-size: 2.5rem; }
+      .music-player { padding: 24px; }
+      .player-art { width: 150px; height: 150px; }
+      footer { padding: 40px 16px 32px; }
+      .footer-brand p { font-size: 0.875rem; }
+      .download-buttons { flex-direction: column !important; gap: 12px !important; }
+      .download-btn { width: 100% !important; }
     }
 
     /* Animations */
@@ -1333,7 +1625,7 @@
     <div class="journey-header" data-animate>
       <span class="section-label">The Path</span>
       <h2 class="section-title">40 Days of Gentle Transformation</h2>
-      <p class="section-desc">Like kintsugi - the Japanese art of repairing broken pottery with gold - your cracks become your most beautiful features.</p>
+      <p class="section-desc">"The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him." — Jeremiah 18:4</p>
     </div>
 
     <div class="journey-grid">
@@ -1418,6 +1710,20 @@
           <h3>Gentle Reminders</h3>
           <p>Optional daily nudges. An invitation, never a demand.</p>
         </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          </div>
+          <h3>Interactive Digital Book</h3>
+          <p>Read the full book with beautiful page-turning effects. Your companion on any device.</p>
+        </div>
+        <div class="feature-card" data-animate>
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+          </div>
+          <h3>Brain Games</h3>
+          <p>Six evidence-based exercises for emotional regulation and mental wellness.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1428,7 +1734,7 @@
       <div class="music-content" data-animate>
         <span class="section-label">Original Music</span>
         <h2 class="section-title">Songs for Your Soul</h2>
-        <p class="section-desc">Original worship songs and instrumental pieces created specifically for this journey. Let the music carry you deeper into your healing.</p>
+        <p class="section-desc">Original worship songs created specifically for your healing journey. Let the music carry you deeper into each devotional.</p>
 
         <div class="music-features">
           <div class="music-feature">
@@ -1437,7 +1743,7 @@
             </div>
             <div>
               <h4>Original Tracks</h4>
-              <p>Exclusive songs written for each phase of healing</p>
+              <p>Exclusive songs to accompany your daily devotional</p>
             </div>
           </div>
           <div class="music-feature">
@@ -1445,8 +1751,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
             </div>
             <div>
-              <h4>Background Play</h4>
-              <p>Music continues while you journal and reflect</p>
+              <h4>Built-In Player</h4>
+              <p>Listen while you read and reflect</p>
             </div>
           </div>
           <div class="music-feature">
@@ -1454,7 +1760,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
             </div>
             <div>
-              <h4>Worship & Instrumental</h4>
+              <h4>Healing Worship</h4>
               <p>Peaceful sounds to accompany your prayers</p>
             </div>
           </div>
@@ -1469,8 +1775,8 @@
           </div>
           <div class="player-info">
             <span class="now-playing">Now Playing</span>
-            <h4>Be Still My Soul</h4>
-            <p>Healing Instrumentals</p>
+            <h4>Restore My Soul</h4>
+            <p>Tea With God</p>
           </div>
           <div class="player-wave">
             <span></span><span></span><span></span><span></span><span></span>
@@ -1522,56 +1828,29 @@
   </section>
 
   <!-- Download Section -->
-  <section id="download" class="download" style="padding: 120px 48px; text-align: center;">
-    <div data-animate>
-      <span class="section-label">Download</span>
-      <h2 class="section-title">Get the App</h2>
-      <p class="section-desc">Your healing journey in your pocket. Available on mobile.</p>
+  <section id="download" class="download">
+    <div data-animate style="text-align: center;">
+      <span class="section-label">Get Started</span>
+      <h2 class="section-title">Begin Your Journey</h2>
+      <p class="section-desc" style="margin: 0 auto;">Your healing companion awaits. Works on any device with a browser.</p>
     </div>
 
-    <div style="display: flex; justify-content: center; gap: 24px; margin-top: 48px; flex-wrap: wrap;">
-      <!-- Android Download -->
-      <a href="downloads/TeaWithGod.apk" style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.03)'">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
-          <path d="M5 16V8a7 7 0 0114 0v8M12 2v2M7 20h10a2 2 0 002-2v-2H5v2a2 2 0 002 2z"/>
-          <circle cx="8" cy="6" r="1" fill="var(--gold)"/>
-          <circle cx="16" cy="6" r="1" fill="var(--gold)"/>
-        </svg>
-        <div style="text-align: left;">
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Download for</div>
-          <div style="font-size: 1.25rem; color: var(--text-primary); font-weight: 600;">Android</div>
-        </div>
-      </a>
-
+    <div class="download-buttons" style="justify-content: center;">
       <!-- Web App (PWA) -->
-      <a href="app/" style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; text-decoration: none; transition: all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.background='rgba(212,175,55,0.1)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)';this.style.background='rgba(255,255,255,0.03)'">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
+      <a href="checkout.html" class="download-btn" style="min-width: 280px;">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5">
           <circle cx="12" cy="12" r="10"/>
           <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
         </svg>
-        <div style="text-align: left;">
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Open in Browser</div>
-          <div style="font-size: 1.25rem; color: var(--text-primary); font-weight: 600;">Web App</div>
+        <div>
+          <div class="download-label">Launch the</div>
+          <div class="download-platform">Web App</div>
         </div>
       </a>
-
-      <!-- iOS Coming Soon -->
-      <div style="display: flex; align-items: center; gap: 16px; padding: 16px 32px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; opacity: 0.6;">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="1.5">
-          <path d="M12 2a8.5 8.5 0 00-8.5 8.5v5a8.5 8.5 0 0017 0v-5A8.5 8.5 0 0012 2z"/>
-          <path d="M12 2c1.5 0 3-1 3-2"/>
-        </svg>
-        <div style="text-align: left;">
-          <div style="font-size: 0.75rem; color: var(--text-secondary);">Coming Soon</div>
-          <div style="font-size: 1.25rem; color: var(--text-secondary); font-weight: 600;">iOS</div>
-        </div>
-      </div>
     </div>
 
-    <p style="margin-top: 32px; color: var(--text-secondary); font-size: 0.875rem;">
-      <strong>Android:</strong> Download APK and install (allow unknown sources).<br>
-      <strong>Web App:</strong> Works on any device - add to home screen for app-like experience.<br>
-      <strong style="color: var(--gold);">Review Code: REVIEW</strong> - Unlocks all 40 days for testing.
+    <p class="download-note">
+      Works on iPhone, Android, tablet, or computer. Install as an app or use in your browser. No app store needed.
     </p>
   </section>
 
@@ -1580,27 +1859,10 @@
     <div class="pricing-header" data-animate>
       <span class="section-label">Pricing</span>
       <h2 class="section-title">Choose Your Path</h2>
-      <p class="section-desc">Start free. Upgrade when you're ready. No pressure.</p>
+      <p class="section-desc">One-time purchase. Lifetime access. No subscriptions.</p>
     </div>
 
-    <div class="pricing-grid">
-      <!-- Free Tier -->
-      <div class="pricing-card" data-animate>
-        <div class="pricing-tier">Free</div>
-        <div class="pricing-price">
-          <span class="currency">R</span>
-          <span class="amount">0</span>
-        </div>
-        <p class="pricing-desc">Taste the journey</p>
-        <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Days 1-3 devotionals</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Sample the experience</li>
-          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No journal access</li>
-          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No crisis support</li>
-        </ul>
-        <a href="#" class="btn btn-secondary btn-full">Download App</a>
-      </div>
-
+    <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr);">
       <!-- Book Tier -->
       <div class="pricing-card" data-animate>
         <div class="pricing-tier">Book</div>
@@ -1608,12 +1870,12 @@
           <span class="currency">R</span>
           <span class="amount">99</span>
         </div>
-        <p class="pricing-desc">The complete devotional</p>
+        <p class="pricing-desc">eBook only</p>
         <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 40 devotionals</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> eBook PDF download</li>
           <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Read at your pace</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline access</li>
-          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No journal</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline reading</li>
+          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No app access</li>
         </ul>
         <a href="checkout.html?plan=book" class="btn btn-secondary btn-full">Get Book Access</a>
       </div>
@@ -1628,10 +1890,10 @@
         </div>
         <p class="pricing-desc">The interactive experience</p>
         <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All 40 devotionals</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> eBook included</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 40 devotionals in app</li>
           <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Private journal</li>
           <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Progress tracking</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline access</li>
         </ul>
         <a href="checkout.html?plan=journey" class="btn btn-primary btn-full">Start Your Journey</a>
       </div>
@@ -1646,9 +1908,9 @@
         <p class="pricing-desc">The complete sanctuary</p>
         <ul class="pricing-features">
           <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Everything in Journey</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Voice note recordings</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Crisis support prayers</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> All future updates</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Music library</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Brain games</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Voice recordings</li>
         </ul>
         <a href="checkout.html?plan=premium" class="btn btn-gold btn-full">Get Premium</a>
       </div>
@@ -1659,6 +1921,85 @@
       Secure EFT payment. Lifetime access. No subscriptions.
     </p>
   </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="contact-section">
+    <div class="container">
+      <div class="contact-header" data-animate>
+        <span class="section-tag">Get in Touch</span>
+        <h2 class="section-title">We'd Love to Hear From You</h2>
+        <p class="section-subtitle">Questions about your healing journey? Need support? We're here for you.</p>
+      </div>
+
+      <div class="contact-grid">
+        <div class="contact-info" data-animate>
+          <div class="contact-card">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            </div>
+            <h3>Email Us</h3>
+            <p>hello@teawithgod.com</p>
+            <p class="response-time">We respond within 24-48 hours</p>
+          </div>
+
+          <div class="contact-card">
+            <div class="contact-icon whatsapp">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <h3>WhatsApp</h3>
+            <p>+27 66 467 8937</p>
+            <a href="https://wa.me/27664678937?text=Hi%20there!%20I%27d%20love%20to%20learn%20more%20about%20Tea%20With%20God.%0A%0AMy%20name%3A%20%0AMy%20email%3A%20%0ABest%20time%20to%20contact%20me%3A%20%0A%0ALooking%20forward%20to%20connecting!" class="whatsapp-link">Chat with us</a>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" data-animate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name *</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone (Optional)</label>
+            <input type="tel" id="phone" name="phone">
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <select id="subject" name="subject">
+              <option value="general">General Inquiry</option>
+              <option value="support">Support Request</option>
+              <option value="bulk">Bulk/Organization Pricing</option>
+              <option value="partnership">Partnership Opportunity</option>
+              <option value="feedback">Feedback</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="message">Message *</label>
+            <textarea id="message" name="message" rows="4" required placeholder="How can we help you?"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">
+            <span>Send Message</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+          <p class="form-note">We respect your privacy. Your information is safe with us.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/27664678937?text=Hi%20there!%20I%27d%20love%20to%20learn%20more%20about%20Tea%20With%20God.%0A%0AMy%20name%3A%20%0AMy%20email%3A%20%0ABest%20time%20to%20contact%20me%3A%20%0A%0ALooking%20forward%20to%20connecting!" class="whatsapp-float" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="whatsapp-tooltip">Chat with us</span>
+  </a>
 
   <!-- Footer -->
   <footer>
@@ -1676,6 +2017,7 @@
           <h4>Product</h4>
           <a href="#journey">The Journey</a>
           <a href="#features">Features</a>
+          <a href="science.html">The Science</a>
           <a href="checkout.html">Get Access</a>
         </div>
         <div class="footer-column">
@@ -1686,10 +2028,10 @@
         </div>
         <div class="footer-column">
           <h4>Support</h4>
-          <a href="mailto:twg@cleva-ai.co.za">Contact</a>
-          <a href="mailto:twg@cleva-ai.co.za?subject=FAQ">FAQ</a>
-          <a href="mailto:twg@cleva-ai.co.za?subject=Privacy">Privacy</a>
-          <a href="admin/">Admin Login</a>
+          <a href="mailto:hello@teawithgod.com">Contact</a>
+          <a href="faq.html">FAQ</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
         </div>
       </div>
     </div>
@@ -1717,6 +2059,29 @@
       document.body.style.overflow = '';
     }
 
+    // Toast notification system
+    function showToast(message, type = 'error') {
+      let container = document.getElementById('toastContainer');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;';
+        document.body.appendChild(container);
+      }
+
+      const toast = document.createElement('div');
+      const bgColor = type === 'success' ? 'rgba(143, 188, 143, 0.95)' : 'rgba(229, 115, 115, 0.95)';
+      toast.style.cssText = `background: ${bgColor}; color: #0D0D0D; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); font-family: 'Inter', sans-serif; font-size: 14px; max-width: 350px; animation: slideIn 0.3s ease;`;
+      toast.textContent = message;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, 5000);
+    }
+
     // Scroll animation
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver((entries) => {
@@ -1733,6 +2098,60 @@
     window.addEventListener('scroll', () => {
       document.querySelector('nav').classList.toggle('scrolled', window.scrollY > 50);
     });
+
+    // Contact Form Submission
+    const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000/api/v1'
+      : '/api/v1';
+
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = this.querySelector('button[type="submit"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span>Sending...</span>';
+      btn.disabled = true;
+
+      const formData = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+      };
+
+      try {
+        const response = await fetch(`${API_URL}/contact`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          this.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+              <div style="width: 64px; height: 64px; background: rgba(143, 188, 143, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#8FBC8F" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+              </div>
+              <h3 style="font-family: var(--font-display); margin-bottom: 12px;">Message Sent!</h3>
+              <p style="color: var(--text-secondary);">Thank you for reaching out. We'll get back to you within 24-48 hours.</p>
+            </div>
+          `;
+        } else {
+          throw new Error(data.error || 'Failed to send message');
+        }
+      } catch (error) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showToast('Sorry, there was an error sending your message. Please try again or email us directly at hello@teawithgod.com', 'error');
+      }
+    });
   </script>
+
+  <!-- Chatbot -->
+  <script src="js/chatbot.js"></script>
 </body>
 </html>

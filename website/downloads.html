@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads - Tea With God</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-input: rgba(255, 255, 255, 0.08);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-focus: rgba(212, 175, 55, 0.5);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --text-muted: rgba(250, 250, 250, 0.4);
+      --gold: #D4AF37;
+      --gold-light: #F4E4BC;
+      --sage: #8FBC8F;
+      --error: #E57373;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Nav */
+    nav {
+      padding: 20px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo span {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+
+    .nav-link:hover {
+      color: var(--gold);
+    }
+
+    /* Main */
+    main {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+    }
+
+    /* Access Gate */
+    .access-gate {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+
+    .gate-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .gate-icon svg {
+      width: 32px;
+      height: 32px;
+      stroke: var(--gold);
+    }
+
+    .access-gate h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .access-gate > p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .code-input-wrap {
+      margin-bottom: 24px;
+    }
+
+    .code-input {
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-family: monospace;
+      font-size: 1.25rem;
+      text-align: center;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .code-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+    }
+
+    .code-input::placeholder {
+      color: var(--text-muted);
+      letter-spacing: normal;
+      text-transform: none;
+      font-family: var(--font-body);
+      font-size: 1rem;
+    }
+
+    .error-msg {
+      color: var(--error);
+      font-size: 0.875rem;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 32px;
+      border-radius: 100px;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
+      color: var(--bg-dark);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Downloads Section (hidden until verified) */
+    .downloads-section {
+      display: none;
+    }
+
+    .downloads-section.visible {
+      display: block;
+    }
+
+    .welcome-msg {
+      background: rgba(143, 188, 143, 0.1);
+      border: 1px solid rgba(143, 188, 143, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .welcome-msg h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      color: var(--sage);
+      margin-bottom: 8px;
+    }
+
+    .welcome-msg p {
+      color: var(--text-secondary);
+    }
+
+    .download-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .download-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(212, 175, 55, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .download-icon svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--gold);
+    }
+
+    .download-info {
+      flex: 1;
+    }
+
+    .download-info h3 {
+      font-size: 1.125rem;
+      margin-bottom: 4px;
+    }
+
+    .download-info p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .download-btn {
+      padding: 12px 24px;
+      background: var(--gold);
+      color: var(--bg-dark);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .download-btn:hover {
+      background: var(--gold-light);
+    }
+
+    .download-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .app-link {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .app-link h3 {
+      font-family: var(--font-display);
+      margin-bottom: 8px;
+    }
+
+    .app-link p {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+      margin-bottom: 16px;
+    }
+
+    .app-link .btn {
+      width: auto;
+      display: inline-flex;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .download-card {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .download-info {
+        margin-bottom: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="images/teacup.png" alt="Tea With God">
+      <span>Tea With God</span>
+    </a>
+    <a href="index.html" class="nav-link">Back to Home</a>
+  </nav>
+
+  <main>
+    <div class="page-header">
+      <h1>Your Downloads</h1>
+      <p>Enter your access code to unlock your content</p>
+    </div>
+
+    <!-- Access Code Gate -->
+    <div class="access-gate" id="accessGate">
+      <div class="gate-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0110 0v4"/>
+        </svg>
+      </div>
+      <h2>Enter Access Code</h2>
+      <p>Your access code was sent to your email after purchase.</p>
+
+      <div class="code-input-wrap">
+        <input type="text" class="code-input" id="accessCode" placeholder="e.g. TWG-XXXX-XXXX" maxlength="20">
+        <p class="error-msg" id="errorMsg">Invalid access code. Please check and try again.</p>
+      </div>
+
+      <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        Verify Code
+      </button>
+    </div>
+
+    <!-- Downloads (shown after verification) -->
+    <div class="downloads-section" id="downloadsSection">
+      <div class="welcome-msg">
+        <h2>Welcome, <span id="userName">Friend</span>!</h2>
+        <p>Your access has been verified. Download your content below.</p>
+      </div>
+
+      <!-- eBook Download -->
+      <div class="download-card">
+        <div class="download-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+          </svg>
+        </div>
+        <div class="download-info">
+          <h3>Tea With God eBook</h3>
+          <p>40-Day Devotional (PDF)</p>
+        </div>
+        <a href="#" class="download-btn" id="downloadEbook">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Download
+        </a>
+      </div>
+
+      <!-- Web App Access -->
+      <div class="app-link">
+        <h3>Ready to Begin?</h3>
+        <p>Open the web app and start your 40-day healing journey.</p>
+        <a href="app/" class="btn btn-primary">
+          Open Web App
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Need help? <a href="mailto:twg@cleva-ai.co.za">Contact Support</a></p>
+  </footer>
+
+  <script>
+    const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000/api/v1'
+      : '/api/v1';
+
+    let verifiedCode = null;
+
+    async function verifyCode() {
+      const codeInput = document.getElementById('accessCode');
+      const errorMsg = document.getElementById('errorMsg');
+      const verifyBtn = document.getElementById('verifyBtn');
+      const code = codeInput.value.trim().toUpperCase();
+
+      if (!code) {
+        errorMsg.textContent = 'Please enter your access code.';
+        errorMsg.classList.add('visible');
+        return;
+      }
+
+      // Disable button while checking
+      verifyBtn.disabled = true;
+      verifyBtn.innerHTML = 'Verifying...';
+      errorMsg.classList.remove('visible');
+
+      try {
+        const response = await fetch(`${API_URL}/access-codes/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code: code })
+        });
+
+        const data = await response.json();
+
+        if (data.valid) {
+          // Code is valid - show downloads
+          verifiedCode = code;
+          document.getElementById('accessGate').style.display = 'none';
+          document.getElementById('downloadsSection').classList.add('visible');
+
+          if (data.firstName) {
+            document.getElementById('userName').textContent = data.firstName;
+          }
+
+          // Set up download link
+          document.getElementById('downloadEbook').href = `${API_URL}/download/ebook?code=${encodeURIComponent(code)}`;
+        } else {
+          errorMsg.textContent = data.error || 'Invalid access code. Please check and try again.';
+          errorMsg.classList.add('visible');
+        }
+      } catch (error) {
+        console.error('Verification error:', error);
+        errorMsg.textContent = 'Connection error. Please try again.';
+        errorMsg.classList.add('visible');
+      }
+
+      verifyBtn.disabled = false;
+      verifyBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Verify Code';
+    }
+
+    // Allow Enter key to submit
+    document.getElementById('accessCode').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        verifyCode();
+      }
+    });
+
+    // Check if code passed in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCode = urlParams.get('code');
+    if (urlCode) {
+      document.getElementById('accessCode').value = urlCode;
+      verifyCode();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Failed - Tea With God</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --gold: #D4AF37;
+      --error: #ff6b6b;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .error-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 107, 107, 0.2);
+      border: 2px solid var(--error);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .error-icon svg {
+      width: 40px;
+      height: 40px;
+      stroke: var(--error);
+      stroke-width: 2;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 32px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .reason {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      align-items: flex-start;
+    }
+
+    .reason svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--gold);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .reason span {
+      color: var(--text-secondary);
+      font-size: 0.9375rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--bg-dark);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .support-note {
+      margin-top: 32px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .support-note a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .logo {
+      margin-bottom: 32px;
+    }
+
+    .logo img {
+      width: 48px;
+      height: 48px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <img src="images/teacup.png" alt="Tea With God">
+    </div>
+
+    <div class="error-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </div>
+
+    <h1>Payment Failed</h1>
+    <p class="subtitle">Don't worry, no payment was taken. Let's try again.</p>
+
+    <div class="card">
+      <h3>Common reasons for payment failure:</h3>
+      <div class="reason">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>Insufficient funds on your card</span>
+      </div>
+      <div class="reason">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>Card expired or incorrect details</span>
+      </div>
+      <div class="reason">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>Bank declined the transaction</span>
+      </div>
+      <div class="reason">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        <span>3D Secure verification not completed</span>
+      </div>
+    </div>
+
+    <div class="btn-group">
+      <a href="checkout.html" class="btn btn-primary">Try Again</a>
+      <a href="index.html" class="btn btn-secondary">Back to Home</a>
+    </div>
+
+    <p class="support-note">
+      Need help? <a href="https://wa.me/27664678937">WhatsApp us</a> or email twg@cleva-ai.co.za
+    </p>
+  </div>
+</body>
+</html>

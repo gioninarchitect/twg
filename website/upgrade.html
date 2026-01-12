@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upgrade Your Journey - Tea With God</title>
+  <meta name="description" content="Unlock the full Tea With God experience with journal, brain games, and audio devotionals.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0D0D0D;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --bg-glass: rgba(255, 255, 255, 0.05);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --text-primary: #FAFAFA;
+      --text-secondary: rgba(250, 250, 250, 0.6);
+      --text-muted: rgba(250, 250, 250, 0.4);
+      --gold: #D4AF37;
+      --gold-light: #F4E4BC;
+      --gold-glow: rgba(212, 175, 55, 0.3);
+      --sage: #8FBC8F;
+      --warm: #E8C39E;
+      --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #F4E4BC 50%, #D4AF37 100%);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', -apple-system, sans-serif;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: var(--bg-dark);
+    }
+
+    .bg-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(143, 188, 143, 0.05) 0%, transparent 50%);
+      animation: bgMove 30s ease-in-out infinite;
+    }
+
+    @keyframes bgMove {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(-5%, 5%); }
+    }
+
+    /* Navigation */
+    nav {
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(13, 13, 13, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* Main Content */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 24px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      margin-bottom: 16px;
+      background: var(--gradient-gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    .current-tier {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .current-tier-info {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tier-badge {
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .current-tier h3 {
+      font-size: 1.125rem;
+      margin-bottom: 4px;
+    }
+
+    .current-tier p {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Pricing Cards */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+      transition: all 0.4s var(--ease-out);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .pricing-card.recommended {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, rgba(212,175,55,0.05) 0%, var(--bg-card) 100%);
+    }
+
+    .pricing-card.recommended::before {
+      content: 'MOST POPULAR';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gradient-gold);
+      color: #0D0D0D;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .pricing-card.current {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .pricing-card.current::after {
+      content: 'CURRENT';
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(143, 188, 143, 0.2);
+      color: var(--sage);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 12px;
+    }
+
+    .card-header {
+      margin-bottom: 24px;
+    }
+
+    .card-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .card-header .price {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .card-header .currency {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+    }
+
+    .card-header .amount {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .card-header .period {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    .upgrade-price {
+      background: rgba(143, 188, 143, 0.1);
+      border: 1px solid rgba(143, 188, 143, 0.2);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+
+    .upgrade-price span {
+      color: var(--sage);
+      font-weight: 600;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 32px;
+    }
+
+    .features-list li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      color: var(--text-secondary);
+    }
+
+    .features-list li:last-child {
+      border-bottom: none;
+    }
+
+    .features-list .check {
+      color: var(--sage);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .features-list .cross {
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .features-list li.included {
+      color: var(--text-primary);
+    }
+
+    .features-list li.new {
+      color: var(--gold);
+    }
+
+    .features-list .new-badge {
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 12px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      transition: all 0.3s var(--ease-out);
+    }
+
+    .btn-primary {
+      background: var(--gradient-gold);
+      color: #0D0D0D;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px var(--gold-glow);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid var(--gold);
+      color: var(--gold);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(212, 175, 55, 0.1);
+    }
+
+    .btn-disabled {
+      background: var(--bg-glass);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+
+    /* Promo Code */
+    .promo-section {
+      background: linear-gradient(135deg, rgba(212,175,55,0.1) 0%, rgba(143,188,143,0.05) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .promo-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+    }
+
+    .promo-section p {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+
+    .promo-code {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.15);
+      border: 2px dashed var(--gold);
+      color: var(--gold);
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: monospace;
+      padding: 16px 32px;
+      border-radius: 12px;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .promo-code:hover {
+      background: rgba(212, 175, 55, 0.25);
+    }
+
+    .promo-note {
+      margin-top: 16px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Comparison Table */
+    .comparison-section {
+      margin-bottom: 60px;
+    }
+
+    .comparison-section h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--bg-card);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 16px 20px;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .comparison-table th {
+      background: rgba(212, 175, 55, 0.1);
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    .comparison-table th:first-child {
+      text-align: left;
+    }
+
+    .comparison-table th:not(:first-child) {
+      text-align: center;
+    }
+
+    .comparison-table td:not(:first-child) {
+      text-align: center;
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table .feature-name {
+      color: var(--text-primary);
+    }
+
+    .comparison-table .check-mark {
+      color: var(--sage);
+      font-size: 1.25rem;
+    }
+
+    .comparison-table .cross-mark {
+      color: var(--text-muted);
+      font-size: 1.25rem;
+    }
+
+    /* Testimonials */
+    .testimonials {
+      margin-bottom: 60px;
+    }
+
+    .testimonials h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .testimonial-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .testimonial-card p {
+      color: var(--text-secondary);
+      font-style: italic;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .testimonial-author .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--gradient-gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #0D0D0D;
+      font-weight: 600;
+    }
+
+    .testimonial-author .name {
+      font-weight: 600;
+    }
+
+    .testimonial-author .tier {
+      font-size: 0.75rem;
+      color: var(--gold);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+    }
+
+    footer p {
+      margin-bottom: 8px;
+    }
+
+    footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .scripture {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--text-secondary);
+      margin-top: 24px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .container { padding: 40px 16px 60px; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .current-tier { flex-direction: column; text-align: center; }
+      .promo-section { padding: 24px; }
+      .promo-code { font-size: 1.25rem; padding: 12px 24px; }
+      .comparison-table { font-size: 0.875rem; }
+      .comparison-table th, .comparison-table td { padding: 12px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-gradient"></div>
+
+  <nav>
+    <a href="/" class="logo">
+      <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
+      <span>Tea With God</span>
+    </a>
+    <div class="nav-links" style="display: flex; align-items: center; gap: 16px;">
+      <select id="currency-selector" onchange="updatePricing(this.value)" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; font-size: 0.875rem; cursor: pointer;">
+        <option value="ZA">R ZAR</option>
+        <option value="US">$ USD</option>
+        <option value="GB">£ GBP</option>
+        <option value="EU">€ EUR</option>
+        <option value="AU">A$ AUD</option>
+        <option value="CA">C$ CAD</option>
+      </select>
+      <a href="/">Home</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <h1 id="hero-title">Upgrade Your Healing Journey</h1>
+      <p id="hero-subtitle">You have the eBook - beautiful! But there's so much more waiting for you in the full Tea With God experience.</p>
+      <!-- Dynamic message for deep link redirects -->
+      <div id="day-redirect-notice" style="display: none; margin-top: 24px; padding: 28px; background: linear-gradient(135deg, rgba(212,175,55,0.15) 0%, rgba(143,188,143,0.1) 100%); border: 1px solid rgba(212,175,55,0.3); border-radius: 20px; text-align: center;">
+        <p style="color: var(--gold); font-size: 1.25rem; font-weight: 600; margin-bottom: 12px;">You tried to access Day <span id="requested-day"></span></p>
+        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 20px; max-width: 500px; margin-left: auto; margin-right: auto;">The PDF gives you the devotional content. Upgrade now to unlock the interactive app with journal, brain games, and audio.</p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="checkout.html?plan=journey&upgrade=book" class="btn btn-primary" style="display: inline-flex; align-items: center; gap: 8px; width: auto; padding: 16px 32px;">
+            Upgrade for R50
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+          <a href="#pricing-section" class="btn btn-secondary" style="width: auto; padding: 16px 24px;">See All Options</a>
+        </div>
+      </div>
+      <p id="currency-note" style="display: none; margin-top: 16px; padding: 12px 20px; background: rgba(212,175,55,0.1); border-radius: 12px; font-size: 0.875rem; color: var(--gold);"></p>
+    </div>
+
+    <div class="current-tier">
+      <div class="current-tier-info">
+        <span class="tier-badge">Book Access</span>
+        <div>
+          <h3>Your Current Plan</h3>
+          <p>40-Day PDF eBook</p>
+        </div>
+      </div>
+      <p style="color: var(--text-secondary);">Upgrade to unlock the interactive app</p>
+    </div>
+
+    <!-- Promo Code Section -->
+    <div class="promo-section">
+      <h2>Special Offer for Book Owners</h2>
+      <p>Use this code at checkout to get R50 off your upgrade</p>
+      <div class="promo-code" onclick="copyCode()" title="Click to copy">BOOKUPGRADE</div>
+      <p class="promo-note">Valid for Journey or Premium upgrades only</p>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div id="pricing-section" class="pricing-grid">
+      <!-- Book (Current) -->
+      <div class="pricing-card current">
+        <div class="card-header">
+          <h3>Book Access</h3>
+          <div class="price">
+            <span class="currency">R</span>
+            <span class="amount">99</span>
+          </div>
+          <span class="period">one-time payment</span>
+        </div>
+        <ul class="features-list">
+          <li class="included"><span class="check">&#10003;</span> 40-Day PDF eBook</li>
+          <li><span class="cross">&#10005;</span> Interactive App</li>
+          <li><span class="cross">&#10005;</span> Private Journal</li>
+          <li><span class="cross">&#10005;</span> Brain Games</li>
+          <li><span class="cross">&#10005;</span> Progress Tracking</li>
+          <li><span class="cross">&#10005;</span> Audio Devotionals</li>
+        </ul>
+        <button class="btn btn-disabled">Current Plan</button>
+      </div>
+
+      <!-- Journey (Recommended) -->
+      <div class="pricing-card recommended">
+        <div class="card-header">
+          <h3>Journey Access</h3>
+          <div class="price">
+            <span class="currency">R</span>
+            <span class="amount">149</span>
+          </div>
+          <span class="period">one-time payment</span>
+        </div>
+        <div class="upgrade-price">
+          <span>Pay only R50 to upgrade</span> (with code)
+        </div>
+        <ul class="features-list">
+          <li class="included"><span class="check">&#10003;</span> 40-Day PDF eBook</li>
+          <li class="new"><span class="check">&#10003;</span> Interactive App <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> Private Journal <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> 6 Brain Games <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> Progress Tracking <span class="new-badge">NEW</span></li>
+          <li><span class="cross">&#10005;</span> Audio Devotionals</li>
+        </ul>
+        <a href="checkout.html?plan=journey&upgrade=book" class="btn btn-primary">Upgrade for R50</a>
+      </div>
+
+      <!-- Premium -->
+      <div class="pricing-card">
+        <div class="card-header">
+          <h3>Premium Access</h3>
+          <div class="price">
+            <span class="currency">R</span>
+            <span class="amount">249</span>
+          </div>
+          <span class="period">one-time payment</span>
+        </div>
+        <div class="upgrade-price">
+          <span>Pay only R150 to upgrade</span> (with code)
+        </div>
+        <ul class="features-list">
+          <li class="included"><span class="check">&#10003;</span> 40-Day PDF eBook</li>
+          <li class="new"><span class="check">&#10003;</span> Interactive App <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> Private Journal <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> 6 Brain Games <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> Progress Tracking <span class="new-badge">NEW</span></li>
+          <li class="new"><span class="check">&#10003;</span> Audio Devotionals <span class="new-badge">NEW</span></li>
+        </ul>
+        <a href="checkout.html?plan=premium&upgrade=book" class="btn btn-secondary">Upgrade for R150</a>
+      </div>
+    </div>
+
+    <!-- Feature Comparison -->
+    <div class="comparison-section">
+      <h2>What You're Missing</h2>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Book</th>
+            <th>Journey</th>
+            <th>Premium</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="feature-name">40-Day PDF eBook</td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Interactive Web & Mobile App</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Private Encrypted Journal</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">6 Brain Games for Healing</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Progress Tracking & Streaks</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Offline Mode</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">Audio Devotionals & Music</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td class="feature-name">All Future Updates</td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="cross-mark">&#10005;</span></td>
+            <td><span class="check-mark">&#10003;</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="testimonials">
+      <h2>What Others Are Saying</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <p>"The journal feature changed everything for me. Writing my prayers and reflections in the app made the devotional feel so much more personal."</p>
+          <div class="testimonial-author">
+            <div class="avatar">S</div>
+            <div>
+              <div class="name">Sarah M.</div>
+              <div class="tier">Journey Access</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p>"I started with just the book, but the brain games were exactly what I needed to process my emotions. Best R50 I ever spent on the upgrade."</p>
+          <div class="testimonial-author">
+            <div class="avatar">L</div>
+            <div>
+              <div class="name">Linda K.</div>
+              <div class="tier">Journey Access</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <p>"The audio devotionals are like having a gentle friend read to me. I listen while I make tea in the morning. It sets the tone for my whole day."</p>
+          <div class="testimonial-author">
+            <div class="avatar">M</div>
+            <div>
+              <div class="name">Michelle R.</div>
+              <div class="tier">Premium Access</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Questions? <a href="mailto:hello@teawithgod.com">hello@teawithgod.com</a> | WhatsApp: +27 66 467 8937</p>
+    <p class="scripture">"The potter formed it into another pot, shaping it as seemed best to him." - Jeremiah 18:4</p>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--gold); color: #0D0D0D; padding: 16px 24px; border-radius: 12px; font-weight: 600; transition: transform 0.3s ease; z-index: 1000;">
+    Code copied!
+  </div>
+
+  <script>
+    // Currency configuration
+    const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000/api/v1'
+      : 'https://twg.cleva-ai.co.za/api/v1';
+
+    // Pricing in different currencies (book-only users get upgrade discount)
+    const PRICING = {
+      ZA: { symbol: 'R', book: 99, journey: 149, premium: 249, upgradeJourney: 50, upgradePremium: 150 },
+      US: { symbol: '$', book: 5.99, journey: 8.99, premium: 13.99, upgradeJourney: 3, upgradePremium: 8 },
+      GB: { symbol: '£', book: 4.99, journey: 7.99, premium: 11.99, upgradeJourney: 3, upgradePremium: 7 },
+      EU: { symbol: '€', book: 5.49, journey: 8.49, premium: 12.99, upgradeJourney: 3, upgradePremium: 7.50 },
+      AU: { symbol: 'A$', book: 8.99, journey: 12.99, premium: 19.99, upgradeJourney: 4, upgradePremium: 11 },
+      CA: { symbol: 'C$', book: 7.99, journey: 11.99, premium: 17.99, upgradeJourney: 4, upgradePremium: 10 },
+      DEFAULT: { symbol: '$', book: 5.99, journey: 8.99, premium: 13.99, upgradeJourney: 3, upgradePremium: 8 }
+    };
+
+    // Country display names
+    const COUNTRY_NAMES = {
+      ZA: 'South Africa (ZAR)',
+      US: 'United States (USD)',
+      GB: 'United Kingdom (GBP)',
+      EU: 'Europe (EUR)',
+      AU: 'Australia (AUD)',
+      CA: 'Canada (CAD)'
+    };
+
+    let currentCountry = 'ZA';
+
+    // Detect country on page load
+    async function detectCountry() {
+      try {
+        // Try to get country from IP geolocation
+        const response = await fetch('https://ipapi.co/json/', { timeout: 3000 });
+        const data = await response.json();
+        const country = data.country_code || 'ZA';
+
+        // Map to our supported currencies
+        const currencyMap = {
+          'ZA': 'ZA',
+          'US': 'US',
+          'GB': 'GB',
+          'IE': 'EU', 'DE': 'EU', 'FR': 'EU', 'IT': 'EU', 'ES': 'EU', 'NL': 'EU', 'BE': 'EU', 'AT': 'EU', 'PT': 'EU',
+          'AU': 'AU',
+          'CA': 'CA'
+        };
+
+        currentCountry = currencyMap[country] || 'DEFAULT';
+        updatePricing(currentCountry);
+      } catch (e) {
+        console.log('Using default country ZA');
+        updatePricing('ZA');
+      }
+    }
+
+    // Update all prices on the page
+    function updatePricing(country) {
+      const pricing = PRICING[country] || PRICING.DEFAULT;
+      currentCountry = country;
+
+      // Update currency symbols and amounts
+      document.querySelectorAll('.currency').forEach(el => {
+        el.textContent = pricing.symbol;
+      });
+
+      // Update pricing amounts
+      const amounts = document.querySelectorAll('.amount');
+      if (amounts[0]) amounts[0].textContent = pricing.book;
+      if (amounts[1]) amounts[1].textContent = pricing.journey;
+      if (amounts[2]) amounts[2].textContent = pricing.premium;
+
+      // Update upgrade prices
+      const upgradePrices = document.querySelectorAll('.upgrade-price span');
+      if (upgradePrices[0]) upgradePrices[0].textContent = `Pay only ${pricing.symbol}${pricing.upgradeJourney} to upgrade`;
+      if (upgradePrices[1]) upgradePrices[1].textContent = `Pay only ${pricing.symbol}${pricing.upgradePremium} to upgrade`;
+
+      // Update buttons
+      const journeyBtn = document.querySelector('.pricing-card.recommended .btn');
+      const premiumBtn = document.querySelector('.pricing-card:last-child .btn');
+      if (journeyBtn) journeyBtn.textContent = `Upgrade for ${pricing.symbol}${pricing.upgradeJourney}`;
+      if (premiumBtn) premiumBtn.textContent = `Upgrade for ${pricing.symbol}${pricing.upgradePremium}`;
+
+      // Update promo section
+      const promoText = document.querySelector('.promo-section p');
+      if (promoText && country === 'ZA') {
+        promoText.textContent = 'Use this code at checkout to get R50 off your upgrade';
+      } else if (promoText) {
+        promoText.textContent = 'Use this code at checkout for a special book owner discount';
+      }
+
+      // Update currency selector
+      const selector = document.getElementById('currency-selector');
+      if (selector) selector.value = country;
+
+      // Show note for non-ZA currencies
+      const note = document.getElementById('currency-note');
+      if (note) {
+        if (country === 'ZA') {
+          note.style.display = 'none';
+        } else {
+          note.style.display = 'block';
+          note.textContent = `Prices shown in ${COUNTRY_NAMES[country] || 'your local currency'}. Payments are processed in ZAR and your bank handles conversion.`;
+        }
+      }
+    }
+
+    function copyCode() {
+      navigator.clipboard.writeText('BOOKUPGRADE');
+      const toast = document.getElementById('toast');
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+      setTimeout(() => {
+        toast.style.transform = 'translateX(-50%) translateY(100px)';
+      }, 2000);
+    }
+
+    // Handle deep link redirect parameters
+    function handleDeepLinkRedirect() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const day = urlParams.get('day');
+      const returnTo = urlParams.get('returnTo');
+
+      if (day) {
+        // Show the redirect notice
+        const notice = document.getElementById('day-redirect-notice');
+        const daySpan = document.getElementById('requested-day');
+        if (notice && daySpan) {
+          daySpan.textContent = day;
+          notice.style.display = 'block';
+        }
+
+        // Store returnTo URL for after purchase
+        if (returnTo) {
+          sessionStorage.setItem('upgradeReturnTo', returnTo);
+        }
+
+        // Update checkout links to include returnTo
+        document.querySelectorAll('a[href*="checkout.html"]').forEach(link => {
+          const href = new URL(link.href, window.location.origin);
+          if (returnTo) {
+            href.searchParams.set('returnTo', returnTo);
+          }
+          link.href = href.toString();
+        });
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      detectCountry();
+      handleDeepLinkRedirect();
+    });
+  </script>
+</body>
+</html>

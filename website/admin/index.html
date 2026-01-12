@@ -164,6 +164,9 @@
 
         .sidebar-nav {
             list-style: none;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 120px);
         }
 
         .sidebar-nav li {
@@ -653,6 +656,74 @@
             border-radius: 8px;
             border: 1px solid var(--border-subtle);
             margin-top: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .proof-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* Proof of Payment Lightbox */
+        .pop-lightbox {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 40px;
+        }
+
+        .pop-lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .pop-lightbox-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+
+        .pop-lightbox-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: var(--gold);
+            color: #0D0D0D;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pop-lightbox-close:hover {
+            background: var(--gold-light);
+        }
+
+        .pop-lightbox-info {
+            text-align: center;
+            margin-top: 16px;
+            color: var(--text-secondary);
+        }
+
+        .pop-lightbox-info h4 {
+            color: var(--gold);
+            margin-bottom: 4px;
         }
 
         /* Generate Codes Section */
@@ -690,7 +761,8 @@
         }
 
         .form-group input,
-        .form-group select {
+        .form-group select,
+        .form-group textarea {
             padding: 10px 14px;
             border: 1px solid var(--border-subtle);
             border-radius: 8px;
@@ -701,7 +773,8 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus {
+        .form-group select:focus,
+        .form-group textarea:focus {
             border-color: var(--gold);
             box-shadow: 0 0 0 3px var(--gold-glow);
         }
@@ -709,6 +782,13 @@
         .form-group select option {
             background: #1A1A1A;
             color: var(--text-primary);
+        }
+
+        /* Force dark textarea styling */
+        textarea {
+            background: #1A1A1A !important;
+            color: #FAFAFA !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
 
         /* Codes List */
@@ -1079,21 +1159,331 @@
             }
         }
 
+        /* Mobile Menu Button - ALWAYS visible on mobile */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10001;
+            width: 56px;
+            height: 56px;
+            background: #D4AF37;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            transition: left 0.3s ease, background 0.2s ease;
+        }
+
+        .mobile-menu-btn i {
+            color: #0D0D0D;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .mobile-menu-btn:hover {
+            background: #F4E4BC;
+        }
+
+        .mobile-menu-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* When sidebar is open, move hamburger to edge of sidebar */
+        .sidebar.mobile-open ~ .mobile-menu-btn,
+        body.menu-open .mobile-menu-btn {
+            left: 232px;
+            background: #E57373;
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 9998;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        .mobile-overlay.active {
+            display: block !important;
+        }
+
+        /* Mobile Responsive - 768px and below */
         @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
             .sidebar {
-                transform: translateX(-100%);
+                transform: translateX(-100%) !important;
+                width: 280px !important;
+                z-index: 9999 !important;
+                position: fixed !important;
+                left: 0 !important;
+                top: 0 !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                transition: transform 0.3s ease !important;
+            }
+
+            .sidebar.mobile-open {
+                transform: translateX(0) !important;
+            }
+
+            /* FORCE show text labels on mobile - override collapsed state */
+            .sidebar .sidebar-logo h1,
+            .sidebar .sidebar-logo span,
+            .sidebar .sidebar-nav a span,
+            .sidebar.collapsed .sidebar-logo h1,
+            .sidebar.collapsed .sidebar-logo span,
+            .sidebar.collapsed .sidebar-nav a span {
+                display: inline !important;
+            }
+
+            .sidebar .sidebar-nav a,
+            .sidebar.collapsed .sidebar-nav a {
+                display: flex !important;
+                align-items: center !important;
+                gap: 16px !important;
+                padding: 16px 24px !important;
+                justify-content: flex-start !important;
+                min-height: 52px !important;
+                font-size: 1rem !important;
+            }
+
+            .sidebar .sidebar-nav a i,
+            .sidebar.collapsed .sidebar-nav a i {
+                width: 24px !important;
+                font-size: 1.2rem !important;
+                flex-shrink: 0 !important;
+            }
+
+            .sidebar .sidebar-logo,
+            .sidebar.collapsed .sidebar-logo {
+                padding: 16px 24px 24px !important;
+                text-align: left !important;
+            }
+
+            /* Scrollable sidebar nav on mobile */
+            .sidebar .sidebar-nav,
+            .sidebar.collapsed .sidebar-nav {
+                height: auto !important;
+                max-height: calc(100vh - 140px) !important;
+                max-height: calc(100dvh - 140px) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+
+            /* Hide collapsed icon on mobile */
+            .sidebar .sidebar-logo-icon,
+            .sidebar.collapsed .sidebar-logo-icon {
+                display: none !important;
+            }
+
+            .sidebar-toggle {
+                display: none !important;
             }
 
             .main-content {
-                margin-left: 0;
+                margin-left: 0 !important;
+                padding: 90px 16px 16px 16px !important;
+                width: 100% !important;
+                min-height: 100vh !important;
             }
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
 
             .form-row {
                 grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start !important;
+                padding: 0 0 16px !important;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+                min-width: 100px;
+                justify-content: center;
+            }
+
+            .orders-container {
+                padding: 16px !important;
+                margin-top: 16px;
+            }
+
+            .orders-header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start !important;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .tab {
+                flex: 1;
+                min-width: 80px;
+                text-align: center;
+                padding: 10px 12px;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+
+            /* Calendar mobile */
+            .calendar-grid {
+                overflow-x: auto;
+            }
+
+            .calendar-day {
+                min-width: 48px;
+                height: 48px;
+                padding: 4px;
+            }
+
+            .calendar-day-number {
+                font-size: 12px;
+            }
+
+            .calendar-post-preview {
+                display: none;
+            }
+
+            /* Social calendar header */
+            #section-social .orders-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            #section-social .orders-header > div {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            #section-social .orders-header button,
+            #section-social .orders-header select {
+                flex: 1;
+                min-width: 100px;
+            }
+
+            /* Themes grid mobile */
+            .themes-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Modal mobile */
+            .modal-container {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 16px;
+                max-height: 90vh;
+            }
+
+            .modal-body {
+                padding: 16px !important;
+            }
+
+            /* Invoice line items mobile */
+            .invoice-line-item {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+
+            /* Stat cards mobile */
+            .stat-card {
+                padding: 16px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            /* CRM/Contact cards mobile */
+            .contact-card {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 72px 12px 12px !important;
+            }
+
+            .stats-grid {
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 12px;
+            }
+
+            .stat-value {
+                font-size: 1.25rem;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .orders-container {
+                padding: 12px !important;
+                border-radius: 12px;
+            }
+
+            h2 {
+                font-size: 1.25rem;
+            }
+
+            .btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            /* Hide some columns on very small screens */
+            table th:nth-child(4),
+            table td:nth-child(4) {
+                display: none;
+            }
+
+            .modal-container {
+                margin: 8px;
             }
         }
     </style>
@@ -1114,6 +1504,14 @@
 
     <!-- Dashboard (hidden initially) -->
     <div id="dashboardScreen" style="display: none;">
+        <!-- Mobile Menu Button -->
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" id="mobileMenuBtn">
+            <i class="fas fa-bars" id="mobileMenuIcon"></i>
+        </button>
+
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+
         <!-- Sidebar -->
         <nav class="sidebar" id="sidebar">
             <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -1128,13 +1526,16 @@
                 <li><a href="#" class="active" data-view="dashboard"><i class="fas fa-chart-line"></i><span>Dashboard</span></a></li>
                 <li><a href="#" data-view="orders"><i class="fas fa-shopping-bag"></i><span>Orders</span></a></li>
                 <li><a href="#" data-view="codes"><i class="fas fa-key"></i><span>Access Codes</span></a></li>
-                <li><a href="#" data-view="customers"><i class="fas fa-users"></i><span>Customers</span></a></li>
                 <li><a href="#" data-view="b2b"><i class="fas fa-building"></i><span>B2B Partners</span></a></li>
+                <li><a href="#" data-view="tithe"><i class="fas fa-hand-holding-heart"></i><span>Tithe</span></a></li>
+                <li><a href="#" data-view="products"><i class="fas fa-cloud-upload-alt"></i><span>Products</span></a></li>
                 <li><a href="#" data-view="analytics"><i class="fas fa-chart-pie"></i><span>Analytics</span></a></li>
                 <li><a href="#" data-view="social"><i class="fas fa-calendar-alt"></i><span>Social Calendar</span></a></li>
                 <li><a href="#" data-view="crm"><i class="fas fa-address-book"></i><span>CRM</span></a></li>
+                <li><a href="#" data-view="promo"><i class="fas fa-bullhorn"></i><span>Promo Campaigns</span></a></li>
                 <li><a href="#" data-view="invoices"><i class="fas fa-file-invoice"></i><span>Invoices</span></a></li>
                 <li><a href="#" data-view="settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+                <li style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;"><a href="#" onclick="handleLogout()" style="color: var(--error);"><i class="fas fa-sign-out-alt"></i><span>Logout</span></a></li>
             </ul>
         </nav>
 
@@ -1149,50 +1550,46 @@
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value" id="dashTotalUsers">247</div>
+                                <div class="stat-value" id="dashTotalUsers">0</div>
                                 <div class="stat-label">Total Users</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(135, 168, 120, 0.1); color: var(--sage);">
                                 <i class="fas fa-users"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 12% this month</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value" id="dashActiveJourneys">189</div>
+                                <div class="stat-value" id="dashActiveJourneys">0</div>
                                 <div class="stat-label">Active Journeys</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);">
                                 <i class="fas fa-road"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 76% completion rate</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value" id="dashTotalRevenue">R24,750</div>
+                                <div class="stat-value" id="dashTotalRevenue">R0</div>
                                 <div class="stat-label">Total Revenue</div>
                             </div>
                             <div class="stat-card-icon revenue">
                                 <i class="fas fa-coins"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 18% this month</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value" id="dashJournalEntries">1,842</div>
-                                <div class="stat-label">Journal Entries</div>
+                                <div class="stat-value" id="dashTotalOrders">0</div>
+                                <div class="stat-label">Total Orders</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(212, 165, 165, 0.2); color: var(--rose);">
-                                <i class="fas fa-book"></i>
+                                <i class="fas fa-shopping-bag"></i>
                             </div>
                         </div>
-                        <div class="stat-change">Average 7.4 per user</div>
                     </div>
                 </div>
                 <div class="orders-container" style="margin-top: 24px;">
@@ -1203,7 +1600,7 @@
                         <button class="btn btn-primary" onclick="showSection('orders')"><i class="fas fa-shopping-bag"></i> View Orders</button>
                         <button class="btn btn-secondary" onclick="showSection('codes')"><i class="fas fa-key"></i> Generate Codes</button>
                         <button class="btn btn-secondary" onclick="showSection('analytics')"><i class="fas fa-chart-pie"></i> View Analytics</button>
-                        <button class="btn btn-secondary" onclick="showSection('customers')"><i class="fas fa-users"></i> Manage Users</button>
+                        <button class="btn btn-secondary" onclick="showSection('crm')"><i class="fas fa-users"></i> Manage Contacts</button>
                     </div>
                 </div>
             </section>
@@ -1458,10 +1855,10 @@
                 </div>
                 <div class="orders-container" style="margin-top: 24px;">
                     <div class="orders-header">
-                        <h3>Recent Users</h3>
+                        <h3>Recent Customers</h3>
                         <div class="search-box">
                             <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Search users...">
+                            <input type="text" id="customerSearchInput" placeholder="Search customers..." oninput="filterCustomers()">
                         </div>
                     </div>
                     <table>
@@ -1469,15 +1866,13 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
-                                <th>Access Level</th>
-                                <th>Day</th>
-                                <th>Last Active</th>
+                                <th>Tier</th>
+                                <th>Order Date</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr><td>Sarah M.</td><td>sarah.m***@gmail.com</td><td><span class="status-badge verified">Pilgrim</span></td><td>Day 28</td><td>2 hours ago</td></tr>
-                            <tr><td>Grace K.</td><td>grace.k***@outlook.com</td><td><span class="status-badge verified">Pilgrim</span></td><td>Day 14</td><td>5 hours ago</td></tr>
-                            <tr><td>Emma R.</td><td>emma.r***@gmail.com</td><td><span class="status-badge pending">Guest</span></td><td>Day 2</td><td>1 day ago</td></tr>
+                        <tbody id="customersTableBody">
+                            <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading customers...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1500,85 +1895,55 @@
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value">R24,750</div>
+                                <div class="stat-value" id="analyticsRevenue">R0</div>
                                 <div class="stat-label">Total Revenue</div>
                             </div>
                             <div class="stat-card-icon revenue">
                                 <i class="fas fa-coins"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 18% vs last period</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value">1,842</div>
+                                <div class="stat-value" id="analyticsJournals">0</div>
                                 <div class="stat-label">Journal Entries</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(212, 165, 165, 0.2); color: var(--rose);">
                                 <i class="fas fa-book"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 24% vs last period</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value">4,521</div>
+                                <div class="stat-value" id="analyticsDevotions">0</div>
                                 <div class="stat-label">Devotions Read</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(184, 134, 11, 0.1); color: var(--gold);">
                                 <i class="fas fa-cross"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 31% vs last period</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-card-header">
                             <div>
-                                <div class="stat-value">892</div>
+                                <div class="stat-value" id="analyticsBrainGames">0</div>
                                 <div class="stat-label">Brain Games Played</div>
                             </div>
                             <div class="stat-card-icon" style="background: rgba(135, 168, 120, 0.1); color: var(--sage);">
                                 <i class="fas fa-brain"></i>
                             </div>
                         </div>
-                        <div class="stat-change up"><i class="fas fa-arrow-up"></i> 45% vs last period</div>
                     </div>
                 </div>
                 <div class="orders-container" style="margin-top: 24px;">
                     <div class="orders-header">
-                        <h3>Popular Brain Games</h3>
+                        <h3>Usage Statistics</h3>
                     </div>
-                    <div style="padding: 20px;">
-                        <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                            <span style="width: 150px;">Breathe With God</span>
-                            <div style="flex: 1; background: var(--gray-200); border-radius: 8px; height: 24px; overflow: hidden;">
-                                <div style="width: 78%; background: linear-gradient(90deg, var(--sage), #6B8E5C); height: 100%; border-radius: 8px;"></div>
-                            </div>
-                            <span style="width: 60px; text-align: right; color: var(--gray-500);">78%</span>
-                        </div>
-                        <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                            <span style="width: 150px;">Gratitude Garden</span>
-                            <div style="flex: 1; background: var(--gray-200); border-radius: 8px; height: 24px; overflow: hidden;">
-                                <div style="width: 65%; background: linear-gradient(90deg, var(--gold), var(--gold-dark)); height: 100%; border-radius: 8px;"></div>
-                            </div>
-                            <span style="width: 60px; text-align: right; color: var(--gray-500);">65%</span>
-                        </div>
-                        <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                            <span style="width: 150px;">Thought Detective</span>
-                            <div style="flex: 1; background: var(--gray-200); border-radius: 8px; height: 24px; overflow: hidden;">
-                                <div style="width: 52%; background: linear-gradient(90deg, var(--info), #2563EB); height: 100%; border-radius: 8px;"></div>
-                            </div>
-                            <span style="width: 60px; text-align: right; color: var(--gray-500);">52%</span>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                            <span style="width: 150px;">Body Scan Release</span>
-                            <div style="flex: 1; background: var(--gray-200); border-radius: 8px; height: 24px; overflow: hidden;">
-                                <div style="width: 41%; background: linear-gradient(90deg, var(--rose), #C48B8B); height: 100%; border-radius: 8px;"></div>
-                            </div>
-                            <span style="width: 60px; text-align: right; color: var(--gray-500);">41%</span>
-                        </div>
+                    <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                        <i class="fas fa-chart-bar" style="font-size: 48px; opacity: 0.3; margin-bottom: 16px;"></i>
+                        <p>Analytics data will appear here once users start using the app.</p>
                     </div>
                 </div>
             </section>
@@ -1666,6 +2031,271 @@
                 </div>
             </section>
 
+            <!-- TITHE SECTION -->
+            <section id="section-tithe" class="content-section">
+                <header class="header">
+                    <h2>Tithe Management</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="loadTitheStats()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="openBeneficiaryModal()">
+                            <i class="fas fa-plus"></i> Add Organization
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Info Banner -->
+                <div style="background: rgba(212, 175, 55, 0.1); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-hand-holding-heart" style="color: var(--gold); font-size: 24px;"></i>
+                        <div>
+                            <strong style="color: var(--gold);">10% of Every Purchase Goes to Healing Organizations</strong>
+                            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 14px;">
+                                When pilgrims purchase Tea With God, 10% of their contribution is allocated to verified charitable organizations.
+                                This is not an extra charge - it comes from the purchase price. Pilgrims choose where their tithe goes.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tithe Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="titheTotalAllocated">R0</div>
+                                <div class="stat-label">Total Allocated</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(212, 175, 55, 0.1); color: var(--gold);">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="titheAwaitingDisbursement">R0</div>
+                                <div class="stat-label">Awaiting Disbursement</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="titheDisbursed">R0</div>
+                                <div class="stat-label">Total Disbursed</div>
+                            </div>
+                            <div class="stat-card-icon verified">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="tithePilgrims">0</div>
+                                <div class="stat-label">Pilgrims Contributing</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(135, 168, 120, 0.1); color: var(--sage);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div style="display: flex; gap: 8px; margin: 24px 0 16px;">
+                    <button class="btn btn-secondary tithe-tab active" data-tab="organizations" onclick="switchTitheTab('organizations')">
+                        <i class="fas fa-building"></i> Beneficiary Organizations
+                    </button>
+                    <button class="btn btn-secondary tithe-tab" data-tab="allocations" onclick="switchTitheTab('allocations')">
+                        <i class="fas fa-list"></i> Allocations
+                    </button>
+                    <button class="btn btn-secondary tithe-tab" data-tab="disbursements" onclick="switchTitheTab('disbursements')">
+                        <i class="fas fa-money-bill-wave"></i> Disbursements
+                    </button>
+                </div>
+
+                <!-- Organizations Tab -->
+                <div id="tithe-tab-organizations" class="tithe-tab-content">
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h3>Beneficiary Organizations</h3>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Organization</th>
+                                    <th>Category</th>
+                                    <th>Country</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="beneficiaryOrgsTableBody">
+                                <tr><td colspan="5" style="text-align: center; color: var(--gray-400);">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Allocations Tab -->
+                <div id="tithe-tab-allocations" class="tithe-tab-content" style="display: none;">
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h3>Tithe Allocations</h3>
+                            <select id="allocationStatusFilter" onchange="loadTitheAllocations()" style="padding: 8px 12px; background: var(--bg-input); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-primary);">
+                                <option value="all">All Statuses</option>
+                                <option value="pending">Pending (No Org Selected)</option>
+                                <option value="allocated">Allocated (Awaiting Disbursement)</option>
+                                <option value="disbursed">Disbursed</option>
+                            </select>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order Ref</th>
+                                    <th>Amount</th>
+                                    <th>Tithe (10%)</th>
+                                    <th>Organization</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="titheAllocationsTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--gray-400);">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Disbursements Tab -->
+                <div id="tithe-tab-disbursements" class="tithe-tab-content" style="display: none;">
+                    <div class="orders-container">
+                        <div class="orders-header">
+                            <h3>Disbursements</h3>
+                            <button class="btn btn-primary" onclick="openDisbursementModal()">
+                                <i class="fas fa-plus"></i> Create Disbursement
+                            </button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Organization</th>
+                                    <th>Period</th>
+                                    <th>Amount</th>
+                                    <th>Allocations</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="titheDisbursementsTableBody">
+                                <tr><td colspan="6" style="text-align: center; color: var(--gray-400);">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PRODUCTS SECTION -->
+            <section id="section-products" class="content-section">
+                <header class="header">
+                    <h2>Product Management</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary" onclick="loadProducts()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </header>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="productAudioCount">0</div>
+                                <div class="stat-label">Audio Files</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--info);">
+                                <i class="fas fa-music"></i>
+                            </div>
+                        </div>
+                        <div class="stat-change">MP3 devotional audio</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="productPdfStatus">-</div>
+                                <div class="stat-label">PDF eBook</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(239, 68, 68, 0.1); color: var(--error);">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                        </div>
+                        <div class="stat-change" id="productPdfSize">Not uploaded</div>
+                    </div>
+                </div>
+
+                <!-- Audio Files Section -->
+                <div class="orders-container" style="margin-top: 24px;">
+                    <div class="orders-header">
+                        <h3><i class="fas fa-music" style="margin-right: 8px;"></i> Audio Files</h3>
+                        <div>
+                            <select id="audioNameSelect" style="background: var(--card-bg); border: 1px solid var(--gold); color: var(--text-primary); padding: 8px 12px; border-radius: 8px; margin-right: 8px;">
+                                <option value="">Select day...</option>
+                                <option value="intro">Intro</option>
+                            </select>
+                            <input type="file" id="audioFileInput" accept=".mp3,audio/mpeg" style="display: none;" onchange="uploadAudioFile()">
+                            <button class="btn btn-primary" onclick="document.getElementById('audioFileInput').click()">
+                                <i class="fas fa-upload"></i> Upload Audio
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>File Name</th>
+                                    <th>Size</th>
+                                    <th>Last Modified</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="audioFilesTableBody">
+                                <tr><td colspan="4" style="text-align: center; color: var(--gray-400);">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PDF eBook Section -->
+                <div class="orders-container" style="margin-top: 24px;">
+                    <div class="orders-header">
+                        <h3><i class="fas fa-file-pdf" style="margin-right: 8px;"></i> PDF eBook</h3>
+                        <div>
+                            <input type="file" id="pdfFileInput" accept=".pdf,application/pdf" style="display: none;" onchange="uploadPdfFile()">
+                            <button class="btn btn-primary" onclick="document.getElementById('pdfFileInput').click()">
+                                <i class="fas fa-upload"></i> Upload PDF
+                            </button>
+                        </div>
+                    </div>
+                    <div id="pdfFileInfo" style="padding: 20px; text-align: center; color: var(--gray-400);">
+                        Loading...
+                    </div>
+                </div>
+
+                <!-- Upload Progress -->
+                <div id="uploadProgress" style="display: none; margin-top: 24px; padding: 20px; background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-spinner fa-spin" style="color: var(--gold);"></i>
+                        <span id="uploadProgressText">Uploading...</span>
+                    </div>
+                </div>
+            </section>
+
             <!-- SOCIAL CALENDAR SECTION -->
             <section id="section-social" class="content-section">
                 <header class="header">
@@ -1742,6 +2372,12 @@
                         </div>
                         <div style="display: flex; gap: 8px;">
                             <button class="btn btn-secondary" onclick="goToToday()" style="padding: 8px 16px;">Today</button>
+                            <button class="btn btn-secondary" onclick="showPlatformStrategy()" style="padding: 8px 16px;" title="View platform strategies">
+                                <i class="fas fa-lightbulb"></i> Strategy
+                            </button>
+                            <button class="btn btn-primary" onclick="autoFillCalendar()" style="padding: 8px 16px;">
+                                <i class="fas fa-magic"></i> Auto-Fill Month
+                            </button>
                             <select id="calendarPlatformFilter" onchange="filterCalendarByPlatform()" style="padding: 8px 12px; border-radius: 8px; background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border-subtle);">
                                 <option value="all">All Platforms</option>
                                 <option value="instagram">Instagram</option>
@@ -1939,6 +2575,7 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
+                                <th>Type</th>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Subject</th>
@@ -1947,7 +2584,7 @@
                             </tr>
                         </thead>
                         <tbody id="contactsTableBody">
-                            <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No contact submissions yet</td></tr>
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No contacts yet</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -1962,6 +2599,170 @@
                     </div>
                 </div>
             </section>
+
+            <!-- PROMO CAMPAIGNS SECTION -->
+            <section id="section-promo" class="content-section">
+                <header class="header">
+                    <h2>Promo Campaigns</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="openPromoModal()">
+                            <i class="fas fa-plus"></i> New Campaign
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Promo Stats -->
+                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="promoTotalCampaigns">0</div>
+                                <div class="stat-label">Total Campaigns</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(212, 175, 55, 0.1); color: var(--gold);">
+                                <i class="fas fa-bullhorn"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="promoTotalSent">0</div>
+                                <div class="stat-label">Invites Sent</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(74, 144, 226, 0.1); color: var(--info);">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="promoTotalRedeemed">0</div>
+                                <div class="stat-label">Codes Redeemed</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(102, 187, 106, 0.1); color: var(--success);">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div>
+                                <div class="stat-value" id="promoRedemptionRate">0%</div>
+                                <div class="stat-label">Redemption Rate</div>
+                            </div>
+                            <div class="stat-card-icon" style="background: rgba(171, 71, 188, 0.1); color: #AB47BC;">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaigns List -->
+                <div class="orders-container" style="margin-top: 24px;">
+                    <div class="orders-header">
+                        <h3>Campaign History</h3>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Campaign Name</th>
+                                <th>Tier</th>
+                                <th>Sent</th>
+                                <th>Redeemed</th>
+                                <th>Rate</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="promoCampaignsTableBody">
+                            <tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No campaigns created yet. Click "New Campaign" to get started!</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- PROMO CAMPAIGN MODAL -->
+            <div class="modal-overlay" id="promoModal">
+                <div class="modal" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h3>Send Promotional Invites</h3>
+                        <button class="modal-close" onclick="closePromoModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Campaign Name</label>
+                            <input type="text" id="promoCampaignName" placeholder="e.g., Summer 2026 Launch" style="width: 100%; padding: 12px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-input); color: var(--text-primary);">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Select Package Tier</label>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 8px;">
+                                <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid var(--gray-200); border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="promoTier" value="book" style="margin-top: 4px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--text-primary);">Book Only <span style="color: var(--gold);">(R99 value)</span></div>
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">eBook access only</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid var(--gold); border-radius: 12px; cursor: pointer; background: rgba(212, 175, 55, 0.05); transition: all 0.2s;">
+                                    <input type="radio" name="promoTier" value="journey" checked style="margin-top: 4px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--text-primary);">Journey <span style="color: var(--gold);">(R149 value)</span></div>
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">eBook + 40 devotionals, journal, progress tracking (no music/games)</div>
+                                    </div>
+                                </label>
+                                <label style="display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 2px solid var(--gray-200); border-radius: 12px; cursor: pointer; transition: all 0.2s;">
+                                    <input type="radio" name="promoTier" value="premium" style="margin-top: 4px;">
+                                    <div>
+                                        <div style="font-weight: 600; color: var(--text-primary);">Premium <span style="color: var(--gold);">(R249 value)</span></div>
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">Full access: devotionals, journal, music, brain games, voice recordings</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Addresses</label>
+                            <textarea id="promoEmails" rows="6" placeholder="Enter email addresses separated by commas, spaces, or new lines&#10;&#10;Example:&#10;jane@example.com&#10;sarah@test.com, mary@gmail.com" style="width: 100%; padding: 12px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-input); color: var(--text-primary); resize: vertical;"></textarea>
+                            <div style="display: flex; justify-content: space-between; margin-top: 8px;">
+                                <span style="font-size: 13px; color: var(--text-secondary);">Separate emails with commas, spaces, or new lines</span>
+                                <span style="font-size: 13px; color: var(--gold);" id="promoEmailCount">0 valid emails detected</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Custom Message <span style="color: var(--text-muted);">(optional)</span></label>
+                            <textarea id="promoCustomMessage" rows="3" placeholder="Add a personal note to the invitation..." style="width: 100%; padding: 12px; border: 1px solid var(--border-subtle); border-radius: 8px; background: var(--bg-input); color: var(--text-primary); resize: vertical;"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closePromoModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="sendPromoCampaign()" id="sendPromoBtn">
+                            <i class="fas fa-paper-plane"></i> Send Invites
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROMO CAMPAIGN DETAILS MODAL -->
+            <div class="modal-overlay" id="promoDetailsModal">
+                <div class="modal" style="max-width: 800px;">
+                    <div class="modal-header">
+                        <h3 id="promoDetailsTitle">Campaign Details</h3>
+                        <button class="modal-close" onclick="closePromoDetailsModal()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="promoDetailsContent">
+                            <p style="text-align: center; color: var(--text-muted);">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="closePromoDetailsModal()">Close</button>
+                    </div>
+                </div>
+            </div>
 
             <!-- INVOICES SECTION -->
             <section id="section-invoices" class="content-section">
@@ -2182,6 +2983,7 @@
                         <select id="orgType">
                             <option value="church">Church / Ministry</option>
                             <option value="counseling">Counseling Center</option>
+                            <option value="psychiatric">Psychiatric / Mental Health</option>
                             <option value="shelter">Women's Shelter</option>
                             <option value="ngo">NGO / Non-Profit</option>
                             <option value="retreat">Retreat Center</option>
@@ -2213,8 +3015,6 @@
                             <option value="za">South Africa</option>
                             <option value="us">United States</option>
                             <option value="uk">United Kingdom</option>
-                            <option value="ng">Nigeria</option>
-                            <option value="ke">Kenya</option>
                             <option value="au">Australia</option>
                             <option value="other">Other</option>
                         </select>
@@ -2524,6 +3324,58 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal (replaces browser confirm()) -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+                <button class="modal-close" onclick="closeConfirmModal(false)">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage" style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeConfirmModal(false)">Cancel</button>
+                <button class="btn btn-primary" id="confirmActionBtn" onclick="closeConfirmModal(true)">
+                    <span id="confirmActionText">Confirm</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Codes Display Modal (replaces browser alert for showing codes) -->
+    <div class="modal-overlay" id="codesDisplayModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-key" style="margin-right: 8px; color: var(--gold);"></i> Generated Access Codes</h3>
+                <button class="modal-close" onclick="closeModal('codesDisplayModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    <span id="codesCount">0</span> codes have been generated. Copy them below:
+                </p>
+                <textarea id="codesTextarea" readonly style="
+                    width: 100%;
+                    height: 200px;
+                    background: var(--bg-input);
+                    border: 1px solid var(--border-subtle);
+                    border-radius: 8px;
+                    padding: 12px;
+                    color: var(--text-primary);
+                    font-family: monospace;
+                    font-size: 0.9rem;
+                    resize: none;
+                "></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('codesDisplayModal')">Close</button>
+                <button class="btn btn-primary" onclick="copyGeneratedCodes()">
+                    <i class="fas fa-copy"></i> Copy All
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
@@ -2539,7 +3391,7 @@
         // Supabase Configuration
         const SUPABASE_URL = 'https://hqzyzioyospxwfzrdwkj.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhxenl6aW95b3NweHdmenJkd2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2ODAyNTksImV4cCI6MjA4MjI1NjI1OX0.gx_53V9FCUSe_fJuv8pG4W9uF3bTodHAaONZ6cwccgs';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // State
         let orders = [];
@@ -2552,6 +3404,64 @@
             journey: { name: 'Journey Access', price: 149 },
             premium: { name: 'Premium Access', price: 249 }
         };
+
+        // ============================================
+        // CONFIRMATION MODAL (replaces browser confirm)
+        // ============================================
+        let confirmCallback = null;
+
+        function showConfirm(message, options = {}) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('confirmModal');
+                const titleEl = document.getElementById('confirmTitle');
+                const messageEl = document.getElementById('confirmMessage');
+                const actionBtn = document.getElementById('confirmActionBtn');
+                const actionText = document.getElementById('confirmActionText');
+
+                titleEl.textContent = options.title || 'Confirm Action';
+                messageEl.textContent = message;
+                actionText.textContent = options.confirmText || 'Confirm';
+
+                // Style danger actions differently
+                if (options.danger) {
+                    actionBtn.style.background = 'var(--error)';
+                } else {
+                    actionBtn.style.background = 'var(--gold)';
+                }
+
+                confirmCallback = resolve;
+                modal.classList.add('active');
+            });
+        }
+
+        function closeConfirmModal(result) {
+            const modal = document.getElementById('confirmModal');
+            modal.classList.remove('active');
+            if (confirmCallback) {
+                confirmCallback(result);
+                confirmCallback = null;
+            }
+        }
+
+        // ============================================
+        // CODES DISPLAY MODAL (replaces browser alert)
+        // ============================================
+        function showGeneratedCodes(codes) {
+            const modal = document.getElementById('codesDisplayModal');
+            const countEl = document.getElementById('codesCount');
+            const textarea = document.getElementById('codesTextarea');
+
+            countEl.textContent = codes.length;
+            textarea.value = codes.join('\n');
+            modal.classList.add('active');
+        }
+
+        function copyGeneratedCodes() {
+            const textarea = document.getElementById('codesTextarea');
+            textarea.select();
+            document.execCommand('copy');
+            showToast('Codes copied to clipboard', 'success');
+        }
 
         // Login Handler
         async function handleLogin(e) {
@@ -2588,6 +3498,14 @@
                 errorDiv.textContent = error.message;
                 errorDiv.style.display = 'block';
             }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboardScreen').style.display = 'none';
+            showToast('Logged out successfully', 'success');
         }
 
         function createErrorDiv() {
@@ -2785,6 +3703,11 @@
                             <button class="action-btn" onclick="viewOrder('${orderRef}')" title="View Details">
                                 <i class="fas fa-eye"></i>
                             </button>
+                            ${order.proofUrl ? `
+                                <button class="action-btn" onclick="showProofOfPayment('${order.proofUrl}', '${orderRef}', '${order.customer.name.replace(/'/g, "\\'")}', 'R${order.amount}')" title="View Proof of Payment" style="color: var(--gold);">
+                                    <i class="fas fa-receipt"></i>
+                                </button>
+                            ` : ''}
                             ${order.status === 'proof_submitted' ? `
                                 <button class="action-btn approve" onclick="approveOrder('${orderRef}')" title="Approve">
                                     <i class="fas fa-check"></i>
@@ -2795,6 +3718,9 @@
                             ` : ''}
                             <button class="action-btn" onclick="emailCustomer('${customerEmail}')" title="Email Customer">
                                 <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn danger" onclick="deleteOrder('${orderRef}')" title="Delete Order" style="color: var(--error);">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
@@ -2871,10 +3797,10 @@
                 ` : ''}
                 ${order.proofUrl ? `
                     <div style="margin-top: 16px;">
-                        <span class="detail-label">Payment Proof</span>
-                        <img src="${order.proofUrl}" alt="Payment Proof" class="proof-image">
+                        <span class="detail-label">Payment Proof <span style="font-size: 11px; color: var(--text-muted);">(click to enlarge)</span></span>
+                        <img src="${order.proofUrl}" alt="Payment Proof" class="proof-image" onclick="showProofOfPayment('${order.proofUrl}', '${order.orderRef}', '${order.customer.name}', 'R${order.amount}')">
                     </div>
-                ` : ''}
+                ` : '<div style="margin-top: 16px; padding: 24px; background: var(--bg-card); border-radius: 8px; text-align: center; color: var(--text-muted); border: 1px dashed var(--border-subtle);"><i class="fas fa-image" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>No proof of payment uploaded yet</div>'}
             `;
 
             const modalFooter = document.getElementById('orderModalFooter');
@@ -2891,6 +3817,43 @@
             }
 
             document.getElementById('orderModal').classList.add('active');
+        }
+
+        // Show Proof of Payment Lightbox
+        function showProofOfPayment(imageUrl, orderRef, customerName, amount) {
+            // Remove existing lightbox if any
+            const existing = document.getElementById('popLightbox');
+            if (existing) existing.remove();
+
+            // Create lightbox
+            const lightbox = document.createElement('div');
+            lightbox.id = 'popLightbox';
+            lightbox.className = 'pop-lightbox';
+            lightbox.onclick = function(e) {
+                if (e.target === this) this.remove();
+            };
+
+            lightbox.innerHTML = `
+                <div class="pop-lightbox-content">
+                    <button class="pop-lightbox-close" onclick="document.getElementById('popLightbox').remove()">&times;</button>
+                    <img src="${imageUrl}" alt="Proof of Payment" class="pop-lightbox-image">
+                    <div class="pop-lightbox-info">
+                        <h4>Proof of Payment</h4>
+                        <p>Order: ${orderRef} | Customer: ${customerName} | Amount: ${amount}</p>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(lightbox);
+
+            // Close on Escape key
+            const closeOnEscape = (e) => {
+                if (e.key === 'Escape') {
+                    document.getElementById('popLightbox')?.remove();
+                    document.removeEventListener('keydown', closeOnEscape);
+                }
+            };
+            document.addEventListener('keydown', closeOnEscape);
         }
 
         // Approve Order
@@ -2912,7 +3875,12 @@
 
         // Reject Order
         async function rejectOrder(orderRef) {
-            if (!confirm('Are you sure you want to reject this order?')) return;
+            const confirmed = await showConfirm('Are you sure you want to reject this order?', {
+                title: 'Reject Order',
+                confirmText: 'Reject',
+                danger: true
+            });
+            if (!confirmed) return;
 
             try {
                 // In production: await fetch(`${API_URL}/admin/orders/${orderRef}/reject`, { method: 'POST', headers: { Authorization: `Bearer ${authToken}` } });
@@ -2925,6 +3893,33 @@
                 }
             } catch (error) {
                 showToast('Failed to reject order', 'error');
+            }
+        }
+
+        // Delete Order
+        async function deleteOrder(orderRef) {
+            const confirmed = await showConfirm('Are you sure you want to permanently delete this order? This cannot be undone.', {
+                title: 'Delete Order',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/orders/${orderRef}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to delete order');
+
+                // Remove from local array
+                orders = orders.filter(o => (o.orderRef || o.order_ref) !== orderRef);
+                updateStats();
+                renderOrders();
+                showToast('Order deleted', 'success');
+            } catch (error) {
+                console.error('Delete order error:', error);
+                showToast('Failed to delete order', 'error');
             }
         }
 
@@ -2960,6 +3955,10 @@
             document.getElementById('generateModal').classList.add('active');
         }
 
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
@@ -2984,7 +3983,7 @@
 
                 // Show generated codes (in production, these would be saved to database)
                 console.log('Generated codes:', codes);
-                alert(`Generated ${count} codes:\n\n${codes.join('\n')}`);
+                showGeneratedCodes(codes);
             } catch (error) {
                 showToast('Failed to generate codes', 'error');
             }
@@ -3004,6 +4003,72 @@
             a.download = `twg-orders-${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             showToast('Orders exported successfully', 'success');
+        }
+
+        // Render Customers Table (from approved orders)
+        function renderCustomers() {
+            const tbody = document.getElementById('customersTableBody');
+            if (!tbody) return;
+
+            // Get customers from approved orders
+            const customers = orders
+                .filter(o => o.status === 'verified' || o.status === 'code_sent')
+                .map(o => ({
+                    name: o.customer.name,
+                    email: o.customer.email,
+                    tier: o.plan,
+                    orderDate: o.createdAt,
+                    status: o.status
+                }));
+
+            if (customers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No customers yet. Approved orders will appear here.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = customers.map(c => {
+                const tierBadge = {
+                    'book': '<span class="status pending">Book</span>',
+                    'journey': '<span class="status proof">Journey</span>',
+                    'premium': '<span class="status verified">Premium</span>'
+                }[c.tier] || `<span class="status">${c.tier}</span>`;
+
+                const statusBadge = c.status === 'code_sent'
+                    ? '<span class="status verified">Code Sent</span>'
+                    : '<span class="status pending">Approved</span>';
+
+                return `<tr>
+                    <td>${c.name}</td>
+                    <td>${c.email}</td>
+                    <td>${tierBadge}</td>
+                    <td>${new Date(c.orderDate).toLocaleDateString('en-ZA')}</td>
+                    <td>${statusBadge}</td>
+                </tr>`;
+            }).join('');
+
+            // Update stats
+            const totalCustomers = customers.length;
+            const premiumCount = customers.filter(c => c.tier === 'premium').length;
+            const journeyCount = customers.filter(c => c.tier === 'journey').length;
+            const bookCount = customers.filter(c => c.tier === 'book').length;
+
+            // Update the stat cards if elements exist
+            const statCards = document.querySelectorAll('#section-customers .stat-value');
+            if (statCards.length >= 4) {
+                statCards[0].textContent = totalCustomers;
+                statCards[1].textContent = premiumCount + journeyCount; // Active Pilgrims
+                statCards[2].textContent = Math.round((premiumCount / totalCustomers) * 100) || 0; // Est. completion %
+                statCards[3].textContent = Math.round(((premiumCount + journeyCount) / totalCustomers) * 100) + '%'; // Completion rate
+            }
+        }
+
+        function filterCustomers() {
+            const search = document.getElementById('customerSearchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('#customersTableBody tr');
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(search) ? '' : 'none';
+            });
         }
 
         // Toast Notification
@@ -3035,7 +4100,27 @@
             if (activeLink) {
                 activeLink.classList.add('active');
             }
+            // Save to URL hash for persistence on refresh
+            if (window.location.hash !== '#' + sectionName) {
+                history.replaceState(null, '', '#' + sectionName);
+            }
+            // Load section-specific data
+            if (sectionName === 'tithe') {
+                loadTitheStats();
+                loadBeneficiaryOrgs();
+            }
+            if (sectionName === 'promo') {
+                loadPromoCampaigns();
+            }
         }
+
+        // Restore section from URL hash on page load
+        (function restoreSection() {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && document.getElementById('section-' + hash)) {
+                showSection(hash);
+            }
+        })();
 
         // Sidebar Navigation
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
@@ -3071,6 +4156,59 @@
             document.getElementById('sidebar')?.classList.add('collapsed');
             document.body.classList.add('sidebar-collapsed');
         }
+
+        // ============================================
+        // MOBILE MENU TOGGLE
+        // ============================================
+        function toggleMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const icon = document.getElementById('mobileMenuIcon');
+
+            // On mobile, ALWAYS remove collapsed class when opening
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+                document.body.classList.remove('sidebar-collapsed');
+            }
+
+            sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('active');
+
+            // Prevent body scroll when menu is open
+            if (sidebar.classList.contains('mobile-open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+                document.body.style.overflow = 'hidden';
+                document.body.classList.add('menu-open');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+                document.body.style.overflow = '';
+                document.body.classList.remove('menu-open');
+            }
+        }
+
+        function closeMobileMenu() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('mobileOverlay');
+            const icon = document.getElementById('mobileMenuIcon');
+
+            sidebar.classList.remove('mobile-open');
+            overlay.classList.remove('active');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+            document.body.style.overflow = '';
+            document.body.classList.remove('menu-open');
+        }
+
+        // Auto-close mobile menu when nav item is clicked
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    closeMobileMenu();
+                }
+            });
+        });
 
         // ============================================
         // SETTINGS MANAGEMENT
@@ -3192,6 +4330,7 @@
             const orgTypes = {
                 church: 'Church',
                 counseling: 'Counseling',
+                psychiatric: 'Psychiatric',
                 shelter: 'Shelter',
                 ngo: 'NGO',
                 retreat: 'Retreat',
@@ -3237,6 +4376,9 @@
                             </button>
                             <button class="action-btn" onclick="emailOrg('${org.contact_email}')" title="Email">
                                 <i class="fas fa-envelope"></i>
+                            </button>
+                            <button class="action-btn danger" onclick="deleteOrganization('${org.org_id}')" title="Delete">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </td>
@@ -3325,6 +4467,34 @@
             }
         }
 
+        async function deleteOrganization(orgId) {
+            const confirmed = await showConfirm('Are you sure you want to delete this organization? This will also delete all associated access codes.', {
+                title: 'Delete Organization',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/organizations/${orgId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete organization');
+                }
+
+                organizations = organizations.filter(o => o.org_id !== orgId);
+                renderOrganizations();
+                updateB2BStats();
+                showToast('Organization deleted', 'success');
+            } catch (e) {
+                console.error('Delete org error:', e);
+                showToast('Failed to delete organization', 'error');
+            }
+        }
+
         function openOrgCodesModal(orgId, orgName) {
             document.getElementById('orgCodesOrgId').value = orgId;
             document.getElementById('orgCodesOrgName').textContent = orgName;
@@ -3354,9 +4524,9 @@
                 showToast(`Generated ${data.count} codes`, 'success');
                 closeModal('orgCodesModal');
 
-                // Show codes in alert
+                // Show codes in modal
                 if (data.codes && data.codes.length > 0) {
-                    alert(`Generated ${data.codes.length} codes:\n\n${data.codes.join('\n')}`);
+                    showGeneratedCodes(data.codes);
                 }
 
                 loadOrganizations();
@@ -3398,6 +4568,440 @@
         }
 
         // ============================================
+        // TITHE MANAGEMENT FUNCTIONS
+        // ============================================
+        let beneficiaryOrgs = [];
+        let titheAllocations = [];
+        let titheDisbursements = [];
+
+        function switchTitheTab(tab) {
+            document.querySelectorAll('.tithe-tab').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tithe-tab-content').forEach(content => content.style.display = 'none');
+            document.querySelector(`.tithe-tab[data-tab="${tab}"]`).classList.add('active');
+            document.getElementById(`tithe-tab-${tab}`).style.display = 'block';
+
+            if (tab === 'organizations') loadBeneficiaryOrgs();
+            else if (tab === 'allocations') loadTitheAllocations();
+            else if (tab === 'disbursements') loadTitheDisbursements();
+        }
+
+        async function loadTitheStats() {
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) return;
+                const data = await response.json();
+                const stats = data.stats || {};
+
+                document.getElementById('titheTotalAllocated').textContent = `R${(stats.totalAllocated || 0).toFixed(2)}`;
+                document.getElementById('titheAwaitingDisbursement').textContent = `R${(stats.awaitingDisbursement || 0).toFixed(2)}`;
+                document.getElementById('titheDisbursed').textContent = `R${(stats.disbursed || 0).toFixed(2)}`;
+                document.getElementById('tithePilgrims').textContent = stats.pilgrimsContributing || 0;
+            } catch (e) {
+                console.error('Failed to load tithe stats:', e);
+            }
+        }
+
+        async function loadBeneficiaryOrgs() {
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/organizations`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                beneficiaryOrgs = data.organizations || [];
+                renderBeneficiaryOrgs();
+            } catch (e) {
+                console.error('Failed to load beneficiary orgs:', e);
+            }
+        }
+
+        function renderBeneficiaryOrgs() {
+            const tbody = document.getElementById('beneficiaryOrgsTableBody');
+            if (!tbody) return;
+
+            if (beneficiaryOrgs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray-400);">No organizations yet</td></tr>';
+                return;
+            }
+
+            const categoryLabels = {
+                shelter: 'Women\'s Shelter',
+                mental_health: 'Mental Health',
+                crisis: 'Crisis Support',
+                faith: 'Faith-Based',
+                anti_trafficking: 'Anti-Trafficking',
+                other: 'Other'
+            };
+
+            tbody.innerHTML = beneficiaryOrgs.map(org => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 500;">${org.name}</div>
+                        ${org.website_url ? `<a href="${org.website_url}" target="_blank" style="font-size: 12px; color: var(--info);">${org.website_url}</a>` : ''}
+                    </td>
+                    <td><span class="badge" style="background: rgba(135, 168, 120, 0.2); color: var(--sage);">${categoryLabels[org.category] || org.category}</span></td>
+                    <td>${(org.country_code || 'za').toUpperCase()}</td>
+                    <td>
+                        ${org.verification_status === 'verified'
+                            ? '<span class="badge verified"><i class="fas fa-check-circle"></i> Verified</span>'
+                            : org.verification_status === 'suspended'
+                            ? '<span class="badge" style="background: rgba(239, 68, 68, 0.2); color: var(--error);"><i class="fas fa-ban"></i> Suspended</span>'
+                            : '<span class="badge pending"><i class="fas fa-clock"></i> Pending</span>'
+                        }
+                    </td>
+                    <td>
+                        ${org.verification_status !== 'verified' ? `<button class="btn btn-sm btn-primary" onclick="verifyBeneficiaryOrg('${org.id}')"><i class="fas fa-check"></i></button>` : ''}
+                        <button class="btn btn-sm btn-secondary" onclick="editBeneficiaryOrg('${org.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBeneficiaryOrg('${org.id}')"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function verifyBeneficiaryOrg(id) {
+            const confirmed = await showConfirm('Verify this organization?', {
+                title: 'Verify Organization',
+                confirmText: 'Verify'
+            });
+            if (!confirmed) return;
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/organizations/${id}/verify`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to verify');
+                showToast('Organization verified', 'success');
+                loadBeneficiaryOrgs();
+            } catch (e) {
+                showToast('Failed to verify organization', 'error');
+            }
+        }
+
+        async function deleteBeneficiaryOrg(id) {
+            const confirmed = await showConfirm('Delete this organization? This cannot be undone.', {
+                title: 'Delete Organization',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/organizations/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to delete');
+                showToast('Organization deleted', 'success');
+                loadBeneficiaryOrgs();
+            } catch (e) {
+                showToast('Failed to delete organization', 'error');
+            }
+        }
+
+        function editBeneficiaryOrg(id) {
+            const org = beneficiaryOrgs.find(o => o.id === id);
+            if (!org) return;
+            openBeneficiaryModal(org);
+        }
+
+        function openBeneficiaryModal(org = null) {
+            const isEdit = !!org;
+            const html = `
+                <div class="modal-overlay active" id="beneficiaryModal" onclick="if(event.target === this) closeBeneficiaryModal()">
+                    <div class="modal" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h3>${isEdit ? 'Edit' : 'Add'} Beneficiary Organization</h3>
+                            <button onclick="closeBeneficiaryModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Organization Name *</label>
+                                <input type="text" id="beneficiaryName" value="${org?.name || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="beneficiaryDescription" rows="3">${org?.description || ''}</textarea>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Category</label>
+                                    <select id="beneficiaryCategory">
+                                        <option value="shelter" ${org?.category === 'shelter' ? 'selected' : ''}>Women's Shelter</option>
+                                        <option value="mental_health" ${org?.category === 'mental_health' ? 'selected' : ''}>Mental Health</option>
+                                        <option value="crisis" ${org?.category === 'crisis' ? 'selected' : ''}>Crisis Support</option>
+                                        <option value="faith" ${org?.category === 'faith' ? 'selected' : ''}>Faith-Based</option>
+                                        <option value="anti_trafficking" ${org?.category === 'anti_trafficking' ? 'selected' : ''}>Anti-Trafficking</option>
+                                        <option value="other" ${org?.category === 'other' ? 'selected' : ''}>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <select id="beneficiaryCountry">
+                                        <option value="za" ${(org?.country_code || 'za') === 'za' ? 'selected' : ''}>South Africa</option>
+                                        <option value="us" ${org?.country_code === 'us' ? 'selected' : ''}>United States</option>
+                                        <option value="uk" ${org?.country_code === 'uk' ? 'selected' : ''}>United Kingdom</option>
+                                        <option value="au" ${org?.country_code === 'au' ? 'selected' : ''}>Australia</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Website URL</label>
+                                <input type="url" id="beneficiaryWebsite" value="${org?.website_url || ''}" placeholder="https://...">
+                            </div>
+                            <div class="form-group">
+                                <label>Contact Email</label>
+                                <input type="email" id="beneficiaryEmail" value="${org?.contact_email || ''}">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeBeneficiaryModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="saveBeneficiaryOrg(${isEdit ? `'${org.id}'` : 'null'})">${isEdit ? 'Update' : 'Add'} Organization</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+
+        function closeBeneficiaryModal() {
+            const modal = document.getElementById('beneficiaryModal');
+            if (modal) modal.remove();
+        }
+
+        async function saveBeneficiaryOrg(id = null) {
+            const data = {
+                name: document.getElementById('beneficiaryName').value,
+                description: document.getElementById('beneficiaryDescription').value,
+                category: document.getElementById('beneficiaryCategory').value,
+                countryCode: document.getElementById('beneficiaryCountry').value,
+                websiteUrl: document.getElementById('beneficiaryWebsite').value,
+                contactEmail: document.getElementById('beneficiaryEmail').value
+            };
+
+            if (!data.name) {
+                showToast('Organization name is required', 'error');
+                return;
+            }
+
+            try {
+                const url = id ? `${API_URL}/admin/tithe/organizations/${id}` : `${API_URL}/admin/tithe/organizations`;
+                const response = await fetch(url, {
+                    method: id ? 'PUT' : 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) throw new Error('Failed to save');
+                showToast(id ? 'Organization updated' : 'Organization added', 'success');
+                closeBeneficiaryModal();
+                loadBeneficiaryOrgs();
+            } catch (e) {
+                showToast('Failed to save organization', 'error');
+            }
+        }
+
+        async function loadTitheAllocations() {
+            try {
+                const status = document.getElementById('allocationStatusFilter')?.value || 'all';
+                const response = await fetch(`${API_URL}/admin/tithe/allocations?status=${status}`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                titheAllocations = data.allocations || [];
+                renderTitheAllocations();
+            } catch (e) {
+                console.error('Failed to load allocations:', e);
+            }
+        }
+
+        function renderTitheAllocations() {
+            const tbody = document.getElementById('titheAllocationsTableBody');
+            if (!tbody) return;
+
+            if (titheAllocations.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray-400);">No allocations yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = titheAllocations.map(a => `
+                <tr>
+                    <td><code>${a.order_ref || '-'}</code></td>
+                    <td>R${parseFloat(a.gross_amount || 0).toFixed(2)}</td>
+                    <td style="color: var(--gold); font-weight: 500;">R${parseFloat(a.tithe_amount || 0).toFixed(2)}</td>
+                    <td>${a.beneficiary_orgs?.name || '<span style="color: var(--gray-400);">Not selected</span>'}</td>
+                    <td>
+                        ${a.status === 'disbursed'
+                            ? '<span class="badge verified"><i class="fas fa-check-circle"></i> Disbursed</span>'
+                            : a.status === 'allocated'
+                            ? '<span class="badge" style="background: rgba(59, 130, 246, 0.2); color: var(--info);"><i class="fas fa-clock"></i> Allocated</span>'
+                            : '<span class="badge pending"><i class="fas fa-hourglass-half"></i> Pending</span>'
+                        }
+                    </td>
+                    <td>${a.allocated_at ? new Date(a.allocated_at).toLocaleDateString() : '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function loadTitheDisbursements() {
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/disbursements`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                titheDisbursements = data.disbursements || [];
+                renderTitheDisbursements();
+            } catch (e) {
+                console.error('Failed to load disbursements:', e);
+            }
+        }
+
+        function renderTitheDisbursements() {
+            const tbody = document.getElementById('titheDisbursementsTableBody');
+            if (!tbody) return;
+
+            if (titheDisbursements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray-400);">No disbursements yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = titheDisbursements.map(d => `
+                <tr>
+                    <td>${d.beneficiary_orgs?.name || '-'}</td>
+                    <td>${d.period_start && d.period_end ? `${d.period_start} - ${d.period_end}` : '-'}</td>
+                    <td style="color: var(--gold); font-weight: 500;">R${parseFloat(d.total_amount || 0).toFixed(2)}</td>
+                    <td>${d.allocation_count || 0}</td>
+                    <td>
+                        ${d.status === 'completed'
+                            ? '<span class="badge verified"><i class="fas fa-check-circle"></i> Completed</span>'
+                            : d.status === 'processing'
+                            ? '<span class="badge" style="background: rgba(59, 130, 246, 0.2); color: var(--info);"><i class="fas fa-spinner fa-spin"></i> Processing</span>'
+                            : '<span class="badge pending"><i class="fas fa-clock"></i> Pending</span>'
+                        }
+                    </td>
+                    <td>
+                        ${d.status !== 'completed' ? `<button class="btn btn-sm btn-primary" onclick="completeDisbursement('${d.id}')"><i class="fas fa-check"></i> Mark Paid</button>` : ''}
+                        ${d.proof_of_payment_url ? `<a href="${d.proof_of_payment_url}" target="_blank" class="btn btn-sm btn-secondary"><i class="fas fa-receipt"></i></a>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openDisbursementModal() {
+            const verifiedOrgs = beneficiaryOrgs.filter(o => o.verification_status === 'verified');
+            if (verifiedOrgs.length === 0) {
+                showToast('No verified organizations available', 'error');
+                return;
+            }
+
+            const html = `
+                <div class="modal-overlay" id="disbursementModal" onclick="if(event.target === this) closeDisbursementModal()">
+                    <div class="modal" style="max-width: 450px;">
+                        <div class="modal-header">
+                            <h3>Create Disbursement</h3>
+                            <button onclick="closeDisbursementModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Select Organization *</label>
+                                <select id="disbursementOrgId">
+                                    ${verifiedOrgs.map(o => `<option value="${o.id}">${o.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Period Start</label>
+                                    <input type="date" id="disbursementPeriodStart">
+                                </div>
+                                <div class="form-group">
+                                    <label>Period End</label>
+                                    <input type="date" id="disbursementPeriodEnd">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="disbursementNotes" rows="2" placeholder="Optional notes..."></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" onclick="closeDisbursementModal()">Cancel</button>
+                            <button class="btn btn-primary" onclick="createDisbursement()">Create Disbursement</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', html);
+        }
+
+        function closeDisbursementModal() {
+            const modal = document.getElementById('disbursementModal');
+            if (modal) modal.remove();
+        }
+
+        async function createDisbursement() {
+            const data = {
+                beneficiaryOrgId: document.getElementById('disbursementOrgId').value,
+                periodStart: document.getElementById('disbursementPeriodStart').value || null,
+                periodEnd: document.getElementById('disbursementPeriodEnd').value || null,
+                notes: document.getElementById('disbursementNotes').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/disbursements`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to create');
+                }
+
+                showToast(`Disbursement created: R${parseFloat(result.disbursement.total_amount).toFixed(2)} (${result.allocationsProcessed} allocations)`, 'success');
+                closeDisbursementModal();
+                loadTitheDisbursements();
+                loadTitheStats();
+            } catch (e) {
+                showToast(e.message || 'Failed to create disbursement', 'error');
+            }
+        }
+
+        async function completeDisbursement(id) {
+            const confirmed = await showConfirm('Mark this disbursement as paid?', {
+                title: 'Complete Disbursement',
+                confirmText: 'Mark as Paid'
+            });
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/tithe/disbursements/${id}/complete`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) throw new Error('Failed to complete');
+                showToast('Disbursement marked as paid', 'success');
+                loadTitheDisbursements();
+                loadTitheStats();
+            } catch (e) {
+                showToast('Failed to complete disbursement', 'error');
+            }
+        }
+
+        // ============================================
         // SOCIAL CALENDAR FUNCTIONS
         // ============================================
         let socialPosts = [];
@@ -3405,25 +5009,29 @@
         // Load social posts from Supabase
         async function loadSocialPosts() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('social_posts')
                     .select('*')
-                    .order('post_date', { ascending: true });
+                    .order('created_at', { ascending: false });
 
-                if (error) throw error;
-
-                // Map Supabase format to UI format
-                socialPosts = (data || []).map(p => ({
-                    id: p.id,
-                    date: p.post_date,
-                    time: p.post_time || '',
-                    content: p.content,
-                    platforms: p.platforms || [],
-                    theme: p.theme,
-                    hashtags: p.hashtags || '',
-                    status: p.status,
-                    createdAt: p.created_at
-                }));
+                if (error) {
+                    // Table might not exist yet - use localStorage
+                    console.log('Social posts table not ready, using localStorage');
+                    socialPosts = JSON.parse(localStorage.getItem('twg_social_posts') || '[]');
+                } else {
+                    // Map Supabase format to UI format
+                    socialPosts = (data || []).map(p => ({
+                        id: p.id,
+                        date: p.post_date || p.scheduled_date || '',
+                        time: p.post_time || p.scheduled_time || '',
+                        content: p.content,
+                        platforms: p.platforms || [],
+                        theme: p.theme,
+                        hashtags: p.hashtags || '',
+                        status: p.status,
+                        createdAt: p.created_at
+                    }));
+                }
 
                 renderCalendar();
                 renderSocialPostsTable();
@@ -3432,6 +5040,9 @@
                 console.error('Error loading social posts:', err);
                 // Fallback to localStorage if Supabase fails
                 socialPosts = JSON.parse(localStorage.getItem('twg_social_posts') || '[]');
+                renderCalendar();
+                renderSocialPostsTable();
+                updateSocialStats();
             }
         }
         let currentCalendarDate = new Date();
@@ -3445,37 +5056,460 @@
             { week: 6, title: 'Sharing Your Story', description: 'Becoming a source of hope', days: '36-40' }
         ];
 
+        // =====================================================
+        // AUTO-MODE SOCIAL MEDIA SYSTEM
+        // Platform strategies, optimal times, and content bank
+        // =====================================================
+
+        const PLATFORM_CONFIG = {
+            instagram: {
+                name: 'Instagram',
+                icon: 'fab fa-instagram',
+                color: '#E4405F',
+                optimalTimes: ['09:00', '12:00', '17:00', '19:00'],
+                bestDays: ['tuesday', 'wednesday', 'friday'],
+                maxChars: 2200,
+                strategy: 'Visual storytelling, carousel quotes, reels for engagement',
+                hashtagSets: [
+                    '#TeaWithGod #HealingJourney #WomenOfFaith #ChristianWomen #EmotionalHealing',
+                    '#FaithOverFear #GodIsGood #SpiritualGrowth #WomensMinistry #HopeInChrist',
+                    '#PottersClay #Jeremiah184 #ReshapedByGod #Healing #MentalHealthMatters'
+                ]
+            },
+            facebook: {
+                name: 'Facebook',
+                icon: 'fab fa-facebook',
+                color: '#1877F2',
+                optimalTimes: ['09:00', '13:00', '16:00'],
+                bestDays: ['wednesday', 'thursday', 'friday'],
+                maxChars: 63206,
+                strategy: 'Longer stories, community building, shareable content',
+                hashtagSets: ['#TeaWithGod #HealingJourney #WomenOfFaith']
+            },
+            twitter: {
+                name: 'X/Twitter',
+                icon: 'fab fa-twitter',
+                color: '#1DA1F2',
+                optimalTimes: ['08:00', '12:00', '17:00'],
+                bestDays: ['tuesday', 'wednesday', 'thursday'],
+                maxChars: 280,
+                strategy: 'Short, punchy quotes. Scripture snippets. Conversation starters.',
+                hashtagSets: ['#TeaWithGod #Healing #Faith']
+            },
+            linkedin: {
+                name: 'LinkedIn',
+                icon: 'fab fa-linkedin',
+                color: '#0A66C2',
+                optimalTimes: ['08:00', '10:00', '12:00'],
+                bestDays: ['tuesday', 'wednesday', 'thursday'],
+                maxChars: 3000,
+                strategy: 'Professional angle: mental wellness, workplace resilience, leadership',
+                hashtagSets: ['#MentalWellness #WomenInLeadership #EmotionalIntelligence #Faith']
+            },
+            tiktok: {
+                name: 'TikTok',
+                icon: 'fab fa-tiktok',
+                color: '#000000',
+                optimalTimes: ['07:00', '12:00', '19:00', '21:00'],
+                bestDays: ['tuesday', 'thursday', 'friday'],
+                maxChars: 2200,
+                strategy: 'Trending sounds, relatable moments, quick tips, POV content',
+                hashtagSets: ['#healingtiktok #faithtok #christianwomen #emotionalhealing #mentalhealthawareness']
+            }
+        };
+
+        // Massive pre-written content bank organized by theme and type
+        const AUTO_CONTENT_BANK = {
+            // WEEK 1: ACKNOWLEDGING BROKENNESS
+            1: {
+                quotes: [
+                    "Healing begins the moment we stop pretending we're okay.",
+                    "The bravest thing you'll ever do is admit you need help.",
+                    "Your brokenness is not your identity - it's your starting point.",
+                    "Like the potter in Jeremiah 18:4, God sees your cracks and says 'I can work with this.'",
+                    "Sometimes we have to fall apart to fall into God's arms.",
+                    "Broken crayons still color. Broken hearts still love. You still matter.",
+                    "The first step to getting somewhere is deciding you're not willing to stay where you are.",
+                    "It's okay to not be okay. It's not okay to stay that way alone."
+                ],
+                scriptures: [
+                    "The LORD is close to the brokenhearted and saves those who are crushed in spirit. - Psalm 34:18",
+                    "He heals the brokenhearted and binds up their wounds. - Psalm 147:3",
+                    "The pot was marred in his hands; so the potter formed it into another pot. - Jeremiah 18:4",
+                    "Come to me, all you who are weary and burdened, and I will give you rest. - Matthew 11:28"
+                ],
+                questions: [
+                    "What's one thing you've been afraid to admit, even to yourself?",
+                    "If your pain could speak, what would it say it needs from you today?",
+                    "When was the last time you gave yourself permission to not be okay?",
+                    "What mask are you tired of wearing?"
+                ],
+                tips: [
+                    "Healing tip: Journal for 5 minutes today. Write without editing. Let the truth come out.",
+                    "Try this: Place your hand on your heart. Breathe. Say 'I acknowledge my pain, and I'm ready to heal.'",
+                    "Today's practice: Name one emotion you've been avoiding. Just name it. That's enough for now."
+                ]
+            },
+            // WEEK 2: RELEASING PAIN
+            2: {
+                quotes: [
+                    "Letting go isn't giving up - it's growing up.",
+                    "You can't heal what you won't release.",
+                    "Holding onto pain is like drinking poison and expecting someone else to get sick.",
+                    "Release doesn't mean the pain never existed. It means it no longer controls your future.",
+                    "The weight you carry was never yours to hold. Put it down, beloved.",
+                    "Forgiveness is the fragrance the violet sheds on the heel that crushed it.",
+                    "Sometimes the hardest person to forgive is yourself. Start there.",
+                    "What you don't release, you repeat."
+                ],
+                scriptures: [
+                    "Cast your cares on the LORD and he will sustain you. - Psalm 55:22",
+                    "Forget the former things; do not dwell on the past. See, I am doing a new thing! - Isaiah 43:18-19",
+                    "Bear with each other and forgive one another. - Colossians 3:13",
+                    "And we know that in all things God works for the good. - Romans 8:28"
+                ],
+                questions: [
+                    "What are you holding onto that's holding you back?",
+                    "If you could write a letter to your pain, what would you say?",
+                    "Who do you need to forgive - including yourself?",
+                    "What would your life look like if you finally let this go?"
+                ],
+                tips: [
+                    "Release ritual: Write down what you're letting go of. Tear it up. Throw it away. Breathe.",
+                    "Try this breathing exercise: Inhale peace for 4 counts. Exhale pain for 8 counts. Repeat 5 times.",
+                    "Today's practice: Every time that painful memory surfaces, say 'I release you. You have no power here.'"
+                ]
+            },
+            // WEEK 3: FINDING STRENGTH
+            3: {
+                quotes: [
+                    "You survived 100% of your worst days. That's not luck - that's strength.",
+                    "The same God who brought you through then is with you now.",
+                    "Resilience isn't about never falling. It's about rising every single time.",
+                    "Your scars are not shameful. They're proof you survived.",
+                    "She remembered who she was, and the game changed.",
+                    "You are stronger than the story you've been telling yourself.",
+                    "The oak fought the wind and was broken. The willow bent and survived.",
+                    "Your breakdown was actually a breakthrough in disguise."
+                ],
+                scriptures: [
+                    "I can do all things through Christ who strengthens me. - Philippians 4:13",
+                    "The joy of the LORD is your strength. - Nehemiah 8:10",
+                    "But those who hope in the LORD will renew their strength. - Isaiah 40:31",
+                    "God is our refuge and strength, an ever-present help in trouble. - Psalm 46:1"
+                ],
+                questions: [
+                    "What impossible thing have you already survived?",
+                    "Where do you see evidence of God's strength in your story?",
+                    "What's one thing that makes you feel powerful?",
+                    "How has your struggle made you stronger?"
+                ],
+                tips: [
+                    "Strength practice: Stand in a power pose for 2 minutes. Research shows it changes your brain chemistry.",
+                    "Write this on your mirror: 'I am not what happened to me. I am what I choose to become.'",
+                    "Today's exercise: List 3 hard things you've overcome. You're already a survivor."
+                ]
+            },
+            // WEEK 4: EMBRACING TRANSFORMATION
+            4: {
+                quotes: [
+                    "The caterpillar doesn't know it's becoming a butterfly. Trust your process.",
+                    "Transformation isn't about becoming someone new. It's about becoming who you were always meant to be.",
+                    "You're not broken beyond repair. You're a masterpiece in progress.",
+                    "The potter reshapes. The gold fills the cracks. Beauty rises from ashes.",
+                    "Growth is painful. Change is painful. But nothing is as painful as staying stuck.",
+                    "Every next level of your life will demand a different version of you.",
+                    "Like the potter's clay, we are being remolded into something beautiful.",
+                    "You can't go back and change the beginning, but you can start where you are and change the ending."
+                ],
+                scriptures: [
+                    "Therefore, if anyone is in Christ, the new creation has come. - 2 Corinthians 5:17",
+                    "We are being transformed into his image with ever-increasing glory. - 2 Corinthians 3:18",
+                    "Create in me a pure heart, O God, and renew a steadfast spirit within me. - Psalm 51:10",
+                    "The pot was marred, so the potter formed it into another pot. - Jeremiah 18:4"
+                ],
+                questions: [
+                    "Who are you becoming through this healing journey?",
+                    "What old version of yourself are you ready to release?",
+                    "If you could redesign your life, what would you change first?",
+                    "What's one small change that could make a big difference?"
+                ],
+                tips: [
+                    "Transformation practice: Do one thing differently today. Take a new route. Try a new food. Break the pattern.",
+                    "Affirmation: 'I am being reshaped by the Master Potter. Every change is for my good.'",
+                    "Today's exercise: Write a letter to your future healed self. What does she want you to know?"
+                ]
+            },
+            // WEEK 5: LIVING RENEWED
+            5: {
+                quotes: [
+                    "This is what freedom feels like - walking in wholeness, breathing in purpose.",
+                    "You didn't come this far to only come this far.",
+                    "Living renewed isn't about perfection. It's about peace.",
+                    "The woman who walked into this journey is not the woman walking out. And that's beautiful.",
+                    "Freedom isn't the absence of problems. It's the presence of peace despite them.",
+                    "You are no longer defined by what broke you. You are defined by what rebuilt you.",
+                    "From surviving to thriving - this is your new chapter.",
+                    "The best is yet to come. Believe that."
+                ],
+                scriptures: [
+                    "It is for freedom that Christ has set us free. - Galatians 5:1",
+                    "The Spirit of the Lord is on me... to set the oppressed free. - Luke 4:18",
+                    "You will know the truth, and the truth will set you free. - John 8:32",
+                    "See, I am doing a new thing! Now it springs up; do you not perceive it? - Isaiah 43:19"
+                ],
+                questions: [
+                    "What does freedom look like for you now?",
+                    "How has this journey changed the way you see yourself?",
+                    "What's one thing you can do now that you couldn't do 40 days ago?",
+                    "What are you most grateful for in your healing?"
+                ],
+                tips: [
+                    "Freedom practice: Do something today that the old you was afraid to do.",
+                    "Celebrate yourself: Write down 5 ways you've grown. You've earned this.",
+                    "Today's exercise: Look in the mirror and say 'I am healed. I am whole. I am free.'"
+                ]
+            },
+            // WEEK 6: SHARING YOUR STORY
+            6: {
+                quotes: [
+                    "Your story matters. Someone out there is waiting to hear it.",
+                    "Be the light you needed when you were in darkness.",
+                    "The wounded healer - your pain was never wasted. Use it to help others.",
+                    "Your testimony could be the lifeline someone else needs today.",
+                    "Don't let your struggle become your silence. Speak life.",
+                    "Every woman who shares her story gives another woman permission to share hers.",
+                    "You went through it so you could grow through it and help others get through it.",
+                    "The world needs your story. Tell it with courage."
+                ],
+                scriptures: [
+                    "They triumphed over him by the blood of the Lamb and by the word of their testimony. - Revelation 12:11",
+                    "Comfort others with the comfort you have received from God. - 2 Corinthians 1:4",
+                    "Let the redeemed of the LORD tell their story. - Psalm 107:2",
+                    "Go and tell what the Lord has done for you. - Mark 5:19"
+                ],
+                questions: [
+                    "If you could share one lesson from your healing journey, what would it be?",
+                    "Who in your life needs to hear your story?",
+                    "How can your pain become purpose for someone else?",
+                    "What would you tell a woman just starting her healing journey?"
+                ],
+                tips: [
+                    "Story practice: Write your testimony in 3 sentences. Before. During. After.",
+                    "Reach out: Text or call one woman today and tell her you're proud of her.",
+                    "Pay it forward: Share one insight from your journey that could help another woman heal."
+                ]
+            }
+        };
+
+        // Auto-generate full month of posts
+        async function autoFillCalendar() {
+            const confirmed = await showConfirm(
+                'Auto-Fill Calendar will generate posts for the next 4 weeks based on the 40-Day Journey themes. This uses pre-written content optimized for each platform. Continue?',
+                { title: 'Auto-Generate Social Calendar', confirmText: 'Generate Posts' }
+            );
+            if (!confirmed) return;
+
+            const today = new Date();
+            const postsToCreate = [];
+
+            // Get current week in journey (cycle through 1-6)
+            const weekNumber = ((Math.floor((today.getTime() / 86400000) % 42) / 7) % 6) + 1;
+
+            // Platform posting schedule (posts per week per platform)
+            const schedule = [
+                { day: 0, platform: 'instagram', time: '09:00', type: 'quotes' }, // Sunday - inspirational
+                { day: 1, platform: 'facebook', time: '09:00', type: 'scriptures' }, // Monday - scripture
+                { day: 2, platform: 'instagram', time: '12:00', type: 'questions' }, // Tuesday - engagement
+                { day: 2, platform: 'twitter', time: '08:00', type: 'quotes' }, // Tuesday - quote
+                { day: 3, platform: 'linkedin', time: '10:00', type: 'tips' }, // Wednesday - professional
+                { day: 3, platform: 'tiktok', time: '19:00', type: 'questions' }, // Wednesday - TikTok
+                { day: 4, platform: 'facebook', time: '13:00', type: 'quotes' }, // Thursday - quote
+                { day: 4, platform: 'twitter', time: '12:00', type: 'scriptures' }, // Thursday - scripture
+                { day: 5, platform: 'instagram', time: '17:00', type: 'tips' }, // Friday - tip
+                { day: 5, platform: 'tiktok', time: '21:00', type: 'quotes' }, // Friday - TikTok
+                { day: 6, platform: 'facebook', time: '10:00', type: 'questions' } // Saturday - engagement
+            ];
+
+            // Track used content to avoid duplicates
+            const usedContent = {};
+
+            // Generate 4 weeks of posts
+            for (let week = 0; week < 4; week++) {
+                const themeWeek = ((weekNumber + week - 1) % 6) + 1;
+                const weekContent = AUTO_CONTENT_BANK[themeWeek];
+
+                schedule.forEach(slot => {
+                    const postDate = new Date(today);
+                    postDate.setDate(today.getDate() + (week * 7) + slot.day);
+
+                    // Skip past dates
+                    if (postDate < today) return;
+
+                    const dateStr = postDate.toISOString().split('T')[0];
+                    const contentArray = weekContent[slot.type] || weekContent.quotes;
+
+                    // Get unused content
+                    const contentKey = `${themeWeek}-${slot.type}`;
+                    usedContent[contentKey] = usedContent[contentKey] || 0;
+                    const contentIndex = usedContent[contentKey] % contentArray.length;
+                    usedContent[contentKey]++;
+
+                    let content = contentArray[contentIndex];
+
+                    // Add platform-specific hashtags
+                    const platform = PLATFORM_CONFIG[slot.platform];
+                    if (platform && platform.hashtagSets) {
+                        const hashtags = platform.hashtagSets[week % platform.hashtagSets.length];
+                        content = content + '\n\n' + hashtags;
+                    }
+
+                    // Trim for platform limits
+                    if (content.length > platform.maxChars) {
+                        content = content.substring(0, platform.maxChars - 3) + '...';
+                    }
+
+                    postsToCreate.push({
+                        id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+                        content,
+                        platforms: [slot.platform],
+                        date: dateStr,
+                        time: slot.time,
+                        theme: themeWeek,
+                        hashtags: '',
+                        status: 'scheduled',
+                        createdAt: new Date().toISOString()
+                    });
+                });
+            }
+
+            // Save all posts
+            let successCount = 0;
+            for (const post of postsToCreate) {
+                try {
+                    const supabasePost = {
+                        id: post.id,
+                        content: post.content,
+                        platforms: post.platforms,
+                        post_date: post.date,
+                        post_time: post.time,
+                        theme: post.theme,
+                        hashtags: post.hashtags,
+                        status: post.status
+                    };
+
+                    const { error } = await supabaseClient
+                        .from('social_posts')
+                        .upsert(supabasePost, { onConflict: 'id' });
+
+                    if (!error) {
+                        socialPosts.push(post);
+                        successCount++;
+                    }
+                } catch (err) {
+                    console.error('Error saving post:', err);
+                }
+            }
+
+            renderCalendar();
+            renderSocialPostsTable();
+            updateSocialStats();
+            showToast(`${successCount} posts scheduled for the next 4 weeks!`);
+        }
+
+        // Copy post content to clipboard
+        function copyPostContent(postId) {
+            const post = socialPosts.find(p => p.id === postId);
+            if (post) {
+                navigator.clipboard.writeText(post.content).then(() => {
+                    showToast('Content copied to clipboard!');
+                }).catch(err => {
+                    showToast('Failed to copy', 'error');
+                });
+            }
+        }
+
+        // Quick preview with copy button
+        function showPostPreview(postId) {
+            const post = socialPosts.find(p => p.id === postId);
+            if (!post) return;
+
+            const platform = PLATFORM_CONFIG[post.platforms[0]] || {};
+            const previewHtml = `
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 24px; max-width: 500px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <i class="${platform.icon || 'fas fa-globe'}" style="font-size: 24px; color: ${platform.color || 'var(--gold)'}"></i>
+                        <div>
+                            <div style="font-weight: 600;">${platform.name || 'Post'}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">${post.date} at ${post.time}</div>
+                        </div>
+                    </div>
+                    <div style="background: var(--bg-glass); padding: 16px; border-radius: 8px; white-space: pre-wrap; font-size: 14px; line-height: 1.6; margin-bottom: 16px; max-height: 300px; overflow-y: auto;">
+                        ${post.content}
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="copyPostContent('${post.id}')" style="flex: 1;">
+                            <i class="fas fa-copy"></i> Copy to Clipboard
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal('postPreviewModal')">Close</button>
+                    </div>
+                </div>
+            `;
+
+            // Create or use preview modal
+            let modal = document.getElementById('postPreviewModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'postPreviewModal';
+                modal.className = 'modal-overlay';
+                modal.innerHTML = `<div class="modal-container" style="max-width: 540px;"><div class="modal-content" id="postPreviewContent"></div></div>`;
+                document.body.appendChild(modal);
+                modal.addEventListener('click', e => { if (e.target === modal) closeModal('postPreviewModal'); });
+            }
+            document.getElementById('postPreviewContent').innerHTML = previewHtml;
+            openModal('postPreviewModal');
+        }
+
+        // Platform strategy modal
+        function showPlatformStrategy() {
+            let html = '<div style="max-height: 70vh; overflow-y: auto;">';
+            Object.entries(PLATFORM_CONFIG).forEach(([key, platform]) => {
+                html += `
+                    <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <i class="${platform.icon}" style="font-size: 28px; color: ${platform.color};"></i>
+                            <div>
+                                <h4 style="margin: 0;">${platform.name}</h4>
+                                <div style="font-size: 12px; color: var(--text-muted);">Max ${platform.maxChars} chars</div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 12px;">${platform.strategy}</p>
+                        <div style="display: flex; gap: 16px; font-size: 13px;">
+                            <div>
+                                <span style="color: var(--text-muted);">Best times:</span>
+                                <span style="color: var(--gold);">${platform.optimalTimes.join(', ')}</span>
+                            </div>
+                            <div>
+                                <span style="color: var(--text-muted);">Best days:</span>
+                                <span style="color: var(--gold);">${platform.bestDays.map(d => d.charAt(0).toUpperCase() + d.slice(1, 3)).join(', ')}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            showAlert(html, { title: 'Platform Strategies', size: 'large' });
+        }
+
+        // Legacy support
         const CONTENT_TEMPLATES = {
-            1: [
-                "Sometimes healing begins when we finally admit we're broken. And that's okay. You're not alone in this journey. #TeaWithGod #Healing",
-                "The first step to transformation is acknowledging where we are. Today, let's be honest with ourselves. #40DayJourney #Faith",
-                "Like Kintsugi pottery, our cracks don't diminish us - they're where the gold will shine through. #BeautifullyBroken"
-            ],
-            2: [
-                "Holding onto pain doesn't protect us - it imprisons us. Today, we choose to release. #TeaWithGod #LetGo",
-                "What are you ready to release today? Give yourself permission to let go. #HealingJourney #Faith",
-                "Pain that is not transformed is transmitted. Let's break the cycle together. #40DayJourney"
-            ],
-            3: [
-                "You are stronger than you know. The same God who brought you through before is with you now. #TeaWithGod #Strength",
-                "Resilience isn't about never falling - it's about rising every time we do. #FindingStrength #Faith",
-                "Your story of survival is someone else's story of hope. #40DayJourney #Overcomer"
-            ],
-            4: [
-                "Transformation isn't about becoming someone new - it's about becoming who you were always meant to be. #TeaWithGod",
-                "The caterpillar doesn't know it's becoming a butterfly. Trust the process. #Transformation #Faith",
-                "Beauty rises from ashes. Hope blooms in darkness. You are being renewed. #40DayJourney"
-            ],
-            5: [
-                "This is what freedom feels like - walking in wholeness, breathing in purpose. #TeaWithGod #LivingRenewed",
-                "You've done the work. Now live in the blessing of it. #Freedom #Faith #Healed",
-                "From surviving to thriving - this is your new chapter. #40DayJourney #NewBeginnings"
-            ],
-            6: [
-                "Your story matters. Someone out there needs to hear it. #TeaWithGod #ShareYourStory",
-                "The wounded healer - your pain has purpose. Use it to help others. #TestimonyTime #Faith",
-                "Be the light you needed when you were in darkness. #40DayJourney #BeTheChange"
-            ]
+            1: AUTO_CONTENT_BANK[1].quotes.slice(0, 3),
+            2: AUTO_CONTENT_BANK[2].quotes.slice(0, 3),
+            3: AUTO_CONTENT_BANK[3].quotes.slice(0, 3),
+            4: AUTO_CONTENT_BANK[4].quotes.slice(0, 3),
+            5: AUTO_CONTENT_BANK[5].quotes.slice(0, 3),
+            6: AUTO_CONTENT_BANK[6].quotes.slice(0, 3)
         };
 
         function renderCalendar() {
@@ -3660,7 +5694,7 @@
             };
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('social_posts')
                     .upsert(supabasePost, { onConflict: 'id' });
 
@@ -3763,32 +5797,39 @@
                     <td>${themeName}</td>
                     <td>${statusBadge}</td>
                     <td>
-                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="openPostModal('${post.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="deletePost('${post.id}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="showPostPreview('${post.id}')" title="Preview & Copy"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="copyPostContent('${post.id}')" title="Quick Copy"><i class="fas fa-copy"></i></button>
+                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="openPostModal('${post.id}')" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="deletePost('${post.id}')" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
             }).join('');
         }
 
         async function deletePost(postId) {
-            if (confirm('Are you sure you want to delete this post?')) {
-                try {
-                    const { error } = await supabase
-                        .from('social_posts')
-                        .delete()
-                        .eq('id', postId);
+            const confirmed = await showConfirm('Are you sure you want to delete this post?', {
+                title: 'Delete Post',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
 
-                    if (error) throw error;
+            try {
+                const { error } = await supabaseClient
+                    .from('social_posts')
+                    .delete()
+                    .eq('id', postId);
 
-                    socialPosts = socialPosts.filter(p => p.id !== postId);
-                    renderCalendar();
-                    renderSocialPostsTable();
-                    updateSocialStats();
-                    showToast('Post deleted');
-                } catch (err) {
-                    console.error('Error deleting post:', err);
-                    showToast('Error deleting post: ' + err.message, 'error');
-                }
+                if (error) throw error;
+
+                socialPosts = socialPosts.filter(p => p.id !== postId);
+                renderCalendar();
+                renderSocialPostsTable();
+                updateSocialStats();
+                showToast('Post deleted');
+            } catch (err) {
+                console.error('Error deleting post:', err);
+                showToast('Error deleting post: ' + err.message, 'error');
             }
         }
 
@@ -3834,7 +5875,39 @@
         }
 
         function toggleThemesView() {
-            showToast('Full theme view coming soon!');
+            // Show all 6 journey themes in a modal
+            const themesHtml = JOURNEY_THEMES.map((theme, index) => `
+                <div style="background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                            <h4 style="color: var(--gold); margin-bottom: 4px;">Week ${index + 1}: ${theme.title}</h4>
+                            <p style="color: var(--text-secondary); font-size: 14px; margin-bottom: 8px;">${theme.subtitle}</p>
+                            <p style="color: var(--text-muted); font-size: 12px;">${theme.description}</p>
+                        </div>
+                        <button class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;" onclick="createPostFromTheme(${index + 1})">
+                            <i class="fas fa-plus"></i> Create Post
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Create temporary modal for themes
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay active';
+            modal.id = 'themesModal';
+            modal.onclick = function(e) { if(e.target === this) this.remove(); };
+            modal.innerHTML = `
+                <div class="modal" style="max-width: 700px;">
+                    <div class="modal-header">
+                        <h3>Journey Themes (6 Weeks)</h3>
+                        <button class="modal-close" onclick="document.getElementById('themesModal').remove()">&times;</button>
+                    </div>
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                        ${themesHtml}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
         }
 
         function filterCalendarByPlatform() {
@@ -3847,18 +5920,20 @@
         let contacts = [];
         let crmActivityLog = [];
 
-        // Load contacts from Supabase
+        // Load contacts from Supabase + customers from orders
         async function loadContacts() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('contacts')
                     .select('*')
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
 
-                contacts = (data || []).map(c => ({
+                // Contacts from website forms (Leads)
+                const formContacts = (data || []).map(c => ({
                     id: c.id,
+                    type: 'lead',
                     firstName: c.first_name,
                     lastName: c.last_name,
                     email: c.email,
@@ -3866,8 +5941,31 @@
                     subject: c.subject,
                     message: c.message,
                     status: c.status,
+                    tier: null,
                     createdAt: c.created_at
                 }));
+
+                // Customers from approved orders
+                const customerContacts = orders
+                    .filter(o => o.status === 'verified' || o.status === 'code_sent')
+                    .map(o => ({
+                        id: 'order_' + o.orderRef,
+                        type: 'customer',
+                        firstName: o.customer.name.split(' ')[0] || '',
+                        lastName: o.customer.name.split(' ').slice(1).join(' ') || '',
+                        email: o.customer.email,
+                        phone: o.customer.phone || '',
+                        subject: 'purchase',
+                        message: `Purchased ${o.plan} package`,
+                        status: o.status === 'code_sent' ? 'converted' : 'new',
+                        tier: o.plan,
+                        createdAt: o.createdAt
+                    }));
+
+                // Merge and sort by date (most recent first)
+                contacts = [...formContacts, ...customerContacts].sort((a, b) =>
+                    new Date(b.createdAt) - new Date(a.createdAt)
+                );
 
                 renderContactsTable();
                 updateCrmStats();
@@ -3880,7 +5978,7 @@
         // Load CRM activity log from Supabase
         async function loadCrmActivities() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('crm_activities')
                     .select('*')
                     .order('activity_date', { ascending: false })
@@ -3957,7 +6055,7 @@
             };
 
             try {
-                const { error } = await supabase
+                const { error } = await supabaseClient
                     .from('contacts')
                     .upsert(supabaseContact, { onConflict: 'id' });
 
@@ -3995,7 +6093,7 @@
             filteredContacts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
             if (filteredContacts.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No contacts found</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No contacts found</td></tr>`;
                 return;
             }
 
@@ -4003,25 +6101,38 @@
                 const statusClass = {
                     'new': 'pending',
                     'in_progress': 'proof',
-                    'resolved': 'verified'
+                    'resolved': 'verified',
+                    'converted': 'verified'
                 }[contact.status] || '';
 
                 const statusLabel = {
                     'new': 'New',
                     'in_progress': 'In Progress',
-                    'resolved': 'Resolved'
+                    'resolved': 'Resolved',
+                    'converted': 'Converted'
                 }[contact.status] || contact.status;
+
+                // Type badge (Lead vs Customer)
+                const typeBadge = contact.type === 'customer'
+                    ? '<span style="background: rgba(102, 187, 106, 0.1); color: var(--success); padding: 2px 8px; border-radius: 12px; font-size: 11px;">Customer</span>'
+                    : '<span style="background: rgba(74, 144, 226, 0.1); color: var(--info); padding: 2px 8px; border-radius: 12px; font-size: 11px;">Lead</span>';
+
+                // Tier badge for customers
+                const tierBadge = contact.tier
+                    ? `<span style="background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 4px;">${contact.tier}</span>`
+                    : '';
 
                 return `<tr>
                     <td>${new Date(contact.createdAt).toLocaleDateString('en-ZA')}</td>
+                    <td>${typeBadge}${tierBadge}</td>
                     <td>${contact.firstName} ${contact.lastName || ''}</td>
                     <td>${contact.email}</td>
                     <td>${contact.subject}</td>
                     <td><span class="status ${statusClass}">${statusLabel}</span></td>
                     <td>
                         <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="viewContact('${contact.id}')"><i class="fas fa-eye"></i></button>
-                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="openContactModal('${contact.id}')"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="deleteContact('${contact.id}')"><i class="fas fa-trash"></i></button>
+                        ${contact.type !== 'customer' ? `<button class="btn btn-secondary" style="padding: 4px 8px;" onclick="openContactModal('${contact.id}')"><i class="fas fa-edit"></i></button>` : ''}
+                        <button class="btn btn-secondary" style="padding: 4px 8px;" onclick="${contact.type === 'customer' ? `deleteCustomer('${contact.id}')` : `deleteContact('${contact.id}')`}"><i class="fas fa-trash"></i></button>
                     </td>
                 </tr>`;
             }).join('');
@@ -4071,25 +6182,64 @@
         }
 
         async function deleteContact(contactId) {
-            if (confirm('Are you sure you want to delete this contact?')) {
-                try {
-                    const contact = contacts.find(c => c.id === contactId);
-                    const { error } = await supabase
-                        .from('contacts')
-                        .delete()
-                        .eq('id', contactId);
+            const confirmed = await showConfirm('Are you sure you want to delete this contact?', {
+                title: 'Delete Contact',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
 
-                    if (error) throw error;
+            try {
+                const contact = contacts.find(c => c.id === contactId);
+                const { error } = await supabaseClient
+                    .from('contacts')
+                    .delete()
+                    .eq('id', contactId);
 
-                    contacts = contacts.filter(c => c.id !== contactId);
-                    addCrmActivity('deleted', `Deleted contact: ${contact?.firstName}`);
-                    renderContactsTable();
-                    updateCrmStats();
-                    showToast('Contact deleted');
-                } catch (err) {
-                    console.error('Error deleting contact:', err);
-                    showToast('Error deleting contact: ' + err.message, 'error');
-                }
+                if (error) throw error;
+
+                contacts = contacts.filter(c => c.id !== contactId);
+                addCrmActivity('deleted', `Deleted contact: ${contact?.firstName}`);
+                renderContactsTable();
+                updateCrmStats();
+                showToast('Contact deleted');
+            } catch (err) {
+                console.error('Error deleting contact:', err);
+                showToast('Error deleting contact: ' + err.message, 'error');
+            }
+        }
+
+        async function deleteCustomer(contactId) {
+            // contactId is in format 'order_TWG-XXXXX'
+            const orderRef = contactId.replace('order_', '');
+            const contact = contacts.find(c => c.id === contactId);
+
+            const confirmed = await showConfirm(`Are you sure you want to delete customer "${contact?.firstName} ${contact?.lastName || ''}" and their order? This cannot be undone.`, {
+                title: 'Delete Customer',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
+
+            try {
+                const response = await fetch(`${API_URL}/admin/orders/${orderRef}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Failed to delete customer order');
+
+                // Remove from local arrays
+                contacts = contacts.filter(c => c.id !== contactId);
+                orders = orders.filter(o => (o.orderRef || o.order_ref) !== orderRef);
+
+                addCrmActivity('deleted', `Deleted customer: ${contact?.firstName}`);
+                renderContactsTable();
+                updateCrmStats();
+                updateStats();
+                showToast('Customer deleted', 'success');
+            } catch (err) {
+                console.error('Error deleting customer:', err);
+                showToast('Error deleting customer: ' + err.message, 'error');
             }
         }
 
@@ -4137,7 +6287,7 @@
 
             // Save to Supabase
             try {
-                await supabase.from('crm_activities').insert(activity);
+                await supabaseClient.from('crm_activities').insert(activity);
             } catch (err) {
                 console.error('Error saving CRM activity:', err);
             }
@@ -4208,7 +6358,15 @@
         }
 
         function replyToContact() {
-            showToast('Email reply feature coming soon!');
+            const emailEl = document.querySelector('#contactDetailBody a[href^="mailto:"]');
+            if (emailEl) {
+                const email = emailEl.textContent;
+                const subjectEl = document.querySelector('#contactDetailBody div:nth-child(4) div:last-child');
+                const subject = subjectEl ? `Re: ${subjectEl.textContent}` : 'Re: Your Tea With God inquiry';
+                window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent('Dear ' + document.querySelector('#contactDetailBody div:first-child div:first-child div:last-child').textContent + ',\n\nThank you for reaching out to Tea With God.\n\n')}`;
+            } else {
+                showToast('Could not find contact email');
+            }
         }
 
         // ============================================
@@ -4219,7 +6377,7 @@
         // Load invoices from Supabase
         async function loadInvoices() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('invoices')
                     .select('*, invoice_line_items(*)')
                     .order('created_at', { ascending: false });
@@ -4300,18 +6458,78 @@
             openModal('invoiceModal');
         }
 
+        // Predefined products/services for invoicing
+        const INVOICE_PRODUCTS = [
+            { id: 'custom', name: '-- Custom Item --', price: 0 },
+            { id: 'book', name: 'Tea With God Book (40-Day Journey)', price: 350 },
+            { id: 'code-single', name: 'Access Code (Single)', price: 199 },
+            { id: 'code-5', name: 'Access Code Bundle (5 codes)', price: 899 },
+            { id: 'code-10', name: 'Access Code Bundle (10 codes)', price: 1599 },
+            { id: 'b2b-starter', name: 'B2B Starter Package (50 codes)', price: 7450 },
+            { id: 'b2b-growth', name: 'B2B Growth Package (100 codes)', price: 13900 },
+            { id: 'b2b-pro', name: 'B2B Professional Package (250 codes)', price: 29750 },
+            { id: 'consultation', name: 'Consultation (1 hour)', price: 500 },
+            { id: 'workshop', name: 'Workshop Facilitation', price: 2500 },
+        ];
+
         function addLineItem(item = null) {
             const container = document.getElementById('invoiceLineItems');
             const div = document.createElement('div');
             div.className = 'invoice-line-item';
             div.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 8px; margin-bottom: 8px;';
+
+            const productOptions = INVOICE_PRODUCTS.map(p =>
+                `<option value="${p.id}" data-price="${p.price}">${p.name}</option>`
+            ).join('');
+
+            const isCustom = item && !INVOICE_PRODUCTS.find(p => p.name === item.description);
+
             div.innerHTML = `
-                <input type="text" placeholder="Description" class="line-description" value="${item?.description || ''}" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);" oninput="calculateInvoiceTotal()">
-                <input type="number" placeholder="Qty" class="line-qty" value="${item?.qty || 1}" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);" oninput="calculateInvoiceTotal()">
-                <input type="number" placeholder="Price" class="line-price" value="${item?.price || ''}" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);" oninput="calculateInvoiceTotal()">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <select class="line-product" onchange="handleProductSelect(this)" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);">
+                        ${productOptions}
+                    </select>
+                    <input type="text" placeholder="Custom description" class="line-description" value="${item?.description || ''}" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary); display: ${isCustom || !item ? 'none' : 'none'};" oninput="calculateInvoiceTotal()">
+                </div>
+                <input type="number" placeholder="Qty" class="line-qty" value="${item?.qty || 1}" min="1" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);" oninput="calculateInvoiceTotal()">
+                <input type="number" placeholder="Price" class="line-price" value="${item?.price || ''}" step="0.01" style="padding: 10px; border: 1px solid var(--border-subtle); border-radius: 6px; background: var(--bg-input); color: var(--text-primary);" oninput="calculateInvoiceTotal()">
                 <button type="button" onclick="removeLineItem(this)" style="background: var(--error); color: white; border: none; border-radius: 6px; cursor: pointer;"><i class="fas fa-trash"></i></button>
             `;
             container.appendChild(div);
+
+            // If editing existing item, select the matching product
+            if (item) {
+                const select = div.querySelector('.line-product');
+                const descInput = div.querySelector('.line-description');
+                const matchingProduct = INVOICE_PRODUCTS.find(p => p.name === item.description);
+                if (matchingProduct) {
+                    select.value = matchingProduct.id;
+                } else {
+                    select.value = 'custom';
+                    descInput.style.display = 'block';
+                    descInput.value = item.description;
+                }
+            }
+        }
+
+        function handleProductSelect(select) {
+            const lineItem = select.closest('.invoice-line-item');
+            const descInput = lineItem.querySelector('.line-description');
+            const priceInput = lineItem.querySelector('.line-price');
+            const selectedOption = select.options[select.selectedIndex];
+            const product = INVOICE_PRODUCTS.find(p => p.id === select.value);
+
+            if (select.value === 'custom') {
+                descInput.style.display = 'block';
+                descInput.value = '';
+                descInput.focus();
+                priceInput.value = '';
+            } else {
+                descInput.style.display = 'none';
+                descInput.value = product.name;
+                priceInput.value = product.price;
+            }
+            calculateInvoiceTotal();
         }
 
         function removeLineItem(button) {
@@ -4333,7 +6551,17 @@
         function getLineItems() {
             const items = [];
             document.querySelectorAll('.invoice-line-item').forEach(item => {
-                const description = item.querySelector('.line-description').value.trim();
+                const select = item.querySelector('.line-product');
+                const descInput = item.querySelector('.line-description');
+                let description = '';
+
+                if (select.value === 'custom') {
+                    description = descInput.value.trim();
+                } else {
+                    const product = INVOICE_PRODUCTS.find(p => p.id === select.value);
+                    description = product ? product.name : descInput.value.trim();
+                }
+
                 const qty = parseFloat(item.querySelector('.line-qty').value) || 0;
                 const price = parseFloat(item.querySelector('.line-price').value) || 0;
                 if (description && qty && price) {
@@ -4390,14 +6618,14 @@
                     status
                 };
 
-                const { error: invoiceError } = await supabase
+                const { error: invoiceError } = await supabaseClient
                     .from('invoices')
                     .upsert(supabaseInvoice, { onConflict: 'id' });
 
                 if (invoiceError) throw invoiceError;
 
                 // Delete existing line items and insert new ones
-                await supabase
+                await supabaseClient
                     .from('invoice_line_items')
                     .delete()
                     .eq('invoice_id', invoiceId);
@@ -4411,7 +6639,7 @@
                         sort_order: idx
                     }));
 
-                    const { error: lineError } = await supabase
+                    const { error: lineError } = await supabaseClient
                         .from('invoice_line_items')
                         .insert(lineItemsToInsert);
 
@@ -4474,9 +6702,12 @@
             document.getElementById('invoicePreviewBody').innerHTML = `
                 <div class="invoice-preview">
                     <div class="invoice-header">
-                        <div>
-                            <div class="invoice-logo">Tea With God</div>
-                            <div style="font-size: 12px; color: #666; margin-top: 4px;">Healing & Transformation</div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="../images/teacup.png" alt="Tea With God" style="width: 48px; height: 48px;">
+                            <div>
+                                <div class="invoice-logo">Tea With God</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">40-Day Healing Journey</div>
+                            </div>
                         </div>
                         <div class="invoice-details">
                             <div class="invoice-number">${invoiceNumber}</div>
@@ -4490,6 +6721,7 @@
                             <div style="font-size: 11px; text-transform: uppercase; color: #999; margin-bottom: 4px;">From</div>
                             <div style="font-weight: 500;">Tea With God</div>
                             <div style="font-size: 13px; color: #666;">hello@teawithgod.com</div>
+                            <div style="font-size: 13px; color: #666;">teawithgod.com</div>
                         </div>
                         <div>
                             <div style="font-size: 11px; text-transform: uppercase; color: #999; margin-bottom: 4px;">Bill To</div>
@@ -4524,7 +6756,14 @@
                         <div style="font-size: 20px; font-weight: 700; color: #D4AF37;">Total: R${total.toFixed(2)}</div>
                     </div>
 
-                    ${notes ? `<div style="background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 13px; color: #666;">${notes}</div>` : ''}
+                    ${notes ? `<div style="background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 13px; color: #666; margin-bottom: 24px;">${notes}</div>` : ''}
+
+                    <div style="text-align: center; padding-top: 24px; border-top: 1px solid #eee;">
+                        <div style="font-style: italic; color: #8B7355; font-size: 13px; margin-bottom: 8px;">
+                            "The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him."
+                        </div>
+                        <div style="font-size: 11px; color: #999;">— Jeremiah 18:4</div>
+                    </div>
                 </div>
             `;
 
@@ -4595,9 +6834,12 @@
             document.getElementById('invoicePreviewBody').innerHTML = `
                 <div class="invoice-preview">
                     <div class="invoice-header">
-                        <div>
-                            <div class="invoice-logo">Tea With God</div>
-                            <div style="font-size: 12px; color: #666; margin-top: 4px;">Healing & Transformation</div>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <img src="../images/teacup.png" alt="Tea With God" style="width: 48px; height: 48px;">
+                            <div>
+                                <div class="invoice-logo">Tea With God</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 4px;">40-Day Healing Journey</div>
+                            </div>
                         </div>
                         <div class="invoice-details">
                             <div class="invoice-number">${invoice.number}</div>
@@ -4611,6 +6853,7 @@
                             <div style="font-size: 11px; text-transform: uppercase; color: #999; margin-bottom: 4px;">From</div>
                             <div style="font-weight: 500;">Tea With God</div>
                             <div style="font-size: 13px; color: #666;">hello@teawithgod.com</div>
+                            <div style="font-size: 13px; color: #666;">teawithgod.com</div>
                         </div>
                         <div>
                             <div style="font-size: 11px; text-transform: uppercase; color: #999; margin-bottom: 4px;">Bill To</div>
@@ -4618,6 +6861,18 @@
                             <div style="font-size: 13px; color: #666;">${invoice.clientEmail}</div>
                             ${invoice.clientAddress ? `<div style="font-size: 13px; color: #666; white-space: pre-line;">${invoice.clientAddress}</div>` : ''}
                         </div>
+                    </div>
+
+                    <div style="margin-bottom: 24px;">
+                        <span style="display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; text-transform: uppercase; ${
+                            invoice.status === 'paid'
+                                ? 'background: rgba(143,188,143,0.2); color: #2E7D32;'
+                                : invoice.dueDate && new Date(invoice.dueDate) < new Date()
+                                    ? 'background: rgba(229,115,115,0.2); color: #C62828;'
+                                    : 'background: rgba(212,175,55,0.2); color: #8B7355;'
+                        }">
+                            ${invoice.status === 'paid' ? 'PAID' : invoice.dueDate && new Date(invoice.dueDate) < new Date() ? 'OVERDUE' : 'PENDING'}
+                        </span>
                     </div>
 
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
@@ -4645,7 +6900,14 @@
                         <div style="font-size: 20px; font-weight: 700; color: #D4AF37;">Total: R${invoice.total.toFixed(2)}</div>
                     </div>
 
-                    ${invoice.notes ? `<div style="background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 13px; color: #666;">${invoice.notes}</div>` : ''}
+                    ${invoice.notes ? `<div style="background: #f9f9f9; padding: 16px; border-radius: 8px; font-size: 13px; color: #666; margin-bottom: 24px;">${invoice.notes}</div>` : ''}
+
+                    <div style="text-align: center; padding-top: 24px; border-top: 1px solid #eee;">
+                        <div style="font-style: italic; color: #8B7355; font-size: 13px; margin-bottom: 8px;">
+                            "The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him."
+                        </div>
+                        <div style="font-size: 11px; color: #999;">— Jeremiah 18:4</div>
+                    </div>
                 </div>
             `;
 
@@ -4656,7 +6918,7 @@
             const invoice = invoices.find(i => i.id === invoiceId);
             if (invoice) {
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('invoices')
                         .update({ status: 'paid' })
                         .eq('id', invoiceId);
@@ -4675,23 +6937,28 @@
         }
 
         async function deleteInvoice(invoiceId) {
-            if (confirm('Are you sure you want to delete this invoice?')) {
-                try {
-                    const { error } = await supabase
-                        .from('invoices')
-                        .delete()
-                        .eq('id', invoiceId);
+            const confirmed = await showConfirm('Are you sure you want to delete this invoice?', {
+                title: 'Delete Invoice',
+                confirmText: 'Delete',
+                danger: true
+            });
+            if (!confirmed) return;
 
-                    if (error) throw error;
+            try {
+                const { error } = await supabaseClient
+                    .from('invoices')
+                    .delete()
+                    .eq('id', invoiceId);
 
-                    invoices = invoices.filter(i => i.id !== invoiceId);
-                    renderInvoicesTable();
-                    updateInvoiceStats();
-                    showToast('Invoice deleted');
-                } catch (err) {
-                    console.error('Error deleting invoice:', err);
-                    showToast('Error deleting invoice: ' + err.message, 'error');
-                }
+                if (error) throw error;
+
+                invoices = invoices.filter(i => i.id !== invoiceId);
+                renderInvoicesTable();
+                updateInvoiceStats();
+                showToast('Invoice deleted');
+            } catch (err) {
+                console.error('Error deleting invoice:', err);
+                showToast('Error deleting invoice: ' + err.message, 'error');
             }
         }
 
@@ -4745,12 +7012,70 @@
         }
 
         function downloadInvoicePDF() {
-            showToast('PDF download feature coming soon! For now, use Print > Save as PDF');
-            window.print();
+            // Open print dialog for the invoice preview
+            const previewContent = document.getElementById('invoicePreviewBody').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Invoice - Tea With God</title>
+                    <style>
+                        body { font-family: 'Inter', Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+                        .invoice-preview { background: white; }
+                        .invoice-header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+                        .invoice-logo { font-family: 'Playfair Display', Georgia, serif; font-size: 24px; color: #D4AF37; }
+                        .invoice-number { font-size: 20px; font-weight: 600; color: #D4AF37; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { padding: 12px 8px; text-align: left; }
+                        @media print { body { padding: 0; } }
+                    </style>
+                </head>
+                <body>${previewContent}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 250);
+            showToast('Print dialog opened. Choose "Save as PDF" to download.');
         }
 
         function sendInvoiceEmail() {
-            showToast('Email feature coming soon!');
+            const preview = document.getElementById('invoicePreviewBody');
+            const clientEmail = preview.querySelector('div[style*="Bill To"] + div + div')?.textContent || '';
+            const invoiceNumber = preview.querySelector('.invoice-number')?.textContent || 'Invoice';
+            const total = preview.querySelector('div[style*="font-size: 24px"]')?.textContent || '';
+
+            if (!clientEmail || !clientEmail.includes('@')) {
+                showToast('Could not find client email address', 'error');
+                return;
+            }
+
+            const subject = `Invoice ${invoiceNumber} from Tea With God`;
+            const body = `Dear Client,
+
+Please find attached your invoice ${invoiceNumber} from Tea With God.
+
+Total Amount: ${total}
+
+Payment Details:
+Bank: FNB
+Account Name: HL BUTLER
+Account Number: 63084271237
+Branch Code: 250655
+Reference: ${invoiceNumber}
+
+Thank you for your support of Tea With God.
+
+Warm regards,
+Tea With God Team
+twg@cleva-ai.co.za`;
+
+            window.location.href = `mailto:${clientEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            showToast('Email draft opened in your email client');
         }
 
         // ============================================
@@ -4771,6 +7096,484 @@
             updateCrmStats();
             renderInvoicesTable();
             updateInvoiceStats();
+            renderCustomers();
+            loadProducts();
+        };
+
+        // ============================================
+        // PRODUCT MANAGEMENT FUNCTIONS
+        // ============================================
+
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/admin/products`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load products');
+
+                const data = await response.json();
+
+                // Update stats
+                document.getElementById('productAudioCount').textContent = data.audio.length;
+
+                if (data.pdf) {
+                    document.getElementById('productPdfStatus').textContent = 'Uploaded';
+                    document.getElementById('productPdfSize').textContent = data.pdf.sizeFormatted;
+                } else {
+                    document.getElementById('productPdfStatus').textContent = 'Missing';
+                    document.getElementById('productPdfSize').textContent = 'Not uploaded';
+                }
+
+                // Populate audio dropdown with available days
+                const audioSelect = document.getElementById('audioNameSelect');
+                audioSelect.innerHTML = '<option value="">Select day...</option><option value="intro">Intro</option>';
+                for (let i = 1; i <= 40; i++) {
+                    const dayName = `day-${i.toString().padStart(2, '0')}`;
+                    const exists = data.audio.some(a => a.name === `${dayName}.mp3`);
+                    audioSelect.innerHTML += `<option value="${dayName}">${dayName}${exists ? ' (replace)' : ''}</option>`;
+                }
+
+                // Render audio files table
+                const tbody = document.getElementById('audioFilesTableBody');
+                if (data.audio.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray-400);">No audio files uploaded yet</td></tr>';
+                } else {
+                    tbody.innerHTML = data.audio.map(file => `
+                        <tr>
+                            <td><i class="fas fa-music" style="color: var(--info); margin-right: 8px;"></i>${file.name}</td>
+                            <td>${file.sizeFormatted}</td>
+                            <td>${new Date(file.modified).toLocaleDateString()} ${new Date(file.modified).toLocaleTimeString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary" onclick="replaceAudioFile('${file.name.replace('.mp3', '')}')">
+                                    <i class="fas fa-sync-alt"></i> Replace
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+
+                // Render PDF info
+                const pdfInfo = document.getElementById('pdfFileInfo');
+                if (data.pdf) {
+                    pdfInfo.innerHTML = `
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px;">
+                            <div style="text-align: center;">
+                                <i class="fas fa-file-pdf" style="font-size: 48px; color: var(--error); margin-bottom: 12px;"></i>
+                                <div style="font-weight: 600; color: var(--text-primary);">${data.pdf.name}</div>
+                                <div style="color: var(--gray-400); font-size: 14px; margin-top: 4px;">${data.pdf.sizeFormatted}</div>
+                                <div style="color: var(--gray-500); font-size: 12px; margin-top: 4px;">
+                                    Last modified: ${new Date(data.pdf.modified).toLocaleDateString()} ${new Date(data.pdf.modified).toLocaleTimeString()}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    pdfInfo.innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <i class="fas fa-file-pdf" style="font-size: 48px; color: var(--gray-600); margin-bottom: 12px;"></i>
+                            <div style="color: var(--gray-400);">No PDF eBook uploaded yet</div>
+                            <div style="color: var(--gray-500); font-size: 14px; margin-top: 8px;">Click "Upload PDF" to add the eBook</div>
+                        </div>
+                    `;
+                }
+
+            } catch (error) {
+                console.error('Load products error:', error);
+                showToast('Failed to load products', 'error');
+            }
+        }
+
+        function replaceAudioFile(audioName) {
+            document.getElementById('audioNameSelect').value = audioName;
+            document.getElementById('audioFileInput').click();
+        }
+
+        async function uploadAudioFile() {
+            const fileInput = document.getElementById('audioFileInput');
+            const audioName = document.getElementById('audioNameSelect').value;
+
+            if (!audioName) {
+                showToast('Please select a day first', 'error');
+                fileInput.value = '';
+                return;
+            }
+
+            if (!fileInput.files.length) return;
+
+            const file = fileInput.files[0];
+
+            if (!file.type.includes('audio/mpeg') && !file.name.endsWith('.mp3')) {
+                showToast('Please select an MP3 file', 'error');
+                fileInput.value = '';
+                return;
+            }
+
+            // Show progress
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('uploadProgressText').textContent = `Uploading ${audioName}.mp3...`;
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('audioName', audioName);
+
+                const response = await fetch(`${API_URL}/admin/upload/audio`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) throw new Error(result.error || 'Upload failed');
+
+                showToast(`Uploaded ${result.filename} (${result.sizeFormatted})`, 'success');
+                loadProducts();
+
+            } catch (error) {
+                console.error('Audio upload error:', error);
+                showToast(error.message || 'Failed to upload audio', 'error');
+            } finally {
+                document.getElementById('uploadProgress').style.display = 'none';
+                fileInput.value = '';
+                document.getElementById('audioNameSelect').value = '';
+            }
+        }
+
+        async function uploadPdfFile() {
+            const fileInput = document.getElementById('pdfFileInput');
+
+            if (!fileInput.files.length) return;
+
+            const file = fileInput.files[0];
+
+            if (file.type !== 'application/pdf' && !file.name.endsWith('.pdf')) {
+                showToast('Please select a PDF file', 'error');
+                fileInput.value = '';
+                return;
+            }
+
+            // Show progress
+            document.getElementById('uploadProgress').style.display = 'block';
+            document.getElementById('uploadProgressText').textContent = 'Uploading PDF eBook...';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch(`${API_URL}/admin/upload/pdf`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` },
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) throw new Error(result.error || 'Upload failed');
+
+                showToast(`Uploaded ${result.filename} (${result.sizeFormatted})`, 'success');
+                loadProducts();
+
+            } catch (error) {
+                console.error('PDF upload error:', error);
+                showToast(error.message || 'Failed to upload PDF', 'error');
+            } finally {
+                document.getElementById('uploadProgress').style.display = 'none';
+                fileInput.value = '';
+            }
+        }
+
+        // ============================================
+        // PROMO CAMPAIGNS
+        // ============================================
+
+        let promoCampaigns = [];
+
+        async function loadPromoCampaigns() {
+            try {
+                const response = await fetch(`${API_URL}/admin/promo-campaigns`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load campaigns');
+
+                const data = await response.json();
+                promoCampaigns = data.campaigns || [];
+                renderPromoCampaigns();
+                updatePromoStats();
+            } catch (error) {
+                console.error('Error loading promo campaigns:', error);
+            }
+        }
+
+        function updatePromoStats() {
+            const totalCampaigns = promoCampaigns.length;
+            const totalSent = promoCampaigns.reduce((sum, c) => sum + (c.total_sent || 0), 0);
+            const totalRedeemed = promoCampaigns.reduce((sum, c) => sum + (c.total_redeemed || 0), 0);
+            const redemptionRate = totalSent > 0 ? Math.round((totalRedeemed / totalSent) * 100) : 0;
+
+            document.getElementById('promoTotalCampaigns').textContent = totalCampaigns;
+            document.getElementById('promoTotalSent').textContent = totalSent;
+            document.getElementById('promoTotalRedeemed').textContent = totalRedeemed;
+            document.getElementById('promoRedemptionRate').textContent = redemptionRate + '%';
+        }
+
+        function renderPromoCampaigns() {
+            const tbody = document.getElementById('promoCampaignsTableBody');
+
+            if (promoCampaigns.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No campaigns created yet. Click "New Campaign" to get started!</td></tr>';
+                return;
+            }
+
+            const tierLabels = {
+                book: '<span style="background: rgba(74, 144, 226, 0.1); color: var(--info); padding: 4px 12px; border-radius: 20px; font-size: 12px;">Book</span>',
+                journey: '<span style="background: rgba(212, 175, 55, 0.1); color: var(--gold); padding: 4px 12px; border-radius: 20px; font-size: 12px;">Journey</span>',
+                premium: '<span style="background: rgba(171, 71, 188, 0.1); color: #AB47BC; padding: 4px 12px; border-radius: 20px; font-size: 12px;">Premium</span>'
+            };
+
+            tbody.innerHTML = promoCampaigns.map(campaign => {
+                const date = new Date(campaign.created_at).toLocaleDateString('en-ZA', {
+                    year: 'numeric', month: 'short', day: 'numeric'
+                });
+                const sent = campaign.total_sent || campaign.sent_count || 0;
+                const redeemed = campaign.total_redeemed || campaign.redeemed_count || 0;
+                const rate = sent > 0 ? Math.round((redeemed / sent) * 100) : 0;
+
+                return `
+                    <tr>
+                        <td>${date}</td>
+                        <td style="font-weight: 500;">${campaign.name}</td>
+                        <td>${tierLabels[campaign.tier] || campaign.tier}</td>
+                        <td>${sent}</td>
+                        <td>${redeemed}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="flex: 1; height: 6px; background: var(--gray-200); border-radius: 3px; max-width: 60px;">
+                                    <div style="height: 100%; width: ${rate}%; background: var(--success); border-radius: 3px;"></div>
+                                </div>
+                                <span>${rate}%</span>
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" onclick="viewCampaignDetails(${campaign.campaign_id})" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openPromoModal() {
+            document.getElementById('promoCampaignName').value = '';
+            document.getElementById('promoEmails').value = '';
+            document.getElementById('promoCustomMessage').value = '';
+            document.getElementById('promoEmailCount').textContent = '0 valid emails detected';
+            document.querySelector('input[name="promoTier"][value="journey"]').checked = true;
+            document.getElementById('promoModal').classList.add('active');
+        }
+
+        function closePromoModal() {
+            document.getElementById('promoModal').classList.remove('active');
+        }
+
+        function closePromoDetailsModal() {
+            document.getElementById('promoDetailsModal').classList.remove('active');
+        }
+
+        // Parse and validate emails from bulk input
+        function parsePromoEmails(input) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emails = input
+                .split(/[\s,;\n]+/)
+                .map(e => e.trim().toLowerCase())
+                .filter(e => e && emailRegex.test(e));
+            // Remove duplicates
+            return [...new Set(emails)];
+        }
+
+        // Update email count as user types
+        document.getElementById('promoEmails')?.addEventListener('input', function() {
+            const emails = parsePromoEmails(this.value);
+            const countText = emails.length === 1 ? '1 valid email detected' : `${emails.length} valid emails detected`;
+            document.getElementById('promoEmailCount').textContent = countText;
+
+            // Update send button text
+            const sendBtn = document.getElementById('sendPromoBtn');
+            if (emails.length > 0) {
+                sendBtn.innerHTML = `<i class="fas fa-paper-plane"></i> Send ${emails.length} Invite${emails.length > 1 ? 's' : ''}`;
+            } else {
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Invites';
+            }
+        });
+
+        async function sendPromoCampaign() {
+            const name = document.getElementById('promoCampaignName').value.trim();
+            const tier = document.querySelector('input[name="promoTier"]:checked')?.value;
+            const emailsRaw = document.getElementById('promoEmails').value;
+            const customMessage = document.getElementById('promoCustomMessage').value.trim();
+
+            const emails = parsePromoEmails(emailsRaw);
+
+            // Validation
+            if (!name) {
+                showToast('Please enter a campaign name', 'error');
+                return;
+            }
+
+            if (!tier) {
+                showToast('Please select a package tier', 'error');
+                return;
+            }
+
+            if (emails.length === 0) {
+                showToast('Please enter at least one valid email address', 'error');
+                return;
+            }
+
+            // Confirm before sending
+            if (!confirm(`Send ${emails.length} promotional invite${emails.length > 1 ? 's' : ''} for the ${tier.charAt(0).toUpperCase() + tier.slice(1)} package?`)) {
+                return;
+            }
+
+            const sendBtn = document.getElementById('sendPromoBtn');
+            const originalText = sendBtn.innerHTML;
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                const response = await fetch(`${API_URL}/admin/promo-campaigns`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify({
+                        name,
+                        tier,
+                        emails,
+                        customMessage: customMessage || undefined
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to create campaign');
+                }
+
+                showToast(`Campaign created! ${result.sent} invite${result.sent > 1 ? 's' : ''} sent successfully.`, 'success');
+                closePromoModal();
+                loadPromoCampaigns();
+
+            } catch (error) {
+                console.error('Error creating promo campaign:', error);
+                showToast(error.message || 'Failed to send invites', 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = originalText;
+            }
+        }
+
+        async function viewCampaignDetails(campaignId) {
+            const modal = document.getElementById('promoDetailsModal');
+            const content = document.getElementById('promoDetailsContent');
+            const title = document.getElementById('promoDetailsTitle');
+
+            content.innerHTML = '<p style="text-align: center; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+            modal.classList.add('active');
+
+            try {
+                const response = await fetch(`${API_URL}/admin/promo-campaigns/${campaignId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('adminToken')}` }
+                });
+
+                if (!response.ok) throw new Error('Failed to load campaign details');
+
+                const data = await response.json();
+                const campaign = data.campaign;
+                title.textContent = campaign.name;
+
+                const tierValues = { book: 'R99', journey: 'R149', premium: 'R249' };
+                const date = new Date(campaign.created_at).toLocaleDateString('en-ZA', {
+                    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+
+                const recipientRows = (campaign.recipients || []).map(r => {
+                    const sentDate = r.email_sent_at ? new Date(r.email_sent_at).toLocaleDateString('en-ZA') : '-';
+                    const redeemedDate = r.redeemed_at ? new Date(r.redeemed_at).toLocaleDateString('en-ZA') : '-';
+                    const statusBadge = r.redeemed_at
+                        ? '<span style="background: rgba(102, 187, 106, 0.1); color: var(--success); padding: 2px 8px; border-radius: 12px; font-size: 11px;">Redeemed</span>'
+                        : r.email_status === 'sent'
+                        ? '<span style="background: rgba(74, 144, 226, 0.1); color: var(--info); padding: 2px 8px; border-radius: 12px; font-size: 11px;">Sent</span>'
+                        : '<span style="background: rgba(229, 115, 115, 0.1); color: var(--error); padding: 2px 8px; border-radius: 12px; font-size: 11px;">Pending</span>';
+
+                    return `
+                        <tr>
+                            <td style="font-size: 13px;">${r.email}</td>
+                            <td style="font-family: monospace; font-size: 12px; color: var(--text-secondary);">${r.access_code}</td>
+                            <td>${statusBadge}</td>
+                            <td style="font-size: 12px; color: var(--text-secondary);">${redeemedDate}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                content.innerHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;">
+                        <div style="background: var(--gray-100); padding: 16px; border-radius: 12px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Package Tier</div>
+                            <div style="font-weight: 600; text-transform: capitalize;">${campaign.tier} (${tierValues[campaign.tier]})</div>
+                        </div>
+                        <div style="background: var(--gray-100); padding: 16px; border-radius: 12px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Created</div>
+                            <div style="font-weight: 600;">${date}</div>
+                        </div>
+                        <div style="background: var(--gray-100); padding: 16px; border-radius: 12px;">
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Redemption Rate</div>
+                            <div style="font-weight: 600; color: var(--success);">${campaign.total_sent > 0 ? Math.round((campaign.total_redeemed / campaign.total_sent) * 100) : 0}%</div>
+                        </div>
+                    </div>
+
+                    ${campaign.custom_message ? `
+                        <div style="background: rgba(212, 175, 55, 0.05); border-left: 3px solid var(--gold); padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 24px;">
+                            <div style="font-size: 12px; color: var(--gold); margin-bottom: 4px;">Custom Message</div>
+                            <div style="color: var(--text-primary);">${campaign.custom_message}</div>
+                        </div>
+                    ` : ''}
+
+                    <h4 style="margin-bottom: 12px;">Recipients (${campaign.recipients?.length || 0})</h4>
+                    <div style="max-height: 300px; overflow-y: auto; border: 1px solid var(--gray-200); border-radius: 8px;">
+                        <table style="margin: 0;">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Access Code</th>
+                                    <th>Status</th>
+                                    <th>Redeemed</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${recipientRows || '<tr><td colspan="4" style="text-align: center; color: var(--text-muted);">No recipients</td></tr>'}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+            } catch (error) {
+                console.error('Error loading campaign details:', error);
+                content.innerHTML = `<p style="text-align: center; color: var(--error);">Failed to load campaign details: ${error.message}</p>`;
+            }
+        }
+
+        // Load promo campaigns when section is shown
+        const originalShowSection = showSection;
+        showSection = function(sectionName) {
+            originalShowSection(sectionName);
+            if (sectionName === 'promo') {
+                loadPromoCampaigns();
+            }
         };
     </script>
 </body>

@@ -205,7 +205,17 @@ function authMiddleware(req, res, next) {
 }
 
 // Admin Middleware - Requires valid token + admin role
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'admin@teawithgod.app,twg@cleva-ai.co.za').split(',').map(e => e.trim().toLowerCase());
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS || 'lani@teawithgod.com,twg@cleva-ai.co.za').split(',').map(e => e.trim().toLowerCase());
+const SUPER_ADMIN_EMAILS = (process.env.SUPER_ADMIN_EMAILS || 'superadmin@cleva-ai.co.za,floris@cleva-ai.co.za').split(',').map(e => e.trim().toLowerCase());
+
+// Admin OTP Store (in-memory with expiry)
+const adminOtpStore = new Map();
+const ADMIN_OTP_EXPIRY_MS = 10 * 60 * 1000; // 10 minutes
+const FIXED_ADMIN_OTP = process.env.ADMIN_OTP || '132872'; // Fixed OTP for admin login
+
+function generateAdminOTP() {
+  return FIXED_ADMIN_OTP;
+}
 
 function adminMiddleware(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -214,10 +224,29 @@ function adminMiddleware(req, res, next) {
   }
   try {
     const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
-    if (!ADMIN_EMAILS.includes(decoded.email.toLowerCase())) {
+    if (!ADMIN_EMAILS.includes(decoded.email.toLowerCase()) && !SUPER_ADMIN_EMAILS.includes(decoded.email.toLowerCase())) {
       return res.status(403).json({ error: 'Admin access denied' });
     }
     req.user = decoded;
+    req.user.isSuperAdmin = SUPER_ADMIN_EMAILS.includes(decoded.email.toLowerCase());
+    next();
+  } catch (e) {
+    return res.status(401).json({ error: 'Invalid admin token' });
+  }
+}
+
+function superAdminMiddleware(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Super admin authentication required' });
+  }
+  try {
+    const decoded = jwt.verify(authHeader.split(' ')[1], JWT_SECRET);
+    if (!SUPER_ADMIN_EMAILS.includes(decoded.email.toLowerCase())) {
+      return res.status(403).json({ error: 'Super admin access denied' });
+    }
+    req.user = decoded;
+    req.user.isSuperAdmin = true;
     next();
   } catch (e) {
     return res.status(401).json({ error: 'Invalid admin token' });
@@ -277,7 +306,7 @@ app.post('/api/v1/auth/login', authLimiter, async function(req, res) {
     }
     db.run("UPDATE users SET last_active_at = datetime('now') WHERE user_id = ?", [user.user_id]);
     const token = jwt.sign({ userId: user.user_id, email: email }, JWT_SECRET, { expiresIn: '30d' });
-    res.json({ token: token, user: { userId: user.user_id, email: user.email, accessLevel: user.access_level, currentDayIndex: user.current_day_index } });
+    res.json({ token: token, user: { userId: user.user_id, email: user.email, accessLevel: user.access_level, tier: user.tier, currentDayIndex: user.current_day_index } });
   } catch (e) {
     console.error('[Login Error]', e);
     res.status(500).json({ error: 'Login failed' });
@@ -388,7 +417,7 @@ app.post('/api/v1/auth/reset-password', async function(req, res) {
 app.get('/api/v1/auth/me', authMiddleware, function(req, res) {
   const user = db.getUserById(req.user.userId);
   if (!user) return res.status(404).json({ error: 'User not found' });
-  res.json({ user: { userId: user.user_id, email: user.email, displayName: user.display_name, accessLevel: user.access_level, currentDayIndex: user.current_day_index, totalDaysCompleted: user.total_days_completed } });
+  res.json({ user: { userId: user.user_id, email: user.email, displayName: user.display_name, accessLevel: user.access_level, tier: user.tier, currentDayIndex: user.current_day_index, totalDaysCompleted: user.total_days_completed } });
 });
 
 app.post('/api/v1/auth/redeem-code', authMiddleware, function(req, res) {
@@ -400,8 +429,20 @@ app.post('/api/v1/auth/redeem-code', authMiddleware, function(req, res) {
   const accessCode = db.getAccessCode(upperCode);
   if (!accessCode) return res.status(404).json({ error: 'Code not found or used' });
 
+  // Check if this is a promo code and get the tier
+  let tier = 'journey'; // Default tier for non-promo codes
+  try {
+    const promoTier = db.getPromoTierByCode(upperCode);
+    if (promoTier) {
+      tier = promoTier;
+      console.log('[Promo] Code', upperCode, 'redeemed with tier:', tier);
+    }
+  } catch (e) {
+    console.log('[Promo] Could not get tier:', e.message);
+  }
+
   db.run("UPDATE access_codes SET is_redeemed = 1, redeemed_by = ?, redeemed_at = datetime('now') WHERE code = ?", [req.user.userId, upperCode]);
-  db.run("UPDATE users SET access_level = 'PILGRIM', access_code = ?, journey_started_at = COALESCE(journey_started_at, datetime('now')) WHERE user_id = ?", [upperCode, req.user.userId]);
+  db.run("UPDATE users SET access_level = 'PILGRIM', tier = ?, access_code = ?, journey_started_at = COALESCE(journey_started_at, datetime('now')) WHERE user_id = ?", [tier, upperCode, req.user.userId]);
   for (let d = 4; d <= 40; d++) {
     db.run("INSERT OR IGNORE INTO user_daily_completions (user_id, day_number, status) VALUES (?, ?, 'LOCKED')", [req.user.userId, d]);
   }
@@ -419,14 +460,14 @@ app.post('/api/v1/auth/redeem-code', authMiddleware, function(req, res) {
     console.log('[Promo] Note: Could not track promo redemption:', e.message);
   }
 
-  res.json({ success: true, accessLevel: 'PILGRIM', message: 'Welcome, Pilgrim.' });
+  res.json({ success: true, accessLevel: 'PILGRIM', tier: tier, message: 'Welcome, Pilgrim.' });
 });
 
 // Journey Routes
 app.get('/api/v1/journey/progress', authMiddleware, function(req, res) {
   const user = db.getUserById(req.user.userId);
   const completions = db.getUserProgress(req.user.userId);
-  res.json({ currentDayIndex: user.current_day_index, totalDaysCompleted: user.total_days_completed, accessLevel: user.access_level, completions: completions });
+  res.json({ currentDayIndex: user.current_day_index, totalDaysCompleted: user.total_days_completed, accessLevel: user.access_level, tier: user.tier, completions: completions });
 });
 
 app.get('/api/v1/journey/days/:dayNumber', authMiddleware, function(req, res) {
@@ -506,6 +547,147 @@ app.post('/api/v1/crisis/log', function(req, res) {
   const { sessionHash, accessType, detectedPhrases, resourceAccessed } = req.body;
   db.run('INSERT INTO crisis_access_logs (session_hash, access_type, detected_phrases, resource_accessed) VALUES (?, ?, ?, ?)', [sessionHash, accessType, JSON.stringify(detectedPhrases || []), resourceAccessed]);
   res.json({ logged: true });
+});
+
+// ============================================
+// ADMIN AUTH ROUTES (PIN only - no password)
+// ============================================
+
+// Admin Login: Email + PIN only
+app.post('/api/v1/admin/login-pin', authLimiter, async function(req, res) {
+  try {
+    const { email, pin } = req.body;
+    const normalizedEmail = email?.toLowerCase().trim();
+
+    // Check if email is in admin list
+    const isAdmin = ADMIN_EMAILS.includes(normalizedEmail) || SUPER_ADMIN_EMAILS.includes(normalizedEmail);
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'Not authorized for admin access' });
+    }
+
+    // Verify PIN matches
+    if (pin !== FIXED_ADMIN_OTP) {
+      return res.status(401).json({ error: 'Invalid PIN' });
+    }
+
+    // Get or create user for this admin email
+    let user = db.getUserByEmail(normalizedEmail);
+    if (!user) {
+      // Auto-create admin user if they don't exist
+      const userId = require('uuid').v4();
+      const tempHash = await bcrypt.hash(FIXED_ADMIN_OTP, 12);
+      db.createUser({
+        user_id: userId,
+        email: normalizedEmail,
+        display_name: normalizedEmail.split('@')[0],
+        password_hash: tempHash
+      });
+      user = db.getUserByEmail(normalizedEmail);
+      console.log('[Admin Login] Auto-created admin user:', normalizedEmail);
+    }
+
+    const isSuperAdmin = SUPER_ADMIN_EMAILS.includes(normalizedEmail);
+    const token = jwt.sign({
+      userId: user.user_id,
+      email: normalizedEmail,
+      isAdmin: true,
+      isSuperAdmin: isSuperAdmin
+    }, JWT_SECRET, { expiresIn: '8h' });
+
+    console.log('[Admin Login] Successful:', normalizedEmail, isSuperAdmin ? '(Super Admin)' : '(Admin)');
+
+    res.json({
+      success: true,
+      token: token,
+      user: {
+        email: normalizedEmail,
+        isAdmin: true,
+        isSuperAdmin: isSuperAdmin
+      }
+    });
+  } catch (e) {
+    console.error('[Admin Login] Error:', e);
+    res.status(500).json({ error: 'Login failed' });
+  }
+});
+
+// Get list of admin users (Super Admin only)
+app.get('/api/v1/admin/users', superAdminMiddleware, function(req, res) {
+  try {
+    const adminUsers = [];
+
+    // Get all admin emails and check if they exist in DB
+    const allAdminEmails = [...new Set([...ADMIN_EMAILS, ...SUPER_ADMIN_EMAILS])];
+
+    for (const email of allAdminEmails) {
+      const user = db.getUserByEmail(email);
+      adminUsers.push({
+        email: email,
+        exists: !!user,
+        userId: user?.user_id || null,
+        displayName: user?.display_name || null,
+        lastActive: user?.last_active_at || null,
+        isSuperAdmin: SUPER_ADMIN_EMAILS.includes(email)
+      });
+    }
+
+    res.json({
+      adminUsers: adminUsers,
+      adminEmails: ADMIN_EMAILS,
+      superAdminEmails: SUPER_ADMIN_EMAILS
+    });
+  } catch (e) {
+    console.error('[Admin Users] Error:', e);
+    res.status(500).json({ error: 'Failed to fetch admin users' });
+  }
+});
+
+// Reset admin password (Super Admin only)
+app.post('/api/v1/admin/users/reset-password', superAdminMiddleware, async function(req, res) {
+  try {
+    const { email, newPassword } = req.body;
+    const normalizedEmail = email?.toLowerCase().trim();
+
+    if (!normalizedEmail || !newPassword) {
+      return res.status(400).json({ error: 'Email and new password required' });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    }
+
+    // Check if target is an admin
+    const isTargetAdmin = ADMIN_EMAILS.includes(normalizedEmail) || SUPER_ADMIN_EMAILS.includes(normalizedEmail);
+    if (!isTargetAdmin) {
+      return res.status(400).json({ error: 'Target email is not an admin' });
+    }
+
+    // Check if user exists
+    let user = db.getUserByEmail(normalizedEmail);
+
+    if (!user) {
+      // Create the admin user if they don't exist
+      const userId = require('uuid').v4();
+      const passwordHash = await bcrypt.hash(newPassword, 12);
+      db.createUser({
+        user_id: userId,
+        email: normalizedEmail,
+        display_name: normalizedEmail.split('@')[0],
+        password_hash: passwordHash
+      });
+      console.log('[Admin Reset] Created new admin user:', normalizedEmail);
+      res.json({ success: true, message: 'Admin user created with new password' });
+    } else {
+      // Update existing user's password
+      const passwordHash = await bcrypt.hash(newPassword, 12);
+      db.run('UPDATE users SET password_hash = ?, updated_at = datetime("now") WHERE user_id = ?', [passwordHash, user.user_id]);
+      console.log('[Admin Reset] Password reset for:', normalizedEmail, 'by:', req.user.email);
+      res.json({ success: true, message: 'Password reset successfully' });
+    }
+  } catch (e) {
+    console.error('[Admin Reset] Error:', e);
+    res.status(500).json({ error: 'Failed to reset password' });
+  }
 });
 
 // Admin (Protected)
@@ -2248,10 +2430,24 @@ app.post('/api/v1/access/validate', async function(req, res) {
       });
     }
 
-    // 2. Check SQLite access_codes table (B2B/org codes)
+    // 2. Check SQLite access_codes table (B2B/org codes and promo codes)
     const sqliteCode = db.getAccessCode(normalizedCode);
     if (sqliteCode) {
       console.log('[Access Validate] SQLite code matched:', normalizedCode.substring(0, 8) + '***');
+
+      // Check if this is a promo code and get the tier from the campaign
+      const promoTier = db.getPromoTierByCode(normalizedCode);
+      if (promoTier) {
+        console.log('[Access Validate] Promo code tier:', promoTier);
+        return res.json({
+          valid: true,
+          accessLevel: 'FULL',
+          plan: promoTier,
+          codeType: 'promo'
+        });
+      }
+
+      // Regular organization code (defaults to journey)
       return res.json({
         valid: true,
         accessLevel: 'FULL',
@@ -2546,7 +2742,7 @@ app.get('/api/v1/admin/email-templates', function(req, res) {
       name: 'Welcome Partner',
       subject: 'Welcome to Tea With God Partnership',
       body: `<p>Dear {{orgName}},</p>
-<p>Thank you for partnering with Tea With God to bring healing and hope to your community.</p>
+<p>Thank you for partnering with Tea With God to bring faith and hope to your community.</p>
 <p>Your organization is now set up in our system. Here's what happens next:</p>
 <ul>
 <li>We'll generate access codes for your members</li>
@@ -2561,7 +2757,7 @@ app.get('/api/v1/admin/email-templates', function(req, res) {
       subject: 'Thank you from Tea With God',
       body: `<p>Dear {{name}},</p>
 <p>Thank you for {{reason}}.</p>
-<p>Your support means the world to us and helps bring healing to women everywhere.</p>
+<p>Your support means the world to us and helps bring hope to women everywhere.</p>
 <p>"The potter formed it into another pot, shaping it as seemed best to him." — Jeremiah 18:4</p>
 <p>With gratitude,<br>The Tea With God Team</p>`
     }

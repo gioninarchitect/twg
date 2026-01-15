@@ -62,8 +62,83 @@ const dbHelpers = {
       try { stmt.run(code, batchId); codes.push(code); } catch(e) { i--; }
     }
     return codes;
+  },
+
+  // Promo Campaign Functions
+  createPromoCampaign: function(name, tier, customMessage, createdBy) {
+    const result = db.prepare('INSERT INTO promo_campaigns (name, tier, custom_message, created_by) VALUES (?, ?, ?, ?)').run(name, tier, customMessage || null, createdBy || null);
+    return result.lastInsertRowid;
+  },
+
+  getPromoCampaigns: function() {
+    return db.prepare(`
+      SELECT pc.*,
+        (SELECT COUNT(*) FROM promo_recipients WHERE campaign_id = pc.campaign_id AND email_status = 'sent') as sent_count,
+        (SELECT COUNT(*) FROM promo_recipients WHERE campaign_id = pc.campaign_id AND redeemed_at IS NOT NULL) as redeemed_count
+      FROM promo_campaigns pc
+      ORDER BY pc.created_at DESC
+    `).all();
+  },
+
+  getPromoCampaignById: function(campaignId) {
+    const campaign = db.prepare('SELECT * FROM promo_campaigns WHERE campaign_id = ?').get(campaignId);
+    if (campaign) {
+      campaign.recipients = db.prepare('SELECT * FROM promo_recipients WHERE campaign_id = ? ORDER BY created_at DESC').all(campaignId);
+    }
+    return campaign;
+  },
+
+  addPromoRecipient: function(campaignId, email, accessCode) {
+    return db.prepare('INSERT INTO promo_recipients (campaign_id, email, access_code) VALUES (?, ?, ?)').run(campaignId, email.toLowerCase().trim(), accessCode);
+  },
+
+  updatePromoRecipientStatus: function(recipientId, status) {
+    const now = new Date().toISOString();
+    return db.prepare('UPDATE promo_recipients SET email_status = ?, email_sent_at = ? WHERE recipient_id = ?').run(status, now, recipientId);
+  },
+
+  updatePromoCampaignStats: function(campaignId) {
+    const stats = db.prepare(`
+      SELECT
+        COUNT(*) as total,
+        SUM(CASE WHEN email_status = 'sent' THEN 1 ELSE 0 END) as sent,
+        SUM(CASE WHEN redeemed_at IS NOT NULL THEN 1 ELSE 0 END) as redeemed
+      FROM promo_recipients WHERE campaign_id = ?
+    `).get(campaignId);
+    return db.prepare('UPDATE promo_campaigns SET total_sent = ?, total_redeemed = ? WHERE campaign_id = ?').run(stats.sent || 0, stats.redeemed || 0, campaignId);
+  },
+
+  markPromoCodeRedeemed: function(accessCode, userId) {
+    const now = new Date().toISOString();
+    return db.prepare('UPDATE promo_recipients SET redeemed_at = ?, redeemed_by = ? WHERE access_code = ?').run(now, userId, accessCode);
+  },
+
+  getPromoRecipientByCode: function(accessCode) {
+    return db.prepare('SELECT * FROM promo_recipients WHERE access_code = ?').get(accessCode);
+  },
+
+  getPromoTierByCode: function(accessCode) {
+    const result = db.prepare(`
+      SELECT pc.tier
+      FROM promo_recipients pr
+      JOIN promo_campaigns pc ON pr.campaign_id = pc.campaign_id
+      WHERE pr.access_code = ?
+    `).get(accessCode);
+    return result ? result.tier : null;
   }
 };
 
 initializeSchema();
+
+// Add tier column to existing databases (migration)
+try {
+  db.exec("ALTER TABLE users ADD COLUMN tier TEXT DEFAULT NULL CHECK (tier IS NULL OR tier IN ('book', 'journey', 'premium'))");
+  console.log('[DB] Added tier column to users table');
+} catch (e) {
+  // Column already exists, ignore
+  if (!e.message.includes('duplicate column')) {
+    console.log('[DB] Note:', e.message);
+  }
+}
+
 module.exports = Object.assign({ db: db }, dbHelpers);

@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS users (
     display_name TEXT,
     password_hash TEXT,
     access_level TEXT DEFAULT 'GUEST' CHECK (access_level IN ('GUEST', 'PILGRIM')),
+    tier TEXT DEFAULT NULL CHECK (tier IS NULL OR tier IN ('book', 'journey', 'premium')),
     access_code TEXT,
     code_redeemed_at TEXT,
     journey_started_at TEXT,
@@ -125,10 +126,21 @@ CREATE TABLE IF NOT EXISTS organizations (
     updated_at TEXT DEFAULT (datetime('now'))
 );
 
+-- User Tithe Preferences (links to Supabase beneficiary_orgs)
+CREATE TABLE IF NOT EXISTS user_tithe_preferences (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL REFERENCES users(user_id) ON DELETE CASCADE,
+    beneficiary_org_id TEXT NOT NULL,
+    beneficiary_org_name TEXT,
+    selected_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(user_id)
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_completions_user_day ON user_daily_completions(user_id, day_number);
 CREATE INDEX IF NOT EXISTS idx_organizations_email ON organizations(contact_email);
+CREATE INDEX IF NOT EXISTS idx_tithe_preferences_user ON user_tithe_preferences(user_id);
 
 -- Seed Phases
 INSERT OR IGNORE INTO content_phases (phase_id, phase_name, phase_order, day_start, day_end, audio_mood, theme_description) VALUES
@@ -136,3 +148,33 @@ INSERT OR IGNORE INTO content_phases (phase_id, phase_name, phase_order, day_sta
 (2, 'Waiting', 2, 15, 21, 'Transitional', 'Transition, silence, learning to trust.'),
 (3, 'Rising', 3, 22, 33, 'Mixed', 'Emergence, identity reformation.'),
 (4, 'Becoming', 4, 34, 40, 'Major', 'Integration, hope, strength.');
+
+-- Promo Campaigns
+CREATE TABLE IF NOT EXISTS promo_campaigns (
+    campaign_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    tier TEXT NOT NULL CHECK (tier IN ('book', 'journey', 'premium')),
+    custom_message TEXT,
+    total_sent INTEGER DEFAULT 0,
+    total_redeemed INTEGER DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now')),
+    created_by TEXT
+);
+
+-- Promo Recipients
+CREATE TABLE IF NOT EXISTS promo_recipients (
+    recipient_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    campaign_id INTEGER NOT NULL REFERENCES promo_campaigns(campaign_id) ON DELETE CASCADE,
+    email TEXT NOT NULL,
+    access_code TEXT NOT NULL,
+    email_sent_at TEXT,
+    email_status TEXT DEFAULT 'pending' CHECK (email_status IN ('pending', 'sent', 'failed')),
+    redeemed_at TEXT,
+    redeemed_by TEXT REFERENCES users(user_id),
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+-- Indexes for Promo Tables
+CREATE INDEX IF NOT EXISTS idx_promo_recipients_campaign ON promo_recipients(campaign_id);
+CREATE INDEX IF NOT EXISTS idx_promo_recipients_email ON promo_recipients(email);
+CREATE INDEX IF NOT EXISTS idx_promo_recipients_code ON promo_recipients(access_code);

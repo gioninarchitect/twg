@@ -1,53 +1,80 @@
 # Tea With God - Next Session Handoff
 
-**Session Date:** January 15, 2026 (Session 11)
+**Session Date:** January 15, 2026 (Session 12)
 **Branch:** `feature/session-5-jan5-2026`
 
 ---
 
 ## What We Did This Session
 
-### 1. Fixed Promo Tier Bug (R249 going to R149)
-**Problem:** Premium (R249) promo codes were giving Journey (R149) access.
-
-**Root cause:**
-- Users table had no `tier` column
-- Validate endpoint hardcoded `plan: 'journey'` for all SQLite codes
-- Redeem endpoint set everyone to PILGRIM without tier distinction
+### 1. Removed False Testimonials (Liability Fix)
+**Problem:** Website had fabricated testimonials with fake names and organizations (Pastor Sarah M., Grace Community Church, etc.)
 
 **Fix:**
-- Added `tier` column to users table (schema.sql + migration in db.js)
-- Added `getPromoTierByCode()` helper to look up campaign tier
-- Updated `/api/v1/access/validate` to return correct tier for promo codes
-- Updated `/api/v1/auth/redeem-code` to set user's tier from promo campaign
-- All user endpoints now return tier in responses
+- **B2B Portal** - Replaced fake testimonials with feature highlights (Privacy-First Design, Offline Capable, Evidence-Based Content)
+- **Main Website** - Changed "Voices from the Journey" to "Built for Real Life" with feature cards instead of fake names
+- **Upgrade Page** - Changed to "Why People Upgrade" with feature descriptions
 
-### 2. Admin PIN Login System (No Password)
-**Login flow:**
-1. Enter email
-2. Enter PIN: **132872** (permanent, never changes)
-3. Access dashboard
+### 2. B2B Wholesale + Tithe Pricing Structure
+**Research-backed pricing** (30-45% is industry standard for ministry resources):
 
-**New endpoint:**
-- `POST /api/v1/admin/login-pin` - Email + PIN login (auto-creates user if needed)
-- `GET /api/v1/admin/users` - List admins (super admin only)
-- `POST /api/v1/admin/users/reset-password` - Reset password (super admin only)
+| Package | Codes | Wholesale Discount | Tithe Bonus | Total Savings |
+|---------|-------|--------------------|-------------|---------------|
+| Seedling | 50+5 free | 20% | +10% | **30%** |
+| Harvest | 100+10 free | 30% | +10% | **40%** |
+| Flourish | 200+20 free | 40% | +10% | **50%** |
+| Enterprise | 500+ | Custom | Custom | Up to 60% |
 
-### 3. Super Admin System
-| Role | Emails | Access |
-|------|--------|--------|
-| Super Admin | superadmin@cleva-ai.co.za, floris@cleva-ai.co.za | Full access + reset passwords |
-| Admin | lani@teawithgod.com, twg@cleva-ai.co.za | Standard admin access |
+**Pricing per code (Journey tier R149 retail):**
+- Seedling: R104/code (pay R5,200 for 55 codes)
+- Harvest: R89/code (pay R8,900 for 110 codes)
+- Flourish: R75/code (pay R15,000 for 220 codes)
 
-### 4. Updated SMTP Settings
-- SMTP_HOST: mail.cleva-ai.co.za
-- SMTP_PORT: 465
-- SMTP_USER: superadmin@cleva-ai.co.za
-- EMAIL_FROM: lani@teawithgod.com
+### 3. B2B Tier Selector
+Organizations can now choose which tier to buy codes for:
+- **Book (R99)** - PDF/eBook only
+- **Journey (R149)** - Full app access
+- **Premium (R249)** - Everything including brain games, music, voice recordings
+
+### 4. Price Breakdown Display
+Each B2B package now shows transparent pricing:
+```
+Retail price:           R149 (crossed out)
+Wholesale (30% off):    R104
+Tithe bonus (10%):      -R15
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Your price:             R89/code
+```
 
 ---
 
-## Admin Credentials (PIN Only - No Password)
+## Two Separate Code Distribution Systems
+
+### 1. B2B Portal (`/b2b`)
+- For organizations buying bulk codes
+- Wholesale pricing with tithe bonus
+- Packages: Seedling (50), Harvest (100), Flourish (200), Enterprise (500+)
+- Organizations contact via form, admin generates codes
+
+### 2. Promo Campaigns (Admin Dashboard)
+- For individual promotional distribution
+- Admin creates campaign, adds recipients, sends email with codes
+- Tiers: Book, Journey, Premium
+- Tracked redemption stats
+
+---
+
+## Consumer Pricing (Unchanged)
+
+| Tier | Price | Access |
+|------|-------|--------|
+| Book | R99 | eBook only |
+| Journey | R149 | eBook + Full app (40 days) |
+| Premium | R249 | Everything (music, brain games, voice notes) |
+
+---
+
+## Admin Credentials
 
 | Email | Role | PIN |
 |-------|------|-----|
@@ -69,6 +96,13 @@
 ---
 
 ## Deployment Commands
+
+### Website Only (changed files)
+```bash
+COPYFILE_DISABLE=1 tar --no-mac-metadata --exclude='._*' --exclude='.DS_Store' -czf /tmp/twg-updates.tar.gz -C /Users/florisolivier/TWGAPP/tea-with-God website/index.html website/b2b/index.html website/upgrade.html
+
+scp /tmp/twg-updates.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /var/www/twg && tar -xzf /tmp/twg-updates.tar.gz --strip-components=1 && chown -R www-data:www-data . && rm /tmp/twg-updates.tar.gz && echo 'Updates deployed'"
+```
 
 ### Full Website (includes PWA)
 ```bash
@@ -95,16 +129,6 @@ scp /tmp/twg-app.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /
 
 ---
 
-## Pricing Tiers (CORRECT)
-
-| Tier | Price | Access |
-|------|-------|--------|
-| Book | R99 | eBook only |
-| Journey | R149 | eBook + Full app (40 days) |
-| Premium | R249 | Everything (music, brain games, voice notes) |
-
----
-
 ## Test URLs
 
 | What | URL |
@@ -118,8 +142,9 @@ scp /tmp/twg-app.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /
 ## Pending/Future Tasks
 
 1. **SMTP credentials not working** - mail.cleva-ai.co.za rejecting superadmin@cleva-ai.co.za login (535 error). Need correct credentials.
-2. **Promo emails going to spam** - May need SPF/DKIM configuration
-3. **Test promo tier fix** - Create Premium campaign and verify brain games unlock
+2. **Test promo tier fix** - Create Premium campaign and verify brain games unlock
+3. **B2B admin integration** - Admin dashboard needs to generate B2B wholesale codes with correct pricing
+4. **Upgrade commission tracking** - PARKED for now. If needed later: track which org distributed a code, credit them commission on user upgrades.
 
 ---
 
@@ -127,10 +152,18 @@ scp /tmp/twg-app.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /
 
 - **The app does NOT heal anyone** - It's a devotional companion, educational content only
 - **Admin login is PIN only:** 132872 (no password, permanent)
-- **Three tiers:** Book (R99), Journey (R149), Premium (R249)
+- **Three consumer tiers:** Book (R99), Journey (R149), Premium (R249)
+- **B2B wholesale:** 30%/40%/50% total discount (20/30/40 wholesale + 10% tithe)
 - **NEVER use "healing" in user-facing text** - Liability issue
-- **Super admin can reset passwords** for other admins
-- **Admin users auto-created** on first PIN login
+- **No false testimonials** - All removed, replaced with feature descriptions
+
+---
+
+## Key Files Modified This Session
+
+- `website/index.html` - Testimonials section updated
+- `website/b2b/index.html` - Full wholesale + tithe pricing system
+- `website/upgrade.html` - Testimonials replaced with features
 
 ---
 

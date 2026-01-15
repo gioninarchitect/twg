@@ -57,7 +57,7 @@
         .nav-logo {
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
-            color: var(--gold);
+            color: var(--text-primary);
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -277,12 +277,12 @@
             color: var(--text-secondary);
         }
 
-        .region-btn:hover {
+        .region-btn:hover, .tier-btn:hover {
             border-color: var(--gold);
             color: var(--gold);
         }
 
-        .region-btn.active {
+        .region-btn.active, .tier-btn.active {
             border-color: var(--gold);
             background: var(--gold);
             color: #0D0D0D;
@@ -290,6 +290,20 @@
 
         .region-btn .flag {
             font-size: 1.25rem;
+        }
+
+        .tier-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--border-subtle);
+            background: var(--bg-card);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
         }
 
         .pricing-note {
@@ -746,14 +760,70 @@
             text-decoration: none;
         }
 
+        /* 4-column org grid */
+        .org-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Onboarding Section */
+        .onboarding-section {
+            padding: 60px 48px;
+            background: linear-gradient(135deg, rgba(135,168,120,0.05) 0%, transparent 100%);
+        }
+
+        .onboarding-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .onboarding-subtitle {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+
+        .onboarding-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 24px;
+        }
+
+        .onboarding-item {
+            text-align: center;
+        }
+
+        .onboarding-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(135,168,120,0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 1.5rem;
+            color: var(--sage);
+        }
+
+        .onboarding-item h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .onboarding-item p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
-            .org-grid, .pricing-grid, .testimonial-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .org-grid, .org-grid-4, .pricing-grid, .testimonial-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
 
-            .steps-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .steps-grid, .onboarding-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
             }
 
             .step-card::after {
@@ -767,27 +837,173 @@
 
         @media (max-width: 768px) {
             nav {
-                padding: 16px 24px;
+                padding: 16px 20px;
             }
 
             .nav-links {
                 display: none;
             }
 
+            .nav-logo {
+                font-size: 1.25rem;
+            }
+
+            .nav-cta {
+                padding: 8px 16px;
+                font-size: 0.875rem;
+            }
+
             .hero {
-                padding: 120px 24px 60px;
+                padding: 100px 20px 50px;
             }
 
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 1.875rem;
+                line-height: 1.3;
             }
 
-            .org-grid, .pricing-grid, .testimonial-grid, .steps-grid {
-                grid-template-columns: 1fr;
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .org-grid, .org-grid-4, .pricing-grid, .testimonial-grid, .steps-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .onboarding-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 20px !important;
             }
 
             .hero-cta {
                 flex-direction: column;
+                gap: 12px;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Section padding for mobile */
+            .org-types,
+            .pricing-section,
+            .how-it-works,
+            .testimonials,
+            .faq-section,
+            .onboarding-section {
+                padding: 50px 20px !important;
+            }
+
+            .section-header h2,
+            .section-title {
+                font-size: 1.75rem;
+            }
+
+            /* Region selector - stack on mobile */
+            .region-selector {
+                gap: 8px;
+            }
+
+            .region-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            /* Pricing cards */
+            .pricing-card {
+                padding: 32px 24px;
+            }
+
+            .pricing-price {
+                font-size: 2.5rem;
+            }
+
+            /* FAQ */
+            .faq-question {
+                padding: 16px;
+            }
+
+            .faq-answer {
+                padding: 0 16px 16px;
+            }
+
+            /* Modal - full screen on mobile */
+            .modal {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+                margin: 0;
+            }
+
+            .modal-body {
+                max-height: calc(100vh - 140px);
+                overflow-y: auto;
+            }
+
+            /* CTA Section */
+            .cta-section {
+                padding: 50px 20px !important;
+            }
+
+            .cta-section h2 {
+                font-size: 1.75rem;
+            }
+
+            .cta-section p {
+                font-size: 1rem;
+            }
+
+            /* Footer */
+            footer {
+                padding: 24px 20px !important;
+            }
+
+            /* Onboarding icons smaller on mobile */
+            .onboarding-icon {
+                width: 56px;
+                height: 56px;
+                font-size: 1.25rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-header h2,
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .region-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+
+            .region-btn .flag {
+                font-size: 1rem;
+            }
+
+            .pricing-price {
+                font-size: 2rem;
+            }
+
+            .onboarding-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .org-card {
+                padding: 24px !important;
+            }
+
+            .step-number {
+                width: 48px;
+                height: 48px;
+                font-size: 1.25rem;
             }
         }
     </style>
@@ -807,8 +1023,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <span class="hero-badge"><i class="fas fa-hands-holding-heart"></i> For Organizations</span>
-        <h1>Bring Healing to Your Community</h1>
-        <p>Equip your organization with a proven 40-day healing journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.</p>
+        <h1>Bring Hope to Your Community</h1>
+        <p>Equip your organization with a proven 40-day devotional journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.</p>
         <div class="hero-cta">
             <a href="#pricing" class="btn btn-primary"><i class="fas fa-tag"></i> View Pricing</a>
             <a href="#" class="btn btn-secondary" onclick="openContactModal()"><i class="fas fa-calendar"></i> Book a Demo</a>
@@ -821,11 +1037,11 @@
             <h2>Perfect for Every Organization</h2>
             <p>Tea With God serves organizations of all sizes across the globe</p>
         </div>
-        <div class="org-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="org-grid org-grid-4">
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-church"></i></div>
                 <h3>Churches</h3>
-                <p>Women's ministries and small groups seeking structured healing resources</p>
+                <p>Women's ministries and small groups seeking structured devotional resources</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-heart-pulse"></i></div>
@@ -843,16 +1059,16 @@
                 <p>Non-profits serving vulnerable women and communities</p>
             </div>
         </div>
-        <div class="org-grid" style="grid-template-columns: repeat(4, 1fr); margin-top: 24px;">
+        <div class="org-grid org-grid-4" style="margin-top: 24px;">
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-hands-praying"></i></div>
                 <h3>Retreat Centers</h3>
-                <p>Healing ministries and spiritual formation retreats</p>
+                <p>Spiritual formation retreats and women's ministries</p>
             </div>
             <div class="org-card">
-                <div class="org-icon"><i class="fas fa-hospital"></i></div>
-                <h3>Healthcare</h3>
-                <p>Hospitals and clinics with spiritual care programs</p>
+                <div class="org-icon"><i class="fas fa-brain"></i></div>
+                <h3>Psychiatric & Mental Health</h3>
+                <p>Psychiatric hospitals, clinics, and mental health facilities</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-graduation-cap"></i></div>
@@ -885,15 +1101,25 @@
             <button class="region-btn" data-region="uk">
                 <span class="flag">gb</span> United Kingdom
             </button>
-            <button class="region-btn" data-region="ng">
-                <span class="flag">ng</span> Nigeria
-            </button>
-            <button class="region-btn" data-region="ke">
-                <span class="flag">ke</span> Kenya
-            </button>
             <button class="region-btn" data-region="au">
                 <span class="flag">au</span> Australia
             </button>
+        </div>
+
+        <!-- Tier Selector -->
+        <div style="text-align: center; margin: 24px 0;">
+            <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.9rem;">Select access tier for your members:</p>
+            <div class="region-selector" style="margin-bottom: 0;">
+                <button class="tier-btn" data-tier="book">
+                    <i class="fas fa-book"></i> Book <span style="opacity: 0.7;">(R99)</span>
+                </button>
+                <button class="tier-btn active" data-tier="journey">
+                    <i class="fas fa-route"></i> Journey <span style="opacity: 0.7;">(R149)</span>
+                </button>
+                <button class="tier-btn" data-tier="premium">
+                    <i class="fas fa-crown"></i> Premium <span style="opacity: 0.7;">(R249)</span>
+                </button>
+            </div>
         </div>
 
         <div class="pricing-note" id="pricingNote">
@@ -906,38 +1132,28 @@
         </div>
     </section>
 
-    <!-- Seamless Onboarding Promise -->
-    <section style="padding: 60px 48px; background: linear-gradient(135deg, rgba(135,168,120,0.05) 0%, transparent 100%);">
-        <div style="max-width: 1100px; margin: 0 auto; text-align: center;">
-            <span class="section-label">Zero Friction</span>
-            <h2 class="section-title" style="margin-bottom: 16px;">Seamless Self-Service Onboarding</h2>
-            <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto 48px;">No sales calls. No waiting. Get your entire organization set up in under 10 minutes.</p>
+    <!-- Simple Process -->
+    <section class="onboarding-section">
+        <div class="onboarding-container">
+            <span class="section-label">Simple Process</span>
+            <h2 class="section-title">Quick Setup for Your Organization</h2>
+            <p class="onboarding-subtitle">Contact us to get bulk access codes for your team or community.</p>
 
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px;">
-                <div style="text-align: center;">
-                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-credit-card"></i></div>
-                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Instant Payment</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">EFT, card, or invoice</p>
+            <div class="onboarding-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="onboarding-item">
+                    <div class="onboarding-icon"><i class="fas fa-comments"></i></div>
+                    <h4>Contact Us</h4>
+                    <p>Tell us your needs</p>
                 </div>
-                <div style="text-align: center;">
-                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-key"></i></div>
-                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Codes in Seconds</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Bulk generate instantly</p>
+                <div class="onboarding-item">
+                    <div class="onboarding-icon"><i class="fas fa-key"></i></div>
+                    <h4>Get Your Codes</h4>
+                    <p>Bulk access codes generated</p>
                 </div>
-                <div style="text-align: center;">
-                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-envelope"></i></div>
-                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Email Templates</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Copy-paste distribution</p>
-                </div>
-                <div style="text-align: center;">
-                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-chart-line"></i></div>
-                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Dashboard Access</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Same-day analytics</p>
-                </div>
-                <div style="text-align: center;">
-                    <div style="width: 64px; height: 64px; background: rgba(135,168,120,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 1.5rem; color: var(--sage);"><i class="fas fa-headset"></i></div>
-                    <h4 style="font-size: 1rem; margin-bottom: 4px;">Support Ready</h4>
-                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Help when you need it</p>
+                <div class="onboarding-item">
+                    <div class="onboarding-icon"><i class="fas fa-users"></i></div>
+                    <h4>Distribute</h4>
+                    <p>Share with your community</p>
                 </div>
             </div>
         </div>
@@ -973,40 +1189,40 @@
         </div>
     </section>
 
-    <!-- Testimonials -->
+    <!-- Why Organizations Choose Us -->
     <section class="testimonials">
         <div class="section-header">
-            <h2>Trusted by Organizations Worldwide</h2>
-            <p>Hear from leaders who've used Tea With God</p>
+            <h2>Why Organizations Choose Tea With God</h2>
+            <p>A 40-day devotional companion designed for community impact</p>
         </div>
         <div class="testimonial-grid">
             <div class="testimonial-card">
-                <p class="testimonial-quote">"Our women's ministry has been transformed. The combination of Scripture and psychology gave our members tools they could actually use in their daily struggles."</p>
+                <p class="testimonial-quote" style="font-style: normal;"><strong>Privacy-First Design</strong><br><br>Journal entries and personal reflections stay on each user's device. Organizations see only aggregate engagement metrics, never individual content.</p>
                 <div class="testimonial-author">
-                    <div class="testimonial-avatar">PS</div>
+                    <div class="testimonial-avatar"><i class="fas fa-shield-halved"></i></div>
                     <div>
-                        <div class="testimonial-name">Pastor Sarah M.</div>
-                        <div class="testimonial-role">Grace Community Church, Cape Town</div>
+                        <div class="testimonial-name">Data Protection</div>
+                        <div class="testimonial-role">POPIA & GDPR Compliant</div>
                     </div>
                 </div>
             </div>
             <div class="testimonial-card">
-                <p class="testimonial-quote">"For our shelter residents, this program offers structure and hope. The offline functionality means they can use it even without stable internet access."</p>
+                <p class="testimonial-quote" style="font-style: normal;"><strong>Works Offline</strong><br><br>Once downloaded, the app works without internet connection. Perfect for communities with limited connectivity or expensive mobile data.</p>
                 <div class="testimonial-author">
-                    <div class="testimonial-avatar">TN</div>
+                    <div class="testimonial-avatar"><i class="fas fa-wifi-slash"></i></div>
                     <div>
-                        <div class="testimonial-name">Thandiwe N.</div>
-                        <div class="testimonial-role">Director, Hope House Women's Shelter</div>
+                        <div class="testimonial-name">Offline Capable</div>
+                        <div class="testimonial-role">No internet required</div>
                     </div>
                 </div>
             </div>
             <div class="testimonial-card">
-                <p class="testimonial-quote">"I recommend it to clients between sessions. The psychology modules reinforce what we work on in therapy, and they love the privacy-first approach."</p>
+                <p class="testimonial-quote" style="font-style: normal;"><strong>Evidence-Based Content</strong><br><br>Devotionals are grounded in Scripture while incorporating insights from CBT, positive psychology, and trauma-informed care principles.</p>
                 <div class="testimonial-author">
-                    <div class="testimonial-avatar">DR</div>
+                    <div class="testimonial-avatar"><i class="fas fa-book-open"></i></div>
                     <div>
-                        <div class="testimonial-name">Dr. Rachel M.</div>
-                        <div class="testimonial-role">Christian Counseling Practice, Johannesburg</div>
+                        <div class="testimonial-name">Research-Informed</div>
+                        <div class="testimonial-role">Faith + Psychology</div>
                     </div>
                 </div>
             </div>
@@ -1058,20 +1274,11 @@
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>Is there a free trial for organizations?</span>
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    <p>Yes! We offer a 14-day pilot program with 10 free Premium access codes for qualifying organizations. This allows your leadership team to experience the journey firsthand before committing to a full rollout.</p>
-                </div>
-            </div>
-            <div class="faq-item">
-                <div class="faq-question">
                     <span>Why is pricing different in different countries?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>We believe healing tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means a church in Nigeria pays what's affordable in Nigeria, not a US-dollar equivalent that might be out of reach.</p>
+                    <p>We believe devotional tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means organizations in different countries pay what's affordable locally, not a US-dollar equivalent that might be out of reach.</p>
                 </div>
             </div>
         </div>
@@ -1080,7 +1287,7 @@
     <!-- CTA Section -->
     <section class="cta-section">
         <h2>Ready to Transform Your Ministry?</h2>
-        <p>Join hundreds of churches bringing evidence-based healing to their communities.</p>
+        <p>Join hundreds of churches bringing evidence-based devotional support to their communities.</p>
         <a href="#" class="btn" onclick="openContactModal()"><i class="fas fa-paper-plane"></i> Contact Us Today</a>
     </section>
 
@@ -1110,7 +1317,8 @@
                             <option value="counseling">Counseling / Therapy Center</option>
                             <option value="shelter">Women's Shelter / Safe House</option>
                             <option value="ngo">NGO / Non-Profit</option>
-                            <option value="retreat">Retreat / Healing Center</option>
+                            <option value="retreat">Retreat / Spiritual Center</option>
+                            <option value="psychiatric">Psychiatric Hospital / Mental Health Clinic</option>
                             <option value="healthcare">Hospital / Healthcare</option>
                             <option value="education">School / College / University</option>
                             <option value="corporate">Corporate / Workplace Wellness</option>
@@ -1134,8 +1342,6 @@
                             <option value="za">South Africa</option>
                             <option value="us">United States</option>
                             <option value="uk">United Kingdom</option>
-                            <option value="ng">Nigeria</option>
-                            <option value="ke">Kenya</option>
                             <option value="au">Australia</option>
                             <option value="other">Other</option>
                         </select>
@@ -1164,142 +1370,167 @@
     </div>
 
     <script>
-        // Regional Pricing Data
-        // Pricing is based on purchasing power parity (PPP), not direct currency conversion
-        // Goal: Make it affordable in each market while being sustainable
-        const REGIONAL_PRICING = {
-            za: {
-                currency: 'R',
-                currencyName: 'ZAR',
-                flag: 'za',
-                starter: { price: 4950, codes: 50, perUser: 99 },
-                plus: { price: 9950, codes: 100, perUser: 99.5 },
-                enterprise: { price: 24950, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'Pricing for South African organizations'
-            },
-            us: {
-                currency: '$',
-                currencyName: 'USD',
-                flag: 'us',
-                starter: { price: 499, codes: 50, perUser: 9.98 },
-                plus: { price: 999, codes: 100, perUser: 9.99 },
-                enterprise: { price: 2499, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'US pricing based on local market rates'
-            },
-            uk: {
-                currency: '£',
-                currencyName: 'GBP',
-                flag: 'gb',
-                starter: { price: 399, codes: 50, perUser: 7.98 },
-                plus: { price: 799, codes: 100, perUser: 7.99 },
-                enterprise: { price: 1999, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'UK pricing based on local market rates'
-            },
-            ng: {
-                currency: '₦',
-                currencyName: 'NGN',
-                flag: 'ng',
-                starter: { price: 149000, codes: 50, perUser: 2980 },
-                plus: { price: 299000, codes: 100, perUser: 2990 },
-                enterprise: { price: 749000, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'Nigerian pricing adjusted for local purchasing power'
-            },
-            ke: {
-                currency: 'KSh',
-                currencyName: 'KES',
-                flag: 'ke',
-                starter: { price: 29900, codes: 50, perUser: 598 },
-                plus: { price: 59900, codes: 100, perUser: 599 },
-                enterprise: { price: 149900, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'Kenyan pricing adjusted for local purchasing power'
-            },
-            au: {
-                currency: 'A$',
-                currencyName: 'AUD',
-                flag: 'au',
-                starter: { price: 749, codes: 50, perUser: 14.98 },
-                plus: { price: 1499, codes: 100, perUser: 14.99 },
-                enterprise: { price: 3749, codes: 'Unlimited', perUser: 'Custom' },
-                note: 'Australian pricing based on local market rates'
+        // Toast notification system
+        function showToast(message, type = 'success') {
+            let container = document.getElementById('toastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toastContainer';
+                container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 10000; display: flex; flex-direction: column; gap: 10px;';
+                document.body.appendChild(container);
             }
+            const toast = document.createElement('div');
+            const bgColor = type === 'success' ? 'rgba(143, 188, 143, 0.95)' : 'rgba(229, 115, 115, 0.95)';
+            toast.style.cssText = `background: ${bgColor}; color: #0D0D0D; padding: 16px 24px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); font-family: 'Inter', sans-serif; font-size: 14px; max-width: 350px;`;
+            toast.textContent = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        // Tier pricing (per code) - retail prices
+        const TIER_PRICES = {
+            za: { book: 99, journey: 149, premium: 249, currency: 'R', currencyName: 'ZAR' },
+            us: { book: 9.90, journey: 14.90, premium: 24.90, currency: '$', currencyName: 'USD' },
+            uk: { book: 7.90, journey: 11.90, premium: 19.90, currency: '£', currencyName: 'GBP' },
+            au: { book: 14.90, journey: 22.40, premium: 37.40, currency: 'A$', currencyName: 'AUD' }
+        };
+
+        // Package structures (codes + bonus + discount breakdown)
+        // wholesaleDiscount + titheBonus = totalDiscount
+        const PACKAGES = {
+            seedling: { name: 'Seedling', codes: 50, bonus: 5, wholesaleDiscount: 20, titheBonus: 10, totalDiscount: 30, tagline: 'Plant the first seeds', icon: 'fa-seedling' },
+            harvest: { name: 'Harvest', codes: 100, bonus: 10, wholesaleDiscount: 30, titheBonus: 10, totalDiscount: 40, tagline: 'Reap abundant blessings', icon: 'fa-wheat-awn', featured: true },
+            flourish: { name: 'Flourish', codes: 200, bonus: 20, wholesaleDiscount: 40, titheBonus: 10, totalDiscount: 50, tagline: 'Watch your community grow', icon: 'fa-leaf' }
         };
 
         let currentRegion = 'za';
+        let currentTier = 'journey'; // Default to Journey tier
 
         // Initialize pricing
         function renderPricing() {
-            const pricing = REGIONAL_PRICING[currentRegion];
+            const tierPrices = TIER_PRICES[currentRegion];
+            const currency = tierPrices.currency;
+            const retailPrice = tierPrices[currentTier];
+            const tierLabel = currentTier.charAt(0).toUpperCase() + currentTier.slice(1);
             const grid = document.getElementById('pricingGrid');
 
-            grid.innerHTML = `
-                <!-- Starter -->
-                <div class="pricing-card">
-                    <div class="pricing-tier">Starter</div>
-                    <h3 class="pricing-name">Starter</h3>
-                    <p class="pricing-desc">Perfect for small organizations and groups</p>
-                    <div class="pricing-price">
-                        <span class="currency">${pricing.currency}</span>${pricing.starter.price.toLocaleString()}
-                        <span class="period">/year</span>
+            // Calculate wholesale prices with total discount (wholesale + tithe)
+            function calcPrice(pkg) {
+                const discountedPrice = retailPrice * (1 - pkg.totalDiscount / 100);
+                return Math.round(discountedPrice);
+            }
+
+            function calcTotal(pkg) {
+                return calcPrice(pkg) * pkg.codes;
+            }
+
+            // Generate pricing breakdown HTML
+            function priceBreakdown(pkg) {
+                const wholesalePrice = Math.round(retailPrice * (1 - pkg.wholesaleDiscount / 100));
+                const finalPrice = calcPrice(pkg);
+                return `
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: left; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Retail price:</span>
+                            <span style="text-decoration: line-through;">${currency}${retailPrice}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Wholesale (${pkg.wholesaleDiscount}% off):</span>
+                            <span>${currency}${wholesalePrice}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: var(--gold);">
+                            <span>Tithe bonus (${pkg.titheBonus}%):</span>
+                            <span>-${currency}${wholesalePrice - finalPrice}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: 600; color: var(--text-primary); border-top: 1px solid var(--border-subtle); padding-top: 4px; margin-top: 4px;">
+                            <span>Your price:</span>
+                            <span>${currency}${finalPrice}/code</span>
+                        </div>
                     </div>
-                    <p class="pricing-per-user">${pricing.currency}${pricing.starter.perUser} per user (${pricing.starter.codes} codes)</p>
+                `;
+            }
+
+            grid.innerHTML = `
+                <!-- Seedling -->
+                <div class="pricing-card">
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.seedling.icon}"></i> ${PACKAGES.seedling.name}</div>
+                    <h3 class="pricing-name">${PACKAGES.seedling.name}</h3>
+                    <p class="pricing-desc">${PACKAGES.seedling.tagline}</p>
+                    <div class="pricing-price">
+                        <span class="currency">${currency}</span>${calcTotal(PACKAGES.seedling).toLocaleString()}
+                    </div>
+                    <p class="pricing-per-user">${PACKAGES.seedling.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.seedling.bonus} FREE</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.seedling.totalDiscount}% total savings</p>
+                    ${priceBreakdown(PACKAGES.seedling)}
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Up to ${pricing.starter.codes} access codes</li>
-                        <li><i class="fas fa-check"></i> Full Premium app access for all users</li>
-                        <li><i class="fas fa-check"></i> Group progress dashboard</li>
-                        <li><i class="fas fa-check"></i> Monthly usage reports</li>
-                        <li><i class="fas fa-check"></i> Email support</li>
-                        <li><i class="fas fa-check"></i> Leader's guide (PDF)</li>
+                        <li><i class="fas fa-check"></i> ${PACKAGES.seedling.codes + PACKAGES.seedling.bonus} total access codes</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
+                        <li><i class="fas fa-check"></i> Email & WhatsApp support</li>
                     </ul>
-                    <button class="btn btn-secondary" onclick="selectPlan('starter')">Get Started</button>
+                    <button class="btn btn-secondary" onclick="selectPlan('seedling')">Get Started</button>
                 </div>
 
-                <!-- Growth (Featured) -->
+                <!-- Harvest (Featured) -->
                 <div class="pricing-card featured">
-                    <div class="pricing-tier">Most Popular</div>
-                    <h3 class="pricing-name">Growth</h3>
-                    <p class="pricing-desc">For growing organizations with more reach</p>
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.harvest.icon}"></i> ${PACKAGES.harvest.name}</div>
+                    <h3 class="pricing-name">${PACKAGES.harvest.name}</h3>
+                    <p class="pricing-desc">${PACKAGES.harvest.tagline}</p>
                     <div class="pricing-price">
-                        <span class="currency">${pricing.currency}</span>${pricing.plus.price.toLocaleString()}
-                        <span class="period">/year</span>
+                        <span class="currency">${currency}</span>${calcTotal(PACKAGES.harvest).toLocaleString()}
                     </div>
-                    <p class="pricing-per-user">${pricing.currency}${pricing.plus.perUser} per user (${pricing.plus.codes} codes)</p>
+                    <p class="pricing-per-user">${PACKAGES.harvest.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.harvest.bonus} FREE</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.harvest.totalDiscount}% total savings</p>
+                    ${priceBreakdown(PACKAGES.harvest)}
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Up to ${pricing.plus.codes} access codes</li>
-                        <li><i class="fas fa-check"></i> Everything in Starter</li>
-                        <li><i class="fas fa-check"></i> Custom welcome message</li>
-                        <li><i class="fas fa-check"></i> White-label option (remove TWG branding)</li>
-                        <li><i class="fas fa-check"></i> Priority support</li>
-                        <li><i class="fas fa-check"></i> Quarterly strategy call</li>
+                        <li><i class="fas fa-check"></i> ${PACKAGES.harvest.codes + PACKAGES.harvest.bonus} total access codes</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
+                        <li><i class="fas fa-check"></i> Priority email support</li>
                     </ul>
-                    <button class="btn btn-primary" onclick="selectPlan('plus')">Get Started</button>
+                    <button class="btn btn-primary" onclick="selectPlan('harvest')">Get Started</button>
+                </div>
+
+                <!-- Flourish -->
+                <div class="pricing-card">
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.flourish.icon}"></i> ${PACKAGES.flourish.name}</div>
+                    <h3 class="pricing-name">${PACKAGES.flourish.name}</h3>
+                    <p class="pricing-desc">${PACKAGES.flourish.tagline}</p>
+                    <div class="pricing-price">
+                        <span class="currency">${currency}</span>${calcTotal(PACKAGES.flourish).toLocaleString()}
+                    </div>
+                    <p class="pricing-per-user">${PACKAGES.flourish.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.flourish.bonus} FREE</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.flourish.totalDiscount}% total savings</p>
+                    ${priceBreakdown(PACKAGES.flourish)}
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> ${PACKAGES.flourish.codes + PACKAGES.flourish.bonus} total access codes</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
+                        <li><i class="fas fa-check"></i> Dedicated support</li>
+                    </ul>
+                    <button class="btn btn-secondary" onclick="selectPlan('flourish')">Get Started</button>
                 </div>
 
                 <!-- Enterprise -->
                 <div class="pricing-card">
-                    <div class="pricing-tier">Enterprise</div>
+                    <div class="pricing-tier"><i class="fas fa-building"></i> Enterprise</div>
                     <h3 class="pricing-name">Enterprise</h3>
-                    <p class="pricing-desc">For large organizations and networks</p>
-                    <div class="pricing-price">
-                        <span class="currency">${pricing.currency}</span>${pricing.enterprise.price.toLocaleString()}
-                        <span class="period">/year</span>
+                    <p class="pricing-desc">Large-scale transformation</p>
+                    <div class="pricing-price" style="font-size:2rem;">
+                        Custom Quote
                     </div>
-                    <p class="pricing-per-user">Unlimited codes</p>
+                    <p class="pricing-per-user">500+ codes + custom bonus</p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">Up to 60% savings</p>
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Unlimited access codes</li>
-                        <li><i class="fas fa-check"></i> Everything in Plus</li>
-                        <li><i class="fas fa-check"></i> Full white-label branding</li>
-                        <li><i class="fas fa-check"></i> API integration</li>
+                        <li><i class="fas fa-check"></i> Volume pricing available</li>
+                        <li><i class="fas fa-check"></i> Any tier app access</li>
                         <li><i class="fas fa-check"></i> Dedicated account manager</li>
-                        <li><i class="fas fa-check"></i> Custom content modules</li>
-                        <li><i class="fas fa-check"></i> SSO/SAML integration</li>
+                        <li><i class="fas fa-check"></i> Custom tithe arrangements</li>
                     </ul>
                     <button class="btn btn-secondary" onclick="selectPlan('enterprise')">Contact Sales</button>
                 </div>
             `;
 
             document.getElementById('pricingNote').innerHTML = `
-                <i class="fas fa-info-circle"></i>
-                ${pricing.note}. All plans include the same features regardless of region.
+                <i class="fas fa-gift"></i>
+                <strong>Wholesale + Tithe savings!</strong> Prices shown for <strong>${tierLabel}</strong> tier (retail ${currency}${retailPrice}/code).
             `;
         }
 
@@ -1309,6 +1540,16 @@
                 document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 currentRegion = btn.dataset.region;
+                renderPricing();
+            });
+        });
+
+        // Tier selector
+        document.querySelectorAll('.tier-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tier-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTier = btn.dataset.tier;
                 renderPricing();
             });
         });
@@ -1342,7 +1583,7 @@
             console.log('Form submission:', data);
 
             // In production, send to backend API
-            alert('Thank you for your inquiry! We\'ll be in touch within 24 hours.');
+            showToast('Thank you for your inquiry! We\'ll be in touch within 24 hours.', 'success');
             closeModal();
             e.target.reset();
         }

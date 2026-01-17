@@ -1300,14 +1300,15 @@
         function getBookSize() {
             const maxWidth = window.innerWidth - 40;
             const maxHeight = window.innerHeight - 280;
-            const pageRatio = 0.77;
+            const pageRatio = 0.77; // width/height ratio of a single page
 
+            // Single page mode - calculate for one page
             let bookHeight = maxHeight;
-            let bookWidth = bookHeight * pageRatio * 2;
+            let bookWidth = bookHeight * pageRatio;
 
             if (bookWidth > maxWidth) {
                 bookWidth = maxWidth;
-                bookHeight = bookWidth / (pageRatio * 2);
+                bookHeight = bookWidth / pageRatio;
             }
 
             return { width: Math.floor(bookWidth), height: Math.floor(bookHeight) };
@@ -1351,7 +1352,7 @@
             const size = getBookSize();
 
             pageFlip = new St.PageFlip(flipbookEl, {
-                width: size.width / 2,
+                width: size.width,
                 height: size.height,
                 size: 'fixed',
                 minWidth: 100,
@@ -1361,15 +1362,15 @@
                 showCover: true,
                 mobileScrollSupport: false,
                 swipeDistance: 30,
-                usePortrait: false,
+                usePortrait: true, // Single page mode
                 startPage: 0,
                 drawShadow: true,
-                flippingTime: 600, // Slightly faster for smoother animation
+                flippingTime: 600,
                 useMouseEvents: true,
                 maxShadowOpacity: 0.4,
                 showPageCorners: true,
                 disableFlipByClick: false,
-                autoSize: false // Prevent auto-resizing that might cause bleed
+                autoSize: false
             });
 
             pageFlip.loadFromHTML(document.querySelectorAll('.page'));
@@ -1743,7 +1744,7 @@
                 if (pageFlip && !isMobile()) {
                     const size = getBookSize();
                     pageFlip.updateFromSettings({
-                        width: size.width / 2,
+                        width: size.width,
                         height: size.height
                     });
                 }

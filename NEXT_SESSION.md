@@ -1,21 +1,39 @@
 # Tea With God - Next Session Handoff
 
-**Session Date:** January 15, 2026 (Session 12)
+**Session Date:** January 17, 2026 (Session 13)
 **Branch:** `feature/session-5-jan5-2026`
 
 ---
 
 ## What We Did This Session
 
-### 1. Removed False Testimonials (Liability Fix)
-**Problem:** Website had fabricated testimonials with fake names and organizations (Pastor Sarah M., Grace Community Church, etc.)
+### 1. Digital Book Tier Restriction
+**Problem:** Digital Book button in sidebar was showing for all users including Book tier (R99), but Book tier only gets PDF access.
 
 **Fix:**
-- **B2B Portal** - Replaced fake testimonials with feature highlights (Privacy-First Design, Offline Capable, Evidence-Based Content)
-- **Main Website** - Changed "Voices from the Journey" to "Built for Real Life" with feature cards instead of fake names
+- Changed condition from `hasFullAccess()` to `(planTier === 'journey' || planTier === 'premium')`
+- Digital Book now only shows for Journey (R149) and Premium (R249) tiers
+- Book tier (R99) only gets PDF download, no in-app reader
+
+### 2. Web Flipbook Single-Page Mode
+**Problem:** Mobile flipbook showed single-page view, but web flipbook showed double-page spread (inconsistent experience).
+
+**Fix:**
+- Changed `usePortrait: true` in StPageFlip configuration
+- Updated `getBookSize()` to not multiply width by 2
+- Updated resize handler similarly
+- Now both mobile and web show single-page view
+
+---
+
+## Previous Session Work (Session 12)
+
+### Removed False Testimonials (Liability Fix)
+- **B2B Portal** - Replaced fake testimonials with feature highlights
+- **Main Website** - Changed "Voices from the Journey" to "Built for Real Life"
 - **Upgrade Page** - Changed to "Why People Upgrade" with feature descriptions
 
-### 2. B2B Wholesale + Tithe Pricing Structure
+### B2B Wholesale + Tithe Pricing Structure
 **Research-backed pricing** (30-45% is industry standard for ministry resources):
 
 | Package | Codes | Wholesale Discount | Tithe Bonus | Total Savings |
@@ -30,13 +48,13 @@
 - Harvest: R89/code (pay R8,900 for 110 codes)
 - Flourish: R75/code (pay R15,000 for 220 codes)
 
-### 3. B2B Tier Selector
+### B2B Tier Selector
 Organizations can now choose which tier to buy codes for:
 - **Book (R99)** - PDF/eBook only
 - **Journey (R149)** - Full app access
 - **Premium (R249)** - Everything including brain games, music, voice recordings
 
-### 4. Price Breakdown Display
+### Price Breakdown Display
 Each B2B package now shows transparent pricing:
 ```
 Retail price:           R149 (crossed out)
@@ -146,6 +164,10 @@ scp /tmp/twg-app.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /
 3. **B2B admin integration** - Admin dashboard needs to generate B2B wholesale codes with correct pricing
 4. **Upgrade commission tracking** - PARKED for now. If needed later: track which org distributed a code, credit them commission on user upgrades.
 
+### Completed This Session
+- Digital Book tier restriction (now Journey/Premium only)
+- Web flipbook single-page mode (matches mobile)
+
 ---
 
 ## Important Context
@@ -161,9 +183,21 @@ scp /tmp/twg-app.tar.gz root@154.66.196.12:/tmp/ && ssh root@154.66.196.12 "cd /
 
 ## Key Files Modified This Session
 
+- `mobile/src/screens/DashboardScreen.tsx` - Digital Book tier restriction (Journey/Premium only)
+- `website/flipbook/index.html` - Single-page mode (`usePortrait: true`)
+- `website/app/` - PWA rebuilt with tier fix
+
+### Previous Session Files
 - `website/index.html` - Testimonials section updated
 - `website/b2b/index.html` - Full wholesale + tithe pricing system
 - `website/upgrade.html` - Testimonials replaced with features
+
+---
+
+## Recent Commits
+
+- `2d80292` - Add B2B wholesale pricing and remove false testimonials
+- `a6d5d4a` - Flipbook single-page mode and PWA rebuild with tier fix
 
 ---
 

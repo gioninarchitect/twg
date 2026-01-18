@@ -26,11 +26,11 @@ import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../them
 import { audioService, DAILY_AUDIO_TRACKS, buildAudioTrack } from '../services/audioService';
 import { useProgress, PSYCHOLOGY_DAYS } from '../context/ProgressContext';
 import { useAccess } from '../context/AccessContext';
+import { useContent } from '../context/ContentContext';
 import { Divider } from '../components/PremiumUI';
 import AudioPlayer from '../components/AudioPlayer';
 import JournalInput from '../components/JournalInput';
 
-import offlineContent from '../../assets/content.json';
 import psychologyModules from '../../assets/data/psychology.json';
 import { GameRecommendation } from '../components/brainGames';
 
@@ -42,27 +42,17 @@ function getPsychologyModule(dayNumber: number) {
 
 const { width } = Dimensions.get('window');
 
-interface DayContent {
-  day_number: number;
-  title: string;
-  phase_name: string;
-  reflection_content: string;
-  scripture_text: string;
-  scripture_reference: string;
-  thought_of_day: string;
-  prayer_text: string;
-  journal_prompt: string;
-}
-
 export default function DayModuleScreen() {
   const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { dayNumber } = route.params;
   const { codeUsed } = useAccess();
+  const { getDay, isLoading: contentLoading, getPhaseName } = useContent();
 
-  const [loading, setLoading] = useState(true);
-  const [day, setDay] = useState<DayContent | null>(null);
+  // Get day content from ContentContext (language-aware)
+  const day = getDay(dayNumber);
+  const loading = contentLoading;
   const [scrollDepth, setScrollDepth] = useState(0);
   const [psychologyUnlocked, setPsychologyUnlocked] = useState(false);
   const [psychologyExpanded, setPsychologyExpanded] = useState(false);
@@ -71,10 +61,6 @@ export default function DayModuleScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const psychologyAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    loadDay();
-  }, [dayNumber]);
 
   useEffect(() => {
     if (!loading && day) {
@@ -93,15 +79,6 @@ export default function DayModuleScreen() {
       useNativeDriver: false,
     }).start();
   }, [psychologyExpanded]);
-
-  function loadDay() {
-    // Purely local - load from bundled JSON file
-    const offlineDay = offlineContent.days.find(d => d.day_number === dayNumber);
-    if (offlineDay) {
-      setDay(offlineDay as DayContent);
-    }
-    setLoading(false);
-  }
 
   function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>) {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;

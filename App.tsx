@@ -67,6 +67,7 @@ import { SyncProvider } from './src/context/SyncContext';
 import { WorldModelProvider } from './src/worldModel/WorldModelContext';
 import { PinProvider, usePin } from './src/context/PinContext';
 import { SettingsProvider, useSettings } from './src/context/SettingsContext';
+import { ContentProvider } from './src/context/ContentContext';
 import LockScreen from './src/screens/LockScreen';
 import { COLORS, TYPOGRAPHY, SHADOWS } from './src/theme/colors';
 import { supabase } from './src/services/supabase';
@@ -516,11 +517,12 @@ export default function App() {
     );
   }
 
-  // Authenticated - wrap with providers for sync, progress, access, notifications, journal, world model, PIN, settings, and language
+  // Authenticated - wrap with providers for sync, progress, access, notifications, journal, world model, PIN, settings, content, and language
   return (
     <SafeAreaProvider>
       <LanguageProvider>
-        <PinProvider>
+        <ContentProvider>
+          <PinProvider>
           <SettingsProvider>
             <SyncProvider>
               <NotificationProvider>
@@ -537,6 +539,7 @@ export default function App() {
             </SyncProvider>
           </SettingsProvider>
         </PinProvider>
+        </ContentProvider>
       </LanguageProvider>
     </SafeAreaProvider>
   );

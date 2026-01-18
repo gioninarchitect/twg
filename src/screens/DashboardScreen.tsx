@@ -42,6 +42,7 @@ import AudioPlayer from '../components/AudioPlayer';
 import { audioService, buildAudioTrack } from '../services/audioService';
 import { loadGameStats } from '../services/gameDataService';
 import { supabase, TABLES, getCurrentUserId } from '../services/supabase';
+import { useContent } from '../context/ContentContext';
 
 // Tea cup logo using actual teacup.png image
 function TeaCupIcon({ size = 60 }: { size?: number }) {
@@ -54,15 +55,7 @@ function TeaCupIcon({ size = 60 }: { size?: number }) {
   );
 }
 
-import offlineContent from '../../assets/content.json';
-
 const { width } = Dimensions.get('window');
-
-interface DayData {
-  day_number: number;
-  title: string;
-  phase_name: string;
-}
 
 export default function DashboardScreen() {
   const { t } = useTranslation();
@@ -77,6 +70,7 @@ export default function DashboardScreen() {
   const { entries: journalEntries } = useJournal();
   const { isPinEnabled, lockApp } = usePin();
   const { openSettings } = useSettings();
+  const { days, isLoading: contentLoading, getPhaseName } = useContent();
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const drawerAnim = useRef(new Animated.Value(width)).current;
@@ -85,7 +79,6 @@ export default function DashboardScreen() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
-  const days = offlineContent.days as DayData[];
 
   // Load profile image and user data from storage
   useEffect(() => {
@@ -249,7 +242,7 @@ export default function DashboardScreen() {
         : [...prev, phaseKey]
     );
   };
-  const loading = progressLoading || accessLoading;
+  const loading = progressLoading || accessLoading || contentLoading;
 
   useEffect(() => {
     if (!loading) {

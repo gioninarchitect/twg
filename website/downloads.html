@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page="downloads">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Downloads - Tea With God</title>
+  <title data-i18n="downloads.pageTitle">Downloads - Tea With God</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -357,13 +357,20 @@
       <img src="images/teacup.png" alt="Tea With God">
       <span>Tea With God</span>
     </a>
-    <a href="index.html" class="nav-link">Back to Home</a>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="lang-switcher" style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;">
+        <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" style="background: none; border: none; color: var(--gold); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 600;">EN</button>
+        <span style="color: var(--text-muted);">|</span>
+        <button data-lang-switch="af" onclick="i18n.switchLanguage('af')" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 500;">AF</button>
+      </div>
+      <a href="index.html" class="nav-link" data-i18n="nav.backToHome">Back to Home</a>
+    </div>
   </nav>
 
   <main>
     <div class="page-header">
-      <h1>Your Downloads</h1>
-      <p>Enter your access code to unlock your content</p>
+      <h1 data-i18n="downloads.header.title">Your Downloads</h1>
+      <p data-i18n="downloads.header.subtitle">Enter your access code to unlock your content</p>
     </div>
 
     <!-- Access Code Gate -->
@@ -374,12 +381,12 @@
           <path d="M7 11V7a5 5 0 0110 0v4"/>
         </svg>
       </div>
-      <h2>Enter Access Code</h2>
-      <p>Your access code was sent to your email after purchase.</p>
+      <h2 data-i18n="downloads.gate.title">Enter Access Code</h2>
+      <p data-i18n="downloads.gate.subtitle">Your access code was sent to your email after purchase.</p>
 
       <div class="code-input-wrap">
-        <input type="text" class="code-input" id="accessCode" placeholder="e.g. TWG-XXXX-XXXX" maxlength="20">
-        <p class="error-msg" id="errorMsg">Invalid access code. Please check and try again.</p>
+        <input type="text" class="code-input" id="accessCode" data-i18n-placeholder="downloads.gate.placeholder" placeholder="e.g. TWG-XXXX-XXXX" maxlength="20">
+        <p class="error-msg" id="errorMsg" data-i18n="downloads.gate.error">Invalid access code. Please check and try again.</p>
       </div>
 
       <button class="btn btn-primary" id="verifyBtn" onclick="verifyCode()">
@@ -387,15 +394,15 @@
           <path d="M9 11l3 3L22 4"/>
           <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
         </svg>
-        Verify Code
+        <span data-i18n="downloads.gate.button">Verify Code</span>
       </button>
     </div>
 
     <!-- Downloads (shown after verification) -->
     <div class="downloads-section" id="downloadsSection">
       <div class="welcome-msg">
-        <h2>Welcome, <span id="userName">Friend</span>!</h2>
-        <p>Your access has been verified. Download your content below.</p>
+        <h2><span data-i18n="downloads.welcome.title">Welcome,</span> <span id="userName">Friend</span>!</h2>
+        <p data-i18n="downloads.welcome.subtitle">Your access has been verified. Download your content below.</p>
       </div>
 
       <!-- eBook Download -->
@@ -407,8 +414,8 @@
           </svg>
         </div>
         <div class="download-info">
-          <h3>Tea With God eBook</h3>
-          <p>40-Day Devotional (PDF)</p>
+          <h3 data-i18n="downloads.ebook.title">Tea With God eBook</h3>
+          <p data-i18n="downloads.ebook.subtitle">40-Day Devotional (PDF)</p>
         </div>
         <a href="#" class="download-btn" id="downloadEbook">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -416,16 +423,16 @@
             <polyline points="7 10 12 15 17 10"/>
             <line x1="12" y1="15" x2="12" y2="3"/>
           </svg>
-          Download
+          <span data-i18n="downloads.ebook.button">Download</span>
         </a>
       </div>
 
       <!-- Web App Access -->
       <div class="app-link">
-        <h3>Ready to Begin?</h3>
-        <p>Open the web app and start your 40-day healing journey.</p>
+        <h3 data-i18n="downloads.app.title">Ready to Begin?</h3>
+        <p data-i18n="downloads.app.subtitle">Open the web app and start your 40-day devotional journey.</p>
         <a href="app/" class="btn btn-primary">
-          Open Web App
+          <span data-i18n="downloads.app.button">Open Web App</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M5 12h14M12 5l7 7-7 7"/>
           </svg>
@@ -435,7 +442,7 @@
   </main>
 
   <footer>
-    <p>Need help? <a href="mailto:twg@cleva-ai.co.za">Contact Support</a></p>
+    <p><span data-i18n="downloads.footer.help">Need help?</span> <a href="mailto:twg@cleva-ai.co.za" data-i18n="downloads.footer.contact">Contact Support</a></p>
   </footer>
 
   <script>
@@ -512,5 +519,6 @@
       verifyCode();
     }
   </script>
+  <script src="js/i18n.js"></script>
 </body>
 </html>

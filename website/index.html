@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page="index">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1086,6 +1086,59 @@
       50% { transform: scaleY(0.5); }
     }
 
+    .player-wave.paused span {
+      animation-play-state: paused;
+      transform: scaleY(0.3);
+    }
+
+    .player-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--gradient-gold);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg-dark);
+      z-index: 10;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .player-play-btn:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 8px 32px var(--gold-glow);
+    }
+
+    .player-progress {
+      margin-top: 16px;
+      height: 4px;
+      background: var(--border-subtle);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 0.1s linear;
+    }
+
+    .music-player {
+      position: relative;
+    }
+
+    .player-art {
+      position: relative;
+    }
+
     @media (max-width: 900px) {
       .music-container {
         grid-template-columns: 1fr;
@@ -1493,6 +1546,36 @@
       font-weight: 600;
     }
 
+    .mobile-lang-switcher {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mobile-lang-switcher button {
+      padding: 10px 24px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      border-radius: 100px;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .mobile-lang-switcher button:hover {
+      border-color: var(--gold);
+      color: var(--text-primary);
+    }
+
+    .mobile-lang-switcher button.active {
+      background: var(--gradient-gold);
+      border-color: transparent;
+      color: var(--bg-dark);
+      font-weight: 600;
+    }
+
     @media (max-width: 768px) {
       nav { padding: 16px 24px; }
       .nav-links { display: none; }
@@ -1562,17 +1645,22 @@
   <!-- Navigation -->
   <nav>
     <a href="/" class="logo">
-      <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
-      <span>Tea With God</span>
+      <img src="images/teacup.png" alt="Tea With God" class="logo-mark" data-i18n-title="nav.brandName">
+      <span data-i18n="nav.brandName">Tea With God</span>
     </a>
     <div class="nav-links">
-      <a href="#journey">Journey</a>
-      <a href="#features">Features</a>
-      <a href="#music">Music</a>
-      <a href="#download">Download</a>
-      <a href="#pricing">Pricing</a>
-      <a href="b2b/">For Organizations</a>
-      <a href="checkout.html" class="nav-cta">Begin Now</a>
+      <a href="#journey" data-i18n="nav.journey">Journey</a>
+      <a href="#features" data-i18n="nav.features">Features</a>
+      <a href="#music" data-i18n="nav.music">Music</a>
+      <a href="#download" data-i18n="nav.download">Download</a>
+      <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
+      <a href="b2b/" data-i18n="nav.forOrganizations">For Organizations</a>
+      <a href="checkout.html" class="nav-cta" data-i18n="nav.beginNow">Begin Now</a>
+      <div class="lang-switcher">
+        <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" class="active">EN</button>
+        <span class="lang-divider">|</span>
+        <button data-lang-switch="af" onclick="i18n.switchLanguage('af')">AF</button>
+      </div>
     </div>
     <div class="hamburger" onclick="toggleMobileMenu()">
       <span></span>
@@ -1584,13 +1672,17 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu" onclick="closeMobileMenu()">
     <div class="mobile-menu-close" onclick="closeMobileMenu(); event.stopPropagation();">✕</div>
-    <a href="#journey" onclick="closeMobileMenu()">Journey</a>
-    <a href="#features" onclick="closeMobileMenu()">Features</a>
-    <a href="#music" onclick="closeMobileMenu()">Music</a>
-    <a href="#download" onclick="closeMobileMenu()">Download</a>
-    <a href="#pricing" onclick="closeMobileMenu()">Pricing</a>
-    <a href="b2b/" onclick="closeMobileMenu()">For Organizations</a>
-    <a href="checkout.html" class="nav-cta" onclick="closeMobileMenu()">Begin Now</a>
+    <div class="mobile-lang-switcher" onclick="event.stopPropagation();">
+      <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" class="active">English</button>
+      <button data-lang-switch="af" onclick="i18n.switchLanguage('af')">Afrikaans</button>
+    </div>
+    <a href="#journey" onclick="closeMobileMenu()" data-i18n="nav.journey">Journey</a>
+    <a href="#features" onclick="closeMobileMenu()" data-i18n="nav.features">Features</a>
+    <a href="#music" onclick="closeMobileMenu()" data-i18n="nav.music">Music</a>
+    <a href="#download" onclick="closeMobileMenu()" data-i18n="nav.download">Download</a>
+    <a href="#pricing" onclick="closeMobileMenu()" data-i18n="nav.pricing">Pricing</a>
+    <a href="b2b/" onclick="closeMobileMenu()" data-i18n="nav.forOrganizations">For Organizations</a>
+    <a href="checkout.html" class="nav-cta" onclick="closeMobileMenu()" data-i18n="nav.beginNow">Begin Now</a>
   </div>
 
   <!-- Hero -->
@@ -1602,20 +1694,20 @@
     </div>
 
     <div class="hero-content" data-animate>
-      <div class="hero-badge">40-Day Devotional Companion</div>
-      <h1>Tea With <span>God</span></h1>
-      <p class="hero-subtitle">A sacred space for the beautifully broken. No rush, no shame, just grace. Your devotional journey begins with a single step.</p>
+      <div class="hero-badge" data-i18n="hero.badge">40-Day Devotional Companion</div>
+      <h1><span data-i18n="hero.title">Tea With</span> <span data-i18n="hero.titleHighlight">God</span></h1>
+      <p class="hero-subtitle" data-i18n="hero.subtitle">A sacred space for the beautifully broken. No rush, no shame, just grace. Your devotional journey begins with a single step.</p>
       <div class="hero-actions">
         <a href="checkout.html" class="btn btn-primary">
-          Start Your Journey
+          <span data-i18n="hero.ctaPrimary">Start Your Journey</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
-        <a href="#journey" class="btn btn-secondary">Explore the Journey</a>
+        <a href="#journey" class="btn btn-secondary" data-i18n="hero.ctaSecondary">Explore the Journey</a>
       </div>
     </div>
 
     <div class="scroll-indicator">
-      <span>Scroll</span>
+      <span data-i18n="hero.scroll">Scroll</span>
       <div class="scroll-line"></div>
     </div>
   </section>
@@ -1623,35 +1715,35 @@
   <!-- Journey Section -->
   <section id="journey" class="journey">
     <div class="journey-header" data-animate>
-      <span class="section-label">The Path</span>
-      <h2 class="section-title">40 Days of Gentle Transformation</h2>
-      <p class="section-desc">"The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him." — Jeremiah 18:4</p>
+      <span class="section-label" data-i18n="journey.label">The Path</span>
+      <h2 class="section-title" data-i18n="journey.title">40 Days of Gentle Transformation</h2>
+      <p class="section-desc" data-i18n="journey.scripture">"The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him." — Jeremiah 18:4</p>
     </div>
 
     <div class="journey-grid">
       <div class="journey-card" data-animate>
         <div class="card-number">01</div>
-        <div class="card-days">Days 1-10</div>
-        <h3>Acknowledging</h3>
-        <p>Gently recognizing the broken pieces without judgment. Creating space to simply be present.</p>
+        <div class="card-days" data-i18n="journey.phases.1.days">Days 1-10</div>
+        <h3 data-i18n="journey.phases.1.title">Acknowledging</h3>
+        <p data-i18n="journey.phases.1.description">Gently recognizing the broken pieces without judgment. Creating space to simply be present.</p>
       </div>
       <div class="journey-card" data-animate>
         <div class="card-number">02</div>
-        <div class="card-days">Days 11-20</div>
-        <h3>Sitting With</h3>
-        <p>Learning to be present with your pain. Not fixing, just witnessing with compassion.</p>
+        <div class="card-days" data-i18n="journey.phases.2.days">Days 11-20</div>
+        <h3 data-i18n="journey.phases.2.title">Sitting With</h3>
+        <p data-i18n="journey.phases.2.description">Learning to be present with your pain. Not fixing, just witnessing with compassion.</p>
       </div>
       <div class="journey-card" data-animate>
         <div class="card-number">03</div>
-        <div class="card-days">Days 21-30</div>
-        <h3>Repairing</h3>
-        <p>Applying golden truths to the broken places. Transformation begins in earnest.</p>
+        <div class="card-days" data-i18n="journey.phases.3.days">Days 21-30</div>
+        <h3 data-i18n="journey.phases.3.title">Repairing</h3>
+        <p data-i18n="journey.phases.3.description">Applying golden truths to the broken places. Transformation begins in earnest.</p>
       </div>
       <div class="journey-card" data-animate>
         <div class="card-number">04</div>
-        <div class="card-days">Days 31-40</div>
-        <h3>Becoming</h3>
-        <p>Emerging whole. Your scars now shine with gold - beautiful, strong, restored.</p>
+        <div class="card-days" data-i18n="journey.phases.4.days">Days 31-40</div>
+        <h3 data-i18n="journey.phases.4.title">Becoming</h3>
+        <p data-i18n="journey.phases.4.description">Emerging whole. Your scars now shine with gold - beautiful, strong, restored.</p>
       </div>
     </div>
   </section>
@@ -1661,10 +1753,10 @@
     <div class="features-container">
       <div class="features-header" data-animate>
         <div>
-          <span class="section-label">Features</span>
-          <h2 class="section-title">Everything You Need for Your Journey</h2>
+          <span class="section-label" data-i18n="features.label">Features</span>
+          <h2 class="section-title" data-i18n="features.title">Everything You Need for Your Journey</h2>
         </div>
-        <p class="section-desc">Thoughtfully designed tools to support your journey, without overwhelming you.</p>
+        <p class="section-desc" data-i18n="features.subtitle">Thoughtfully designed tools to support your journey, without overwhelming you.</p>
       </div>
 
       <div class="features-grid">
@@ -1672,57 +1764,57 @@
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
           </div>
-          <h3>Daily Devotionals</h3>
-          <p>40 beautifully written reflections that meet you exactly where you are.</p>
+          <h3 data-i18n="features.items.devotionals.title">Daily Devotionals</h3>
+          <p data-i18n="features.items.devotionals.description">40 beautifully written reflections that meet you exactly where you are.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>
           </div>
-          <h3>Private Journal</h3>
-          <p>A secure, encrypted space for your deepest thoughts and reflections.</p>
+          <h3 data-i18n="features.items.journal.title">Private Journal</h3>
+          <p data-i18n="features.items.journal.description">A secure, encrypted space for your deepest thoughts and reflections.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
           </div>
-          <h3>Anti-Shame Progress</h3>
-          <p>Miss a day? No guilt. The app celebrates your return, not your absence.</p>
+          <h3 data-i18n="features.items.progress.title">Anti-Shame Progress</h3>
+          <p data-i18n="features.items.progress.description">Miss a day? No guilt. The app celebrates your return, not your absence.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
           </div>
-          <h3>Crisis Support</h3>
-          <p>One-tap access to comfort prayers when you need them most.</p>
+          <h3 data-i18n="features.items.crisis.title">Crisis Support</h3>
+          <p data-i18n="features.items.crisis.description">One-tap access to comfort prayers when you need them most.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M17 8l-5-5-5 5M12 3v12"/></svg>
           </div>
-          <h3>Works Offline</h3>
-          <p>Your sanctuary travels with you. No internet required.</p>
+          <h3 data-i18n="features.items.offline.title">Works Offline</h3>
+          <p data-i18n="features.items.offline.description">Your sanctuary travels with you. No internet required.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
           </div>
-          <h3>Gentle Reminders</h3>
-          <p>Optional daily nudges. An invitation, never a demand.</p>
+          <h3 data-i18n="features.items.reminders.title">Gentle Reminders</h3>
+          <p data-i18n="features.items.reminders.description">Optional daily nudges. An invitation, never a demand.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
           </div>
-          <h3>Interactive Digital Book</h3>
-          <p>Read the full book with beautiful page-turning effects. Your companion on any device.</p>
+          <h3 data-i18n="features.items.digitalBook.title">Interactive Digital Book</h3>
+          <p data-i18n="features.items.digitalBook.description">Read the full book with beautiful page-turning effects. Your companion on any device.</p>
         </div>
         <div class="feature-card" data-animate>
           <div class="feature-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
           </div>
-          <h3>Brain Games</h3>
-          <p>Six evidence-based exercises for emotional regulation and mental wellness.</p>
+          <h3 data-i18n="features.items.brainGames.title">Brain Games</h3>
+          <p data-i18n="features.items.brainGames.description">Six evidence-based exercises for emotional regulation and mental wellness.</p>
         </div>
       </div>
     </div>
@@ -1732,9 +1824,9 @@
   <section id="music" class="music">
     <div class="music-container">
       <div class="music-content" data-animate>
-        <span class="section-label">Original Music</span>
-        <h2 class="section-title">Songs for Your Soul</h2>
-        <p class="section-desc">Original worship songs created specifically for your devotional journey. Let the music carry you deeper into each devotional.</p>
+        <span class="section-label" data-i18n="music.label">Original Music</span>
+        <h2 class="section-title" data-i18n="music.title">Songs for Your Soul</h2>
+        <p class="section-desc" data-i18n="music.subtitle">Original worship songs created specifically for your devotional journey. Let the music carry you deeper into each devotional.</p>
 
         <div class="music-features">
           <div class="music-feature">
@@ -1742,8 +1834,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
             <div>
-              <h4>Original Tracks</h4>
-              <p>Exclusive songs to accompany your daily devotional</p>
+              <h4 data-i18n="music.features.tracks.title">Original Tracks</h4>
+              <p data-i18n="music.features.tracks.description">Exclusive songs to accompany your daily devotional</p>
             </div>
           </div>
           <div class="music-feature">
@@ -1751,8 +1843,8 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
             </div>
             <div>
-              <h4>Built-In Player</h4>
-              <p>Listen while you read and reflect</p>
+              <h4 data-i18n="music.features.player.title">Built-In Player</h4>
+              <p data-i18n="music.features.player.description">Listen while you read and reflect</p>
             </div>
           </div>
           <div class="music-feature">
@@ -1760,26 +1852,38 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/></svg>
             </div>
             <div>
-              <h4>Devotional Worship</h4>
-              <p>Peaceful sounds to accompany your prayers</p>
+              <h4 data-i18n="music.features.worship.title">Devotional Worship</h4>
+              <p data-i18n="music.features.worship.description">Peaceful sounds to accompany your prayers</p>
             </div>
           </div>
         </div>
       </div>
       <div class="music-visual" data-animate>
-        <div class="music-player">
+        <div class="music-player" id="musicPlayer">
+          <audio id="introAudio" src="audio/intro.mp3" preload="metadata"></audio>
+          <button class="player-play-btn" id="playBtn" onclick="togglePlay()">
+            <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <svg id="pauseIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" style="display:none;">
+              <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+            </svg>
+          </button>
           <div class="player-art">
             <div class="art-circle"></div>
             <div class="art-circle"></div>
             <div class="art-circle"></div>
           </div>
           <div class="player-info">
-            <span class="now-playing">Now Playing</span>
+            <span class="now-playing" data-i18n="music.nowPlaying">Now Playing</span>
             <h4>Restore My Soul</h4>
-            <p>Tea With God</p>
+            <p data-i18n="nav.brandName">Tea With God</p>
           </div>
-          <div class="player-wave">
+          <div class="player-wave" id="playerWave">
             <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="player-progress">
+            <div class="progress-bar" id="progressBar"></div>
           </div>
         </div>
       </div>
@@ -1789,38 +1893,38 @@
   <!-- Testimonials -->
   <section id="testimonials" class="testimonials">
     <div class="testimonials-header" data-animate>
-      <span class="section-label">What Makes Us Different</span>
-      <h2 class="section-title">Built for Real Life</h2>
+      <span class="section-label" data-i18n="testimonials.label">What Makes Us Different</span>
+      <h2 class="section-title" data-i18n="testimonials.title">Built for Real Life</h2>
     </div>
 
     <div class="testimonials-grid">
       <div class="testimonial-card" data-animate>
-        <p class="testimonial-content">"No guilt for missing days. The app welcomes you back like a friend, not a judge. That approach changes everything."</p>
+        <p class="testimonial-content" data-i18n="testimonials.items.1.content">"No guilt for missing days. The app welcomes you back like a friend, not a judge. That approach changes everything."</p>
         <div class="testimonial-author">
           <div class="author-avatar"><i class="fas fa-heart" style="font-size: 16px;"></i></div>
           <div>
-            <div class="author-name">Grace-Filled Design</div>
-            <div class="author-meta">No shame, just progress</div>
+            <div class="author-name" data-i18n="testimonials.items.1.author">Grace-Filled Design</div>
+            <div class="author-meta" data-i18n="testimonials.items.1.meta">No shame, just progress</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card" data-animate>
-        <p class="testimonial-content">"Crisis prayers are just one tap away. When darkness comes, immediate comfort and guidance are within reach."</p>
+        <p class="testimonial-content" data-i18n="testimonials.items.2.content">"Crisis prayers are just one tap away. When darkness comes, immediate comfort and guidance are within reach."</p>
         <div class="testimonial-author">
           <div class="author-avatar"><i class="fas fa-hands-praying" style="font-size: 16px;"></i></div>
           <div>
-            <div class="author-name">Always Available</div>
-            <div class="author-meta">24/7 crisis support</div>
+            <div class="author-name" data-i18n="testimonials.items.2.author">Always Available</div>
+            <div class="author-meta" data-i18n="testimonials.items.2.meta">24/7 crisis support</div>
           </div>
         </div>
       </div>
       <div class="testimonial-card" data-animate>
-        <p class="testimonial-content">"Growth isn't about perfection. It's about showing up, broken and all. This devotional understands that truth."</p>
+        <p class="testimonial-content" data-i18n="testimonials.items.3.content">"Growth isn't about perfection. It's about showing up, broken and all. This devotional understands that truth."</p>
         <div class="testimonial-author">
           <div class="author-avatar"><i class="fas fa-seedling" style="font-size: 16px;"></i></div>
           <div>
-            <div class="author-name">Authentic Growth</div>
-            <div class="author-meta">40 days of transformation</div>
+            <div class="author-name" data-i18n="testimonials.items.3.author">Authentic Growth</div>
+            <div class="author-meta" data-i18n="testimonials.items.3.meta">40 days of transformation</div>
           </div>
         </div>
       </div>
@@ -1830,9 +1934,9 @@
   <!-- Download Section -->
   <section id="download" class="download">
     <div data-animate style="text-align: center;">
-      <span class="section-label">Get Started</span>
-      <h2 class="section-title">Begin Your Journey</h2>
-      <p class="section-desc" style="margin: 0 auto;">Your devotional companion awaits. Works on any device with a browser.</p>
+      <span class="section-label" data-i18n="download.label">Get Started</span>
+      <h2 class="section-title" data-i18n="download.title">Begin Your Journey</h2>
+      <p class="section-desc" style="margin: 0 auto;" data-i18n="download.subtitle">Your devotional companion awaits. Works on any device with a browser.</p>
     </div>
 
     <div class="download-buttons" style="justify-content: center;">
@@ -1843,13 +1947,13 @@
           <path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
         </svg>
         <div>
-          <div class="download-label">Launch the</div>
-          <div class="download-platform">Web App</div>
+          <div class="download-label" data-i18n="download.launchThe">Launch the</div>
+          <div class="download-platform" data-i18n="download.webApp">Web App</div>
         </div>
       </a>
     </div>
 
-    <p class="download-note">
+    <p class="download-note" data-i18n="download.note">
       Works on iPhone, Android, tablet, or computer. Install as an app or use in your browser. No app store needed.
     </p>
   </section>
@@ -1857,68 +1961,68 @@
   <!-- Pricing Section -->
   <section id="pricing" class="pricing">
     <div class="pricing-header" data-animate>
-      <span class="section-label">Pricing</span>
-      <h2 class="section-title">Choose Your Path</h2>
-      <p class="section-desc">One-time purchase. Lifetime access. No subscriptions.</p>
+      <span class="section-label" data-i18n="pricing.label">Pricing</span>
+      <h2 class="section-title" data-i18n="pricing.title">Choose Your Path</h2>
+      <p class="section-desc" data-i18n="pricing.subtitle">One-time purchase. Lifetime access. No subscriptions.</p>
     </div>
 
     <div class="pricing-grid" style="grid-template-columns: repeat(3, 1fr);">
       <!-- Book Tier -->
       <div class="pricing-card" data-animate>
-        <div class="pricing-tier">Book</div>
+        <div class="pricing-tier" data-i18n="pricing.tiers.book.name">Book</div>
         <div class="pricing-price">
-          <span class="currency">R</span>
-          <span class="amount">99</span>
+          <span class="currency" data-i18n="common.currency">R</span>
+          <span class="amount" data-i18n="pricing.tiers.book.price">99</span>
         </div>
-        <p class="pricing-desc">eBook only</p>
+        <p class="pricing-desc" data-i18n="pricing.tiers.book.description">eBook only</p>
         <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> eBook PDF download</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Read at your pace</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Offline reading</li>
-          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> No app access</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.book.features.1">eBook PDF download</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.book.features.2">Read at your pace</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.book.features.3">Offline reading</span></li>
+          <li class="excluded"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg> <span data-i18n="pricing.tiers.book.features.4">No app access</span></li>
         </ul>
-        <a href="checkout.html?plan=book" class="btn btn-secondary btn-full">Get Book Access</a>
+        <a href="checkout.html?plan=book" class="btn btn-secondary btn-full" data-i18n="pricing.tiers.book.cta">Get Book Access</a>
       </div>
 
       <!-- Journey Tier -->
       <div class="pricing-card featured" data-animate>
-        <div class="pricing-badge">Most Popular</div>
-        <div class="pricing-tier">Journey</div>
+        <div class="pricing-badge" data-i18n="pricing.tiers.journey.badge">Most Popular</div>
+        <div class="pricing-tier" data-i18n="pricing.tiers.journey.name">Journey</div>
         <div class="pricing-price">
-          <span class="currency">R</span>
-          <span class="amount">149</span>
+          <span class="currency" data-i18n="common.currency">R</span>
+          <span class="amount" data-i18n="pricing.tiers.journey.price">149</span>
         </div>
-        <p class="pricing-desc">The interactive experience</p>
+        <p class="pricing-desc" data-i18n="pricing.tiers.journey.description">The interactive experience</p>
         <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> eBook included</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> 40 devotionals in app</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Private journal</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Progress tracking</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.journey.features.1">eBook included</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.journey.features.2">40 devotionals in app</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.journey.features.3">Private journal</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.journey.features.4">Progress tracking</span></li>
         </ul>
-        <a href="checkout.html?plan=journey" class="btn btn-primary btn-full">Start Your Journey</a>
+        <a href="checkout.html?plan=journey" class="btn btn-primary btn-full" data-i18n="pricing.tiers.journey.cta">Start Your Journey</a>
       </div>
 
       <!-- Premium Tier -->
       <div class="pricing-card premium" data-animate>
-        <div class="pricing-tier">Premium</div>
+        <div class="pricing-tier" data-i18n="pricing.tiers.premium.name">Premium</div>
         <div class="pricing-price">
-          <span class="currency">R</span>
-          <span class="amount">249</span>
+          <span class="currency" data-i18n="common.currency">R</span>
+          <span class="amount" data-i18n="pricing.tiers.premium.price">249</span>
         </div>
-        <p class="pricing-desc">The complete sanctuary</p>
+        <p class="pricing-desc" data-i18n="pricing.tiers.premium.description">The complete sanctuary</p>
         <ul class="pricing-features">
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Everything in Journey</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Music library</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Brain games</li>
-          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Voice recordings</li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.premium.features.1">Everything in Journey</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.premium.features.2">Music library</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.premium.features.3">Brain games</span></li>
+          <li class="included"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> <span data-i18n="pricing.tiers.premium.features.4">Voice recordings</span></li>
         </ul>
-        <a href="checkout.html?plan=premium" class="btn btn-gold btn-full">Get Premium</a>
+        <a href="checkout.html?plan=premium" class="btn btn-gold btn-full" data-i18n="pricing.tiers.premium.cta">Get Premium</a>
       </div>
     </div>
 
     <p class="pricing-guarantee" data-animate>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      Secure EFT payment. Lifetime access. No subscriptions.
+      <span data-i18n="pricing.guarantee">Secure EFT payment. Lifetime access. No subscriptions.</span>
     </p>
   </section>
 
@@ -1926,9 +2030,9 @@
   <section id="contact" class="contact-section">
     <div class="container">
       <div class="contact-header" data-animate>
-        <span class="section-tag">Get in Touch</span>
-        <h2 class="section-title">We'd Love to Hear From You</h2>
-        <p class="section-subtitle">Questions about your devotional journey? Need support? We're here for you.</p>
+        <span class="section-tag" data-i18n="contact.label">Get in Touch</span>
+        <h2 class="section-title" data-i18n="contact.title">We'd Love to Hear From You</h2>
+        <p class="section-subtitle" data-i18n="contact.subtitle">Questions about your devotional journey? Need support? We're here for you.</p>
       </div>
 
       <div class="contact-grid">
@@ -1937,59 +2041,59 @@
             <div class="contact-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
-            <h3>Email Us</h3>
-            <p>hello@teawithgod.com</p>
-            <p class="response-time">We respond within 24-48 hours</p>
+            <h3 data-i18n="contact.email.title">Email Us</h3>
+            <p data-i18n="contact.email.address">hello@teawithgod.com</p>
+            <p class="response-time" data-i18n="contact.email.responseTime">We respond within 24-48 hours</p>
           </div>
 
           <div class="contact-card">
             <div class="contact-icon whatsapp">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             </div>
-            <h3>WhatsApp</h3>
-            <p>+27 66 467 8937</p>
-            <a href="https://wa.me/27664678937?text=Hi%20there!%20I%27d%20love%20to%20learn%20more%20about%20Tea%20With%20God.%0A%0AMy%20name%3A%20%0AMy%20email%3A%20%0ABest%20time%20to%20contact%20me%3A%20%0A%0ALooking%20forward%20to%20connecting!" class="whatsapp-link">Chat with us</a>
+            <h3 data-i18n="contact.whatsapp.title">WhatsApp</h3>
+            <p data-i18n="contact.whatsapp.number">+27 66 467 8937</p>
+            <a href="https://wa.me/27664678937?text=Hi%20there!%20I%27d%20love%20to%20learn%20more%20about%20Tea%20With%20God.%0A%0AMy%20name%3A%20%0AMy%20email%3A%20%0ABest%20time%20to%20contact%20me%3A%20%0A%0ALooking%20forward%20to%20connecting!" class="whatsapp-link" data-i18n="contact.whatsapp.cta">Chat with us</a>
           </div>
         </div>
 
         <form class="contact-form" id="contactForm" data-animate>
           <div class="form-row">
             <div class="form-group">
-              <label for="firstName">First Name *</label>
+              <label for="firstName" data-i18n="contact.form.firstName">First Name</label> *
               <input type="text" id="firstName" name="firstName" required>
             </div>
             <div class="form-group">
-              <label for="lastName">Last Name</label>
+              <label for="lastName" data-i18n="contact.form.lastName">Last Name</label>
               <input type="text" id="lastName" name="lastName">
             </div>
           </div>
           <div class="form-group">
-            <label for="email">Email *</label>
+            <label for="email" data-i18n="contact.form.email">Email</label> *
             <input type="email" id="email" name="email" required>
           </div>
           <div class="form-group">
-            <label for="phone">Phone (Optional)</label>
+            <label for="phone" data-i18n="contact.form.phone">Phone (Optional)</label>
             <input type="tel" id="phone" name="phone">
           </div>
           <div class="form-group">
-            <label for="subject">Subject</label>
+            <label for="subject" data-i18n="contact.form.subject">Subject</label>
             <select id="subject" name="subject">
-              <option value="general">General Inquiry</option>
-              <option value="support">Support Request</option>
-              <option value="bulk">Bulk/Organization Pricing</option>
-              <option value="partnership">Partnership Opportunity</option>
-              <option value="feedback">Feedback</option>
+              <option value="general" data-i18n="contact.form.subjects.general">General Inquiry</option>
+              <option value="support" data-i18n="contact.form.subjects.support">Support Request</option>
+              <option value="bulk" data-i18n="contact.form.subjects.bulk">Bulk/Organization Pricing</option>
+              <option value="partnership" data-i18n="contact.form.subjects.partnership">Partnership Opportunity</option>
+              <option value="feedback" data-i18n="contact.form.subjects.feedback">Feedback</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="message">Message *</label>
-            <textarea id="message" name="message" rows="4" required placeholder="How can we help you?"></textarea>
+            <label for="message" data-i18n="contact.form.message">Message</label> *
+            <textarea id="message" name="message" rows="4" required data-i18n-placeholder="contact.form.messagePlaceholder" placeholder="How can we help you?"></textarea>
           </div>
           <button type="submit" class="btn btn-primary btn-full">
-            <span>Send Message</span>
+            <span data-i18n="contact.form.submit">Send Message</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
           </button>
-          <p class="form-note">We respect your privacy. Your information is safe with us.</p>
+          <p class="form-note" data-i18n="contact.form.note">We respect your privacy. Your information is safe with us.</p>
         </form>
       </div>
     </div>
@@ -2006,38 +2110,38 @@
     <div class="footer-content">
       <div class="footer-brand">
         <a href="/" class="logo">
-          <img src="images/teacup.png" alt="Tea With God" class="logo-mark">
-          <span>Tea With God</span>
+          <img src="images/teacup.png" alt="Tea With God" class="logo-mark" data-i18n-title="nav.brandName">
+          <span data-i18n="nav.brandName">Tea With God</span>
         </a>
-        <p>A 40-day companion for the beautifully broken. Made with love in South Africa.</p>
+        <p data-i18n="footer.tagline">A 40-day companion for the beautifully broken. Made with love in South Africa.</p>
       </div>
 
       <div class="footer-links">
         <div class="footer-column">
-          <h4>Product</h4>
-          <a href="#journey">The Journey</a>
-          <a href="#features">Features</a>
-          <a href="science.html">The Science</a>
-          <a href="checkout.html">Get Access</a>
+          <h4 data-i18n="footer.columns.product.title">Product</h4>
+          <a href="#journey" data-i18n="footer.columns.product.journey">The Journey</a>
+          <a href="#features" data-i18n="footer.columns.product.features">Features</a>
+          <a href="science.html" data-i18n="footer.columns.product.science">The Science</a>
+          <a href="checkout.html" data-i18n="footer.columns.product.getAccess">Get Access</a>
         </div>
         <div class="footer-column">
-          <h4>Organizations</h4>
-          <a href="b2b/">Bulk Licensing</a>
-          <a href="b2b/#pricing">Pricing Tiers</a>
-          <a href="b2b/#faq">FAQ</a>
+          <h4 data-i18n="footer.columns.organizations.title">Organizations</h4>
+          <a href="b2b/" data-i18n="footer.columns.organizations.bulkLicensing">Bulk Licensing</a>
+          <a href="b2b/#pricing" data-i18n="footer.columns.organizations.pricingTiers">Pricing Tiers</a>
+          <a href="b2b/#faq" data-i18n="footer.columns.organizations.faq">FAQ</a>
         </div>
         <div class="footer-column">
-          <h4>Support</h4>
-          <a href="mailto:hello@teawithgod.com">Contact</a>
-          <a href="faq.html">FAQ</a>
-          <a href="privacy.html">Privacy Policy</a>
-          <a href="terms.html">Terms of Service</a>
+          <h4 data-i18n="footer.columns.support.title">Support</h4>
+          <a href="mailto:hello@teawithgod.com" data-i18n="footer.columns.support.contact">Contact</a>
+          <a href="faq.html" data-i18n="footer.columns.support.faq">FAQ</a>
+          <a href="privacy.html" data-i18n="footer.columns.support.privacy">Privacy Policy</a>
+          <a href="terms.html" data-i18n="footer.columns.support.terms">Terms of Service</a>
         </div>
       </div>
     </div>
 
     <div class="footer-bottom">
-      <p>&copy; 2025 Tea With God. All rights reserved.</p>
+      <p>&copy; <span data-i18n="footer.copyright">2025 Tea With God. All rights reserved.</span></p>
     </div>
   </footer>
 
@@ -2057,6 +2161,47 @@
       hamburger.classList.remove('active');
       mobileMenu.classList.remove('active');
       document.body.style.overflow = '';
+    }
+
+    // Audio player
+    let isPlaying = false;
+    const audio = document.getElementById('introAudio');
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    const playerWave = document.getElementById('playerWave');
+    const progressBar = document.getElementById('progressBar');
+
+    function togglePlay() {
+      if (isPlaying) {
+        audio.pause();
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        playerWave.classList.add('paused');
+      } else {
+        audio.play();
+        playIcon.style.display = 'none';
+        pauseIcon.style.display = 'block';
+        playerWave.classList.remove('paused');
+      }
+      isPlaying = !isPlaying;
+    }
+
+    if (audio) {
+      audio.addEventListener('timeupdate', () => {
+        const progress = (audio.currentTime / audio.duration) * 100;
+        if (progressBar) progressBar.style.width = progress + '%';
+      });
+
+      audio.addEventListener('ended', () => {
+        isPlaying = false;
+        playIcon.style.display = 'block';
+        pauseIcon.style.display = 'none';
+        playerWave.classList.add('paused');
+        if (progressBar) progressBar.style.width = '0%';
+      });
+
+      // Start with paused state
+      playerWave.classList.add('paused');
     }
 
     // Toast notification system
@@ -2150,6 +2295,9 @@
       }
     });
   </script>
+
+  <!-- i18n (Language Support) -->
+  <script src="js/i18n.js"></script>
 
   <!-- Chatbot -->
   <script src="js/chatbot.js"></script>

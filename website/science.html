@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page="science">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Science - Tea With God | Evidence-Based Brain Health</title>
+  <title data-i18n="science.pageTitle">The Science - Tea With God | Evidence-Based Brain Health</title>
   <meta name="description" content="Discover the neuroscience behind Tea With God's brain games. Based on evidence-based principles from CBT, Polyvagal Theory, and peer-reviewed psychological research.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -505,30 +505,37 @@
       <img src="images/teacup.png" alt="Tea With God">
       <span>Tea With God</span>
     </a>
-    <a href="index.html" class="back-link">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-      </svg>
-      Back to Home
-    </a>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="lang-switcher" style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;">
+        <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" style="background: none; border: none; color: var(--gold); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 600;">EN</button>
+        <span style="color: var(--text-muted);">|</span>
+        <button data-lang-switch="af" onclick="i18n.switchLanguage('af')" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 500;">AF</button>
+      </div>
+      <a href="index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span data-i18n="nav.backToHome">Back to Home</span>
+      </a>
+    </div>
   </header>
 
   <main>
     <div class="page-header">
-      <span class="page-label">Evidence-Based Healing</span>
-      <h1>The Science Behind Your Healing</h1>
-      <p class="page-subtitle">Tea With God combines ancient spiritual wisdom with modern neuroscience. Here's why it works.</p>
+      <span class="page-label" data-i18n="science.label">Evidence-Based Growth</span>
+      <h1 data-i18n="science.title">The Science Behind Your Journey</h1>
+      <p class="page-subtitle" data-i18n="science.subtitle">Tea With God combines ancient spiritual wisdom with modern neuroscience. Here's why it works.</p>
     </div>
 
     <section class="intro-section">
-      <p>Our brain games aren't random feel-good exercises. They're carefully designed interventions based on peer-reviewed research in neuroscience, psychology, and trauma recovery.</p>
-      <p>Each game targets specific brain regions and psychological mechanisms to support genuine, lasting healing.</p>
+      <p data-i18n="science.intro.p1">Our brain games aren't random feel-good exercises. They're carefully designed interventions based on peer-reviewed research in neuroscience, psychology, and trauma recovery.</p>
+      <p data-i18n="science.intro.p2">Each game targets specific brain regions and psychological mechanisms to support genuine, lasting growth.</p>
     </section>
 
     <!-- Brain Health Principles -->
     <section class="content-section">
-      <h2>Evidence-Based Brain Health Principles</h2>
-      <p>Modern brain imaging research has identified foundational principles for brain health. These evidence-based insights inform our entire approach:</p>
+      <h2 data-i18n="science.principles.title">Evidence-Based Brain Health Principles</h2>
+      <p data-i18n="science.principles.intro">Modern brain imaging research has identified foundational principles for brain health. These evidence-based insights inform our entire approach:</p>
 
       <div class="principles-grid">
         <div class="principle-card">
@@ -566,8 +573,8 @@
 
     <!-- The 6 Brain Games -->
     <section class="content-section">
-      <h2>The 6 Brain Games</h2>
-      <p>Each game is designed to target specific brain regions and psychological mechanisms:</p>
+      <h2 data-i18n="science.games.title">The 6 Brain Games</h2>
+      <p data-i18n="science.games.intro">Each game is designed to target specific brain regions and psychological mechanisms:</p>
 
       <!-- Breathe with God -->
       <div class="game-section">
@@ -951,8 +958,8 @@
 
     <!-- The 40-Day Journey -->
     <section class="content-section">
-      <h2>The 40-Day Journey Structure</h2>
-      <p>Like clay in the Potter's hands (Jeremiah 18:4), you are being reshaped over 40 days. The games unlock progressively, following a structure designed to build brain health systematically:</p>
+      <h2 data-i18n="science.journey.title">The 40-Day Journey Structure</h2>
+      <p data-i18n="science.journey.intro">Like clay in the Potter's hands (Jeremiah 18:4), you are being reshaped over 40 days. The games unlock progressively, following a structure designed to build brain health systematically:</p>
 
       <div class="phases-timeline">
         <div class="phase-item">
@@ -982,7 +989,7 @@
             <div class="phase-days">Days 21-30</div>
             <p><strong>Brain Focus:</strong> Insula (body), DLPFC (focus)<br>
             <strong>Games:</strong> + Body Scan Release, Pattern Peace<br>
-            The Potter refines through fire. Somatic healing, releasing stored tension, building cognitive strength.</p>
+            The Potter refines through fire. Somatic release, letting go of stored tension, building cognitive strength.</p>
           </div>
         </div>
         <div class="phase-item">
@@ -1000,13 +1007,13 @@
 
     <!-- Why This Architecture Works -->
     <section class="content-section">
-      <h2>Why This Architecture Works</h2>
+      <h2 data-i18n="science.architecture.title">Why This Architecture Works</h2>
 
       <div class="highlight-box">
-        <p><strong>Systems Integration Principle:</strong> Brain systems work together in harmony. Imbalance in one system affects all others.</p>
+        <p data-i18n-html="science.architecture.systemsBox"><strong>Systems Integration Principle:</strong> Brain systems work together in harmony. Imbalance in one system affects all others.</p>
       </div>
 
-      <p>The 6 brain games aren't random - they're designed to target EVERY major brain system:</p>
+      <p data-i18n="science.architecture.intro">The 6 brain games aren't random - they're designed to target EVERY major brain system:</p>
 
       <ul>
         <li><strong>Breathing</strong> - Vagus nerve / Autonomic nervous system</li>
@@ -1017,23 +1024,23 @@
         <li><strong>Pattern Peace</strong> - DLPFC / Working memory</li>
       </ul>
 
-      <p>Together, they create <strong>whole-brain healing</strong> - not just treating symptoms, but building a stronger, more resilient brain over 40 days.</p>
+      <p data-i18n-html="science.architecture.conclusion">Together, they create <strong>whole-brain growth</strong> - not just treating symptoms, but building a stronger, more resilient brain over 40 days.</p>
     </section>
 
     <!-- Disclaimer -->
     <div class="disclaimer-section">
-      <h3>Important Disclaimer</h3>
-      <p>These exercises are educational tools based on evidence-based psychological principles.</p>
-      <p>They are not a substitute for professional mental health treatment.</p>
-      <p>If you're in crisis, please reach out to a mental health professional or crisis line.</p>
+      <h3 data-i18n="science.disclaimer.title">Important Disclaimer</h3>
+      <p data-i18n="science.disclaimer.p1">These exercises are educational tools based on evidence-based psychological principles.</p>
+      <p data-i18n="science.disclaimer.p2">They are not a substitute for professional mental health treatment.</p>
+      <p data-i18n="science.disclaimer.p3">If you're in crisis, please reach out to a mental health professional or crisis line.</p>
     </div>
 
     <!-- CTA -->
     <div class="cta-section">
-      <h2>Begin Your Healing Journey</h2>
-      <p>40 days of evidence-based exercises combined with spiritual devotion.</p>
+      <h2 data-i18n="science.cta.title">Begin Your Devotional Journey</h2>
+      <p data-i18n="science.cta.subtitle">40 days of evidence-based exercises combined with spiritual devotion.</p>
       <a href="checkout.html" class="cta-button">
-        Start Your Journey
+        <span data-i18n="science.cta.button">Start Your Journey</span>
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M12 5l7 7-7 7"/>
         </svg>
@@ -1042,7 +1049,9 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Tea With God. All rights reserved. | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a> | <a href="faq.html">FAQ</a></p>
+    <p><span data-i18n="science.footer.copyright">&copy; 2026 Tea With God. All rights reserved.</span> | <a href="privacy.html" data-i18n="science.footer.privacy">Privacy Policy</a> | <a href="terms.html" data-i18n="science.footer.terms">Terms of Service</a> | <a href="faq.html" data-i18n="science.footer.faq">FAQ</a></p>
   </footer>
+
+  <script src="js/i18n.js"></script>
 </body>
 </html>

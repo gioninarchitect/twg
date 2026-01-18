@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page="b2b">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tea With God - For Churches & Organizations</title>
+    <title data-i18n="b2b.pageTitle">Tea With God - For Churches & Organizations</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -1011,74 +1011,81 @@
 <body>
     <!-- Navigation -->
     <nav>
-        <a href="../index.html" class="nav-logo"><img src="../images/teacup.png" alt="Tea With God">Tea With God</a>
+        <a href="../index.html" class="nav-logo"><img src="../images/teacup.png" alt="Tea With God"><span data-i18n="nav.brand">Tea With God</span></a>
         <ul class="nav-links">
-            <li><a href="#pricing">Pricing</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#pricing" data-i18n="b2b.nav.pricing">Pricing</a></li>
+            <li><a href="#how-it-works" data-i18n="b2b.nav.howItWorks">How It Works</a></li>
+            <li><a href="#faq" data-i18n="b2b.nav.faq">FAQ</a></li>
         </ul>
-        <a href="#" class="nav-cta" onclick="openContactModal()">Get Started</a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="lang-switcher" style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;">
+                <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" style="background: none; border: none; color: var(--gold); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 600;">EN</button>
+                <span style="color: var(--text-muted);">|</span>
+                <button data-lang-switch="af" onclick="i18n.switchLanguage('af')" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 500;">AF</button>
+            </div>
+            <a href="#" class="nav-cta" onclick="openContactModal()" data-i18n="b2b.nav.getStarted">Get Started</a>
+        </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="hero">
-        <span class="hero-badge"><i class="fas fa-hands-holding-heart"></i> For Organizations</span>
-        <h1>Bring Hope to Your Community</h1>
-        <p>Equip your organization with a proven 40-day devotional journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.</p>
+        <span class="hero-badge"><i class="fas fa-hands-holding-heart"></i> <span data-i18n="b2b.hero.badge">For Organizations</span></span>
+        <h1 data-i18n="b2b.hero.title">Bring Hope to Your Community</h1>
+        <p data-i18n="b2b.hero.subtitle">Equip your organization with a proven 40-day devotional journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.</p>
         <div class="hero-cta">
-            <a href="#pricing" class="btn btn-primary"><i class="fas fa-tag"></i> View Pricing</a>
-            <a href="#" class="btn btn-secondary" onclick="openContactModal()"><i class="fas fa-calendar"></i> Book a Demo</a>
+            <a href="#pricing" class="btn btn-primary"><i class="fas fa-tag"></i> <span data-i18n="b2b.hero.viewPricing">View Pricing</span></a>
+            <a href="#" class="btn btn-secondary" onclick="openContactModal()"><i class="fas fa-calendar"></i> <span data-i18n="b2b.hero.bookDemo">Book a Demo</span></a>
         </div>
     </section>
 
     <!-- Organization Types -->
     <section class="org-types">
         <div class="section-header">
-            <h2>Perfect for Every Organization</h2>
-            <p>Tea With God serves organizations of all sizes across the globe</p>
+            <h2 data-i18n="b2b.orgTypes.title">Perfect for Every Organization</h2>
+            <p data-i18n="b2b.orgTypes.subtitle">Tea With God serves organizations of all sizes across the globe</p>
         </div>
         <div class="org-grid org-grid-4">
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-church"></i></div>
-                <h3>Churches</h3>
-                <p>Women's ministries and small groups seeking structured devotional resources</p>
+                <h3 data-i18n="b2b.orgTypes.churches.title">Churches</h3>
+                <p data-i18n="b2b.orgTypes.churches.desc">Women's ministries and small groups seeking structured devotional resources</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-heart-pulse"></i></div>
-                <h3>Counseling Centers</h3>
-                <p>Christian counselors and therapists supplementing client care</p>
+                <h3 data-i18n="b2b.orgTypes.counseling.title">Counseling Centers</h3>
+                <p data-i18n="b2b.orgTypes.counseling.desc">Christian counselors and therapists supplementing client care</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-house-chimney-heart"></i></div>
-                <h3>Shelters</h3>
-                <p>Women's shelters and safe houses for trauma recovery support</p>
+                <h3 data-i18n="b2b.orgTypes.shelters.title">Shelters</h3>
+                <p data-i18n="b2b.orgTypes.shelters.desc">Women's shelters and safe houses for trauma recovery support</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-hands-holding-child"></i></div>
-                <h3>NGOs</h3>
-                <p>Non-profits serving vulnerable women and communities</p>
+                <h3 data-i18n="b2b.orgTypes.ngos.title">NGOs</h3>
+                <p data-i18n="b2b.orgTypes.ngos.desc">Non-profits serving vulnerable women and communities</p>
             </div>
         </div>
         <div class="org-grid org-grid-4" style="margin-top: 24px;">
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-hands-praying"></i></div>
-                <h3>Retreat Centers</h3>
-                <p>Spiritual formation retreats and women's ministries</p>
+                <h3 data-i18n="b2b.orgTypes.retreats.title">Retreat Centers</h3>
+                <p data-i18n="b2b.orgTypes.retreats.desc">Spiritual formation retreats and women's ministries</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-brain"></i></div>
-                <h3>Psychiatric & Mental Health</h3>
-                <p>Psychiatric hospitals, clinics, and mental health facilities</p>
+                <h3 data-i18n="b2b.orgTypes.mental.title">Psychiatric & Mental Health</h3>
+                <p data-i18n="b2b.orgTypes.mental.desc">Psychiatric hospitals, clinics, and mental health facilities</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-graduation-cap"></i></div>
-                <h3>Education</h3>
-                <p>Schools, colleges, and universities for student wellness</p>
+                <h3 data-i18n="b2b.orgTypes.education.title">Education</h3>
+                <p data-i18n="b2b.orgTypes.education.desc">Schools, colleges, and universities for student wellness</p>
             </div>
             <div class="org-card">
                 <div class="org-icon"><i class="fas fa-building"></i></div>
-                <h3>Corporates</h3>
-                <p>Faith-based companies for employee wellness programs</p>
+                <h3 data-i18n="b2b.orgTypes.corporate.title">Corporates</h3>
+                <p data-i18n="b2b.orgTypes.corporate.desc">Faith-based companies for employee wellness programs</p>
             </div>
         </div>
     </section>
@@ -1086,8 +1093,8 @@
     <!-- Pricing Section -->
     <section class="pricing-section" id="pricing">
         <div class="section-header">
-            <h2>Simple, Transparent Pricing</h2>
-            <p>Choose the plan that fits your organization's needs</p>
+            <h2 data-i18n="b2b.pricing.title">Simple, Transparent Pricing</h2>
+            <p data-i18n="b2b.pricing.subtitle">Choose the plan that fits your organization's needs</p>
         </div>
 
         <!-- Region Selector -->
@@ -1108,7 +1115,7 @@
 
         <!-- Tier Selector -->
         <div style="text-align: center; margin: 24px 0;">
-            <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.9rem;">Select access tier for your members:</p>
+            <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 0.9rem;" data-i18n="b2b.pricing.selectTier">Select access tier for your members:</p>
             <div class="region-selector" style="margin-bottom: 0;">
                 <button class="tier-btn" data-tier="book">
                     <i class="fas fa-book"></i> Book <span style="opacity: 0.7;">(R99)</span>
@@ -1135,25 +1142,25 @@
     <!-- Simple Process -->
     <section class="onboarding-section">
         <div class="onboarding-container">
-            <span class="section-label">Simple Process</span>
-            <h2 class="section-title">Quick Setup for Your Organization</h2>
-            <p class="onboarding-subtitle">Contact us to get bulk access codes for your team or community.</p>
+            <span class="section-label" data-i18n="b2b.process.label">Simple Process</span>
+            <h2 class="section-title" data-i18n="b2b.process.title">Quick Setup for Your Organization</h2>
+            <p class="onboarding-subtitle" data-i18n="b2b.process.subtitle">Contact us to get bulk access codes for your team or community.</p>
 
             <div class="onboarding-grid" style="grid-template-columns: repeat(3, 1fr);">
                 <div class="onboarding-item">
                     <div class="onboarding-icon"><i class="fas fa-comments"></i></div>
-                    <h4>Contact Us</h4>
-                    <p>Tell us your needs</p>
+                    <h4 data-i18n="b2b.process.step1.title">Contact Us</h4>
+                    <p data-i18n="b2b.process.step1.desc">Tell us your needs</p>
                 </div>
                 <div class="onboarding-item">
                     <div class="onboarding-icon"><i class="fas fa-key"></i></div>
-                    <h4>Get Your Codes</h4>
-                    <p>Bulk access codes generated</p>
+                    <h4 data-i18n="b2b.process.step2.title">Get Your Codes</h4>
+                    <p data-i18n="b2b.process.step2.desc">Bulk access codes generated</p>
                 </div>
                 <div class="onboarding-item">
                     <div class="onboarding-icon"><i class="fas fa-users"></i></div>
-                    <h4>Distribute</h4>
-                    <p>Share with your community</p>
+                    <h4 data-i18n="b2b.process.step3.title">Distribute</h4>
+                    <p data-i18n="b2b.process.step3.desc">Share with your community</p>
                 </div>
             </div>
         </div>
@@ -1162,29 +1169,29 @@
     <!-- How It Works -->
     <section class="how-it-works" id="how-it-works">
         <div class="section-header">
-            <h2>How It Works</h2>
-            <p>Get your organization set up in four simple steps</p>
+            <h2 data-i18n="b2b.howItWorks.title">How It Works</h2>
+            <p data-i18n="b2b.howItWorks.subtitle">Get your organization set up in four simple steps</p>
         </div>
         <div class="steps-grid">
             <div class="step-card">
                 <div class="step-number">1</div>
-                <h3>Choose Your Plan</h3>
-                <p>Select a tier based on your organization size and needs</p>
+                <h3 data-i18n="b2b.howItWorks.step1.title">Choose Your Plan</h3>
+                <p data-i18n="b2b.howItWorks.step1.desc">Select a tier based on your organization size and needs</p>
             </div>
             <div class="step-card">
                 <div class="step-number">2</div>
-                <h3>Receive Access Codes</h3>
-                <p>Codes generated instantly - no waiting for approval</p>
+                <h3 data-i18n="b2b.howItWorks.step2.title">Receive Access Codes</h3>
+                <p data-i18n="b2b.howItWorks.step2.desc">Codes generated instantly - no waiting for approval</p>
             </div>
             <div class="step-card">
                 <div class="step-number">3</div>
-                <h3>Distribute to Members</h3>
-                <p>Use our email templates or your own distribution method</p>
+                <h3 data-i18n="b2b.howItWorks.step3.title">Distribute to Members</h3>
+                <p data-i18n="b2b.howItWorks.step3.desc">Use our email templates or your own distribution method</p>
             </div>
             <div class="step-card">
                 <div class="step-number">4</div>
-                <h3>Track & Support</h3>
-                <p>View engagement metrics and support your community</p>
+                <h3 data-i18n="b2b.howItWorks.step4.title">Track & Support</h3>
+                <p data-i18n="b2b.howItWorks.step4.desc">View engagement metrics and support your community</p>
             </div>
         </div>
     </section>
@@ -1192,37 +1199,37 @@
     <!-- Why Organizations Choose Us -->
     <section class="testimonials">
         <div class="section-header">
-            <h2>Why Organizations Choose Tea With God</h2>
-            <p>A 40-day devotional companion designed for community impact</p>
+            <h2 data-i18n="b2b.whyChoose.title">Why Organizations Choose Tea With God</h2>
+            <p data-i18n="b2b.whyChoose.subtitle">A 40-day devotional companion designed for community impact</p>
         </div>
         <div class="testimonial-grid">
             <div class="testimonial-card">
-                <p class="testimonial-quote" style="font-style: normal;"><strong>Privacy-First Design</strong><br><br>Journal entries and personal reflections stay on each user's device. Organizations see only aggregate engagement metrics, never individual content.</p>
+                <p class="testimonial-quote" style="font-style: normal;" data-i18n-html="b2b.whyChoose.privacy.content"><strong>Privacy-First Design</strong><br><br>Journal entries and personal reflections stay on each user's device. Organizations see only aggregate engagement metrics, never individual content.</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar"><i class="fas fa-shield-halved"></i></div>
                     <div>
-                        <div class="testimonial-name">Data Protection</div>
-                        <div class="testimonial-role">POPIA & GDPR Compliant</div>
+                        <div class="testimonial-name" data-i18n="b2b.whyChoose.privacy.name">Data Protection</div>
+                        <div class="testimonial-role" data-i18n="b2b.whyChoose.privacy.role">POPIA & GDPR Compliant</div>
                     </div>
                 </div>
             </div>
             <div class="testimonial-card">
-                <p class="testimonial-quote" style="font-style: normal;"><strong>Works Offline</strong><br><br>Once downloaded, the app works without internet connection. Perfect for communities with limited connectivity or expensive mobile data.</p>
+                <p class="testimonial-quote" style="font-style: normal;" data-i18n-html="b2b.whyChoose.offline.content"><strong>Works Offline</strong><br><br>Once downloaded, the app works without internet connection. Perfect for communities with limited connectivity or expensive mobile data.</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar"><i class="fas fa-wifi-slash"></i></div>
                     <div>
-                        <div class="testimonial-name">Offline Capable</div>
-                        <div class="testimonial-role">No internet required</div>
+                        <div class="testimonial-name" data-i18n="b2b.whyChoose.offline.name">Offline Capable</div>
+                        <div class="testimonial-role" data-i18n="b2b.whyChoose.offline.role">No internet required</div>
                     </div>
                 </div>
             </div>
             <div class="testimonial-card">
-                <p class="testimonial-quote" style="font-style: normal;"><strong>Evidence-Based Content</strong><br><br>Devotionals are grounded in Scripture while incorporating insights from CBT, positive psychology, and trauma-informed care principles.</p>
+                <p class="testimonial-quote" style="font-style: normal;" data-i18n-html="b2b.whyChoose.evidence.content"><strong>Evidence-Based Content</strong><br><br>Devotionals are grounded in Scripture while incorporating insights from CBT, positive psychology, and trauma-informed care principles.</p>
                 <div class="testimonial-author">
                     <div class="testimonial-avatar"><i class="fas fa-book-open"></i></div>
                     <div>
-                        <div class="testimonial-name">Research-Informed</div>
-                        <div class="testimonial-role">Faith + Psychology</div>
+                        <div class="testimonial-name" data-i18n="b2b.whyChoose.evidence.name">Research-Informed</div>
+                        <div class="testimonial-role" data-i18n="b2b.whyChoose.evidence.role">Faith + Psychology</div>
                     </div>
                 </div>
             </div>
@@ -1232,53 +1239,53 @@
     <!-- FAQ Section -->
     <section class="faq" id="faq">
         <div class="section-header">
-            <h2>Frequently Asked Questions</h2>
-            <p>Everything you need to know about our B2B plans</p>
+            <h2 data-i18n="b2b.faq.title">Frequently Asked Questions</h2>
+            <p data-i18n="b2b.faq.subtitle">Everything you need to know about our B2B plans</p>
         </div>
         <div class="faq-grid">
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>What data can our organization see about members?</span>
+                    <span data-i18n="b2b.faq.q1.question">What data can our organization see about members?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>Privacy is paramount. Your organization dashboard shows aggregate metrics only: total active users, average progress day, phase completion rates, and general engagement. You will never see individual journal entries, personal notes, or specific emotional data.</p>
+                    <p data-i18n="b2b.faq.q1.answer">Privacy is paramount. Your organization dashboard shows aggregate metrics only: total active users, average progress day, phase completion rates, and general engagement. You will never see individual journal entries, personal notes, or specific emotional data.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>Can we customize the app with our branding?</span>
+                    <span data-i18n="b2b.faq.q2.question">Can we customize the app with our branding?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>Our Ministry Plus and Enterprise tiers include white-label options. You can add your organization's logo to the welcome screen, customize the primary color scheme, and add a personalized welcome message for your members.</p>
+                    <p data-i18n="b2b.faq.q2.answer">Our Ministry Plus and Enterprise tiers include white-label options. You can add your organization's logo to the welcome screen, customize the primary color scheme, and add a personalized welcome message for your members.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>How do access codes work?</span>
+                    <span data-i18n="b2b.faq.q3.question">How do access codes work?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>When you purchase a plan, you receive unique access codes to distribute to your members. Each member downloads the Tea With God app and enters their code to unlock their access level. Codes can only be used once and are linked to the member's device.</p>
+                    <p data-i18n="b2b.faq.q3.answer">When you purchase a plan, you receive unique access codes to distribute to your members. Each member downloads the Tea With God app and enters their code to unlock their access level. Codes can only be used once and are linked to the member's device.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>What happens if we need more codes?</span>
+                    <span data-i18n="b2b.faq.q4.question">What happens if we need more codes?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>You can purchase additional codes at any time at the same per-user rate. Enterprise customers can also upgrade to unlimited codes. Contact us to add more codes to your existing plan.</p>
+                    <p data-i18n="b2b.faq.q4.answer">You can purchase additional codes at any time at the same per-user rate. Enterprise customers can also upgrade to unlimited codes. Contact us to add more codes to your existing plan.</p>
                 </div>
             </div>
             <div class="faq-item">
                 <div class="faq-question">
-                    <span>Why is pricing different in different countries?</span>
+                    <span data-i18n="b2b.faq.q5.question">Why is pricing different in different countries?</span>
                     <i class="fas fa-chevron-down"></i>
                 </div>
                 <div class="faq-answer">
-                    <p>We believe devotional tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means organizations in different countries pay what's affordable locally, not a US-dollar equivalent that might be out of reach.</p>
+                    <p data-i18n="b2b.faq.q5.answer">We believe devotional tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means organizations in different countries pay what's affordable locally, not a US-dollar equivalent that might be out of reach.</p>
                 </div>
             </div>
         </div>
@@ -1286,68 +1293,68 @@
 
     <!-- CTA Section -->
     <section class="cta-section">
-        <h2>Ready to Transform Your Ministry?</h2>
-        <p>Join hundreds of churches bringing evidence-based devotional support to their communities.</p>
-        <a href="#" class="btn" onclick="openContactModal()"><i class="fas fa-paper-plane"></i> Contact Us Today</a>
+        <h2 data-i18n="b2b.cta.title">Ready to Transform Your Ministry?</h2>
+        <p data-i18n="b2b.cta.subtitle">Join hundreds of churches bringing evidence-based devotional support to their communities.</p>
+        <a href="#" class="btn" onclick="openContactModal()"><i class="fas fa-paper-plane"></i> <span data-i18n="b2b.cta.button">Contact Us Today</span></a>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Tea With God. All rights reserved. | <a href="../index.html">Individual Access</a> | <a href="../admin">Admin Login</a></p>
+        <p><span data-i18n="b2b.footer.copyright">&copy; 2026 Tea With God. All rights reserved.</span> | <a href="../index.html" data-i18n="b2b.footer.individual">Individual Access</a> | <a href="../admin" data-i18n="b2b.footer.admin">Admin Login</a></p>
     </footer>
 
     <!-- Contact Modal -->
     <div class="modal-overlay" id="contactModal">
         <div class="modal">
             <div class="modal-header">
-                <h3>Get Started</h3>
+                <h3 data-i18n="b2b.modal.title">Get Started</h3>
                 <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <form id="contactForm" onsubmit="handleSubmit(event)">
                     <div class="form-group">
-                        <label>Organization Name *</label>
+                        <label data-i18n="b2b.modal.orgName">Organization Name *</label>
                         <input type="text" name="orgName" required>
                     </div>
                     <div class="form-group">
-                        <label>Organization Type *</label>
+                        <label data-i18n="b2b.modal.orgType">Organization Type *</label>
                         <select name="orgType" required>
-                            <option value="">Select type...</option>
-                            <option value="church">Church / Women's Ministry</option>
-                            <option value="counseling">Counseling / Therapy Center</option>
-                            <option value="shelter">Women's Shelter / Safe House</option>
-                            <option value="ngo">NGO / Non-Profit</option>
-                            <option value="retreat">Retreat / Spiritual Center</option>
-                            <option value="psychiatric">Psychiatric Hospital / Mental Health Clinic</option>
-                            <option value="healthcare">Hospital / Healthcare</option>
-                            <option value="education">School / College / University</option>
-                            <option value="corporate">Corporate / Workplace Wellness</option>
-                            <option value="correctional">Correctional / Rehabilitation</option>
-                            <option value="support">Support Group / Recovery Program</option>
-                            <option value="other">Other</option>
+                            <option value="" data-i18n="b2b.modal.selectType">Select type...</option>
+                            <option value="church" data-i18n="b2b.modal.types.church">Church / Women's Ministry</option>
+                            <option value="counseling" data-i18n="b2b.modal.types.counseling">Counseling / Therapy Center</option>
+                            <option value="shelter" data-i18n="b2b.modal.types.shelter">Women's Shelter / Safe House</option>
+                            <option value="ngo" data-i18n="b2b.modal.types.ngo">NGO / Non-Profit</option>
+                            <option value="retreat" data-i18n="b2b.modal.types.retreat">Retreat / Spiritual Center</option>
+                            <option value="psychiatric" data-i18n="b2b.modal.types.psychiatric">Psychiatric Hospital / Mental Health Clinic</option>
+                            <option value="healthcare" data-i18n="b2b.modal.types.healthcare">Hospital / Healthcare</option>
+                            <option value="education" data-i18n="b2b.modal.types.education">School / College / University</option>
+                            <option value="corporate" data-i18n="b2b.modal.types.corporate">Corporate / Workplace Wellness</option>
+                            <option value="correctional" data-i18n="b2b.modal.types.correctional">Correctional / Rehabilitation</option>
+                            <option value="support" data-i18n="b2b.modal.types.support">Support Group / Recovery Program</option>
+                            <option value="other" data-i18n="b2b.modal.types.other">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Your Name *</label>
+                        <label data-i18n="b2b.modal.yourName">Your Name *</label>
                         <input type="text" name="contactName" required>
                     </div>
                     <div class="form-group">
-                        <label>Email *</label>
+                        <label data-i18n="b2b.modal.email">Email *</label>
                         <input type="email" name="email" required>
                     </div>
                     <div class="form-group">
-                        <label>Country *</label>
+                        <label data-i18n="b2b.modal.country">Country *</label>
                         <select name="country" required>
-                            <option value="">Select country...</option>
+                            <option value="" data-i18n="b2b.modal.selectCountry">Select country...</option>
                             <option value="za">South Africa</option>
                             <option value="us">United States</option>
                             <option value="uk">United Kingdom</option>
                             <option value="au">Australia</option>
-                            <option value="other">Other</option>
+                            <option value="other" data-i18n="b2b.modal.otherCountry">Other</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Estimated Number of Users</label>
+                        <label data-i18n="b2b.modal.userCount">Estimated Number of Users</label>
                         <select name="userCount">
                             <option value="10-50">10-50</option>
                             <option value="50-100">50-100</option>
@@ -1356,14 +1363,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Message</label>
-                        <textarea name="message" rows="3" placeholder="Tell us about your organization and goals..."></textarea>
+                        <label data-i18n="b2b.modal.message">Message</label>
+                        <textarea name="message" rows="3" data-i18n-placeholder="b2b.modal.messagePlaceholder" placeholder="Tell us about your organization and goals..."></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="submit" form="contactForm" class="btn btn-primary">
-                    <i class="fas fa-paper-plane"></i> Send Inquiry
+                    <i class="fas fa-paper-plane"></i> <span data-i18n="b2b.modal.submit">Send Inquiry</span>
                 </button>
             </div>
         </div>
@@ -1598,5 +1605,6 @@
         // Initialize
         renderPricing();
     </script>
+    <script src="../js/i18n.js"></script>
 </body>
 </html>

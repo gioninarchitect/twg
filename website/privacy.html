@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-i18n-page="privacy">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privacy Policy - Tea With God</title>
+  <title data-i18n="privacy.pageTitle">Privacy Policy - Tea With God</title>
   <meta name="description" content="Privacy Policy for Tea With God - Your data stays private, your journey stays sacred.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -202,29 +202,36 @@
       <img src="images/teacup.png" alt="Tea With God">
       <span>Tea With God</span>
     </a>
-    <a href="index.html" class="back-link">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M19 12H5M12 19l-7-7 7-7"/>
-      </svg>
-      Back to Home
-    </a>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="lang-switcher" style="display: flex; align-items: center; gap: 8px; font-size: 0.875rem;">
+        <button data-lang-switch="en" onclick="i18n.switchLanguage('en')" style="background: none; border: none; color: var(--gold); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 600;">EN</button>
+        <span style="color: var(--text-muted);">|</span>
+        <button data-lang-switch="af" onclick="i18n.switchLanguage('af')" style="background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px 8px; font-family: inherit; font-weight: 500;">AF</button>
+      </div>
+      <a href="index.html" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        <span data-i18n="nav.backToHome">Back to Home</span>
+      </a>
+    </div>
   </header>
 
   <main>
     <div class="page-header">
-      <span class="page-label">Legal</span>
-      <h1>Privacy Policy</h1>
-      <p class="page-subtitle">Your data stays private. Your journey stays sacred.</p>
-      <p class="last-updated">Last updated: January 2025</p>
+      <span class="page-label" data-i18n="privacy.label">Legal</span>
+      <h1 data-i18n="privacy.title">Privacy Policy</h1>
+      <p class="page-subtitle" data-i18n="privacy.subtitle">Your data stays private. Your journey stays sacred.</p>
+      <p class="last-updated"><span data-i18n="privacy.lastUpdated">Last updated</span>: January 2025</p>
     </div>
 
     <div class="highlight-box">
-      <p><strong>Our Promise:</strong> Tea With God is built on the principle of privacy by design. Your journal entries, reflections, and personal data never leave your device unless you explicitly choose to back them up.</p>
+      <p data-i18n-html="privacy.promise"><strong>Our Promise:</strong> Tea With God is built on the principle of privacy by design. Your journal entries, reflections, and personal data never leave your device unless you explicitly choose to back them up.</p>
     </div>
 
     <section class="content-section">
-      <h2>Information We Collect</h2>
-      <p>We collect minimal information necessary to provide you with a meaningful experience:</p>
+      <h2 data-i18n="privacy.sections.collect.title">Information We Collect</h2>
+      <p data-i18n="privacy.sections.collect.intro">We collect minimal information necessary to provide you with a meaningful experience:</p>
       <ul>
         <li><strong>Account Information:</strong> Email address and name when you purchase access</li>
         <li><strong>Payment Information:</strong> Processed securely through Yoco - we never store your card details</li>
@@ -233,8 +240,8 @@
     </section>
 
     <section class="content-section">
-      <h2>What Stays on Your Device</h2>
-      <p>The following data is stored locally on your device and is never transmitted to our servers:</p>
+      <h2 data-i18n="privacy.sections.device.title">What Stays on Your Device</h2>
+      <p data-i18n="privacy.sections.device.intro">The following data is stored locally on your device and is never transmitted to our servers:</p>
       <ul>
         <li>Journal entries and personal reflections</li>
         <li>Voice recordings</li>
@@ -245,8 +252,8 @@
     </section>
 
     <section class="content-section">
-      <h2>Data Security</h2>
-      <p>Your privacy is protected through multiple layers of security:</p>
+      <h2 data-i18n="privacy.sections.security.title">Data Security</h2>
+      <p data-i18n="privacy.sections.security.intro">Your privacy is protected through multiple layers of security:</p>
       <ul>
         <li>Journal entries are encrypted on your device</li>
         <li>Secure HTTPS connections for all communications</li>
@@ -256,8 +263,8 @@
     </section>
 
     <section class="content-section">
-      <h2>Your Rights</h2>
-      <p>Under the Protection of Personal Information Act (POPIA), you have the right to:</p>
+      <h2 data-i18n="privacy.sections.rights.title">Your Rights</h2>
+      <p data-i18n="privacy.sections.rights.intro">Under the Protection of Personal Information Act (POPIA), you have the right to:</p>
       <ul>
         <li>Access any personal information we hold about you</li>
         <li>Request correction of inaccurate information</li>
@@ -268,27 +275,29 @@
     </section>
 
     <section class="content-section">
-      <h2>Children's Privacy</h2>
-      <p>Tea With God is designed for adults. We do not knowingly collect information from children under 18. If you believe a child has provided us with personal information, please contact us immediately.</p>
+      <h2 data-i18n="privacy.sections.children.title">Children's Privacy</h2>
+      <p data-i18n="privacy.sections.children.content">Tea With God is designed for adults. We do not knowingly collect information from children under 18. If you believe a child has provided us with personal information, please contact us immediately.</p>
     </section>
 
     <section class="content-section">
-      <h2>Changes to This Policy</h2>
-      <p>We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>
+      <h2 data-i18n="privacy.sections.changes.title">Changes to This Policy</h2>
+      <p data-i18n="privacy.sections.changes.content">We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last updated" date.</p>
     </section>
 
     <section class="content-section">
-      <h2>Contact Us</h2>
-      <p>If you have questions about this Privacy Policy or your personal data, please contact us:</p>
+      <h2 data-i18n="privacy.sections.contact.title">Contact Us</h2>
+      <p data-i18n="privacy.sections.contact.intro">If you have questions about this Privacy Policy or your personal data, please contact us:</p>
       <ul>
-        <li>Email: <a href="mailto:twg@cleva-ai.co.za" style="color: var(--gold);">twg@cleva-ai.co.za</a></li>
-        <li>WhatsApp: <a href="https://wa.me/27664678937" style="color: var(--gold);">+27 66 467 8937</a></li>
+        <li><span data-i18n="privacy.sections.contact.email">Email:</span> <a href="mailto:twg@cleva-ai.co.za" style="color: var(--gold);">twg@cleva-ai.co.za</a></li>
+        <li><span data-i18n="privacy.sections.contact.whatsapp">WhatsApp:</span> <a href="https://wa.me/27664678937" style="color: var(--gold);">+27 66 467 8937</a></li>
       </ul>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Tea With God. All rights reserved. | <a href="terms.html">Terms of Service</a> | <a href="faq.html">FAQ</a></p>
+    <p><span data-i18n="privacy.footer.copyright">&copy; 2025 Tea With God. All rights reserved.</span> | <a href="terms.html" data-i18n="privacy.footer.terms">Terms of Service</a> | <a href="faq.html" data-i18n="privacy.footer.faq">FAQ</a></p>
   </footer>
+
+  <script src="js/i18n.js"></script>
 </body>
 </html>

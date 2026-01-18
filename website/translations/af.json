@@ -1,0 +1,844 @@
+{
+  "meta": {
+    "title": "Tee Saam God - 'n 40-Dag Dagstukkiemetgesel",
+    "description": "Begin jou 40-dag dagstukkiereis. 'n Sagte metgesel-toep vir die pragtig gebrokenes."
+  },
+  "nav": {
+    "brandName": "Tee Saam God",
+    "journey": "Reis",
+    "features": "Kenmerke",
+    "music": "Musiek",
+    "download": "Aflaai",
+    "pricing": "Pryse",
+    "forOrganizations": "Vir Organisasies",
+    "beginNow": "Begin Nou",
+    "backToHome": "Terug na Tuisblad"
+  },
+  "hero": {
+    "badge": "40-Dag Dagstukkiemetgesel",
+    "title": "Tee Saam",
+    "titleHighlight": "God",
+    "subtitle": "'n Heilige ruimte vir die pragtig gebrokenes. Geen haastigheid, geen skaamte, net genade. Jou dagstukkiereis begin met 'n enkele tree.",
+    "ctaPrimary": "Begin Jou Reis",
+    "ctaSecondary": "Ontdek die Reis",
+    "scroll": "Rol"
+  },
+  "journey": {
+    "label": "Die Pad",
+    "title": "40 Dae van Sagte Transformasie",
+    "scripture": "\"Die pot was mismaak in sy hande; toe het die pottebakker dit weer gemaak tot 'n ander pot soos dit hom goed gedink het.\" — Jeremia 18:4",
+    "phases": {
+      "1": {
+        "days": "Dae 1-10",
+        "title": "Erkenning",
+        "description": "Die sagte herkenning van die stukkende dele sonder oordeel. Skep ruimte om eenvoudig teenwoordig te wees."
+      },
+      "2": {
+        "days": "Dae 11-20",
+        "title": "Saamwees",
+        "description": "Leer om teenwoordig te wees met jou pyn. Nie regmaak nie, net waarneem met deernis."
+      },
+      "3": {
+        "days": "Dae 21-30",
+        "title": "Herstel",
+        "description": "Goue waarhede word op die stukkende plekke aangewend. Transformasie begin ernstig."
+      },
+      "4": {
+        "days": "Dae 31-40",
+        "title": "Word",
+        "description": "Heel te voorskyn kom. Jou littekens skyn nou met goud - pragtig, sterk, herstel."
+      }
+    }
+  },
+  "features": {
+    "label": "Kenmerke",
+    "title": "Alles Wat Jy Nodig Het vir Jou Reis",
+    "subtitle": "Oordeelkundig ontwerpte gereedskap om jou reis te ondersteun, sonder om jou te oorweldig.",
+    "items": {
+      "devotionals": {
+        "title": "Daaglikse Dagstukkies",
+        "description": "40 pragtig geskrewe oordenking wat jou presies ontmoet waar jy is."
+      },
+      "journal": {
+        "title": "Privaat Joernaal",
+        "description": "'n Veilige, geënkripteerde ruimte vir jou diepste gedagtes en oordenking."
+      },
+      "progress": {
+        "title": "Anti-Skaamte Vordering",
+        "description": "'n Dag gemis? Geen skuld nie. Die toep vier jou terugkeer, nie jou afwesigheid nie."
+      },
+      "crisis": {
+        "title": "Krisisondersteuning",
+        "description": "Een-tik toegang tot troos-gebede wanneer jy dit die meeste nodig het."
+      },
+      "offline": {
+        "title": "Werk Vanlyn",
+        "description": "Jou toevlugsoord reis saam met jou. Geen internet nodig nie."
+      },
+      "reminders": {
+        "title": "Sagte Herinnerings",
+        "description": "Opsionele daaglikse stootjies. 'n Uitnodiging, nooit 'n eis nie."
+      },
+      "digitalBook": {
+        "title": "Interaktiewe Digitale Boek",
+        "description": "Lees die volledige boek met pragtige blaai-effekte. Jou metgesel op enige toestel."
+      },
+      "brainGames": {
+        "title": "Breinspeletjies",
+        "description": "Ses bewysgebaseerde oefeninge vir emosionele regulering en geestelike welstand."
+      }
+    }
+  },
+  "music": {
+    "label": "Oorspronklike Musiek",
+    "title": "Liedere vir Jou Siel",
+    "subtitle": "Oorspronklike aanbiddingsliedere spesifiek geskep vir jou dagstukkiereis. Laat die musiek jou dieper in elke dagstukkies dra.",
+    "features": {
+      "tracks": {
+        "title": "Oorspronklike Snitte",
+        "description": "Eksklusiewe liedere om jou daaglikse dagstukkies te vergesel"
+      },
+      "player": {
+        "title": "Ingeboude Speler",
+        "description": "Luister terwyl jy lees en nadink"
+      },
+      "worship": {
+        "title": "Dagstukkies-aanbidding",
+        "description": "Vredevolle klanke om jou gebede te vergesel"
+      }
+    },
+    "nowPlaying": "Speel Nou",
+    "songTitle": "Restore My Soul",
+    "artist": "Tee Saam God"
+  },
+  "testimonials": {
+    "label": "Wat Ons Anders Maak",
+    "title": "Gebou vir die Werklike Lewe",
+    "items": {
+      "1": {
+        "content": "\"Geen skuld vir gemiste dae nie. Die toep verwelkom jou terug soos 'n vriend, nie 'n regter nie. Daardie benadering verander alles.\"",
+        "author": "Genade-gevulde Ontwerp",
+        "meta": "Geen skaamte, net vordering"
+      },
+      "2": {
+        "content": "\"Krisisgebede is net een tik weg. Wanneer duisternis kom, is onmiddellike troos en leiding binne bereik.\"",
+        "author": "Altyd Beskikbaar",
+        "meta": "24/7 krisisondersteuning"
+      },
+      "3": {
+        "content": "\"Groei gaan nie oor volmaaktheid nie. Dit gaan oor opdaag, gebreek en al. Hierdie dagstukkies verstaan daardie waarheid.\"",
+        "author": "Outentieke Groei",
+        "meta": "40 dae van transformasie"
+      }
+    }
+  },
+  "download": {
+    "label": "Begin",
+    "title": "Begin Jou Reis",
+    "subtitle": "Jou dagstukkiemetgesel wag. Werk op enige toestel met 'n blaaier.",
+    "launchThe": "Begin die",
+    "webApp": "Webtoep",
+    "note": "Werk op iPhone, Android, tablet, of rekenaar. Installeer as 'n toep of gebruik in jou blaaier. Geen toepwinkel nodig nie."
+  },
+  "pricing": {
+    "label": "Pryse",
+    "title": "Kies Jou Pad",
+    "subtitle": "Eenmalige aankoop. Lewenslange toegang. Geen intekeninge nie.",
+    "guarantee": "Veilige EFT-betaling. Lewenslange toegang. Geen intekeninge nie.",
+    "tiers": {
+      "book": {
+        "name": "Boek",
+        "price": "99",
+        "description": "Slegs e-boek",
+        "features": {
+          "1": "E-boek PDF-aflaai",
+          "2": "Lees op jou pas",
+          "3": "Vanlyn lees",
+          "4": "Geen toep-toegang nie"
+        },
+        "cta": "Kry Boektoegang"
+      },
+      "journey": {
+        "name": "Reis",
+        "badge": "Gewildste",
+        "price": "149",
+        "description": "Die interaktiewe ervaring",
+        "features": {
+          "1": "E-boek ingesluit",
+          "2": "40 dagstukkies in toep",
+          "3": "Privaat joernaal",
+          "4": "Vorderingsnasporing"
+        },
+        "cta": "Begin Jou Reis"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "249",
+        "description": "Die volledige toevlugsoord",
+        "features": {
+          "1": "Alles in Reis",
+          "2": "Musiekbiblioteek",
+          "3": "Breinspeletjies",
+          "4": "Stemopnames"
+        },
+        "cta": "Kry Premium"
+      }
+    }
+  },
+  "contact": {
+    "label": "Kontak Ons",
+    "title": "Ons Hoor Graag van Jou",
+    "subtitle": "Vrae oor jou dagstukkiereis? Hulp nodig? Ons is hier vir jou.",
+    "email": {
+      "title": "E-pos Ons",
+      "address": "hello@teawithgod.com",
+      "responseTime": "Ons reageer binne 24-48 uur"
+    },
+    "whatsapp": {
+      "title": "WhatsApp",
+      "number": "+27 66 467 8937",
+      "cta": "Gesels met ons"
+    },
+    "form": {
+      "firstName": "Voornaam",
+      "lastName": "Van",
+      "email": "E-pos",
+      "phone": "Telefoon (Opsioneel)",
+      "subject": "Onderwerp",
+      "subjects": {
+        "general": "Algemene Navraag",
+        "support": "Ondersteuningsversoek",
+        "bulk": "Grootmaat/Organisasie-pryse",
+        "partnership": "Vennootskapsgeleentheid",
+        "feedback": "Terugvoer"
+      },
+      "message": "Boodskap",
+      "messagePlaceholder": "Hoe kan ons jou help?",
+      "submit": "Stuur Boodskap",
+      "note": "Ons respekteer jou privaatheid. Jou inligting is veilig by ons.",
+      "success": {
+        "title": "Boodskap Gestuur!",
+        "message": "Dankie dat jy uitreik. Ons sal binne 24-48 uur by jou terugkom."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "'n 40-dag metgesel vir die pragtig gebrokenes. Met liefde gemaak in Suid-Afrika.",
+    "columns": {
+      "product": {
+        "title": "Produk",
+        "journey": "Die Reis",
+        "features": "Kenmerke",
+        "science": "Die Wetenskap",
+        "getAccess": "Kry Toegang"
+      },
+      "organizations": {
+        "title": "Organisasies",
+        "bulkLicensing": "Grootmaatlisensiëring",
+        "pricingTiers": "Prysvlakke",
+        "faq": "V&A"
+      },
+      "support": {
+        "title": "Ondersteuning",
+        "contact": "Kontak",
+        "faq": "V&A",
+        "privacy": "Privaatheidsbeleid",
+        "terms": "Diensvoorwaardes"
+      }
+    },
+    "copyright": "2026 Tee Saam God. Alle regte voorbehou."
+  },
+  "checkout": {
+    "title": "Betaalpunt - Tee Saam God",
+    "secureBadge": "Veilig",
+    "steps": {
+      "details": "Jou Besonderhede",
+      "payment": "Betaling",
+      "confirmation": "Bevestiging"
+    },
+    "details": {
+      "title": "Jou Besonderhede",
+      "description": "Ons sal dit gebruik om jou toegangskode na betaling te stuur.",
+      "firstName": "Voornaam",
+      "firstNamePlaceholder": "bv. Nomsa",
+      "lastName": "Van",
+      "lastNamePlaceholder": "bv. Dlamini",
+      "email": "E-posadres",
+      "emailPlaceholder": "jou@epos.com",
+      "emailHint": "Jou toegangskode sal hierheen gestuur word",
+      "phone": "WhatsApp-nommer",
+      "phonePlaceholder": "bv. 082 123 4567",
+      "phoneHint": "Vir betalingsbevestiging en ondersteuning",
+      "tithe": {
+        "title": "Gee Terug: 10% Tiende",
+        "description": "Ons skenk 10% van elke aankoop aan 'n liefdadigheid van jou keuse",
+        "selectLabel": "Kies 'n begunstigde organisasie",
+        "loading": "Laai organisasies...",
+        "select": "Kies 'n organisasie...",
+        "noOrgs": "Geen organisasies beskikbaar nie",
+        "error": "Kan nie organisasies laai nie",
+        "amount": "van jou aankoop sal na die gekose organisasie gaan"
+      },
+      "terms": "Ek stem in tot die",
+      "termsLink": "Diensvoorwaardes",
+      "and": "en",
+      "privacyLink": "Privaatheidsbeleid",
+      "continue": "Gaan Voort na Betaling"
+    },
+    "payment": {
+      "title": "Kies Betaalmetode",
+      "description": "Betaal onmiddellik met kaart of gebruik EFT-bankoordrag.",
+      "card": {
+        "name": "Betaal met Kaart",
+        "description": "Onmiddellike toegang via Yoco",
+        "recommended": "Aanbeveel",
+        "amount": "Jy sal betaal",
+        "note": "Veilige betaling aangedryf deur Yoco. Jou kaartbesonderhede is geënkripteer.",
+        "button": "Betaal Veilig met Kaart",
+        "accepts": "Aanvaar Visa, Mastercard en meer"
+      },
+      "eft": {
+        "name": "EFT Bankoordrag",
+        "description": "Handmatige verifikasie (1-2 ure)",
+        "reveal": "Klik om bankbesonderhede te wys",
+        "revealHint": "Jou verwysing en bedrag sal gewys word",
+        "bank": "Bank",
+        "bankName": "First National Bank (FNB)",
+        "accountName": "Rekeningnaam",
+        "accountNameValue": "HL BUTLER",
+        "accountType": "Rekeningtipe",
+        "accountTypeValue": "Besigheid",
+        "accountNumber": "Rekeningnommer",
+        "branchCode": "Takkode",
+        "reference": "Verwysing",
+        "amount": "Bedrag",
+        "copy": "Kopieer",
+        "copied": "Gekopieer!",
+        "note": "Gebruik die verwysing hierbo sodat ons jou betaling kan identifiseer"
+      },
+      "upload": {
+        "title": "Laai Bewys van Betaling Op",
+        "description": "Skermkiekie of foto van jou betalingsbevestiging",
+        "dropzone": "Klik om op te laai of sleep en los",
+        "hint": "PNG, JPG of PDF (maks 5MB)",
+        "remove": "Verwyder lêer",
+        "tooLarge": "Lêer te groot. Maksimum 5MB."
+      },
+      "back": "Terug",
+      "submit": "Dien Betalingsbewys In",
+      "submitting": "Dien in...",
+      "error": "Iets het verkeerd geloop. Probeer asseblief weer of kontak ons op WhatsApp.",
+      "cardError": "Betaling het misluk. Probeer asseblief weer of gebruik EFT."
+    },
+    "confirmation": {
+      "title": "Betaling Ingedien!",
+      "message": "Dankie, {{name}}. Ons het jou betalingsbewys ontvang.",
+      "orderRef": "Bestellingverwysing",
+      "nextSteps": {
+        "title": "Wat Gebeur Volgende?",
+        "step1": {
+          "title": "Ons verifieer jou betaling",
+          "description": "Gewoonlik binne 1-2 ure gedurende besigheidsure"
+        },
+        "step2": {
+          "title": "Jy ontvang jou toegangskode",
+          "description": "Via e-pos en WhatsApp"
+        },
+        "step3": {
+          "title": "Laai die toep af en voer jou kode in",
+          "description": "Begin jou 40-dag dagstukkiereis"
+        }
+      },
+      "backToHome": "Terug na Tuisblad",
+      "whatsapp": "WhatsApp Ons"
+    },
+    "sidebar": {
+      "title": "Bestellingsopsomming",
+      "total": "Totaal",
+      "includes": "Sluit In",
+      "secure": "Veilig",
+      "verify": "24-uur Verifieer"
+    }
+  },
+  "common": {
+    "required": "verpligtend",
+    "loading": "Laai...",
+    "error": "'n Fout het voorgekom",
+    "tryAgain": "Probeer Weer",
+    "currency": "R"
+  },
+  "faq": {
+    "pageTitle": "V&A - Tee Saam God",
+    "label": "Ondersteuning",
+    "title": "Gereeld Gevraagde Vrae",
+    "subtitle": "Alles wat jy moet weet oor jou dagstukkiereis.",
+    "categories": {
+      "gettingStarted": {
+        "title": "Aan die Gang Kom",
+        "q1": {
+          "question": "Hoe kry ek toegang tot die Tee Saam God-toep?",
+          "answer": "Na aankoop ontvang jy 'n toegangskode via e-pos. Voer hierdie kode in die toep in om jou volle 40-dag reis te ontsluit. Die toep werk op Android, iOS en webblaaiers."
+        },
+        "q2": {
+          "question": "Wat is ingesluit in elke toegangsvlak?",
+          "answer": "<strong>Boektoegang (R99):</strong> Al 40 dagstukkies in e-boekformaat.<br><br><strong>Reistoegang (R149):</strong> Volle toep-toegang met dagstukkies, privaat joernaal en vorderingnasporing.<br><br><strong>Premiumtoegang (R249):</strong> Alles in Reis plus stemopnames, krisisondersteuningsgebede en alle toekomstige opdaterings."
+        },
+        "q3": {
+          "question": "Kan ek die toep vanlyn gebruik?",
+          "answer": "Ja! Sodra jy die toep met jou kode geaktiveer het, word al 40 dagstukkies op jou toestel gestoor. Jy kan die toep enige plek, enige tyd gebruik - geen internet nodig nie."
+        }
+      },
+      "paymentAccess": {
+        "title": "Betaling & Toegang",
+        "q1": {
+          "question": "Watter betaalmetodes aanvaar julle?",
+          "answer": "Ons aanvaar kaartbetalings (Visa, Mastercard) deur Yoco, sowel as EFT-bankoordragte. Kaartbetalings bied onmiddellike toegang, terwyl EFT-bestellings binne 24 uur geverifieer word."
+        },
+        "q2": {
+          "question": "Hoe lank neem dit om my toegangskode te ontvang?",
+          "answer": "Kaartbetalings: Onmiddellik - jou toegangskode word dadelik na betaling gestuur.<br><br>EFT-betalings: Binne 24 uur na betalingsverifikasie. Jy sal 'n e-pos met jou kode ontvang sodra dit bevestig is."
+        },
+        "q3": {
+          "question": "Kan ek my toegangskode deel?",
+          "answer": "Toegangskodes is vir individuele gebruik. As jy Tee Saam God aan iemand wil skenk, kan jy addisionele kodes koop. Vir kerke of organisasies wat veelvuldige lisensies benodig, besoek asseblief ons <a href=\"b2b/\">B2B-portaal</a>."
+        }
+      },
+      "privacyData": {
+        "title": "Privaatheid & Data",
+        "q1": {
+          "question": "Is my joernaal privaat?",
+          "answer": "Absoluut. Jou joernaal-inskrywings word slegs op jou toestel gestoor en is geënkripteer. Ons kan nie jou inskrywings lees nie - hulle verlaat nooit jou foon nie. Jou dagstukkiereis is heeltemal privaat."
+        },
+        "q2": {
+          "question": "Wat gebeur met my data as ek die toep uitvee?",
+          "answer": "Aangesien jou joernaal en vordering plaaslik gestoor word, sal die uitvee van die toep hierdie data van jou toestel verwyder. Jou toegangskode bly geldig, so jy kan herinstalleer en vars begin. Ons beveel aan om enige joernaal-inskrywings wat jy wil behou, uit te voer voordat jy deïnstalleer."
+        }
+      },
+      "theJourney": {
+        "title": "Die Reis",
+        "q1": {
+          "question": "Moet ek 'n dag voltooi voordat ek voortgaan?",
+          "answer": "Geen druk, geen eise nie. Hoewel die reis ontwerp is om een dag op 'n slag ervaar te word, kan jy teen jou eie pas beweeg. Sommige dae moet jy dalk langer sit. Ander dae mag jy vorentoe beweeg. Dit is jou reis."
+        },
+        "q2": {
+          "question": "Wat is die \"breinspeletjies\"?",
+          "answer": "Dit is sagte, bewysgebaseerde oefeninge ontwerp om jou reis te ondersteun. Dit sluit asemhalingsoefeninge, dankbaarheidspraktyke, gedagte-herraming en Skrifgeheue-gereedskap in - alles gegrond in sielkunde en geloof."
+        },
+        "q3": {
+          "question": "Is dit 'n plaasvervanger vir terapie?",
+          "answer": "Tee Saam God is 'n dagstukkiemetgesel, nie 'n plaasvervanger vir professionele geestesgesondheidorg nie. As jy met ernstige geestesgesondheidkwessies worstel, soek asseblief hulp van 'n gekwalifiseerde terapeut of berader. Hierdie toep is ontwerp om professionele ondersteuning aan te vul, nie te vervang nie."
+        }
+      }
+    },
+    "contact": {
+      "title": "Het jy nog vrae?",
+      "subtitle": "Ons is hier om jou op jou reis te help.",
+      "whatsapp": "WhatsApp Ons",
+      "email": "E-pos Ons"
+    },
+    "footer": {
+      "copyright": "2026 Tee Saam God. Alle regte voorbehou.",
+      "privacy": "Privaatheidsbeleid",
+      "terms": "Voorwaardes"
+    }
+  },
+  "terms": {
+    "pageTitle": "Diensvoorwaardes - Tee Saam God",
+    "label": "Regsake",
+    "title": "Diensvoorwaardes",
+    "subtitle": "Lees asseblief hierdie voorwaardes noukeurig voordat jy Tee Saam God gebruik.",
+    "lastUpdated": "Laas opgedateer",
+    "summaryBox": "<strong>Opsomming:</strong> Tee Saam God is 'n dagstukkiemetgesel-toep ontwerp vir persoonlike geestelike groei en emosionele welstand. Dit bied slegs OPVOEDKUNDIGE inhoud en is NIE professionele sielkundige, mediese of terapeutiese advies nie. Deur ons diens te gebruik, stem jy tot hierdie voorwaardes in.",
+    "warningBox": "<strong>BELANGRIK - SLEGS OPVOEDKUNDIGE INHOUD:</strong> Alle inhoud in Tee Saam God, insluitend die \"breinspeletjies\" en sielkundige inligting, is slegs vir OPVOEDKUNDIGE en DAGSTUKKIES-doeleindes. Ons verskaf nie professionele sielkundige, mediese of terapeutiese dienste nie. Die skeppers van Tee Saam God is nie sielkundiges, terapeute of mediese kundiges nie. Niks in hierdie toep moet as professionele advies of behandeling beskou word nie.",
+    "sections": {
+      "1": {
+        "title": "1. Aanvaarding van Voorwaardes",
+        "content": "Deur toegang tot Tee Saam God (\"die Diens\") te verkry of dit te gebruik, stem jy in om deur hierdie Diensvoorwaardes gebind te wees. As jy nie tot hierdie voorwaardes instem nie, moet jy asseblief nie die Diens gebruik nie.<br><br>Hierdie voorwaardes geld vir alle gebruikers van die Diens, insluitend individuele gebruikers en organisasies wat deur ons B2B-program toegang verkry."
+      },
+      "2": {
+        "title": "2. Beskrywing van Diens",
+        "intro": "Tee Saam God is 'n 40-dag digitale dagstukkiemetgesel wat insluit:",
+        "items": ["Daaglikse dagstukkie-inhoud en Skriflesings", "Privaat joernaalfunksionaliteit", "Opvoedkundige welstandsoefeninge geïnspireer deur algemene wetenskaplike beginsels (nie professionele sielkundige behandeling nie)", "Oorspronklike aanbiddingsmusiek (waar beskikbaar)", "Vorderingnasporing deur die 40-dag reis"],
+        "note": "<strong>Let wel:</strong> Alle verwysings na wetenskaplike of sielkundige konsepte binne die toep is gebaseer op publiek beskikbare, algemene wetenskaplike kennis. Ons maak geen aanspraak op affiliasie met, goedkeuring deur, of vennootskap met enige navorsers, instellings of kundiges nie. Die inhoud verteenwoordig ons eie opvoedkundige interpretasie van wyd-beskikbare wetenskaplike beginsels."
+      },
+      "3": {
+        "title": "3. Toegang en Betaling",
+        "intro": "Toegang tot Tee Saam God vereis 'n geldige toegangskode verkry deur:",
+        "items": ["<strong>Direkte Aankoop:</strong> Eenmalige betaling verwerk deur Yoco (ons betalingsverskaffer)", "<strong>Organisasie-toegang:</strong> Kode verskaf deur 'n deelnemende kerk, berader of organisasie", "<strong>Geskenkkode:</strong> Kode as geskenk van 'n ander gebruiker ontvang"],
+        "refund": "Alle betalings is finaal. Weens die digitale aard van die produk, bied ons nie terugbetalings aan sodra 'n toegangskode geaktiveer is nie. As jy tegniese probleme ervaar, kontak ons asseblief vir ondersteuning."
+      },
+      "4": {
+        "title": "4. Gebruikersverantwoordelikhede",
+        "intro": "Wanneer jy Tee Saam God gebruik, stem jy in om:",
+        "items": ["Akkurate inligting tydens registrasie te verskaf", "Jou toegangskode vertroulik te hou", "Die Diens slegs vir persoonlike, nie-kommersiële doeleindes te gebruik", "Nie te probeer om die Diens te ontleed of te kopieer nie", "Nie toegangskodes te deel of te herversprei nie"]
+      },
+      "mentalHealthWarning": "<strong>Belangrike Geestesgesondheid-vrywaring:</strong> Tee Saam God is 'n dagstukkies- en opvoedkundige hulpbron, NIE 'n plaasvervanger vir professionele geestesgesondheidsbehandeling nie. As jy 'n geestesgesondheidskrisis ervaar, kontak asseblief nooddienste of 'n gekwalifiseerde geestesgesondheidskundige onmiddellik.",
+      "5": {
+        "title": "5. Geestesgesondheid- en Opvoedkundige Vrywaring",
+        "intro": "Tee Saam God verskaf geestelike en opvoedkundige inhoud ontwerp om emosionele welstand te ondersteun. DEUR HIERDIE DIENS TE GEBRUIK, ERKEN EN STEM JY UITDRUKLIK IN DAT:",
+        "items": ["Die Diens NIE terapie, berading of professionele geestesgesondheidsbehandeling is nie", "Die \"breinspeletjies\" en welstandsoefeninge slegs OPVOEDKUNDIGE gereedskap is, nie kliniese behandeling nie", "Die skeppers NIE sielkundiges, terapeute, psigiaters of mediese kundiges is nie", "Inhoud NIE bedoel is om enige geestelike of fisiese toestand te diagnoseer, behandel, genees of voorkom nie", "Verwysings na wetenskaplike konsepte vir algemene opvoeding is en NIE professionele advies uitmaak nie", "Geen inhoud as plaasvervanger vir professionele mediese of sielkundige evaluasie beskou moet word nie", "As jy in 'n krisis is, MOET jy onmiddellik professionele hulp soek"],
+        "acknowledgment": "<strong>Deur die Diens te gebruik, erken jy dat jy hierdie beperkings verstaan, volle verantwoordelikheid vir jou eie geestesgesondheidsbesluite aanvaar, en instem om gepaste professionele hulp te soek wanneer nodig. Jy sien uitdruklik enige eise teen Tee Saam God en sy skeppers af wat voortspruit uit jou gebruik van die opvoedkundige inhoud.</strong>"
+      },
+      "6": {
+        "title": "6. Wetenskaplike en Opvoedkundige Inhoud",
+        "intro": "Tee Saam God bevat verwysings na algemene wetenskaplike en sielkundige konsepte. Verstaan asseblief:",
+        "items": ["Alle wetenskaplike inhoud is gebaseer op PUBLIEK BESKIKBARE, algemene kennis", "Ons maak GEEN aanspraak op affiliasie met of goedkeuring deur enige navorsers, universiteite of instellings nie", "Ons maak GEEN aanspraak daarop om kundiges in sielkunde, neurowetenskap of enige wetenskaplike veld te wees nie", "Verwysings na breinwetenskap, senuweestelselregulering, kognitiewe tegnieke of ander wetenskaplike konsepte is slegs vir OPVOEDKUNDIGE doeleindes", "Ons interpretasie van wetenskaplike konsepte mag nie die sienings van enige spesifieke navorser of instelling weerspieël nie", "Die doeltreffendheid van ons oefeninge is nie onafhanklik deur kliniese proewe geverifieer nie"],
+        "acknowledgment": "<strong>Deur die Diens te gebruik, stem jy in dat Tee Saam God geen voorstellings oor professionele kundigheid maak nie en jy sal nie die Diens of sy skeppers aanspreeklik hou vir enige eise rakende wetenskaplike akkuraatheid of professionele kundigheid nie.</strong>"
+      },
+      "7": {
+        "title": "7. Intellektuele Eiendom",
+        "intro": "Alle inhoud binne Tee Saam God word deur kopiereg en intellektuele eiendomswette beskerm:",
+        "items": ["Dagstukkies-inhoud geskryf deur Lani Butler", "Oorspronklike musiekkomposisies", "Breinspeletjie-ontwerpe en -implementerings", "Toep-ontwerp en gebruikerskoppelvlak", "Die Tee Saam God-handelsmerk en -logo"],
+        "note": "Jy mag nie kopieer, reproduseer, versprei of afgeleide werke skep sonder uitdruklike skriftelike toestemming nie."
+      },
+      "8": {
+        "title": "8. Privaatheid",
+        "intro": "Jou privaatheid is vir ons belangrik. Hersien asseblief ons <a href=\"privacy.html\" style=\"color: var(--gold);\">Privaatheidsbeleid</a> vir inligting oor hoe ons jou persoonlike inligting versamel, gebruik en beskerm.",
+        "keyPoints": "Sleutelpunte:",
+        "items": ["Joernaal-inskrywings bly op jou toestel", "Ons verkoop nooit jou persoonlike data nie", "Betalingsinligting word veilig deur Yoco verwerk", "Jy kan enige tyd versoek dat jou rekening uitgevee word"]
+      },
+      "9": {
+        "title": "9. Beperking van Aanspreeklikheid en Vrywaring",
+        "intro": "TOT DIE MAKSIMUM MATE WAT DEUR DIE WET TOEGELAAT WORD, sal Tee Saam God, sy skeppers, ontwikkelaars, geaffilieerdes, beamptes, direkteure, werknemers, agente en lisensiehouers NIE aanspreeklik wees vir:",
+        "items": ["Enige direkte, indirekte, toevallige, spesiale, gevolglike of strafskade nie", "Enige sielkundige, emosionele of geestesgesondheidsuitkomste", "Enige aksies geneem of nie geneem gebaseer op inhoud binne die toep", "Enige staatmaking op die opvoedkundige of wetenskaplike inligting verskaf", "Verlies van data, inhoud of persoonlike inligting", "Diensonderbrekings of tegniese probleme", "Enige eis deur derde partye voortspruitend uit jou gebruik van die Diens"],
+        "asIs": "<strong>DIE DIENS WORD \"SOOS DIT IS\" EN \"SOOS BESKIKBAAR\" VERSKAF SONDER ENIGE WAARBORGE VAN ENIGE AARD, UITDRUKLIK OF GEÏMPLISEER.</strong>",
+        "liability": "Ons totale aanspreeklikheid sal nie die bedrag oorskry wat jy vir toegang tot die Diens betaal het nie.",
+        "indemnification": "<strong>Vrywaring:</strong> Jy stem in om Tee Saam God, sy skeppers en geaffilieerdes te vrywaar en skadeloos te stel teen enige eise, skade, verliese of uitgawes voortspruitend uit jou gebruik van die Diens of oortreding van hierdie voorwaardes."
+      },
+      "10": {
+        "title": "10. Wysigings aan Diens",
+        "intro": "Ons behou die reg voor om:",
+        "items": ["Enige aspek van die Diens te wysig of te staak", "Inhoud en kenmerke op te dateer", "Hierdie Diensvoorwaardes te verander"],
+        "note": "Ons sal gebruikers van beduidende veranderinge deur die toep of e-pos in kennis stel. Voortgesette gebruik na veranderinge vorm aanvaarding van die nuwe voorwaardes."
+      },
+      "11": {
+        "title": "11. Beherende Reg",
+        "content": "Hierdie Diensvoorwaardes word beheer deur die wette van die Republiek van Suid-Afrika. Enige geskille sal in die howe van Suid-Afrika opgelos word."
+      },
+      "12": {
+        "title": "12. Kontakinligting",
+        "intro": "Vir vrae oor hierdie Diensvoorwaardes, kontak ons asseblief:",
+        "email": "E-pos:",
+        "whatsapp": "WhatsApp:"
+      }
+    },
+    "footer": {
+      "copyright": "2026 Tee Saam God. Alle regte voorbehou.",
+      "privacy": "Privaatheidsbeleid",
+      "faq": "V&A"
+    }
+  },
+  "downloads": {
+    "pageTitle": "Aflaaie - Tee Saam God",
+    "header": {
+      "title": "Jou Aflaaie",
+      "subtitle": "Voer jou toegangskode in om jou inhoud te ontsluit"
+    },
+    "gate": {
+      "title": "Voer Toegangskode In",
+      "subtitle": "Jou toegangskode is per e-pos na jou aankoop gestuur.",
+      "placeholder": "bv. TWG-XXXX-XXXX",
+      "error": "Ongeldige toegangskode. Kontroleer asseblief en probeer weer.",
+      "errorEmpty": "Voer asseblief jou toegangskode in.",
+      "errorConnection": "Verbindingsfout. Probeer asseblief weer.",
+      "verifying": "Verifieer...",
+      "button": "Verifieer Kode"
+    },
+    "welcome": {
+      "title": "Welkom,",
+      "subtitle": "Jou toegang is geverifieer. Laai jou inhoud hieronder af."
+    },
+    "ebook": {
+      "title": "Tee Saam God e-Boek",
+      "subtitle": "40-Dag Dagstukkies (PDF)",
+      "button": "Aflaai"
+    },
+    "app": {
+      "title": "Gereed om te Begin?",
+      "subtitle": "Maak die webtoep oop en begin jou 40-dag dagstukkiereis.",
+      "button": "Maak Webtoep Oop"
+    },
+    "footer": {
+      "help": "Hulp nodig?",
+      "contact": "Kontak Ondersteuning"
+    }
+  },
+  "science": {
+    "pageTitle": "Die Wetenskap - Tee Saam God | Bewysgebaseerde Breingesondheid",
+    "label": "Bewysgebaseerde Groei",
+    "title": "Die Wetenskap Agter Jou Reis",
+    "subtitle": "Tee Saam God kombineer antieke geestelike wysheid met moderne neurowetenskap. Hier is hoekom dit werk.",
+    "intro": {
+      "p1": "Ons breinspeletjies is nie lukrake voel-goed oefeninge nie. Hulle is noukeurig ontwerpte intervensies gebaseer op portuur-geëvalueerde navorsing in neurowetenskap, sielkunde en trauma-herstel.",
+      "p2": "Elke speletjie teiken spesifieke breingebiede en sielkundige meganismes om werklike, blywende groei te ondersteun."
+    },
+    "principles": {
+      "title": "Bewysgebaseerde Breingesondheidsbeginsels",
+      "intro": "Moderne breinbeeldingsnavorsing het fundamentele beginsels vir breingesondheid geïdentifiseer. Hierdie bewysgebaseerde insigte rig ons hele benadering:",
+      "items": {
+        "1": {"number": "Beginsel 1", "title": "Brein in Alles", "description": "Jou brein is betrokke by alles wat jy doen - hoe jy dink, voel, optree en met ander verband hou."},
+        "2": {"number": "Beginsel 2", "title": "Beter Brein = Beter Lewe", "description": "Wanneer jou brein reg werk, werk jy reg. Jy kan dit beter maak."},
+        "3": {"number": "Beginsel 7", "title": "Help vs. Benadeel", "description": "Baie dinge benadeel die brein, baie dinge help dit. Klein daaglikse gewoontes vermeerder tot beduidende verskille."},
+        "4": {"number": "Beginsel 9", "title": "Kennis is Mag", "description": "Om jou brein te verstaan help jou om probleme reg te maak. Psigoëdukasie verminder skaamte."},
+        "5": {"number": "Beginsel 10", "title": "Personalisering", "description": "Verskillende breintipes benodig verskillende behandelings. Een-grootte-pas-almal benaderings misluk."},
+        "6": {"number": "Beginsel 11", "title": "Breinreserwe", "description": "Die brein kan kapasiteit bou om uitdagings te hanteer deur konsekwente oefening."}
+      }
+    },
+    "games": {
+      "title": "Die 6 Breinspeletjies",
+      "intro": "Elke speletjie is ontwerp om spesifieke breingebiede en sielkundige meganismes te teiken:"
+    },
+    "journey": {
+      "title": "Die 40-Dag Reisstruktuur",
+      "intro": "Soos klei in die Pottebakker se hande (Jeremia 18:4), word jy hervorm oor 40 dae. Die speletjies ontsluit progressief, na aanleiding van 'n struktuur ontwerp om breingesondheid sistematies te bou:"
+    },
+    "architecture": {
+      "title": "Hoekom Hierdie Argitektuur Werk",
+      "systemsBox": "<strong>Stelselintegrasiebeginsel:</strong> Breinstelsels werk saam in harmonie. Wanbalans in een stelsel beïnvloed al die ander.",
+      "intro": "Die 6 breinspeletjies is nie lukraak nie - hulle is ontwerp om ELKE hoofbreinstelsel te teiken:",
+      "conclusion": "Saam skep hulle <strong>heel-brein groei</strong> - nie net die behandeling van simptome nie, maar die bou van 'n sterker, meer veerkragtige brein oor 40 dae."
+    },
+    "disclaimer": {
+      "title": "Belangrike Vrywaring",
+      "p1": "Hierdie oefeninge is opvoedkundige gereedskap gebaseer op bewysgebaseerde sielkundige beginsels.",
+      "p2": "Hulle is nie 'n plaasvervanger vir professionele geestesgesondheidsbehandeling nie.",
+      "p3": "As jy in 'n krisis is, reik asseblief uit na 'n geestesgesondheidskundige of krisisllyn."
+    },
+    "cta": {
+      "title": "Begin Jou Dagstukkiereis",
+      "subtitle": "40 dae van bewysgebaseerde oefeninge gekombineer met geestelike dagstukkies.",
+      "button": "Begin Jou Reis"
+    },
+    "footer": {
+      "copyright": "2026 Tee Saam God. Alle regte voorbehou.",
+      "privacy": "Privaatheidsbeleid",
+      "terms": "Diensvoorwaardes",
+      "faq": "V&A"
+    }
+  },
+  "privacy": {
+    "pageTitle": "Privaatheidsbeleid - Tee Saam God",
+    "label": "Regsake",
+    "title": "Privaatheidsbeleid",
+    "subtitle": "Jou data bly privaat. Jou reis bly heilig.",
+    "lastUpdated": "Laas opgedateer",
+    "promise": "<strong>Ons Belofte:</strong> Tee Saam God is gebou op die beginsel van privaatheid-deur-ontwerp. Jou joernaal-inskrywings, oordenking en persoonlike data verlaat nooit jou toestel nie, tensy jy uitdruklik kies om dit te rugsteun.",
+    "sections": {
+      "collect": {
+        "title": "Inligting Wat Ons Versamel",
+        "intro": "Ons versamel minimale inligting nodig om jou 'n betekenisvolle ervaring te bied:",
+        "items": ["<strong>Rekeninginligting:</strong> E-posadres en naam wanneer jy toegang koop", "<strong>Betalingsinligting:</strong> Veilig verwerk deur Yoco - ons stoor nooit jou kaartbesonderhede nie", "<strong>Gebruiksdata:</strong> Basiese ontledings om die toep te verbeter (geen persoonlike inhoud word nagespoor nie)"]
+      },
+      "device": {
+        "title": "Wat op Jou Toestel Bly",
+        "intro": "Die volgende data word plaaslik op jou toestel gestoor en word nooit na ons bedieners oorgedra nie:",
+        "items": ["Joernaal-inskrywings en persoonlike oordenking", "Stemopnames", "Vordering deur die 40-dag reis", "Breinspeletjie-resultate en persoonlike insigte", "Enige notas of hoogtepunte wat jy skep"]
+      },
+      "security": {
+        "title": "Datasekuriteit",
+        "intro": "Jou privaatheid word deur verskeie lae sekuriteit beskerm:",
+        "items": ["Joernaal-inskrywings word op jou toestel geënkripteer", "Veilige HTTPS-verbindings vir alle kommunikasie", "Geen derdeparty-ontledings wat persoonlike inhoud naspoor nie", "Betalingsverwerking deur PCI-voldoenende Yoco"]
+      },
+      "rights": {
+        "title": "Jou Regte",
+        "intro": "Onder die Wet op die Beskerming van Persoonlike Inligting (POPIA) het jy die reg om:",
+        "items": ["Toegang tot enige persoonlike inligting wat ons oor jou hou", "Versoek om regstelling van onakkurate inligting", "Versoek om uitwissing van jou persoonlike inligting", "Toestemming vir dataverwerking te onttrek", "'n Klag by die Inligtingsreguleerder in te dien"]
+      },
+      "children": {
+        "title": "Kinders se Privaatheid",
+        "content": "Tee Saam God is ontwerp vir volwassenes. Ons versamel nie bewustelik inligting van kinders onder 18 nie. As jy glo dat 'n kind persoonlike inligting aan ons verskaf het, kontak ons asseblief onmiddellik."
+      },
+      "changes": {
+        "title": "Veranderinge aan Hierdie Beleid",
+        "content": "Ons mag hierdie privaatheidsbeleid van tyd tot tyd opdateer. Ons sal jou van enige veranderinge in kennis stel deur die nuwe beleid op hierdie bladsy te plaas en die \"Laas opgedateer\"-datum op te dateer."
+      },
+      "contact": {
+        "title": "Kontak Ons",
+        "intro": "As jy vrae oor hierdie Privaatheidsbeleid of jou persoonlike data het, kontak ons asseblief:",
+        "email": "E-pos:",
+        "whatsapp": "WhatsApp:"
+      }
+    },
+    "footer": {
+      "copyright": "2026 Tee Saam God. Alle regte voorbehou.",
+      "terms": "Diensvoorwaardes",
+      "faq": "V&A"
+    }
+  },
+  "b2b": {
+    "pageTitle": "Tee Saam God - Vir Kerke & Organisasies",
+    "nav": {
+      "pricing": "Pryse",
+      "howItWorks": "Hoe Dit Werk",
+      "faq": "V&A",
+      "getStarted": "Begin Nou"
+    },
+    "hero": {
+      "badge": "Vir Organisasies",
+      "title": "Bring Hoop na Jou Gemeenskap",
+      "subtitle": "Rus jou organisasie toe met 'n bewese 40-dag dagstukkiereis wat geloof en bewysgebaseerde sielkunde kombineer. Perfek vir kerke, skuilings, beradingsentrums en meer.",
+      "viewPricing": "Bekyk Pryse",
+      "bookDemo": "Bespreek 'n Demo"
+    },
+    "orgTypes": {
+      "title": "Perfek vir Elke Organisasie",
+      "subtitle": "Tee Saam God bedien organisasies van alle groottes regoor die wêreld",
+      "churches": {
+        "title": "Kerke",
+        "desc": "Vrouebedieninge en klein groepe wat gestruktureerde dagstukkiebronne soek"
+      },
+      "counseling": {
+        "title": "Beradingsentrums",
+        "desc": "Christelike beraders en terapeute wat kliëntesorg aanvul"
+      },
+      "shelters": {
+        "title": "Skuilings",
+        "desc": "Vroueskuilings en veilige huise vir trauma-herstelondersteuning"
+      },
+      "ngos": {
+        "title": "NRO's",
+        "desc": "Nie-winsgewende organisasies wat kwesbare vroue en gemeenskappe bedien"
+      },
+      "retreats": {
+        "title": "Retraitsentrums",
+        "desc": "Geestelike vormingsretraites en vrouebedieninge"
+      },
+      "mental": {
+        "title": "Psigiatrie & Geestesgesondheid",
+        "desc": "Psigiatriese hospitale, klinieke en geestesgesondheidsfasiliteite"
+      },
+      "education": {
+        "title": "Onderwys",
+        "desc": "Skole, kolleges en universiteite vir studentewelstand"
+      },
+      "corporate": {
+        "title": "Korporatiewe",
+        "desc": "Geloofsgebaseerde maatskappye vir werknemerwelstandsprogramme"
+      }
+    },
+    "pricing": {
+      "title": "Eenvoudige, Deursigtige Pryse",
+      "subtitle": "Kies die plan wat by jou organisasie se behoeftes pas",
+      "selectTier": "Kies toegangsvlak vir jou lede:"
+    },
+    "process": {
+      "label": "Eenvoudige Proses",
+      "title": "Vinnige Opstelling vir Jou Organisasie",
+      "subtitle": "Kontak ons om grootmaattoeganskodes vir jou span of gemeenskap te kry.",
+      "step1": {
+        "title": "Kontak Ons",
+        "desc": "Vertel ons jou behoeftes"
+      },
+      "step2": {
+        "title": "Kry Jou Kodes",
+        "desc": "Grootmaattoeganskodes word gegenereer"
+      },
+      "step3": {
+        "title": "Versprei",
+        "desc": "Deel met jou gemeenskap"
+      }
+    },
+    "howItWorks": {
+      "title": "Hoe Dit Werk",
+      "subtitle": "Stel jou organisasie op in vier eenvoudige stappe",
+      "step1": {
+        "title": "Kies Jou Plan",
+        "desc": "Kies 'n vlak gebaseer op jou organisasie se grootte en behoeftes"
+      },
+      "step2": {
+        "title": "Ontvang Toegangskodes",
+        "desc": "Kodes word onmiddellik gegenereer - geen wag vir goedkeuring nie"
+      },
+      "step3": {
+        "title": "Versprei aan Lede",
+        "desc": "Gebruik ons e-possjablone of jou eie verspreidingsmetode"
+      },
+      "step4": {
+        "title": "Monitor & Ondersteun",
+        "desc": "Bekyk betrokkenheidsstatistieke en ondersteun jou gemeenskap"
+      }
+    },
+    "whyChoose": {
+      "title": "Hoekom Organisasies Tee Saam God Kies",
+      "subtitle": "'n 40-dag dagstukkiemetgesel ontwerp vir gemeenskapsimpak",
+      "privacy": {
+        "content": "<strong>Privaatheid-Eerste Ontwerp</strong><br><br>Joernaal-inskrywings en persoonlike oordenking bly op elke gebruiker se toestel. Organisasies sien slegs gegroepeerde betrokkenheidsstatistieke, nooit individuele inhoud nie.",
+        "name": "Databeskerming",
+        "role": "POPIA & GDPR Voldoenend"
+      },
+      "offline": {
+        "content": "<strong>Werk Vanlyn</strong><br><br>Sodra dit afgelaai is, werk die toep sonder internetverbinding. Perfek vir gemeenskappe met beperkte konnektiwiteit of duur mobiele data.",
+        "name": "Vanlyn-Bekwaam",
+        "role": "Geen internet nodig nie"
+      },
+      "evidence": {
+        "content": "<strong>Bewysgebaseerde Inhoud</strong><br><br>Dagstukkies is gegrond in die Skrif terwyl dit insigte uit KGT, positiewe sielkunde en trauma-ingeligte sorgbeginsels inkorporeer.",
+        "name": "Navorsingsgeïnformeer",
+        "role": "Geloof + Sielkunde"
+      }
+    },
+    "faq": {
+      "title": "Gereelde Vrae",
+      "subtitle": "Alles wat jy moet weet oor ons B2B-planne",
+      "q1": {
+        "question": "Watter data kan ons organisasie oor lede sien?",
+        "answer": "Privaatheid is uiters belangrik. Jou organisasie-kontroleskerm wys slegs gegroepeerde statistieke: totale aktiewe gebruikers, gemiddelde vorderingsdag, fase-voltooiingskoerse en algemene betrokkenheid. Jy sal nooit individuele joernaal-inskrywings, persoonlike notas of spesifieke emosionele data sien nie."
+      },
+      "q2": {
+        "question": "Kan ons die toep met ons handelsmerk aanpas?",
+        "answer": "Ons Ministry Plus- en Enterprise-vlakke sluit witmerkaanpassingsopsies in. Jy kan jou organisasie se logo by die verwelkomingskerm voeg, die primêre kleurskema aanpas en 'n persoonlike verwelkomingsboodskap vir jou lede byvoeg."
+      },
+      "q3": {
+        "question": "Hoe werk toegangskodes?",
+        "answer": "Wanneer jy 'n plan koop, ontvang jy unieke toegangskodes om aan jou lede te versprei. Elke lid laai die Tee Saam God-toep af en voer hul kode in om hul toegangsvlak te ontsluit. Kodes kan slegs een keer gebruik word en is aan die lid se toestel gekoppel."
+      },
+      "q4": {
+        "question": "Wat gebeur as ons meer kodes nodig het?",
+        "answer": "Jy kan enige tyd addisionele kodes teen dieselfde per-gebruiker-tarief koop. Enterprise-kliënte kan ook opgradeer na onbeperkte kodes. Kontak ons om meer kodes by jou bestaande plan te voeg."
+      },
+      "q5": {
+        "question": "Hoekom is pryse verskillend in verskillende lande?",
+        "answer": "Ons glo dagstukkiegereedskap moet toeganklik wees ongeag ekonomiese omstandighede. Ons pryse word aangepas op grond van plaaslike koopkrag, nie direkte geldeenheidomskakeling nie. Dit beteken organisasies in verskillende lande betaal wat plaaslik bekostigbaar is, nie 'n VSA-dollar-ekwivalent wat dalk buite bereik is nie."
+      }
+    },
+    "cta": {
+      "title": "Gereed om Jou Bediening te Transformeer?",
+      "subtitle": "Sluit aan by honderde kerke wat bewysgebaseerde dagstukkieondersteuning na hul gemeenskappe bring.",
+      "button": "Kontak Ons Vandag"
+    },
+    "footer": {
+      "copyright": "© 2026 Tee Saam God. Alle regte voorbehou.",
+      "individual": "Individuele Toegang",
+      "admin": "Admin-Aanmelding"
+    },
+    "modal": {
+      "title": "Begin Nou",
+      "orgName": "Organisasienaam *",
+      "orgType": "Organisasietipe *",
+      "selectType": "Kies tipe...",
+      "types": {
+        "church": "Kerk / Vrouebediening",
+        "counseling": "Berading / Terapiesentrum",
+        "shelter": "Vroueskuiling / Veilige Huis",
+        "ngo": "NRO / Nie-Winsgewend",
+        "retreat": "Retraite / Geestelike Sentrum",
+        "psychiatric": "Psigiatriese Hospitaal / Geestesgesondheidskliniek",
+        "healthcare": "Hospitaal / Gesondheidsorg",
+        "education": "Skool / Kollege / Universiteit",
+        "corporate": "Korporatief / Werkplekwelstand",
+        "correctional": "Korrektief / Rehabilitasie",
+        "support": "Ondersteuningsgroep / Herstelprogram",
+        "other": "Ander"
+      },
+      "yourName": "Jou Naam *",
+      "email": "E-pos *",
+      "country": "Land *",
+      "selectCountry": "Kies land...",
+      "otherCountry": "Ander",
+      "userCount": "Geskatte Aantal Gebruikers",
+      "message": "Boodskap",
+      "messagePlaceholder": "Vertel ons van jou organisasie en doelwitte...",
+      "submit": "Stuur Navraag"
+    }
+  }
+}

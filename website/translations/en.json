@@ -1,0 +1,844 @@
+{
+  "meta": {
+    "title": "Tea With God - A 40-Day Devotional Companion",
+    "description": "Begin your 40-day devotional journey. A gentle companion app for the beautifully broken."
+  },
+  "nav": {
+    "brandName": "Tea With God",
+    "journey": "Journey",
+    "features": "Features",
+    "music": "Music",
+    "download": "Download",
+    "pricing": "Pricing",
+    "forOrganizations": "For Organizations",
+    "beginNow": "Begin Now",
+    "backToHome": "Back to Home"
+  },
+  "hero": {
+    "badge": "40-Day Devotional Companion",
+    "title": "Tea With",
+    "titleHighlight": "God",
+    "subtitle": "A sacred space for the beautifully broken. No rush, no shame, just grace. Your devotional journey begins with a single step.",
+    "ctaPrimary": "Start Your Journey",
+    "ctaSecondary": "Explore the Journey",
+    "scroll": "Scroll"
+  },
+  "journey": {
+    "label": "The Path",
+    "title": "40 Days of Gentle Transformation",
+    "scripture": "\"The pot was marred in his hands; so the potter formed it into another pot, shaping it as seemed best to him.\" — Jeremiah 18:4",
+    "phases": {
+      "1": {
+        "days": "Days 1-10",
+        "title": "Acknowledging",
+        "description": "Gently recognizing the broken pieces without judgment. Creating space to simply be present."
+      },
+      "2": {
+        "days": "Days 11-20",
+        "title": "Sitting With",
+        "description": "Learning to be present with your pain. Not fixing, just witnessing with compassion."
+      },
+      "3": {
+        "days": "Days 21-30",
+        "title": "Repairing",
+        "description": "Applying golden truths to the broken places. Transformation begins in earnest."
+      },
+      "4": {
+        "days": "Days 31-40",
+        "title": "Becoming",
+        "description": "Emerging whole. Your scars now shine with gold - beautiful, strong, restored."
+      }
+    }
+  },
+  "features": {
+    "label": "Features",
+    "title": "Everything You Need for Your Journey",
+    "subtitle": "Thoughtfully designed tools to support your journey, without overwhelming you.",
+    "items": {
+      "devotionals": {
+        "title": "Daily Devotionals",
+        "description": "40 beautifully written reflections that meet you exactly where you are."
+      },
+      "journal": {
+        "title": "Private Journal",
+        "description": "A secure, encrypted space for your deepest thoughts and reflections."
+      },
+      "progress": {
+        "title": "Anti-Shame Progress",
+        "description": "Miss a day? No guilt. The app celebrates your return, not your absence."
+      },
+      "crisis": {
+        "title": "Crisis Support",
+        "description": "One-tap access to comfort prayers when you need them most."
+      },
+      "offline": {
+        "title": "Works Offline",
+        "description": "Your sanctuary travels with you. No internet required."
+      },
+      "reminders": {
+        "title": "Gentle Reminders",
+        "description": "Optional daily nudges. An invitation, never a demand."
+      },
+      "digitalBook": {
+        "title": "Interactive Digital Book",
+        "description": "Read the full book with beautiful page-turning effects. Your companion on any device."
+      },
+      "brainGames": {
+        "title": "Brain Games",
+        "description": "Six evidence-based exercises for emotional regulation and mental wellness."
+      }
+    }
+  },
+  "music": {
+    "label": "Original Music",
+    "title": "Songs for Your Soul",
+    "subtitle": "Original worship songs created specifically for your devotional journey. Let the music carry you deeper into each devotional.",
+    "features": {
+      "tracks": {
+        "title": "Original Tracks",
+        "description": "Exclusive songs to accompany your daily devotional"
+      },
+      "player": {
+        "title": "Built-In Player",
+        "description": "Listen while you read and reflect"
+      },
+      "worship": {
+        "title": "Devotional Worship",
+        "description": "Peaceful sounds to accompany your prayers"
+      }
+    },
+    "nowPlaying": "Now Playing",
+    "songTitle": "Restore My Soul",
+    "artist": "Tea With God"
+  },
+  "testimonials": {
+    "label": "What Makes Us Different",
+    "title": "Built for Real Life",
+    "items": {
+      "1": {
+        "content": "\"No guilt for missing days. The app welcomes you back like a friend, not a judge. That approach changes everything.\"",
+        "author": "Grace-Filled Design",
+        "meta": "No shame, just progress"
+      },
+      "2": {
+        "content": "\"Crisis prayers are just one tap away. When darkness comes, immediate comfort and guidance are within reach.\"",
+        "author": "Always Available",
+        "meta": "24/7 crisis support"
+      },
+      "3": {
+        "content": "\"Growth isn't about perfection. It's about showing up, broken and all. This devotional understands that truth.\"",
+        "author": "Authentic Growth",
+        "meta": "40 days of transformation"
+      }
+    }
+  },
+  "download": {
+    "label": "Get Started",
+    "title": "Begin Your Journey",
+    "subtitle": "Your devotional companion awaits. Works on any device with a browser.",
+    "launchThe": "Launch the",
+    "webApp": "Web App",
+    "note": "Works on iPhone, Android, tablet, or computer. Install as an app or use in your browser. No app store needed."
+  },
+  "pricing": {
+    "label": "Pricing",
+    "title": "Choose Your Path",
+    "subtitle": "One-time purchase. Lifetime access. No subscriptions.",
+    "guarantee": "Secure EFT payment. Lifetime access. No subscriptions.",
+    "tiers": {
+      "book": {
+        "name": "Book",
+        "price": "99",
+        "description": "eBook only",
+        "features": {
+          "1": "eBook PDF download",
+          "2": "Read at your pace",
+          "3": "Offline reading",
+          "4": "No app access"
+        },
+        "cta": "Get Book Access"
+      },
+      "journey": {
+        "name": "Journey",
+        "badge": "Most Popular",
+        "price": "149",
+        "description": "The interactive experience",
+        "features": {
+          "1": "eBook included",
+          "2": "40 devotionals in app",
+          "3": "Private journal",
+          "4": "Progress tracking"
+        },
+        "cta": "Start Your Journey"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "249",
+        "description": "The complete sanctuary",
+        "features": {
+          "1": "Everything in Journey",
+          "2": "Music library",
+          "3": "Brain games",
+          "4": "Voice recordings"
+        },
+        "cta": "Get Premium"
+      }
+    }
+  },
+  "contact": {
+    "label": "Get in Touch",
+    "title": "We'd Love to Hear From You",
+    "subtitle": "Questions about your devotional journey? Need support? We're here for you.",
+    "email": {
+      "title": "Email Us",
+      "address": "hello@teawithgod.com",
+      "responseTime": "We respond within 24-48 hours"
+    },
+    "whatsapp": {
+      "title": "WhatsApp",
+      "number": "+27 66 467 8937",
+      "cta": "Chat with us"
+    },
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email",
+      "phone": "Phone (Optional)",
+      "subject": "Subject",
+      "subjects": {
+        "general": "General Inquiry",
+        "support": "Support Request",
+        "bulk": "Bulk/Organization Pricing",
+        "partnership": "Partnership Opportunity",
+        "feedback": "Feedback"
+      },
+      "message": "Message",
+      "messagePlaceholder": "How can we help you?",
+      "submit": "Send Message",
+      "note": "We respect your privacy. Your information is safe with us.",
+      "success": {
+        "title": "Message Sent!",
+        "message": "Thank you for reaching out. We'll get back to you within 24-48 hours."
+      }
+    }
+  },
+  "footer": {
+    "tagline": "A 40-day companion for the beautifully broken. Made with love in South Africa.",
+    "columns": {
+      "product": {
+        "title": "Product",
+        "journey": "The Journey",
+        "features": "Features",
+        "science": "The Science",
+        "getAccess": "Get Access"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "bulkLicensing": "Bulk Licensing",
+        "pricingTiers": "Pricing Tiers",
+        "faq": "FAQ"
+      },
+      "support": {
+        "title": "Support",
+        "contact": "Contact",
+        "faq": "FAQ",
+        "privacy": "Privacy Policy",
+        "terms": "Terms of Service"
+      }
+    },
+    "copyright": "2026 Tea With God. All rights reserved."
+  },
+  "checkout": {
+    "title": "Checkout - Tea With God",
+    "secureBadge": "Secure",
+    "steps": {
+      "details": "Your Details",
+      "payment": "Payment",
+      "confirmation": "Confirmation"
+    },
+    "details": {
+      "title": "Your Details",
+      "description": "We'll use this to send your access code after payment.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "e.g. Nomsa",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "e.g. Dlamini",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "emailHint": "Your access code will be sent here",
+      "phone": "WhatsApp Number",
+      "phonePlaceholder": "e.g. 082 123 4567",
+      "phoneHint": "For payment confirmation & support",
+      "tithe": {
+        "title": "Give Back: 10% Tithe",
+        "description": "We donate 10% of every purchase to a charity of your choice",
+        "selectLabel": "Choose a beneficiary organization",
+        "loading": "Loading organizations...",
+        "select": "Select an organization...",
+        "noOrgs": "No organizations available",
+        "error": "Unable to load organizations",
+        "amount": "of your purchase will go to the selected organization"
+      },
+      "terms": "I agree to the",
+      "termsLink": "Terms of Service",
+      "and": "and",
+      "privacyLink": "Privacy Policy",
+      "continue": "Continue to Payment"
+    },
+    "payment": {
+      "title": "Choose Payment Method",
+      "description": "Pay instantly with card or use EFT bank transfer.",
+      "card": {
+        "name": "Pay with Card",
+        "description": "Instant access via Yoco",
+        "recommended": "Recommended",
+        "amount": "You'll pay",
+        "note": "Secure payment powered by Yoco. Your card details are encrypted.",
+        "button": "Pay Securely with Card",
+        "accepts": "Accepts Visa, Mastercard, and more"
+      },
+      "eft": {
+        "name": "EFT Bank Transfer",
+        "description": "Manual verification (1-2 hours)",
+        "reveal": "Click to reveal banking details",
+        "revealHint": "Your reference and amount will be shown",
+        "bank": "Bank",
+        "bankName": "First National Bank (FNB)",
+        "accountName": "Account Name",
+        "accountNameValue": "HL BUTLER",
+        "accountType": "Account Type",
+        "accountTypeValue": "Business",
+        "accountNumber": "Account Number",
+        "branchCode": "Branch Code",
+        "reference": "Reference",
+        "amount": "Amount",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "note": "Use the reference above so we can identify your payment"
+      },
+      "upload": {
+        "title": "Upload Proof of Payment",
+        "description": "Screenshot or photo of your payment confirmation",
+        "dropzone": "Click to upload or drag and drop",
+        "hint": "PNG, JPG or PDF (max 5MB)",
+        "remove": "Remove file",
+        "tooLarge": "File too large. Maximum 5MB."
+      },
+      "back": "Back",
+      "submit": "Submit Payment Proof",
+      "submitting": "Submitting...",
+      "error": "Something went wrong. Please try again or contact us on WhatsApp.",
+      "cardError": "Payment failed. Please try again or use EFT."
+    },
+    "confirmation": {
+      "title": "Payment Submitted!",
+      "message": "Thank you, {{name}}. We've received your proof of payment.",
+      "orderRef": "Order Reference",
+      "nextSteps": {
+        "title": "What Happens Next?",
+        "step1": {
+          "title": "We verify your payment",
+          "description": "Usually within 1-2 hours during business hours"
+        },
+        "step2": {
+          "title": "You receive your access code",
+          "description": "Via email and WhatsApp"
+        },
+        "step3": {
+          "title": "Download the app & enter your code",
+          "description": "Begin your 40-day devotional journey"
+        }
+      },
+      "backToHome": "Back to Home",
+      "whatsapp": "WhatsApp Us"
+    },
+    "sidebar": {
+      "title": "Order Summary",
+      "total": "Total",
+      "includes": "Includes",
+      "secure": "Secure",
+      "verify": "24hr Verify"
+    }
+  },
+  "common": {
+    "required": "required",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "tryAgain": "Try Again",
+    "currency": "R"
+  },
+  "faq": {
+    "pageTitle": "FAQ - Tea With God",
+    "label": "Support",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about your devotional journey.",
+    "categories": {
+      "gettingStarted": {
+        "title": "Getting Started",
+        "q1": {
+          "question": "How do I access the Tea With God app?",
+          "answer": "After purchasing, you'll receive an access code via email. Enter this code in the app to unlock your full 40-day journey. The app works on Android, iOS, and web browsers."
+        },
+        "q2": {
+          "question": "What's included in each access tier?",
+          "answer": "<strong>Book Access (R99):</strong> All 40 devotionals in eBook format.<br><br><strong>Journey Access (R149):</strong> Full app access with devotionals, private journal, and progress tracking.<br><br><strong>Premium Access (R249):</strong> Everything in Journey plus voice recordings, crisis support prayers, and all future updates."
+        },
+        "q3": {
+          "question": "Can I use the app offline?",
+          "answer": "Yes! Once you've accessed the app with your code, all 40 devotionals are stored on your device. You can use the app anywhere, anytime - no internet required."
+        }
+      },
+      "paymentAccess": {
+        "title": "Payment & Access",
+        "q1": {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept card payments (Visa, Mastercard) through Yoco, as well as EFT bank transfers. Card payments provide instant access, while EFT orders are verified within 24 hours."
+        },
+        "q2": {
+          "question": "How long does it take to receive my access code?",
+          "answer": "Card payments: Instant - your access code is sent immediately after payment.<br><br>EFT payments: Within 24 hours of payment verification. You'll receive an email with your code once confirmed."
+        },
+        "q3": {
+          "question": "Can I share my access code?",
+          "answer": "Access codes are for individual use. If you'd like to gift Tea With God to someone, you can purchase additional codes. For churches or organizations needing multiple licenses, please visit our <a href=\"b2b/\">B2B portal</a>."
+        }
+      },
+      "privacyData": {
+        "title": "Privacy & Data",
+        "q1": {
+          "question": "Is my journal private?",
+          "answer": "Absolutely. Your journal entries are stored only on your device and are encrypted. We cannot read your entries - they never leave your phone. Your devotional journey is completely private."
+        },
+        "q2": {
+          "question": "What happens to my data if I delete the app?",
+          "answer": "Since your journal and progress are stored locally, deleting the app will remove this data from your device. Your access code remains valid, so you can reinstall and start fresh. We recommend exporting any journal entries you want to keep before uninstalling."
+        }
+      },
+      "theJourney": {
+        "title": "The Journey",
+        "q1": {
+          "question": "Do I have to complete a day before moving on?",
+          "answer": "No pressure, no demands. While the journey is designed to be experienced one day at a time, you can move at your own pace. Some days you might need to sit longer. Other days you might move forward. This is your journey."
+        },
+        "q2": {
+          "question": "What are the \"brain games\"?",
+          "answer": "These are gentle, evidence-based exercises designed to support your journey. They include breathing exercises, gratitude practices, thought reframing, and scripture memory tools - all grounded in psychology and faith."
+        },
+        "q3": {
+          "question": "Is this a replacement for therapy?",
+          "answer": "Tea With God is a devotional companion, not a substitute for professional mental health care. If you're struggling with serious mental health issues, please seek help from a qualified therapist or counselor. This app is designed to complement, not replace, professional support."
+        }
+      }
+    },
+    "contact": {
+      "title": "Still have questions?",
+      "subtitle": "We're here to help you on your journey.",
+      "whatsapp": "WhatsApp Us",
+      "email": "Email Us"
+    },
+    "footer": {
+      "copyright": "2026 Tea With God. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms"
+    }
+  },
+  "terms": {
+    "pageTitle": "Terms of Service - Tea With God",
+    "label": "Legal",
+    "title": "Terms of Service",
+    "subtitle": "Please read these terms carefully before using Tea With God.",
+    "lastUpdated": "Last updated",
+    "summaryBox": "<strong>Summary:</strong> Tea With God is a devotional companion app designed for personal spiritual growth and emotional wellness. It provides EDUCATIONAL content only and is NOT professional psychological, medical, or therapeutic advice. By using our service, you agree to these terms.",
+    "warningBox": "<strong>IMPORTANT - EDUCATIONAL CONTENT ONLY:</strong> All content in Tea With God, including the \"brain games\" and psychological information, is for EDUCATIONAL and DEVOTIONAL purposes only. We do not provide professional psychological, medical, or therapeutic services. The creators of Tea With God are not psychologists, therapists, or medical professionals. Nothing in this app should be construed as professional advice or treatment.",
+    "sections": {
+      "1": {
+        "title": "1. Acceptance of Terms",
+        "content": "By accessing or using Tea With God (\"the Service\"), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Service.<br><br>These terms apply to all users of the Service, including individual users and organizations accessing through our B2B program."
+      },
+      "2": {
+        "title": "2. Description of Service",
+        "intro": "Tea With God is a 40-day digital devotional companion that includes:",
+        "items": ["Daily devotional content and scripture readings", "Private journaling functionality", "Educational wellness exercises inspired by general scientific principles (not professional psychological treatment)", "Original worship music (where available)", "Progress tracking through the 40-day journey"],
+        "note": "<strong>Note:</strong> All references to scientific or psychological concepts within the app are drawn from publicly available, general scientific knowledge. We do not claim affiliation with, endorsement by, or partnership with any researchers, institutions, or experts. The content represents our own educational interpretation of widely-available scientific principles."
+      },
+      "3": {
+        "title": "3. Access and Payment",
+        "intro": "Access to Tea With God requires a valid access code obtained through:",
+        "items": ["<strong>Direct Purchase:</strong> One-time payment processed through Yoco (our payment provider)", "<strong>Organization Access:</strong> Code provided by a participating church, counselor, or organization", "<strong>Gift Code:</strong> Code received as a gift from another user"],
+        "refund": "All payments are final. Due to the digital nature of the product, we do not offer refunds once an access code has been redeemed. If you experience technical issues, please contact us for support."
+      },
+      "4": {
+        "title": "4. User Responsibilities",
+        "intro": "When using Tea With God, you agree to:",
+        "items": ["Provide accurate information during registration", "Keep your access code confidential", "Use the Service for personal, non-commercial purposes only", "Not attempt to reverse engineer or copy the Service", "Not share or redistribute access codes"]
+      },
+      "mentalHealthWarning": "<strong>Important Mental Health Disclaimer:</strong> Tea With God is a devotional and educational resource, NOT a substitute for professional mental health treatment. If you are experiencing a mental health crisis, please contact emergency services or a qualified mental health professional immediately.",
+      "5": {
+        "title": "5. Mental Health and Educational Disclaimer",
+        "intro": "Tea With God provides spiritual and educational content designed to support emotional wellness. BY USING THIS SERVICE, YOU EXPRESSLY ACKNOWLEDGE AND AGREE THAT:",
+        "items": ["The Service is NOT therapy, counseling, or professional mental health treatment", "The \"brain games\" and wellness exercises are EDUCATIONAL tools only, not clinical treatment", "The creators are NOT psychologists, therapists, psychiatrists, or medical professionals", "Content is NOT intended to diagnose, treat, cure, or prevent any mental or physical condition", "References to scientific concepts are for general education and do NOT constitute professional advice", "No content should be relied upon as a substitute for professional medical or psychological evaluation", "If you are in crisis, you MUST seek professional help immediately"],
+        "acknowledgment": "<strong>By using the Service, you acknowledge that you understand these limitations, assume full responsibility for your own mental health decisions, and agree to seek appropriate professional help when needed. You expressly waive any claims against Tea With God and its creators arising from your use of the educational content.</strong>"
+      },
+      "6": {
+        "title": "6. Scientific and Educational Content",
+        "intro": "Tea With God contains references to general scientific and psychological concepts. Please understand:",
+        "items": ["All scientific content is based on PUBLICLY AVAILABLE, general knowledge", "We do NOT claim affiliation with or endorsement by any researchers, universities, or institutions", "We do NOT claim to be experts in psychology, neuroscience, or any scientific field", "References to brain science, nervous system regulation, cognitive techniques, or other scientific concepts are for EDUCATIONAL purposes only", "Our interpretation of scientific concepts may not reflect the views of any particular researcher or institution", "The effectiveness of our exercises has not been independently verified through clinical trials"],
+        "acknowledgment": "<strong>By using the Service, you agree that Tea With God makes no representations about professional expertise and you will not hold the Service or its creators liable for any claims related to scientific accuracy or professional expertise.</strong>"
+      },
+      "7": {
+        "title": "7. Intellectual Property",
+        "intro": "All content within Tea With God is protected by copyright and intellectual property laws:",
+        "items": ["Devotional content written by Lani Butler", "Original music compositions", "Brain game designs and implementations", "App design and user interface", "The Tea With God brand and logo"],
+        "note": "You may not copy, reproduce, distribute, or create derivative works without express written permission."
+      },
+      "8": {
+        "title": "8. Privacy",
+        "intro": "Your privacy is important to us. Please review our <a href=\"privacy.html\" style=\"color: var(--gold);\">Privacy Policy</a> for information about how we collect, use, and protect your personal information.",
+        "keyPoints": "Key points:",
+        "items": ["Journal entries remain on your device", "We never sell your personal data", "Payment information is processed securely by Yoco", "You can request deletion of your account at any time"]
+      },
+      "9": {
+        "title": "9. Limitation of Liability and Indemnification",
+        "intro": "TO THE MAXIMUM EXTENT PERMITTED BY LAW, Tea With God, its creators, developers, affiliates, officers, directors, employees, agents, and licensors shall NOT be liable for:",
+        "items": ["Any direct, indirect, incidental, special, consequential, or punitive damages", "Any psychological, emotional, or mental health outcomes", "Any actions taken or not taken based on content within the app", "Any reliance on the educational or scientific information provided", "Loss of data, content, or personal information", "Service interruptions or technical issues", "Any claim by third parties arising from your use of the Service"],
+        "asIs": "<strong>THE SERVICE IS PROVIDED \"AS IS\" AND \"AS AVAILABLE\" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED.</strong>",
+        "liability": "Our total liability shall not exceed the amount you paid for access to the Service.",
+        "indemnification": "<strong>Indemnification:</strong> You agree to indemnify and hold harmless Tea With God, its creators, and affiliates from any claims, damages, losses, or expenses arising from your use of the Service or violation of these terms."
+      },
+      "10": {
+        "title": "10. Modifications to Service",
+        "intro": "We reserve the right to:",
+        "items": ["Modify or discontinue any aspect of the Service", "Update content and features", "Change these Terms of Service"],
+        "note": "We will notify users of significant changes through the app or email. Continued use after changes constitutes acceptance of the new terms."
+      },
+      "11": {
+        "title": "11. Governing Law",
+        "content": "These Terms of Service are governed by the laws of the Republic of South Africa. Any disputes shall be resolved in the courts of South Africa."
+      },
+      "12": {
+        "title": "12. Contact Information",
+        "intro": "For questions about these Terms of Service, please contact us:",
+        "email": "Email:",
+        "whatsapp": "WhatsApp:"
+      }
+    },
+    "footer": {
+      "copyright": "2026 Tea With God. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "faq": "FAQ"
+    }
+  },
+  "downloads": {
+    "pageTitle": "Downloads - Tea With God",
+    "header": {
+      "title": "Your Downloads",
+      "subtitle": "Enter your access code to unlock your content"
+    },
+    "gate": {
+      "title": "Enter Access Code",
+      "subtitle": "Your access code was sent to your email after purchase.",
+      "placeholder": "e.g. TWG-XXXX-XXXX",
+      "error": "Invalid access code. Please check and try again.",
+      "errorEmpty": "Please enter your access code.",
+      "errorConnection": "Connection error. Please try again.",
+      "verifying": "Verifying...",
+      "button": "Verify Code"
+    },
+    "welcome": {
+      "title": "Welcome,",
+      "subtitle": "Your access has been verified. Download your content below."
+    },
+    "ebook": {
+      "title": "Tea With God eBook",
+      "subtitle": "40-Day Devotional (PDF)",
+      "button": "Download"
+    },
+    "app": {
+      "title": "Ready to Begin?",
+      "subtitle": "Open the web app and start your 40-day devotional journey.",
+      "button": "Open Web App"
+    },
+    "footer": {
+      "help": "Need help?",
+      "contact": "Contact Support"
+    }
+  },
+  "science": {
+    "pageTitle": "The Science - Tea With God | Evidence-Based Brain Health",
+    "label": "Evidence-Based Growth",
+    "title": "The Science Behind Your Journey",
+    "subtitle": "Tea With God combines ancient spiritual wisdom with modern neuroscience. Here's why it works.",
+    "intro": {
+      "p1": "Our brain games aren't random feel-good exercises. They're carefully designed interventions based on peer-reviewed research in neuroscience, psychology, and trauma recovery.",
+      "p2": "Each game targets specific brain regions and psychological mechanisms to support genuine, lasting growth."
+    },
+    "principles": {
+      "title": "Evidence-Based Brain Health Principles",
+      "intro": "Modern brain imaging research has identified foundational principles for brain health. These evidence-based insights inform our entire approach:",
+      "items": {
+        "1": {"number": "Principle 1", "title": "Brain in Everything", "description": "Your brain is involved in everything you do - how you think, feel, act, and relate to others."},
+        "2": {"number": "Principle 2", "title": "Better Brain = Better Life", "description": "When your brain works right, you work right. You can make it better."},
+        "3": {"number": "Principle 7", "title": "Help vs. Harm", "description": "Many things hurt the brain, many things help it. Small daily habits compound into significant differences."},
+        "4": {"number": "Principle 9", "title": "Knowledge is Power", "description": "Understanding your brain helps you fix problems. Psychoeducation reduces shame."},
+        "5": {"number": "Principle 10", "title": "Personalization", "description": "Different brain types need different treatments. One-size-fits-all approaches fail."},
+        "6": {"number": "Principle 11", "title": "Brain Reserve", "description": "The brain can build capacity to handle challenges through consistent practice."}
+      }
+    },
+    "games": {
+      "title": "The 6 Brain Games",
+      "intro": "Each game is designed to target specific brain regions and psychological mechanisms:"
+    },
+    "journey": {
+      "title": "The 40-Day Journey Structure",
+      "intro": "Like clay in the Potter's hands (Jeremiah 18:4), you are being reshaped over 40 days. The games unlock progressively, following a structure designed to build brain health systematically:"
+    },
+    "architecture": {
+      "title": "Why This Architecture Works",
+      "systemsBox": "<strong>Systems Integration Principle:</strong> Brain systems work together in harmony. Imbalance in one system affects all others.",
+      "intro": "The 6 brain games aren't random - they're designed to target EVERY major brain system:",
+      "conclusion": "Together, they create <strong>whole-brain growth</strong> - not just treating symptoms, but building a stronger, more resilient brain over 40 days."
+    },
+    "disclaimer": {
+      "title": "Important Disclaimer",
+      "p1": "These exercises are educational tools based on evidence-based psychological principles.",
+      "p2": "They are not a substitute for professional mental health treatment.",
+      "p3": "If you're in crisis, please reach out to a mental health professional or crisis line."
+    },
+    "cta": {
+      "title": "Begin Your Devotional Journey",
+      "subtitle": "40 days of evidence-based exercises combined with spiritual devotion.",
+      "button": "Start Your Journey"
+    },
+    "footer": {
+      "copyright": "2026 Tea With God. All rights reserved.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "faq": "FAQ"
+    }
+  },
+  "privacy": {
+    "pageTitle": "Privacy Policy - Tea With God",
+    "label": "Legal",
+    "title": "Privacy Policy",
+    "subtitle": "Your data stays private. Your journey stays sacred.",
+    "lastUpdated": "Last updated",
+    "promise": "<strong>Our Promise:</strong> Tea With God is built on the principle of privacy by design. Your journal entries, reflections, and personal data never leave your device unless you explicitly choose to back them up.",
+    "sections": {
+      "collect": {
+        "title": "Information We Collect",
+        "intro": "We collect minimal information necessary to provide you with a meaningful experience:",
+        "items": ["<strong>Account Information:</strong> Email address and name when you purchase access", "<strong>Payment Information:</strong> Processed securely through Yoco - we never store your card details", "<strong>Usage Data:</strong> Basic analytics to improve the app (no personal content is tracked)"]
+      },
+      "device": {
+        "title": "What Stays on Your Device",
+        "intro": "The following data is stored locally on your device and is never transmitted to our servers:",
+        "items": ["Journal entries and personal reflections", "Voice recordings", "Progress through the 40-day journey", "Brain game results and personal insights", "Any notes or highlights you create"]
+      },
+      "security": {
+        "title": "Data Security",
+        "intro": "Your privacy is protected through multiple layers of security:",
+        "items": ["Journal entries are encrypted on your device", "Secure HTTPS connections for all communications", "No third-party analytics that track personal content", "Payment processing through PCI-compliant Yoco"]
+      },
+      "rights": {
+        "title": "Your Rights",
+        "intro": "Under the Protection of Personal Information Act (POPIA), you have the right to:",
+        "items": ["Access any personal information we hold about you", "Request correction of inaccurate information", "Request deletion of your personal information", "Withdraw consent for data processing", "Lodge a complaint with the Information Regulator"]
+      },
+      "children": {
+        "title": "Children's Privacy",
+        "content": "Tea With God is designed for adults. We do not knowingly collect information from children under 18. If you believe a child has provided us with personal information, please contact us immediately."
+      },
+      "changes": {
+        "title": "Changes to This Policy",
+        "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the \"Last updated\" date."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "intro": "If you have questions about this Privacy Policy or your personal data, please contact us:",
+        "email": "Email:",
+        "whatsapp": "WhatsApp:"
+      }
+    },
+    "footer": {
+      "copyright": "2026 Tea With God. All rights reserved.",
+      "terms": "Terms of Service",
+      "faq": "FAQ"
+    }
+  },
+  "b2b": {
+    "pageTitle": "Tea With God - For Churches & Organizations",
+    "nav": {
+      "pricing": "Pricing",
+      "howItWorks": "How It Works",
+      "faq": "FAQ",
+      "getStarted": "Get Started"
+    },
+    "hero": {
+      "badge": "For Organizations",
+      "title": "Bring Hope to Your Community",
+      "subtitle": "Equip your organization with a proven 40-day devotional journey that combines faith and evidence-based psychology. Perfect for churches, shelters, counseling centers, and more.",
+      "viewPricing": "View Pricing",
+      "bookDemo": "Book a Demo"
+    },
+    "orgTypes": {
+      "title": "Perfect for Every Organization",
+      "subtitle": "Tea With God serves organizations of all sizes across the globe",
+      "churches": {
+        "title": "Churches",
+        "desc": "Women's ministries and small groups seeking structured devotional resources"
+      },
+      "counseling": {
+        "title": "Counseling Centers",
+        "desc": "Christian counselors and therapists supplementing client care"
+      },
+      "shelters": {
+        "title": "Shelters",
+        "desc": "Women's shelters and safe houses for trauma recovery support"
+      },
+      "ngos": {
+        "title": "NGOs",
+        "desc": "Non-profits serving vulnerable women and communities"
+      },
+      "retreats": {
+        "title": "Retreat Centers",
+        "desc": "Spiritual formation retreats and women's ministries"
+      },
+      "mental": {
+        "title": "Psychiatric & Mental Health",
+        "desc": "Psychiatric hospitals, clinics, and mental health facilities"
+      },
+      "education": {
+        "title": "Education",
+        "desc": "Schools, colleges, and universities for student wellness"
+      },
+      "corporate": {
+        "title": "Corporates",
+        "desc": "Faith-based companies for employee wellness programs"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your organization's needs",
+      "selectTier": "Select access tier for your members:"
+    },
+    "process": {
+      "label": "Simple Process",
+      "title": "Quick Setup for Your Organization",
+      "subtitle": "Contact us to get bulk access codes for your team or community.",
+      "step1": {
+        "title": "Contact Us",
+        "desc": "Tell us your needs"
+      },
+      "step2": {
+        "title": "Get Your Codes",
+        "desc": "Bulk access codes generated"
+      },
+      "step3": {
+        "title": "Distribute",
+        "desc": "Share with your community"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Get your organization set up in four simple steps",
+      "step1": {
+        "title": "Choose Your Plan",
+        "desc": "Select a tier based on your organization size and needs"
+      },
+      "step2": {
+        "title": "Receive Access Codes",
+        "desc": "Codes generated instantly - no waiting for approval"
+      },
+      "step3": {
+        "title": "Distribute to Members",
+        "desc": "Use our email templates or your own distribution method"
+      },
+      "step4": {
+        "title": "Track & Support",
+        "desc": "View engagement metrics and support your community"
+      }
+    },
+    "whyChoose": {
+      "title": "Why Organizations Choose Tea With God",
+      "subtitle": "A 40-day devotional companion designed for community impact",
+      "privacy": {
+        "content": "<strong>Privacy-First Design</strong><br><br>Journal entries and personal reflections stay on each user's device. Organizations see only aggregate engagement metrics, never individual content.",
+        "name": "Data Protection",
+        "role": "POPIA & GDPR Compliant"
+      },
+      "offline": {
+        "content": "<strong>Works Offline</strong><br><br>Once downloaded, the app works without internet connection. Perfect for communities with limited connectivity or expensive mobile data.",
+        "name": "Offline Capable",
+        "role": "No internet required"
+      },
+      "evidence": {
+        "content": "<strong>Evidence-Based Content</strong><br><br>Devotionals are grounded in Scripture while incorporating insights from CBT, positive psychology, and trauma-informed care principles.",
+        "name": "Research-Informed",
+        "role": "Faith + Psychology"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about our B2B plans",
+      "q1": {
+        "question": "What data can our organization see about members?",
+        "answer": "Privacy is paramount. Your organization dashboard shows aggregate metrics only: total active users, average progress day, phase completion rates, and general engagement. You will never see individual journal entries, personal notes, or specific emotional data."
+      },
+      "q2": {
+        "question": "Can we customize the app with our branding?",
+        "answer": "Our Ministry Plus and Enterprise tiers include white-label options. You can add your organization's logo to the welcome screen, customize the primary color scheme, and add a personalized welcome message for your members."
+      },
+      "q3": {
+        "question": "How do access codes work?",
+        "answer": "When you purchase a plan, you receive unique access codes to distribute to your members. Each member downloads the Tea With God app and enters their code to unlock their access level. Codes can only be used once and are linked to the member's device."
+      },
+      "q4": {
+        "question": "What happens if we need more codes?",
+        "answer": "You can purchase additional codes at any time at the same per-user rate. Enterprise customers can also upgrade to unlimited codes. Contact us to add more codes to your existing plan."
+      },
+      "q5": {
+        "question": "Why is pricing different in different countries?",
+        "answer": "We believe devotional tools should be accessible regardless of economic circumstances. Our pricing is adjusted based on local purchasing power, not direct currency conversion. This means organizations in different countries pay what's affordable locally, not a US-dollar equivalent that might be out of reach."
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Ministry?",
+      "subtitle": "Join hundreds of churches bringing evidence-based devotional support to their communities.",
+      "button": "Contact Us Today"
+    },
+    "footer": {
+      "copyright": "© 2026 Tea With God. All rights reserved.",
+      "individual": "Individual Access",
+      "admin": "Admin Login"
+    },
+    "modal": {
+      "title": "Get Started",
+      "orgName": "Organization Name *",
+      "orgType": "Organization Type *",
+      "selectType": "Select type...",
+      "types": {
+        "church": "Church / Women's Ministry",
+        "counseling": "Counseling / Therapy Center",
+        "shelter": "Women's Shelter / Safe House",
+        "ngo": "NGO / Non-Profit",
+        "retreat": "Retreat / Spiritual Center",
+        "psychiatric": "Psychiatric Hospital / Mental Health Clinic",
+        "healthcare": "Hospital / Healthcare",
+        "education": "School / College / University",
+        "corporate": "Corporate / Workplace Wellness",
+        "correctional": "Correctional / Rehabilitation",
+        "support": "Support Group / Recovery Program",
+        "other": "Other"
+      },
+      "yourName": "Your Name *",
+      "email": "Email *",
+      "country": "Country *",
+      "selectCountry": "Select country...",
+      "otherCountry": "Other",
+      "userCount": "Estimated Number of Users",
+      "message": "Message",
+      "messagePlaceholder": "Tell us about your organization and goals...",
+      "submit": "Send Inquiry"
+    }
+  }
+}

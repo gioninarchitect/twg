@@ -347,7 +347,7 @@
         }
 
         .pricing-card.featured::before {
-            content: 'Most Popular';
+            content: var(--most-popular-text, 'Most Popular');
             position: absolute;
             top: -12px;
             left: 50%;
@@ -1346,10 +1346,10 @@
                         <label data-i18n="b2b.modal.country">Country *</label>
                         <select name="country" required>
                             <option value="" data-i18n="b2b.modal.selectCountry">Select country...</option>
-                            <option value="za">South Africa</option>
-                            <option value="us">United States</option>
-                            <option value="uk">United Kingdom</option>
-                            <option value="au">Australia</option>
+                            <option value="za" data-i18n="b2b.modal.countries.za">South Africa</option>
+                            <option value="us" data-i18n="b2b.modal.countries.us">United States</option>
+                            <option value="uk" data-i18n="b2b.modal.countries.uk">United Kingdom</option>
+                            <option value="au" data-i18n="b2b.modal.countries.au">Australia</option>
                             <option value="other" data-i18n="b2b.modal.otherCountry">Other</option>
                         </select>
                     </div>
@@ -1405,13 +1405,21 @@
         // Package structures (codes + bonus + discount breakdown)
         // wholesaleDiscount + titheBonus = totalDiscount
         const PACKAGES = {
-            seedling: { name: 'Seedling', codes: 50, bonus: 5, wholesaleDiscount: 20, titheBonus: 10, totalDiscount: 30, tagline: 'Plant the first seeds', icon: 'fa-seedling' },
-            harvest: { name: 'Harvest', codes: 100, bonus: 10, wholesaleDiscount: 30, titheBonus: 10, totalDiscount: 40, tagline: 'Reap abundant blessings', icon: 'fa-wheat-awn', featured: true },
-            flourish: { name: 'Flourish', codes: 200, bonus: 20, wholesaleDiscount: 40, titheBonus: 10, totalDiscount: 50, tagline: 'Watch your community grow', icon: 'fa-leaf' }
+            seedling: { key: 'seedling', codes: 50, bonus: 5, wholesaleDiscount: 20, titheBonus: 10, totalDiscount: 30, icon: 'fa-seedling' },
+            harvest: { key: 'harvest', codes: 100, bonus: 10, wholesaleDiscount: 30, titheBonus: 10, totalDiscount: 40, icon: 'fa-wheat-awn', featured: true },
+            flourish: { key: 'flourish', codes: 200, bonus: 20, wholesaleDiscount: 40, titheBonus: 10, totalDiscount: 50, icon: 'fa-leaf' }
         };
 
         let currentRegion = 'za';
         let currentTier = 'journey'; // Default to Journey tier
+
+        // Helper function for translations
+        function t(key) {
+            if (typeof i18n !== 'undefined' && i18n.t) {
+                return i18n.t(key);
+            }
+            return key;
+        }
 
         // Initialize pricing
         function renderPricing() {
@@ -1438,20 +1446,20 @@
                 return `
                     <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px; text-align: left; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px;">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                            <span>Retail price:</span>
+                            <span>${t('b2b.pricing.labels.retailPrice')}</span>
                             <span style="text-decoration: line-through;">${currency}${retailPrice}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                            <span>Wholesale (${pkg.wholesaleDiscount}% off):</span>
+                            <span>${t('b2b.pricing.labels.wholesale')} (${pkg.wholesaleDiscount}% ${t('b2b.pricing.labels.off')}):</span>
                             <span>${currency}${wholesalePrice}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-bottom: 4px; color: var(--gold);">
-                            <span>Tithe bonus (${pkg.titheBonus}%):</span>
+                            <span>${t('b2b.pricing.labels.titheBonus')} (${pkg.titheBonus}%):</span>
                             <span>-${currency}${wholesalePrice - finalPrice}</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-weight: 600; color: var(--text-primary); border-top: 1px solid var(--border-subtle); padding-top: 4px; margin-top: 4px;">
-                            <span>Your price:</span>
-                            <span>${currency}${finalPrice}/code</span>
+                            <span>${t('b2b.pricing.labels.yourPrice')}</span>
+                            <span>${currency}${finalPrice}${t('b2b.pricing.labels.perCode')}</span>
                         </div>
                     </div>
                 `;
@@ -1460,86 +1468,102 @@
             grid.innerHTML = `
                 <!-- Seedling -->
                 <div class="pricing-card">
-                    <div class="pricing-tier"><i class="fas ${PACKAGES.seedling.icon}"></i> ${PACKAGES.seedling.name}</div>
-                    <h3 class="pricing-name">${PACKAGES.seedling.name}</h3>
-                    <p class="pricing-desc">${PACKAGES.seedling.tagline}</p>
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.seedling.icon}"></i> ${t('b2b.pricing.packages.seedling.name')}</div>
+                    <h3 class="pricing-name">${t('b2b.pricing.packages.seedling.name')}</h3>
+                    <p class="pricing-desc">${t('b2b.pricing.packages.seedling.tagline')}</p>
                     <div class="pricing-price">
                         <span class="currency">${currency}</span>${calcTotal(PACKAGES.seedling).toLocaleString()}
                     </div>
-                    <p class="pricing-per-user">${PACKAGES.seedling.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.seedling.bonus} FREE</span></p>
-                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.seedling.totalDiscount}% total savings</p>
+                    <p class="pricing-per-user">${PACKAGES.seedling.codes} ${t('b2b.pricing.labels.codes')} <span style="color:var(--gold)">+ ${PACKAGES.seedling.bonus} ${t('b2b.pricing.labels.free')}</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.seedling.totalDiscount}% ${t('b2b.pricing.labels.totalSavings')}</p>
                     ${priceBreakdown(PACKAGES.seedling)}
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> ${PACKAGES.seedling.codes + PACKAGES.seedling.bonus} total access codes</li>
-                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
-                        <li><i class="fas fa-check"></i> Email & WhatsApp support</li>
+                        <li><i class="fas fa-check"></i> ${PACKAGES.seedling.codes + PACKAGES.seedling.bonus} ${t('b2b.pricing.labels.totalAccessCodes')}</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} ${t('b2b.pricing.labels.tierAppAccess')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.emailWhatsappSupport')}</li>
                     </ul>
-                    <button class="btn btn-secondary" onclick="selectPlan('seedling')">Get Started</button>
+                    <button class="btn btn-secondary" onclick="selectPlan('seedling')">${t('b2b.pricing.labels.getStarted')}</button>
                 </div>
 
                 <!-- Harvest (Featured) -->
                 <div class="pricing-card featured">
-                    <div class="pricing-tier"><i class="fas ${PACKAGES.harvest.icon}"></i> ${PACKAGES.harvest.name}</div>
-                    <h3 class="pricing-name">${PACKAGES.harvest.name}</h3>
-                    <p class="pricing-desc">${PACKAGES.harvest.tagline}</p>
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.harvest.icon}"></i> ${t('b2b.pricing.packages.harvest.name')}</div>
+                    <h3 class="pricing-name">${t('b2b.pricing.packages.harvest.name')}</h3>
+                    <p class="pricing-desc">${t('b2b.pricing.packages.harvest.tagline')}</p>
                     <div class="pricing-price">
                         <span class="currency">${currency}</span>${calcTotal(PACKAGES.harvest).toLocaleString()}
                     </div>
-                    <p class="pricing-per-user">${PACKAGES.harvest.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.harvest.bonus} FREE</span></p>
-                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.harvest.totalDiscount}% total savings</p>
+                    <p class="pricing-per-user">${PACKAGES.harvest.codes} ${t('b2b.pricing.labels.codes')} <span style="color:var(--gold)">+ ${PACKAGES.harvest.bonus} ${t('b2b.pricing.labels.free')}</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.harvest.totalDiscount}% ${t('b2b.pricing.labels.totalSavings')}</p>
                     ${priceBreakdown(PACKAGES.harvest)}
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> ${PACKAGES.harvest.codes + PACKAGES.harvest.bonus} total access codes</li>
-                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
-                        <li><i class="fas fa-check"></i> Priority email support</li>
+                        <li><i class="fas fa-check"></i> ${PACKAGES.harvest.codes + PACKAGES.harvest.bonus} ${t('b2b.pricing.labels.totalAccessCodes')}</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} ${t('b2b.pricing.labels.tierAppAccess')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.priorityEmailSupport')}</li>
                     </ul>
-                    <button class="btn btn-primary" onclick="selectPlan('harvest')">Get Started</button>
+                    <button class="btn btn-primary" onclick="selectPlan('harvest')">${t('b2b.pricing.labels.getStarted')}</button>
                 </div>
 
                 <!-- Flourish -->
                 <div class="pricing-card">
-                    <div class="pricing-tier"><i class="fas ${PACKAGES.flourish.icon}"></i> ${PACKAGES.flourish.name}</div>
-                    <h3 class="pricing-name">${PACKAGES.flourish.name}</h3>
-                    <p class="pricing-desc">${PACKAGES.flourish.tagline}</p>
+                    <div class="pricing-tier"><i class="fas ${PACKAGES.flourish.icon}"></i> ${t('b2b.pricing.packages.flourish.name')}</div>
+                    <h3 class="pricing-name">${t('b2b.pricing.packages.flourish.name')}</h3>
+                    <p class="pricing-desc">${t('b2b.pricing.packages.flourish.tagline')}</p>
                     <div class="pricing-price">
                         <span class="currency">${currency}</span>${calcTotal(PACKAGES.flourish).toLocaleString()}
                     </div>
-                    <p class="pricing-per-user">${PACKAGES.flourish.codes} codes <span style="color:var(--gold)">+ ${PACKAGES.flourish.bonus} FREE</span></p>
-                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.flourish.totalDiscount}% total savings</p>
+                    <p class="pricing-per-user">${PACKAGES.flourish.codes} ${t('b2b.pricing.labels.codes')} <span style="color:var(--gold)">+ ${PACKAGES.flourish.bonus} ${t('b2b.pricing.labels.free')}</span></p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${PACKAGES.flourish.totalDiscount}% ${t('b2b.pricing.labels.totalSavings')}</p>
                     ${priceBreakdown(PACKAGES.flourish)}
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> ${PACKAGES.flourish.codes + PACKAGES.flourish.bonus} total access codes</li>
-                        <li><i class="fas fa-check"></i> ${tierLabel} tier app access</li>
-                        <li><i class="fas fa-check"></i> Dedicated support</li>
+                        <li><i class="fas fa-check"></i> ${PACKAGES.flourish.codes + PACKAGES.flourish.bonus} ${t('b2b.pricing.labels.totalAccessCodes')}</li>
+                        <li><i class="fas fa-check"></i> ${tierLabel} ${t('b2b.pricing.labels.tierAppAccess')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.dedicatedSupport')}</li>
                     </ul>
-                    <button class="btn btn-secondary" onclick="selectPlan('flourish')">Get Started</button>
+                    <button class="btn btn-secondary" onclick="selectPlan('flourish')">${t('b2b.pricing.labels.getStarted')}</button>
                 </div>
 
                 <!-- Enterprise -->
                 <div class="pricing-card">
-                    <div class="pricing-tier"><i class="fas fa-building"></i> Enterprise</div>
-                    <h3 class="pricing-name">Enterprise</h3>
-                    <p class="pricing-desc">Large-scale transformation</p>
+                    <div class="pricing-tier"><i class="fas fa-building"></i> ${t('b2b.pricing.packages.enterprise.name')}</div>
+                    <h3 class="pricing-name">${t('b2b.pricing.packages.enterprise.name')}</h3>
+                    <p class="pricing-desc">${t('b2b.pricing.packages.enterprise.tagline')}</p>
                     <div class="pricing-price" style="font-size:2rem;">
-                        Custom Quote
+                        ${t('b2b.pricing.packages.enterprise.customQuote')}
                     </div>
-                    <p class="pricing-per-user">500+ codes + custom bonus</p>
-                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">Up to 60% savings</p>
+                    <p class="pricing-per-user">${t('b2b.pricing.packages.enterprise.customCodes')}</p>
+                    <p style="color: var(--sage); font-size: 0.85rem; font-weight: 600;">${t('b2b.pricing.packages.enterprise.upToSavings')}</p>
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> Volume pricing available</li>
-                        <li><i class="fas fa-check"></i> Any tier app access</li>
-                        <li><i class="fas fa-check"></i> Dedicated account manager</li>
-                        <li><i class="fas fa-check"></i> Custom tithe arrangements</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.volumePricing')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.anyTierAccess')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.dedicatedAccountManager')}</li>
+                        <li><i class="fas fa-check"></i> ${t('b2b.pricing.labels.customTithe')}</li>
                     </ul>
-                    <button class="btn btn-secondary" onclick="selectPlan('enterprise')">Contact Sales</button>
+                    <button class="btn btn-secondary" onclick="selectPlan('enterprise')">${t('b2b.pricing.labels.contactSales')}</button>
                 </div>
             `;
 
             document.getElementById('pricingNote').innerHTML = `
                 <i class="fas fa-gift"></i>
-                <strong>Wholesale + Tithe savings!</strong> Prices shown for <strong>${tierLabel}</strong> tier (retail ${currency}${retailPrice}/code).
+                ${t('b2b.pricing.note').replace('{{tier}}', tierLabel).replace('{{currency}}', currency).replace('{{price}}', retailPrice)}
             `;
+
+            // Update "Most Popular" badge
+            const featuredCard = document.querySelector('.pricing-card.featured');
+            if (featuredCard) {
+                featuredCard.style.setProperty('--most-popular-text', `"${t('b2b.pricing.mostPopular')}"`);
+            }
         }
+
+        // Listen for language changes
+        window.addEventListener('languageChanged', () => {
+            renderPricing();
+            // Also update the "Most Popular" badge
+            const featuredCard = document.querySelector('.pricing-card.featured');
+            if (featuredCard) {
+                featuredCard.style.setProperty('--most-popular-text', `"${t('b2b.pricing.mostPopular')}"`);
+            }
+        });
 
         // Region selector
         document.querySelectorAll('.region-btn').forEach(btn => {

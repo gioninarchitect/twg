@@ -665,6 +665,70 @@
       "faq": "FAQ"
     }
   },
+  "chatbot": {
+    "header": {
+      "title": "Tea With God",
+      "subtitle": "Here to help you start your journey"
+    },
+    "placeholder": "Type a question...",
+    "welcome": "Hi there! I'm here to help you learn about Tea With God. What would you like to know?",
+    "buttons": {
+      "whatIsTwg": "What is Tea With God?",
+      "whoIsItFor": "Who is this for?",
+      "seePricing": "See pricing",
+      "brainGames": "Tell me about the brain games",
+      "howDoesItWork": "How does it work?",
+      "whatsTheScience": "What's the science?",
+      "readyToStart": "I'm ready to start",
+      "whatsInJourney": "What's in the Journey tier?",
+      "refundPolicy": "Is there a refund policy?",
+      "readyToOrder": "I'm ready to order",
+      "tellMeMore": "Tell me more first",
+      "privacySecurity": "Privacy & security",
+      "offlineAccess": "Offline access",
+      "churchBulk": "Church/bulk orders",
+      "howLongAccess": "How long do I have access?",
+      "whatAboutPremium": "What about Premium?",
+      "compareAllTiers": "Compare all tiers",
+      "getJourneyTier": "Get Journey tier",
+      "getPremiumTier": "Get Premium tier",
+      "bookOnly": "Book Only (R99)",
+      "journeyRecommended": "Journey (R149) - Recommended",
+      "premiumTier": "Premium (R249)",
+      "moreQuestions": "I have more questions"
+    },
+    "flows": {
+      "afterFaq": "What else would you like to know?",
+      "afterPricing": "Any questions about the options?",
+      "afterBrainGames": "The brain games are what make Tea With God unique. Want to learn more?",
+      "moreInfo": "What would you like to know more about?",
+      "preCheckout": "You're about to begin a beautiful devotional journey. Which option feels right for you?",
+      "goingToCheckout": "Taking you to checkout now..."
+    },
+    "explainJourney": "The Journey tier (R149) is our most popular option. It includes:\n\n• All 40 daily devotionals\n• Digital eBook (PDF)\n• Full app access\n• Private digital journal\n• Progress tracking\n• Offline access\n\nIt's everything you need for the complete devotional journey.",
+    "explainPremium": "The Premium tier (R249) unlocks everything:\n\n• All Journey features\n• Brain games for growth\n• Voice devotionals\n• Crisis support prayers\n• All future updates forever",
+    "pricing": {
+      "intro": "Here are our options:",
+      "bookOnly": {
+        "title": "Book Only",
+        "price": "R99",
+        "desc": "eBook only - all 40 devotionals"
+      },
+      "journey": {
+        "title": "Journey",
+        "badge": "RECOMMENDED",
+        "price": "R149",
+        "desc": "eBook + Full app with journal & progress tracking"
+      },
+      "premium": {
+        "title": "Premium",
+        "price": "R249",
+        "desc": "Everything + brain games, voice devotionals & all future updates"
+      }
+    },
+    "brainGamesIntro": "We have 6 brain games, each based on proven science:",
+    "defaultResponse": "I'd be happy to help! Here are some common questions:"
+  },
   "b2b": {
     "pageTitle": "Tea With God - For Churches & Organizations",
     "nav": {
@@ -719,7 +783,52 @@
     "pricing": {
       "title": "Simple, Transparent Pricing",
       "subtitle": "Choose the plan that fits your organization's needs",
-      "selectTier": "Select access tier for your members:"
+      "selectTier": "Select access tier for your members:",
+      "mostPopular": "Most Popular",
+      "packages": {
+        "seedling": {
+          "name": "Seedling",
+          "tagline": "Plant the first seeds"
+        },
+        "harvest": {
+          "name": "Harvest",
+          "tagline": "Reap abundant blessings"
+        },
+        "flourish": {
+          "name": "Flourish",
+          "tagline": "Watch your community grow"
+        },
+        "enterprise": {
+          "name": "Enterprise",
+          "tagline": "Large-scale transformation",
+          "customQuote": "Custom Quote",
+          "customCodes": "500+ codes + custom bonus",
+          "upToSavings": "Up to 60% savings"
+        }
+      },
+      "labels": {
+        "codes": "codes",
+        "free": "FREE",
+        "totalSavings": "total savings",
+        "retailPrice": "Retail price:",
+        "wholesale": "Wholesale",
+        "off": "off",
+        "titheBonus": "Tithe bonus",
+        "yourPrice": "Your price:",
+        "perCode": "/code",
+        "totalAccessCodes": "total access codes",
+        "tierAppAccess": "tier app access",
+        "emailWhatsappSupport": "Email & WhatsApp support",
+        "priorityEmailSupport": "Priority email support",
+        "dedicatedSupport": "Dedicated support",
+        "volumePricing": "Volume pricing available",
+        "anyTierAccess": "Any tier app access",
+        "dedicatedAccountManager": "Dedicated account manager",
+        "customTithe": "Custom tithe arrangements",
+        "getStarted": "Get Started",
+        "contactSales": "Contact Sales"
+      },
+      "note": "Wholesale + Tithe savings! Prices shown for <strong>{{tier}}</strong> tier (retail {{currency}}{{price}}/code)."
     },
     "process": {
       "label": "Simple Process",
@@ -834,6 +943,12 @@
       "email": "Email *",
       "country": "Country *",
       "selectCountry": "Select country...",
+      "countries": {
+        "za": "South Africa",
+        "us": "United States",
+        "uk": "United Kingdom",
+        "au": "Australia"
+      },
       "otherCountry": "Other",
       "userCount": "Estimated Number of Users",
       "message": "Message",

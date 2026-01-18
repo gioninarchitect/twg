@@ -2,6 +2,7 @@
  * Tea With God - Marketing Chatbot
  * Pre-empted responses with action buttons
  * No AI required - decision tree based
+ * Supports i18n translations
  */
 
 (function() {
@@ -85,88 +86,103 @@
   };
 
   // ============================================
-  // CONVERSATION FLOWS
+  // TRANSLATION HELPER
   // ============================================
 
-  const FLOWS = {
-    welcome: {
-      message: "Hi there! I'm here to help you learn about Tea With God. What would you like to know?",
-      buttons: [
-        { label: 'What is Tea With God?', action: 'faq', value: 'what-is-twg' },
-        { label: 'Who is this for?', action: 'faq', value: 'who-is-it-for' },
-        { label: 'See pricing', action: 'pricing' },
-        { label: 'Tell me about the brain games', action: 'brainGames' }
-      ]
-    },
-
-    afterFaq: {
-      message: "What else would you like to know?",
-      buttons: [
-        { label: 'How does it work?', action: 'faq', value: 'how-it-works' },
-        { label: 'What\'s the science?', action: 'faq', value: 'science-behind' },
-        { label: 'See pricing', action: 'pricing' },
-        { label: 'I\'m ready to start', action: 'checkout' }
-      ]
-    },
-
-    afterPricing: {
-      message: "Any questions about the options?",
-      buttons: [
-        { label: 'What\'s in the Journey tier?', action: 'explainJourney' },
-        { label: 'Is there a refund policy?', action: 'faq', value: 'refund' },
-        { label: 'I\'m ready to order', action: 'checkout' },
-        { label: 'Tell me more first', action: 'moreInfo' }
-      ]
-    },
-
-    afterBrainGames: {
-      message: "The brain games are what make Tea With God unique. Want to learn more?",
-      buttons: [
-        { label: 'What\'s the science?', action: 'faq', value: 'science-behind' },
-        { label: 'Is this therapy?', action: 'faq', value: 'is-it-therapy' },
-        { label: 'See pricing', action: 'pricing' },
-        { label: 'I\'m ready to start', action: 'checkout' }
-      ]
-    },
-
-    moreInfo: {
-      message: "What would you like to know more about?",
-      buttons: [
-        { label: 'Privacy & security', action: 'faq', value: 'privacy' },
-        { label: 'Offline access', action: 'faq', value: 'offline-access' },
-        { label: 'Church/bulk orders', action: 'faq', value: 'church-bulk' },
-        { label: 'How long do I have access?', action: 'faq', value: 'how-long' }
-      ]
-    },
-
-    explainJourney: {
-      message: "The Journey tier (R149) is our most popular option. It includes:\n\n• All 40 daily devotionals\n• Digital eBook (PDF)\n• Full app access\n• Private digital journal\n• Progress tracking\n• Offline access\n\nIt's everything you need for the complete devotional journey.",
-      buttons: [
-        { label: 'What about Premium?', action: 'explainPremium' },
-        { label: 'Compare all tiers', action: 'pricing' },
-        { label: 'Get Journey tier', action: 'checkout', value: 'journey' }
-      ]
-    },
-
-    explainPremium: {
-      message: "The Premium tier (R249) unlocks everything:\n\n• All Journey features\n• Brain games for growth\n• Voice devotionals\n• Crisis support prayers\n• All future updates forever",
-      buttons: [
-        { label: 'What are brain games?', action: 'brainGames' },
-        { label: 'Compare all tiers', action: 'pricing' },
-        { label: 'Get Premium tier', action: 'checkout', value: 'premium' }
-      ]
-    },
-
-    preCheckout: {
-      message: "You're about to begin a beautiful devotional journey. Which option feels right for you?",
-      buttons: [
-        { label: 'Book Only (R99)', action: 'checkout', value: 'book' },
-        { label: 'Journey (R149) - Recommended', action: 'checkout', value: 'journey' },
-        { label: 'Premium (R249)', action: 'checkout', value: 'premium' },
-        { label: 'I have more questions', action: 'moreInfo' }
-      ]
+  function t(key) {
+    if (typeof i18n !== 'undefined' && i18n.t) {
+      const translation = i18n.t(key);
+      // If translation returns the key itself, fall back to key
+      return translation !== key ? translation : key.split('.').pop();
     }
-  };
+    return key.split('.').pop();
+  }
+
+  // ============================================
+  // CONVERSATION FLOWS (using i18n)
+  // ============================================
+
+  function getFlows() {
+    return {
+      welcome: {
+        message: t('chatbot.welcome'),
+        buttons: [
+          { label: t('chatbot.buttons.whatIsTwg'), action: 'faq', value: 'what-is-twg' },
+          { label: t('chatbot.buttons.whoIsItFor'), action: 'faq', value: 'who-is-it-for' },
+          { label: t('chatbot.buttons.seePricing'), action: 'pricing' },
+          { label: t('chatbot.buttons.brainGames'), action: 'brainGames' }
+        ]
+      },
+
+      afterFaq: {
+        message: t('chatbot.flows.afterFaq'),
+        buttons: [
+          { label: t('chatbot.buttons.howDoesItWork'), action: 'faq', value: 'how-it-works' },
+          { label: t('chatbot.buttons.whatsTheScience'), action: 'faq', value: 'science-behind' },
+          { label: t('chatbot.buttons.seePricing'), action: 'pricing' },
+          { label: t('chatbot.buttons.readyToStart'), action: 'checkout' }
+        ]
+      },
+
+      afterPricing: {
+        message: t('chatbot.flows.afterPricing'),
+        buttons: [
+          { label: t('chatbot.buttons.whatsInJourney'), action: 'explainJourney' },
+          { label: t('chatbot.buttons.refundPolicy'), action: 'faq', value: 'refund' },
+          { label: t('chatbot.buttons.readyToOrder'), action: 'checkout' },
+          { label: t('chatbot.buttons.tellMeMore'), action: 'moreInfo' }
+        ]
+      },
+
+      afterBrainGames: {
+        message: t('chatbot.flows.afterBrainGames'),
+        buttons: [
+          { label: t('chatbot.buttons.whatsTheScience'), action: 'faq', value: 'science-behind' },
+          { label: t('chatbot.buttons.refundPolicy'), action: 'faq', value: 'is-it-therapy' },
+          { label: t('chatbot.buttons.seePricing'), action: 'pricing' },
+          { label: t('chatbot.buttons.readyToStart'), action: 'checkout' }
+        ]
+      },
+
+      moreInfo: {
+        message: t('chatbot.flows.moreInfo'),
+        buttons: [
+          { label: t('chatbot.buttons.privacySecurity'), action: 'faq', value: 'privacy' },
+          { label: t('chatbot.buttons.offlineAccess'), action: 'faq', value: 'offline-access' },
+          { label: t('chatbot.buttons.churchBulk'), action: 'faq', value: 'church-bulk' },
+          { label: t('chatbot.buttons.howLongAccess'), action: 'faq', value: 'how-long' }
+        ]
+      },
+
+      explainJourney: {
+        message: t('chatbot.explainJourney'),
+        buttons: [
+          { label: t('chatbot.buttons.whatAboutPremium'), action: 'explainPremium' },
+          { label: t('chatbot.buttons.compareAllTiers'), action: 'pricing' },
+          { label: t('chatbot.buttons.getJourneyTier'), action: 'checkout', value: 'journey' }
+        ]
+      },
+
+      explainPremium: {
+        message: t('chatbot.explainPremium'),
+        buttons: [
+          { label: t('chatbot.buttons.brainGames'), action: 'brainGames' },
+          { label: t('chatbot.buttons.compareAllTiers'), action: 'pricing' },
+          { label: t('chatbot.buttons.getPremiumTier'), action: 'checkout', value: 'premium' }
+        ]
+      },
+
+      preCheckout: {
+        message: t('chatbot.flows.preCheckout'),
+        buttons: [
+          { label: t('chatbot.buttons.bookOnly'), action: 'checkout', value: 'book' },
+          { label: t('chatbot.buttons.journeyRecommended'), action: 'checkout', value: 'journey' },
+          { label: t('chatbot.buttons.premiumTier'), action: 'checkout', value: 'premium' },
+          { label: t('chatbot.buttons.moreQuestions'), action: 'moreInfo' }
+        ]
+      }
+    };
+  }
 
   // ============================================
   // CHATBOT UI
@@ -521,6 +537,11 @@
       setTimeout(() => {
         this.showFlow('welcome');
       }, 500);
+
+      // Listen for language changes
+      window.addEventListener('languageChanged', () => {
+        this.updateUITexts();
+      });
     }
 
     injectStyles() {
@@ -537,13 +558,13 @@
           <div id="twg-chat-header">
             <img src="images/teacup.png" alt="Tea With God" onerror="this.style.display='none'">
             <div id="twg-chat-header-info">
-              <h4>Tea With God</h4>
-              <span>Here to help you start your journey</span>
+              <h4 id="twg-chat-title">${t('chatbot.header.title')}</h4>
+              <span id="twg-chat-subtitle">${t('chatbot.header.subtitle')}</span>
             </div>
           </div>
           <div id="twg-chat-messages"></div>
           <div id="twg-chat-input-area">
-            <input type="text" id="twg-chat-input" placeholder="Type a question...">
+            <input type="text" id="twg-chat-input" placeholder="${t('chatbot.placeholder')}">
             <button id="twg-chat-send">
               <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
@@ -564,6 +585,17 @@
         input: container.querySelector('#twg-chat-input'),
         send: container.querySelector('#twg-chat-send')
       };
+    }
+
+    updateUITexts() {
+      // Update header texts
+      const title = document.getElementById('twg-chat-title');
+      const subtitle = document.getElementById('twg-chat-subtitle');
+      const input = document.getElementById('twg-chat-input');
+
+      if (title) title.textContent = t('chatbot.header.title');
+      if (subtitle) subtitle.textContent = t('chatbot.header.subtitle');
+      if (input) input.placeholder = t('chatbot.placeholder');
     }
 
     bindEvents() {
@@ -589,7 +621,7 @@
       if (buttons && buttons.length > 0) {
         html += '<div class="twg-buttons">';
         buttons.forEach((btn, i) => {
-          const primaryClass = btn.label.includes('Recommended') || btn.action === 'checkout' ? 'primary' : '';
+          const primaryClass = btn.label.includes('Recommended') || btn.label.includes('Aanbeveel') || btn.action === 'checkout' ? 'primary' : '';
           html += `<button class="twg-btn ${primaryClass}" data-action="${btn.action}" data-value="${btn.value || ''}">${btn.label}</button>`;
         });
         html += '</div>';
@@ -628,7 +660,8 @@
     }
 
     async showFlow(flowName) {
-      const flow = FLOWS[flowName];
+      const flows = getFlows();
+      const flow = flows[flowName];
       if (!flow) return;
 
       this.showTyping();
@@ -643,6 +676,8 @@
       this.addMessage(buttonText, false);
 
       await this.delay(300);
+
+      const flows = getFlows();
 
       switch (action) {
         case 'faq':
@@ -661,13 +696,13 @@
           this.showTyping();
           await this.delay(600);
           this.hideTyping();
-          this.addMessage(FLOWS.explainJourney.message, true, FLOWS.explainJourney.buttons);
+          this.addMessage(flows.explainJourney.message, true, flows.explainJourney.buttons);
           break;
         case 'explainPremium':
           this.showTyping();
           await this.delay(600);
           this.hideTyping();
-          this.addMessage(FLOWS.explainPremium.message, true, FLOWS.explainPremium.buttons);
+          this.addMessage(flows.explainPremium.message, true, flows.explainPremium.buttons);
           break;
         case 'moreInfo':
           await this.showFlow('moreInfo');
@@ -699,23 +734,23 @@
       await this.delay(600);
       this.hideTyping();
 
-      const pricingHtml = `Here are our options:\n
+      const pricingHtml = `${t('chatbot.pricing.intro')}\n
 <div class="twg-pricing-card">
-  <h5>Book Only</h5>
-  <div class="price">R99</div>
-  <p>eBook only - all 40 devotionals</p>
+  <h5>${t('chatbot.pricing.bookOnly.title')}</h5>
+  <div class="price">${t('chatbot.pricing.bookOnly.price')}</div>
+  <p>${t('chatbot.pricing.bookOnly.desc')}</p>
 </div>
 
 <div class="twg-pricing-card recommended">
-  <h5>Journey <span class="twg-badge">RECOMMENDED</span></h5>
-  <div class="price">R149</div>
-  <p>eBook + Full app with journal & progress tracking</p>
+  <h5>${t('chatbot.pricing.journey.title')} <span class="twg-badge">${t('chatbot.pricing.journey.badge')}</span></h5>
+  <div class="price">${t('chatbot.pricing.journey.price')}</div>
+  <p>${t('chatbot.pricing.journey.desc')}</p>
 </div>
 
 <div class="twg-pricing-card">
-  <h5>Premium</h5>
-  <div class="price">R249</div>
-  <p>Everything + brain games, voice devotionals & all future updates</p>
+  <h5>${t('chatbot.pricing.premium.title')}</h5>
+  <div class="price">${t('chatbot.pricing.premium.price')}</div>
+  <p>${t('chatbot.pricing.premium.desc')}</p>
 </div>`;
 
       this.addMessage(pricingHtml, true);
@@ -729,7 +764,7 @@
       await this.delay(800);
       this.hideTyping();
 
-      let gamesHtml = "We have 6 brain games, each based on proven science:\n\n";
+      let gamesHtml = t('chatbot.brainGamesIntro') + "\n\n";
 
       KNOWLEDGE.brainGames.forEach((game, i) => {
         gamesHtml += `<strong>${i + 1}. ${game.name}</strong>\n`;
@@ -744,7 +779,7 @@
     }
 
     goToCheckout(tier) {
-      this.addMessage("Taking you to checkout now...", true);
+      this.addMessage(t('chatbot.flows.goingToCheckout'), true);
 
       setTimeout(() => {
         const url = tier ? `checkout.html?tier=${tier}` : 'checkout.html';
@@ -769,36 +804,37 @@
       this.hideTyping();
 
       // Keyword matching
-      if (message.includes('price') || message.includes('cost') || message.includes('how much')) {
+      if (message.includes('price') || message.includes('cost') || message.includes('how much') || message.includes('prys') || message.includes('koste')) {
         await this.showPricing();
-      } else if (message.includes('brain game') || message.includes('exercise')) {
+      } else if (message.includes('brain game') || message.includes('exercise') || message.includes('breinspeletjie') || message.includes('oefening')) {
         await this.showBrainGames();
-      } else if (message.includes('refund') || message.includes('money back')) {
+      } else if (message.includes('refund') || message.includes('money back') || message.includes('terugbetaling')) {
         await this.showFaq('refund');
-      } else if (message.includes('privacy') || message.includes('journal') || message.includes('private')) {
+      } else if (message.includes('privacy') || message.includes('journal') || message.includes('private') || message.includes('privaat') || message.includes('joernaal')) {
         await this.showFaq('privacy');
-      } else if (message.includes('church') || message.includes('bulk') || message.includes('organization')) {
+      } else if (message.includes('church') || message.includes('bulk') || message.includes('organization') || message.includes('kerk') || message.includes('organisasie')) {
         await this.showFaq('church-bulk');
-      } else if (message.includes('therapy') || message.includes('therapist') || message.includes('clinical')) {
+      } else if (message.includes('therapy') || message.includes('therapist') || message.includes('clinical') || message.includes('terapie')) {
         await this.showFaq('is-it-therapy');
-      } else if (message.includes('offline') || message.includes('internet')) {
+      } else if (message.includes('offline') || message.includes('internet') || message.includes('vanlyn')) {
         await this.showFaq('offline-access');
-      } else if (message.includes('science') || message.includes('research') || message.includes('evidence')) {
+      } else if (message.includes('science') || message.includes('research') || message.includes('evidence') || message.includes('wetenskap') || message.includes('navorsing')) {
         await this.showFaq('science-behind');
-      } else if (message.includes('who') || message.includes('for me')) {
+      } else if (message.includes('who') || message.includes('for me') || message.includes('wie') || message.includes('vir my')) {
         await this.showFaq('who-is-it-for');
-      } else if (message.includes('how') && message.includes('work')) {
+      } else if ((message.includes('how') && message.includes('work')) || (message.includes('hoe') && message.includes('werk'))) {
         await this.showFaq('how-it-works');
-      } else if (message.includes('buy') || message.includes('order') || message.includes('get') || message.includes('start')) {
+      } else if (message.includes('buy') || message.includes('order') || message.includes('get') || message.includes('start') || message.includes('koop') || message.includes('bestel') || message.includes('begin')) {
         await this.showFlow('preCheckout');
       } else {
         // Default response
-        this.addMessage("I'd be happy to help! Here are some common questions:", true, [
-          { label: 'What is Tea With God?', action: 'faq', value: 'what-is-twg' },
-          { label: 'See pricing', action: 'pricing' },
-          { label: 'Tell me about brain games', action: 'brainGames' },
-          { label: 'I\'m ready to order', action: 'checkout' }
-        ]);
+        const defaultButtons = [
+          { label: t('chatbot.buttons.whatIsTwg'), action: 'faq', value: 'what-is-twg' },
+          { label: t('chatbot.buttons.seePricing'), action: 'pricing' },
+          { label: t('chatbot.buttons.brainGames'), action: 'brainGames' },
+          { label: t('chatbot.buttons.readyToOrder'), action: 'checkout' }
+        ];
+        this.addMessage(t('chatbot.defaultResponse'), true, defaultButtons);
       }
     }
 

@@ -665,6 +665,70 @@
       "faq": "V&A"
     }
   },
+  "chatbot": {
+    "header": {
+      "title": "Tee Saam God",
+      "subtitle": "Hier om jou te help met jou reis"
+    },
+    "placeholder": "Tik 'n vraag...",
+    "welcome": "Hallo daar! Ek is hier om jou te help leer oor Tee Saam God. Wat wil jy graag weet?",
+    "buttons": {
+      "whatIsTwg": "Wat is Tee Saam God?",
+      "whoIsItFor": "Vir wie is dit?",
+      "seePricing": "Sien pryse",
+      "brainGames": "Vertel my van die breinspeletjies",
+      "howDoesItWork": "Hoe werk dit?",
+      "whatsTheScience": "Wat is die wetenskap?",
+      "readyToStart": "Ek is gereed om te begin",
+      "whatsInJourney": "Wat is in die Reis-vlak?",
+      "refundPolicy": "Is daar 'n terugbetalingsbeleid?",
+      "readyToOrder": "Ek is gereed om te bestel",
+      "tellMeMore": "Vertel my eers meer",
+      "privacySecurity": "Privaatheid & sekuriteit",
+      "offlineAccess": "Vanlyn toegang",
+      "churchBulk": "Kerk/grootmaatbestellings",
+      "howLongAccess": "Hoe lank het ek toegang?",
+      "whatAboutPremium": "Wat van Premium?",
+      "compareAllTiers": "Vergelyk alle vlakke",
+      "getJourneyTier": "Kry Reis-vlak",
+      "getPremiumTier": "Kry Premium-vlak",
+      "bookOnly": "Slegs Boek (R99)",
+      "journeyRecommended": "Reis (R149) - Aanbeveel",
+      "premiumTier": "Premium (R249)",
+      "moreQuestions": "Ek het meer vrae"
+    },
+    "flows": {
+      "afterFaq": "Wat anders wil jy graag weet?",
+      "afterPricing": "Enige vrae oor die opsies?",
+      "afterBrainGames": "Die breinspeletjies maak Tee Saam God uniek. Wil jy meer leer?",
+      "moreInfo": "Waaroor wil jy meer weet?",
+      "preCheckout": "Jy is op die punt om 'n pragtige dagstukkiereis te begin. Watter opsie voel reg vir jou?",
+      "goingToCheckout": "Neem jou nou na betaalpunt..."
+    },
+    "explainJourney": "Die Reis-vlak (R149) is ons gewildste opsie. Dit sluit in:\n\n• Al 40 daaglikse dagstukkies\n• Digitale e-boek (PDF)\n• Volledige toep-toegang\n• Privaat digitale joernaal\n• Vorderingsopsporing\n• Vanlyn toegang\n\nDit is alles wat jy nodig het vir die volledige dagstukkiereis.",
+    "explainPremium": "Die Premium-vlak (R249) ontsluit alles:\n\n• Alle Reis-kenmerke\n• Breinspeletjies vir groei\n• Stem-dagstukkies\n• Krisisondersteuningsgebede\n• Alle toekomstige opdaterings vir altyd",
+    "pricing": {
+      "intro": "Hier is ons opsies:",
+      "bookOnly": {
+        "title": "Slegs Boek",
+        "price": "R99",
+        "desc": "Slegs e-boek - al 40 dagstukkies"
+      },
+      "journey": {
+        "title": "Reis",
+        "badge": "AANBEVEEL",
+        "price": "R149",
+        "desc": "e-Boek + Volledige toep met joernaal & vorderingsopsporing"
+      },
+      "premium": {
+        "title": "Premium",
+        "price": "R249",
+        "desc": "Alles + breinspeletjies, stem-dagstukkies & alle toekomstige opdaterings"
+      }
+    },
+    "brainGamesIntro": "Ons het 6 breinspeletjies, elk gebaseer op bewese wetenskap:",
+    "defaultResponse": "Ek sal graag help! Hier is 'n paar algemene vrae:"
+  },
   "b2b": {
     "pageTitle": "Tee Saam God - Vir Kerke & Organisasies",
     "nav": {
@@ -719,7 +783,52 @@
     "pricing": {
       "title": "Eenvoudige, Deursigtige Pryse",
       "subtitle": "Kies die plan wat by jou organisasie se behoeftes pas",
-      "selectTier": "Kies toegangsvlak vir jou lede:"
+      "selectTier": "Kies toegangsvlak vir jou lede:",
+      "mostPopular": "Gewildste",
+      "packages": {
+        "seedling": {
+          "name": "Saailing",
+          "tagline": "Plant die eerste sade"
+        },
+        "harvest": {
+          "name": "Oes",
+          "tagline": "Maai oorvloedige seëninge"
+        },
+        "flourish": {
+          "name": "Floreer",
+          "tagline": "Kyk hoe jou gemeenskap groei"
+        },
+        "enterprise": {
+          "name": "Onderneming",
+          "tagline": "Grootskaalse transformasie",
+          "customQuote": "Pasgemaakte Kwotasie",
+          "customCodes": "500+ kodes + pasgemaakte bonus",
+          "upToSavings": "Tot 60% besparing"
+        }
+      },
+      "labels": {
+        "codes": "kodes",
+        "free": "GRATIS",
+        "totalSavings": "totale besparing",
+        "retailPrice": "Kleinhandelprys:",
+        "wholesale": "Groothandel",
+        "off": "af",
+        "titheBonus": "Tiende-bonus",
+        "yourPrice": "Jou prys:",
+        "perCode": "/kode",
+        "totalAccessCodes": "totale toegangskodes",
+        "tierAppAccess": "vlak toep-toegang",
+        "emailWhatsappSupport": "E-pos & WhatsApp ondersteuning",
+        "priorityEmailSupport": "Prioriteit e-pos ondersteuning",
+        "dedicatedSupport": "Toegewyde ondersteuning",
+        "volumePricing": "Volume pryse beskikbaar",
+        "anyTierAccess": "Enige vlak toep-toegang",
+        "dedicatedAccountManager": "Toegewyde rekeningbestuurder",
+        "customTithe": "Pasgemaakte tiende-reëlings",
+        "getStarted": "Begin Nou",
+        "contactSales": "Kontak Verkope"
+      },
+      "note": "Groothandel + Tiende-besparing! Pryse getoon vir <strong>{{tier}}</strong> vlak (kleinhandel {{currency}}{{price}}/kode)."
     },
     "process": {
       "label": "Eenvoudige Proses",
@@ -834,6 +943,12 @@
       "email": "E-pos *",
       "country": "Land *",
       "selectCountry": "Kies land...",
+      "countries": {
+        "za": "Suid-Afrika",
+        "us": "Verenigde State",
+        "uk": "Verenigde Koninkryk",
+        "au": "Australië"
+      },
       "otherCountry": "Ander",
       "userCount": "Geskatte Aantal Gebruikers",
       "message": "Boodskap",

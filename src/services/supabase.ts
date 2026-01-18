@@ -13,7 +13,7 @@ import * as SecureStore from 'expo-secure-store';
 
 // Supabase configuration
 const SUPABASE_URL = 'https://hqzyzioyospxwfzrdwkj.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_sr7Yk8Rtrv0t02DJ6Qxmig_3A_j8kCH';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhxenl6aW95b3NweHdmenJkd2tqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2ODAyNTksImV4cCI6MjA4MjI1NjI1OX0.gx_53V9FCUSe_fJuv8pG4W9uF3bTodHAaONZ6cwccgs';
 
 // Custom storage adapter for Supabase auth that uses SecureStore
 const ExpoSecureStoreAdapter = {
@@ -63,16 +63,19 @@ export const TABLES = {
   JOURNAL_ENTRIES: 'journal_entries',
   ACCESS_CODES: 'access_codes',
   NOTIFICATIONS: 'notification_settings',
+  GAME_DATA: 'game_data',
+  USER_SETTINGS: 'user_settings',
+  WORLD_MODEL_STATE: 'world_model_state',
 } as const;
 
 // Helper to check if we're online
 export async function isOnline(): Promise<boolean> {
-  try {
-    const response = await fetch(SUPABASE_URL, { method: 'HEAD' });
-    return response.ok;
-  } catch {
-    return false;
+  // Use navigator.onLine for quick check (available on web and React Native)
+  if (typeof navigator !== 'undefined' && 'onLine' in navigator) {
+    return navigator.onLine;
   }
+  // Fallback: assume online
+  return true;
 }
 
 // Helper to get current user ID

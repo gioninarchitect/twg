@@ -10,6 +10,7 @@ import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { supabase, TABLES, isOnline, getCurrentUserId } from '../services/supabase';
 
 // Storage key
 const NOTIFICATION_KEY = '@twg_notifications';
@@ -26,7 +27,7 @@ const GENTLE_MESSAGES = [
   },
   {
     title: 'No rush',
-    body: 'Your healing journey continues at your own pace.',
+    body: 'Your devotional journey continues at your own pace.',
   },
   {
     title: 'A gentle invitation',
@@ -34,7 +35,7 @@ const GENTLE_MESSAGES = [
   },
   {
     title: 'When you\'re ready',
-    body: 'A peaceful moment of healing awaits.',
+    body: 'A peaceful moment of devotion awaits.',
   },
   {
     title: 'Just checking in',
@@ -129,9 +130,40 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   async function saveSettings(newSettings: NotificationSettings) {
     setSettings(newSettings);
     try {
+      // Save locally first
       await AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(newSettings));
+      // Sync to cloud
+      syncNotificationSettingsToCloud(newSettings);
     } catch (error) {
       console.error('Error saving notification settings:', error);
+    }
+  }
+
+  async function syncNotificationSettingsToCloud(notifSettings: NotificationSettings) {
+    try {
+      const online = await isOnline();
+      const userId = await getCurrentUserId();
+
+      if (!online || !userId) return;
+
+      const timeString = `${notifSettings.reminderTime.hour.toString().padStart(2, '0')}:${notifSettings.reminderTime.minute.toString().padStart(2, '0')}`;
+
+      const { error } = await supabase
+        .from(TABLES.USER_SETTINGS)
+        .upsert({
+          user_id: userId,
+          notifications_enabled: notifSettings.enabled,
+          daily_reminder_time: timeString,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id',
+        });
+
+      if (error) {
+        console.log('Notification settings cloud sync deferred:', error.message);
+      }
+    } catch (error) {
+      console.log('Notification settings cloud sync failed:', error);
     }
   }
 

@@ -521,7 +521,7 @@ function StatItem({ icon, value, label }: StatItemProps) {
 function getEncouragement(trajectory: HealingTrajectory, stage: string): string {
   const encouragements: Record<HealingTrajectory, string[]> = {
     accelerating: [
-      'Your healing is blossoming beautifully.',
+      'Your growth is blossoming beautifully.',
       'The gold is shining through your cracks.',
       'You\'re becoming more beautiful through this journey.',
     ],
@@ -531,12 +531,12 @@ function getEncouragement(trajectory: HealingTrajectory, stage: string): string 
       'You\'re building something beautiful.',
     ],
     plateaued: [
-      'Rest is part of the healing process.',
+      'Rest is part of the growth process.',
       'Sometimes we need to pause before the next growth.',
       'Your heart is integrating what you\'ve learned.',
     ],
     struggling: [
-      'It\'s okay to struggle. Healing isn\'t linear.',
+      'It\'s okay to struggle. Growth isn\'t linear.',
       'Be gentle with yourself today.',
       'Even the smallest effort matters.',
     ],

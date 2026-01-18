@@ -1,0 +1,1013 @@
+{
+  "app": {
+    "name": "Tea With God",
+    "tagline": "A 40-Day Devotional Companion",
+    "subtitle": "From Ruin to Rising"
+  },
+  "welcome": {
+    "title": "Tea With God",
+    "subtitle": "A 40-Day Devotional Companion",
+    "tagline": "From Ruin to Rising",
+    "quote": "Growth doesn't begin with strength.\nIt begins with honesty—the moment you\nfinally exhale and whisper,\n'God... I don't know how to keep going.'",
+    "description": "A quiet invitation to pause, to breathe,\nand to let Him meet you in your own quiet place.",
+    "beginJourney": "Begin Your Journey",
+    "haveAccount": "I Already Have an Account"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "continueAsGuest": "Continue as Guest",
+    "or": "or",
+    "emailPlaceholder": "your@email.com",
+    "passwordPlaceholder": "Enter your password",
+    "signInButton": "Sign In",
+    "signUpButton": "Create Account",
+    "resetPassword": "Reset Password",
+    "resetSent": "Password reset email sent",
+    "enterSanctuary": "Enter Your Sanctuary",
+    "magicLinkDesc": "We'll send you a magic link to sign in instantly.",
+    "sendMagicLink": "Send Magic Link",
+    "noPasswordNote": "No password to remember. Just click the link.",
+    "previewAsGuest": "Preview as Guest",
+    "guestDaysOnly": "(Days 1-3 only)",
+    "checkEmail": "Check Your Email",
+    "magicLinkSent": "We sent a magic link to",
+    "clickLink": "Click the link in the email to sign in.\nNo password needed.",
+    "useDifferentEmail": "Use a different email",
+    "errors": {
+      "invalidEmail": "Please enter a valid email",
+      "passwordShort": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match",
+      "signInFailed": "Sign in failed. Please check your credentials.",
+      "signUpFailed": "Sign up failed. Please try again."
+    }
+  },
+  "lockScreen": {
+    "welcomeBack": "Welcome Back",
+    "enterPin": "Enter your PIN to continue",
+    "forgotPin": "Forgot PIN?",
+    "incorrectPin": "Incorrect PIN",
+    "attemptsRemaining": "Incorrect PIN. {{remaining}} attempts remaining.",
+    "tooManyAttempts": "Too Many Attempts",
+    "tooManyAttemptsMessage": "You have entered the wrong PIN 10 times. Would you like to reset the app? This will delete all your data.",
+    "tryAgain": "Try Again",
+    "resetApp": "Reset App",
+    "forgotPinTitle": "Forgot PIN?",
+    "forgotPinMessage": "Resetting will delete ALL your data including journal entries, progress, and access code. You will need to re-enter your access code.\n\nThis cannot be undone.",
+    "cancel": "Cancel",
+    "resetEverything": "Reset Everything"
+  },
+  "dashboard": {
+    "greeting": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening",
+    "welcomeBack": "Welcome back",
+    "yourDevotionalJourney": "Your Devotional Journey",
+    "yourJourney": "Your Journey",
+    "day": "Day",
+    "days": "Days",
+    "of": "of",
+    "daysCompleted": "days completed",
+    "continueJourney": "Continue Your Journey",
+    "todaysDevotional": "Today's Devotional",
+    "startDay": "Start Day",
+    "resume": "Resume",
+    "completed": "Completed",
+    "locked": "Locked",
+    "unlocksWith": "Unlocks with full access",
+    "guestPreview": "Guest Preview",
+    "guestDaysRemaining": "{{days}} preview days remaining",
+    "unlockFull": "Unlock Full Access",
+    "brainGames": "Brain Games",
+    "journal": "Journal",
+    "music": "Music",
+    "flipbook": "Digital Book",
+    "progress": "Progress",
+    "streak": "Streak",
+    "sessions": "Sessions",
+    "preparingSanctuary": "Preparing your sanctuary...",
+    "backgroundMusic": "Restore My Soul - Background Music",
+    "upgradeToPremium": "Upgrade to Premium to listen",
+    "upgradeForMusic": "Upgrade to Premium to unlock soothing background music for your devotional journey.",
+    "beginTodaysReflection": "Begin Today's Reflection",
+    "fortyDaysTransformation": "40 days of transformation",
+    "unlockFullJourney": "Unlock Your Full Journey",
+    "dayLockedMessage": "Day {{day}} is available with full access. Upgrade to continue your devotional journey beyond the preview.",
+    "maybeLater": "Maybe Later",
+    "upgradeNow": "Upgrade Now",
+    "previewMode": "Preview Mode",
+    "nextDayUnlocksIn": "Next day unlocks in {{hours}}h {{minutes}}m",
+    "previewComplete": "Preview complete! Unlock all 40 days with your book code.",
+    "preview": "Preview",
+    "premiumPlan": "Premium Plan",
+    "journeyPlan": "Journey Plan",
+    "bookPlan": "Book Plan",
+    "daysComplete": "Days\nComplete",
+    "dayStreak": "Day\nStreak",
+    "journalEntries": "Journal\nEntries",
+    "overallProgress": "Overall Progress",
+    "currentPhase": "Current Phase",
+    "quickActions": "Quick Actions",
+    "growthExercises": "Growth exercises",
+    "upgradeToAccess": "Upgrade to access",
+    "readFullBook": "Read the full book",
+    "settingsDesc": "Reminders, access & PIN",
+    "milestones": "Milestones",
+    "week": "Week",
+    "fortyDayArchitecture": "40-Day Architecture",
+    "pathFromRuinToRising": "Your path from ruin to rising",
+    "lockApp": "Lock App",
+    "progressHint": {
+      "justStarted": "You're just getting started!",
+      "greatProgress": "Great progress! Keep going.",
+      "halfway": "Halfway through your journey!",
+      "almostThere": "Almost there! Stay strong.",
+      "complete": "Journey complete! You did it!"
+    },
+    "phases": {
+      "valley": "The Valley",
+      "valleyDesc": "Acknowledging the pain",
+      "waiting": "The Waiting",
+      "waitingDesc": "Learning to be still",
+      "rising": "The Rising",
+      "risingDesc": "Finding strength",
+      "becoming": "The Becoming",
+      "becomingDesc": "Embracing wholeness"
+    }
+  },
+  "dayModule": {
+    "day": "Day",
+    "reflection": "Reflection",
+    "scripture": "Scripture",
+    "thoughtOfDay": "Thought of the Day",
+    "prayer": "Prayer",
+    "journal": "Journal",
+    "journalPrompt": "Journal Prompt",
+    "writeReflection": "Write your reflection...",
+    "saveEntry": "Save Entry",
+    "entrySaved": "Entry saved",
+    "markComplete": "Mark Day Complete",
+    "dayCompleted": "Day Completed",
+    "nextDay": "Continue to Day {{day}}",
+    "backToDashboard": "Back to Dashboard",
+    "listenToMusic": "Listen to Music",
+    "playAudio": "Play Audio",
+    "loadingReflection": "Opening today's reflection...",
+    "devotional": "Devotional",
+    "yourJournal": "Your Journal",
+    "journalPlaceholder": "Write your thoughts here... This is your safe space.",
+    "readingProgress": "Reading Progress",
+    "completeDay": "Complete Day {{day}}",
+    "whyThisWorks": "Why This Works",
+    "scienceBehindToday": "The Science Behind Today",
+    "whatThisMeansForYou": "What This Means For You"
+  },
+  "brainGames": {
+    "title": "Brain Games",
+    "subtitle": "Evidence-based exercises for emotional wellness",
+    "unlockDay": "Unlocks on Day {{day}}",
+    "unlocksDay": "Unlocks Day {{day}}",
+    "dayOf40": "Day {{day}} of 40",
+    "premiumOnly": "Premium Feature",
+    "startGame": "Start",
+    "continueGame": "Continue",
+    "howToPlay": "How to Play",
+    "whyThisWorks": "Why This Works",
+    "yourProgress": "Your Progress",
+    "sessionsCompleted": "Sessions Completed",
+    "currentStreak": "Current Streak",
+    "bestStreak": "Best Streak",
+    "totalTime": "Total Time",
+    "minutes": "min",
+    "unlockBrainGames": "Unlock Brain Games",
+    "unlockDescription": "6 evidence-based exercises designed to rewire your brain for peace and resilience.",
+    "upgradeToPremium": "Upgrade to Premium",
+    "maybeLater": "Maybe Later",
+    "phases": {
+      "gathering": "Gathering",
+      "shaping": "Shaping",
+      "refining": "Refining",
+      "becoming": "Becoming"
+    },
+    "potterVerse": "\"The potter formed it into another pot, shaping it as seemed best to him.\"",
+    "dayStreak": "{{count}} day streak",
+    "recommendedForYou": "Recommended for You",
+    "allGames": "All Games",
+    "recommended": "Recommended",
+    "disclaimer": "FOR EDUCATIONAL PURPOSES ONLY. These exercises are wellness tools based on general scientific principles. They are NOT therapy or professional mental health treatment. The creators are not medical professionals. If you're in crisis, please seek professional help immediately.",
+    "games": {
+      "breathing": {
+        "title": "Breathe with God",
+        "subtitle": "Nervous System Regulation",
+        "description": "Guided breathing exercises to calm your nervous system and find peace.",
+        "theory": "Polyvagal Theory"
+      },
+      "gratitude": {
+        "title": "Gratitude Garden",
+        "subtitle": "Positive Psychology",
+        "description": "Plant seeds of thankfulness and watch your garden of blessings grow.",
+        "theory": "Positive Psychology"
+      },
+      "scripturePalace": {
+        "title": "Scripture Palace",
+        "subtitle": "Memory & Faith",
+        "description": "Build a memory palace with scripture using ancient memorization techniques.",
+        "theory": "Method of Loci"
+      },
+      "thoughtDetective": {
+        "title": "Thought Detective",
+        "subtitle": "Cognitive Reframing",
+        "description": "Investigate and reframe negative thought patterns with truth.",
+        "theory": "Cognitive Behavioral Therapy"
+      },
+      "bodyScan": {
+        "title": "Body Scan Release",
+        "subtitle": "Somatic Awareness",
+        "description": "Release tension stored in your body through guided awareness.",
+        "theory": "Somatic Psychology"
+      },
+      "patternPeace": {
+        "title": "Pattern Peace",
+        "subtitle": "Mindful Focus",
+        "description": "Find calm through meditative pattern recognition exercises.",
+        "theory": "Mindfulness-Based Stress Reduction"
+      }
+    },
+    "breathe": {
+      "inhale": "Inhale",
+      "hold": "Hold",
+      "exhale": "Exhale",
+      "rest": "Rest",
+      "rounds": "Rounds",
+      "roundComplete": "Round Complete",
+      "sessionComplete": "Session Complete",
+      "breatheIn": "Breathe in peace...",
+      "holdGently": "Hold gently...",
+      "releaseSlowly": "Release slowly...",
+      "restMoment": "Rest a moment...",
+      "findYourPeace": "Find Your Peace",
+      "heroDescription": "Deep, rhythmic breathing activates your parasympathetic nervous system, helping you move from stress to calm.",
+      "chooseYourPattern": "Choose Your Pattern",
+      "numberOfBreaths": "Number of Breaths",
+      "duration": "Duration",
+      "hapticGuidance": "Haptic Guidance",
+      "gentleCues": "Gentle cues at each phase",
+      "introScripture": "\"Be still, and know that I am God.\"",
+      "introScriptureRef": "- Psalm 46:10",
+      "beginBreathing": "Begin Breathing",
+      "wellDone": "Well Done",
+      "completionSubtitle": "You took time to breathe with God",
+      "breaths": "Breaths",
+      "encouragement": "Every breath is a prayer. You're learning to find peace in God's presence.",
+      "returnToGames": "Return to Games",
+      "endSession": "End Session",
+      "breathOf": "Breath {{current}} of {{total}}",
+      "phaseInstructions": {
+        "idle": "Ready to begin",
+        "inhale": "Breathe in",
+        "hold": "Hold",
+        "exhale": "Release",
+        "rest": "Rest"
+      },
+      "scripture": {
+        "idle": "\"Be still, and know that I am God.\" - Psalm 46:10",
+        "inhale": "\"The Lord God breathed into his nostrils the breath of life.\" - Genesis 2:7",
+        "holdIn": "\"In quietness and trust is your strength.\" - Isaiah 30:15",
+        "exhale": "\"Cast all your anxiety on Him because He cares for you.\" - 1 Peter 5:7",
+        "holdOut": "\"Come to me, all who are weary, and I will give you rest.\" - Matthew 11:28"
+      },
+      "patterns": {
+        "relaxing": {
+          "name": "Relaxing",
+          "benefit": "Calms the nervous system"
+        },
+        "energizing": {
+          "name": "Energizing",
+          "benefit": "Increases alertness & focus"
+        },
+        "balancing": {
+          "name": "Balancing",
+          "benefit": "Restores equilibrium"
+        },
+        "calming": {
+          "name": "Calming",
+          "benefit": "Deep relaxation & sleep"
+        }
+      },
+      "cycles": {
+        "quick": "Quick",
+        "standard": "Standard",
+        "deep": "Deep",
+        "extended": "Extended"
+      }
+    },
+    "gratitude": {
+      "addGratitude": "Add Gratitude",
+      "whatThankful": "What are you thankful for today?",
+      "placeholder": "I'm grateful for...",
+      "gardenGrowing": "Your gratitude garden is growing!",
+      "seedPlanted": "Seed planted!",
+      "totalEntries": "Total Gratitude Entries"
+    },
+    "gratitudeGarden": {
+      "seedsPlanted": "Seeds Planted",
+      "gardenAwaits": "Your garden awaits",
+      "plantSeeds": "Plant seeds of gratitude",
+      "placeholder": "Type your gratitude...",
+      "harvestGratitudes": "Harvest Gratitudes",
+      "plantMore": "Plant {{count}} More",
+      "gardenBlooming": "Garden Blooming!",
+      "gratitudesFlourishing": "Your gratitudes are flourishing",
+      "completionEncouragement": "Each gratitude is a seed that grows joy in your heart. Return tomorrow to tend your garden.",
+      "scripture": "\"Give thanks in all circumstances; for this is the will of God in Christ Jesus for you.\"",
+      "scriptureRef": "- 1 Thessalonians 5:18",
+      "prompts": {
+        "joyToday": "What's one small thing that brought you joy today?",
+        "thankfulFor": "Who is someone you're thankful for?",
+        "beautifulNoticed": "What's something beautiful you noticed recently?",
+        "challengeGrew": "What's a challenge that helped you grow?",
+        "bodyGrateful": "What's something about your body you're grateful for?",
+        "comfortTaken": "What's a comfort you often take for granted?",
+        "prayerAnswered": "What's a prayer that was answered?",
+        "madeSmile": "What made you smile this week?",
+        "learnedRecently": "What's something you learned recently?",
+        "kindnessShown": "Who showed you kindness lately?"
+      },
+      "encouragements": {
+        "gardenGrowing": "Beautiful! Your garden is growing.",
+        "lovelySeed": "What a lovely seed of gratitude.",
+        "godSees": "God sees your thankful heart.",
+        "watersSoul": "Each gratitude waters your soul.",
+        "cultivatingJoy": "You're cultivating joy!"
+      }
+    },
+    "thoughtDetective": {
+      "identifyThought": "Identify the Thought",
+      "whatThinking": "What negative thought keeps coming back?",
+      "examineEvidence": "Examine the Evidence",
+      "evidenceFor": "Evidence that supports this thought",
+      "evidenceAgainst": "Evidence against this thought",
+      "reframe": "Reframe with Truth",
+      "balancedThought": "A more balanced perspective",
+      "scriptureReminder": "Scripture Reminder",
+      "steps": {
+        "capture": "Capture",
+        "identify": "Identify",
+        "investigate": "Investigate",
+        "reframe": "Reframe",
+        "reflect": "Reflect"
+      },
+      "captureTitle": "Capture the Thought",
+      "captureSubtitle": "What's bothering you? Write it exactly as it appears in your mind.",
+      "capturePlaceholder": "Write your thought here...",
+      "captureHint": "Be honest and specific. This is completely private.",
+      "investigateButton": "Investigate This Thought",
+      "identifyTitle": "Identify the Pattern",
+      "identifySubtitle": "Which thinking trap might this be?",
+      "detectedPatterns": "We detected {{count}} possible pattern(s)",
+      "example": "Example",
+      "investigateTitle": "Investigate the Evidence",
+      "investigateSubtitle": "Let's examine this thought more closely",
+      "patternFound": "Pattern Found",
+      "selfCompassionCheck": "Self-Compassion Check",
+      "notesPlaceholder": "Your thoughts... (optional)",
+      "reframeTitle": "Reframe with Compassion",
+      "reframeSubtitle": "Write a kinder version of this thought",
+      "originalThought": "Original thought",
+      "reframePlaceholder": "Write a kinder thought...",
+      "reframeHint": "Try: \"It's understandable that...\" or \"Even though...\"",
+      "reflectTitle": "Case Closed",
+      "reflectSubtitle": "Look at the transformation",
+      "oldThought": "Old Thought",
+      "newThought": "New Thought",
+      "selfCompassionScore": "Self-Compassion Score",
+      "completeInvestigation": "Complete Investigation",
+      "caseClosed": "Case Closed!",
+      "solvedMystery": "You solved the mystery",
+      "patternLabel": "Pattern",
+      "compassionLabel": "Compassion",
+      "encouragement": "Every time you reframe a thought, you're rewiring your brain for healthier thinking patterns.",
+      "ants": {
+        "allOrNothing": {
+          "name": "All-or-Nothing Thinking",
+          "shortName": "All-or-Nothing",
+          "description": "Seeing things in black and white, with no middle ground.",
+          "example": "\"If I can't do it perfectly, I shouldn't do it at all\"",
+          "reframePrompt": "What's a more balanced way to see this? Is there any gray area?",
+          "selfCompassionPrompt": "What would you say to a friend who made the same mistake?",
+          "scripture": "\"His mercies are new every morning.\" - Lamentations 3:23"
+        },
+        "alwaysNever": {
+          "name": "Always/Never Thinking",
+          "shortName": "Always/Never",
+          "description": "Overgeneralizing with words like \"always\" or \"never\".",
+          "example": "\"You never listen to me\" or \"I always mess things up\"",
+          "reframePrompt": "Is this really always or never? Can you think of one exception?",
+          "selfCompassionPrompt": "We all struggle sometimes. What's actually true most of the time?",
+          "scripture": "\"Weeping may endure for a night, but joy comes in the morning.\" - Psalm 30:5"
+        },
+        "focusingNegative": {
+          "name": "Focusing on the Negative",
+          "shortName": "Negative Focus",
+          "description": "Only seeing the bad while ignoring the good.",
+          "example": "Getting 9 compliments and 1 criticism, but only remembering the criticism",
+          "reframePrompt": "What good things are you overlooking? What went well?",
+          "selfCompassionPrompt": "Your brain is wired to notice threats. What would a balanced view look like?",
+          "scripture": "\"Whatever is true, noble, right, pure, lovely... think about such things.\" - Philippians 4:8"
+        },
+        "fortuneTelling": {
+          "name": "Fortune Telling",
+          "shortName": "Fortune Telling",
+          "description": "Predicting the future negatively without evidence.",
+          "example": "\"I know this won't work out\" or \"They're going to reject me\"",
+          "reframePrompt": "Is this prediction based on facts or fears? What evidence do you have?",
+          "selfCompassionPrompt": "Uncertainty is hard. What if you stayed open to positive possibilities?",
+          "scripture": "\"For I know the plans I have for you... plans to give you hope and a future.\" - Jeremiah 29:11"
+        },
+        "mindReading": {
+          "name": "Mind Reading",
+          "shortName": "Mind Reading",
+          "description": "Assuming you know what others are thinking.",
+          "example": "\"They think I'm stupid\" or \"She doesn't like me\"",
+          "reframePrompt": "What do you actually know for certain? Could there be another explanation?",
+          "selfCompassionPrompt": "We can't read minds. What would you need to feel more secure?",
+          "scripture": "\"Man looks at the outward appearance, but the Lord looks at the heart.\" - 1 Samuel 16:7"
+        },
+        "thinkingWithFeelings": {
+          "name": "Thinking with Feelings",
+          "shortName": "Feeling = Fact",
+          "description": "Believing something is true just because you feel it.",
+          "example": "\"I feel like a burden, so I must be one\"",
+          "reframePrompt": "Just because you feel it, does that make it true? What are the facts?",
+          "selfCompassionPrompt": "Feelings are real but they're not always accurate. What's actually true?",
+          "scripture": "\"The heart is deceitful above all things.\" - Jeremiah 17:9"
+        },
+        "guiltBeating": {
+          "name": "Guilt Beating",
+          "shortName": "Should/Must",
+          "description": "Using \"should\" or \"must\" to beat yourself up.",
+          "example": "\"I should be over this by now\" or \"I ought to be stronger\"",
+          "reframePrompt": "What if you replaced \"should\" with \"I would like to\"?",
+          "selfCompassionPrompt": "You're being hard on yourself. What do you actually need right now?",
+          "scripture": "\"My grace is sufficient for you, for my power is made perfect in weakness.\" - 2 Corinthians 12:9"
+        },
+        "labeling": {
+          "name": "Labeling",
+          "shortName": "Labeling",
+          "description": "Attaching a negative label instead of describing behavior.",
+          "example": "\"I'm a failure\" instead of \"I made a mistake\"",
+          "reframePrompt": "Would you say this to a friend? What's a kinder description?",
+          "selfCompassionPrompt": "You are not your worst moment. Who are you beyond this label?",
+          "scripture": "\"You are fearfully and wonderfully made.\" - Psalm 139:14"
+        },
+        "blame": {
+          "name": "Blame",
+          "shortName": "Blame",
+          "description": "Blaming others or yourself for things outside your control.",
+          "example": "\"It's all my fault\" or \"You make me feel...\"",
+          "reframePrompt": "What parts were in your control? What parts were not?",
+          "selfCompassionPrompt": "Taking responsibility is different from taking blame.",
+          "scripture": "\"Cast your burden on the Lord, and He shall sustain you.\" - Psalm 55:22"
+        }
+      }
+    },
+    "scripturePalace": {
+      "review": "Review",
+      "scriptures": "Scriptures",
+      "dueReview": "Due Review",
+      "add": "Add",
+      "welcomeTitle": "Welcome to Your Palace",
+      "welcomeText": "The Method of Loci is an ancient memory technique. Place scriptures in rooms of your mental palace, and associate each with a vivid image. When you revisit the rooms, the scriptures will return to you.",
+      "yourPalaceRooms": "Your Palace Rooms",
+      "tapRoomHint": "Tap a room to place or review a scripture",
+      "scripture": "\"I have hidden your word in my heart that I might not sin against you.\"",
+      "scriptureRef": "- Psalm 119:11",
+      "chooseScripture": "Choose a Scripture",
+      "forRoom": "for {{room}}",
+      "allPlaced": "All scriptures placed!",
+      "palaceComplete": "Your palace is complete",
+      "placeInRoom": "Place in Room",
+      "tapToReveal": "Tap to reveal the scripture",
+      "recallPrompt": "Did you recall it correctly?",
+      "stillLearning": "Still Learning",
+      "gotIt": "Got It!",
+      "tourComplete": "Palace Tour Complete",
+      "tourSubtitle": "You walked through your memory palace",
+      "reviewed": "Reviewed",
+      "recalled": "Recalled",
+      "encouragement": "Each visit strengthens your memory. God's word is taking root in your heart.",
+      "mastery": {
+        "planting": "Planting",
+        "sprouting": "Sprouting",
+        "growing": "Growing",
+        "blooming": "Blooming",
+        "rooted": "Rooted"
+      },
+      "rooms": {
+        "entrance": {
+          "name": "Entrance Hall",
+          "description": "Where your journey begins",
+          "visualScene": "Imagine standing at a grand wooden door. Warm golden light spills through. As you enter, you see this scripture carved into the stone archway above.",
+          "memoryTip": "Picture the words glowing on the entrance stone"
+        },
+        "garden": {
+          "name": "Garden of Eden",
+          "description": "A place of peace and creation",
+          "visualScene": "You step into a lush garden with blooming flowers and a gentle stream. Butterflies dance around as you read these words on an ancient garden stone.",
+          "memoryTip": "See the words growing like vines on the stone"
+        },
+        "living": {
+          "name": "Living Room",
+          "description": "Where you gather and rest",
+          "visualScene": "A cozy room with a crackling fireplace. Soft cushions invite you to sit. Above the mantle, these words are painted in elegant script.",
+          "memoryTip": "Feel the warmth of the fire as you read"
+        },
+        "kitchen": {
+          "name": "Bread of Life Kitchen",
+          "description": "Where you are nourished",
+          "visualScene": "The aroma of fresh bread fills the air. A wooden table holds a feast. On the wall, written in flour-dusted chalk, you see these words.",
+          "memoryTip": "Smell the bread as you memorize"
+        },
+        "study": {
+          "name": "Wisdom Study",
+          "description": "Where you grow in understanding",
+          "visualScene": "Floor-to-ceiling bookshelves surround you. A lamp illuminates an open book on the desk. These words are highlighted on the page.",
+          "memoryTip": "Hear the pages rustling as you learn"
+        },
+        "bedroom": {
+          "name": "Rest Chamber",
+          "description": "Where you find peace",
+          "visualScene": "Moonlight streams through gauze curtains. A peaceful bed awaits. On the pillow, embroidered in silver thread, you see these words.",
+          "memoryTip": "Feel the peace wash over you"
+        },
+        "tower": {
+          "name": "Watchtower",
+          "description": "Where you see God's perspective",
+          "visualScene": "You climb spiral stairs to the top. The view stretches to the horizon. Carved into the tower wall, catching the sunlight, are these words.",
+          "memoryTip": "See the vast view as you remember"
+        },
+        "throne": {
+          "name": "Throne Room",
+          "description": "Where you meet the King",
+          "visualScene": "Golden light fills a majestic hall. A throne of pure light sits ahead. On the floor before it, written in gold, are these words.",
+          "memoryTip": "Feel the majesty as you bow"
+        }
+      }
+    },
+    "bodyScan": {
+      "title": "Body Scan Release",
+      "subtitle": "Somatic Awareness",
+      "focusOn": "Focus on your",
+      "releaseTension": "Release any tension...",
+      "breatheInto": "Breathe into this area...",
+      "intro": {
+        "title": "Release What You Carry",
+        "description": "Our bodies store emotions and tension, often without us realizing. This gentle scan will help you notice where you're holding stress and guide you to release it with compassion.",
+        "scripture": "\"Come to me, all who are weary and burdened, and I will give you rest.\"",
+        "scriptureRef": "- Matthew 11:28"
+      },
+      "journey": {
+        "title": "The Journey",
+        "step1": "Scan 9 body regions mindfully",
+        "step2": "Rate your tension before & after",
+        "step3": "Follow gentle release prompts",
+        "step4": "Take your time - no rush"
+      },
+      "regions": {
+        "head": {
+          "name": "Head",
+          "displayName": "Crown & Temples",
+          "instruction": "Bring attention to your head. Notice any tension in your forehead, temples, or jaw.",
+          "releasePrompt": "With each exhale, let the tension dissolve. Imagine a warm, golden light softening every muscle.",
+          "scripture": "\"He gives peace to your borders.\" - Psalm 147:14"
+        },
+        "neck": {
+          "name": "Neck",
+          "displayName": "Neck & Throat",
+          "instruction": "Move your attention to your neck and throat. This area often holds unspoken words and tension.",
+          "releasePrompt": "Gently roll your head if it helps. Release any tightness with gratitude for your voice.",
+          "scripture": "\"Let the words of my mouth be acceptable.\" - Psalm 19:14"
+        },
+        "shoulders": {
+          "name": "Shoulders",
+          "displayName": "Shoulders",
+          "instruction": "Feel into your shoulders. This is where we carry burdens and responsibilities.",
+          "releasePrompt": "Let your shoulders drop. You don't have to carry everything alone.",
+          "scripture": "\"Cast your burden on the Lord.\" - Psalm 55:22"
+        },
+        "chest": {
+          "name": "Chest",
+          "displayName": "Heart & Chest",
+          "instruction": "Bring awareness to your chest and heart space. Notice your breath rising and falling.",
+          "releasePrompt": "Place a hand on your heart if you wish. You are safe. You are held.",
+          "scripture": "\"He heals the brokenhearted.\" - Psalm 147:3"
+        },
+        "stomach": {
+          "name": "Stomach",
+          "displayName": "Belly",
+          "instruction": "Notice your belly. This area often holds anxiety and \"gut feelings.\"",
+          "releasePrompt": "Breathe deeply into your belly. Let it soften completely with each breath.",
+          "scripture": "\"Do not be anxious about anything.\" - Philippians 4:6"
+        },
+        "back": {
+          "name": "Back",
+          "displayName": "Lower Back",
+          "instruction": "Scan your lower back. This region supports you and often holds stress.",
+          "releasePrompt": "Imagine warmth spreading through your lower back, releasing all tension.",
+          "scripture": "\"The Lord is my strength.\" - Psalm 28:7"
+        },
+        "hands": {
+          "name": "Hands",
+          "displayName": "Arms & Hands",
+          "instruction": "Feel your arms and hands. Are they clenched or relaxed?",
+          "releasePrompt": "Open your palms. Release anything you've been holding onto too tightly.",
+          "scripture": "\"I will hold your right hand.\" - Isaiah 41:13"
+        },
+        "legs": {
+          "name": "Legs",
+          "displayName": "Legs & Thighs",
+          "instruction": "Bring attention to your thighs and legs. They carry you through each day.",
+          "releasePrompt": "Let your legs feel heavy and grounded. You are supported.",
+          "scripture": "\"He makes my feet like the feet of a deer.\" - Psalm 18:33"
+        },
+        "feet": {
+          "name": "Feet",
+          "displayName": "Feet",
+          "instruction": "Finally, notice your feet. Feel them grounded to the earth.",
+          "releasePrompt": "Imagine roots growing from your feet, connecting you to stability and peace.",
+          "scripture": "\"How beautiful are the feet of those who bring good news.\" - Romans 10:15"
+        }
+      },
+      "tensionLevels": {
+        "relaxed": "Relaxed",
+        "moderate": "Moderate",
+        "tense": "Tense",
+        "none": "None",
+        "high": "High"
+      },
+      "tensionQuestion": {
+        "before": "How much tension do you feel here?",
+        "after": "How does it feel now?"
+      },
+      "phases": {
+        "sensing": "Sensing",
+        "releasing": "Releasing"
+      },
+      "tapForInstructions": "Tap for instructions",
+      "skipArea": "Skip this area",
+      "skipSubtext": "(It's okay to move on)",
+      "regionProgress": "Region {{current}} of {{total}}",
+      "complete": {
+        "title": "Scan Complete",
+        "subtitle": "You've journeyed through your body with awareness",
+        "before": "Before",
+        "after": "After"
+      },
+      "sessionComplete": {
+        "title": "Body Scan Complete",
+        "subtitle": "You've released tension with awareness",
+        "subtitleSkipped": "You honored your boundaries today",
+        "scanned": "Scanned",
+        "improvement": "Improvement",
+        "encouragement": "Your body is a temple. By listening to it with compassion, you honor the gift you've been given.",
+        "encouragementSkipped": "Some areas weren't ready today, and that's perfectly okay. Growth happens in your own time. You showed courage just by showing up.",
+        "returnToGames": "Return to Games"
+      },
+      "buttons": {
+        "beginScan": "Begin Body Scan",
+        "recordRelease": "Record & Release",
+        "nextRegion": "Next Region",
+        "completeScan": "Complete Scan",
+        "finish": "Finish"
+      },
+      "bodyParts": {
+        "head": "head",
+        "shoulders": "shoulders",
+        "arms": "arms",
+        "hands": "hands",
+        "chest": "chest",
+        "stomach": "stomach",
+        "hips": "hips",
+        "legs": "legs",
+        "feet": "feet"
+      }
+    },
+    "patternPeace": {
+      "title": "Pattern Peace",
+      "subtitle": "N-Back Working Memory Training",
+      "intro": {
+        "description": "Train your working memory through focused attention. This exercise helps quiet ruminating thoughts by engaging your mind in purposeful pattern recognition."
+      },
+      "selectDifficulty": "Select Difficulty",
+      "level": "Level {{level}}",
+      "difficulty": {
+        "level1": "1-Back: Match the previous stimulus",
+        "level2": "2-Back: Match 2 stimuli ago",
+        "level3": "3-Back: Match 3 stimuli ago"
+      },
+      "continue": "Continue",
+      "howToPlay": "How to Play",
+      "instructions": {
+        "watchGrid": "Watch the Grid",
+        "watchGridDesc": "A symbol will appear in one of the 9 squares.",
+        "remember": "Remember {{nBack}} Back",
+        "rememberDesc1": "Compare the current stimulus to the previous one.",
+        "rememberDescN": "Compare the current stimulus to {{nBack}} stimuli ago.",
+        "matchPosition": "Match Position",
+        "matchPositionDesc": "Press \"Position Match\" if the square is the same as {{nBack}} ago.",
+        "matchSymbol": "Match Symbol",
+        "matchSymbolDesc": "Press \"Symbol Match\" if the symbol is the same as {{nBack}} ago.",
+        "tip": "Both matches can happen at once! If position AND symbol match, press both buttons."
+      },
+      "beginTraining": "Begin Training",
+      "quickInstruction1": "Tap if position OR symbol matches the previous one",
+      "quickInstructionN": "Tap if position OR symbol matches {{nBack}} ago",
+      "tapIfMatches": "Tap if it matches!",
+      "watchForNext": "Watch for the next symbol...",
+      "positionMatch": "Position Match",
+      "symbolMatch": "Symbol Match",
+      "accuracy": "Accuracy: {{accuracy}}%",
+      "sessionResults": "Session Results",
+      "trials": "Trials",
+      "overall": "Overall",
+      "levelLabel": "Level",
+      "positionMatches": "Position Matches",
+      "symbolMatches": "Symbol Matches",
+      "trainingComplete": "Training Complete",
+      "completeMessages": {
+        "excellent": "Excellent focus! Your working memory is getting stronger.",
+        "good": "Good effort! Consistent practice brings lasting peace.",
+        "keepPracticing": "Keep practicing. Each session trains your mind for stillness."
+      },
+      "playAgain": "Play Again",
+      "done": "Done",
+      "scriptures": {
+        "psalm46": "\"Be still, and know that I am God.\" - Psalm 46:10",
+        "john14": "\"Peace I leave with you; my peace I give you.\" - John 14:27",
+        "isaiah26": "\"You will keep in perfect peace those whose minds are steadfast.\" - Isaiah 26:3",
+        "peter5": "\"Cast all your anxiety on him because he cares for you.\" - 1 Peter 5:7",
+        "psalm29": "\"The Lord gives strength to his people; the Lord blesses his people with peace.\" - Psalm 29:11"
+      },
+      "encouragements": {
+        "focus": "Each trial strengthens your focus.",
+        "peaceful": "Your mind is becoming more peaceful.",
+        "patience": "Patience and practice bring peace.",
+        "stillness": "You are training your mind for stillness.",
+        "gift": "Every moment of focus is a gift to yourself."
+      },
+      "disclaimer": {
+        "title": "Educational Exercise",
+        "content": "Pattern Peace is a cognitive training exercise based on N-back research. It is educational in nature and is not a substitute for professional mental health treatment. If you're experiencing persistent cognitive difficulties, please consult a healthcare provider."
+      }
+    },
+    "celebration": {
+      "wellDone": "Well Done!",
+      "sessionComplete": "Session Complete",
+      "keepGoing": "Keep up the great work",
+      "streakMessage": "{{count}} day streak!",
+      "newRecord": "New personal record!"
+    },
+    "moodCheckIn": {
+      "title": "How are you feeling?",
+      "subtitle": "Check in with yourself",
+      "moods": {
+        "great": "Great",
+        "good": "Good",
+        "okay": "Okay",
+        "struggling": "Struggling",
+        "crisis": "In Crisis"
+      }
+    }
+  },
+  "crisis": {
+    "title": "Crisis Support",
+    "subtitle": "You are not alone",
+    "immediateHelp": "Need immediate help?",
+    "callNow": "Call Now",
+    "textLine": "Text Crisis Line",
+    "comfortPrayers": "Comfort Prayers",
+    "breathingExercise": "Breathing Exercise",
+    "safetyPlan": "My Safety Plan",
+    "emergencyContacts": "Emergency Contacts",
+    "southAfrica": {
+      "lifeline": "SADAG Lifeline",
+      "lifelineNumber": "0800 567 567",
+      "suicide": "Suicide Crisis Line",
+      "suicideNumber": "0800 567 567"
+    },
+    "prayers": {
+      "peace": "Prayer for Peace",
+      "strength": "Prayer for Strength",
+      "hope": "Prayer for Hope",
+      "protection": "Prayer for Protection"
+    }
+  },
+  "journal": {
+    "title": "My Journal",
+    "newEntry": "New Entry",
+    "entries": "Entries",
+    "noEntries": "No journal entries yet",
+    "startWriting": "Start writing to capture your thoughts",
+    "placeholder": "Write your thoughts...",
+    "save": "Save",
+    "saved": "Saved",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this entry?",
+    "deleteMessage": "This action cannot be undone.",
+    "cancel": "Cancel",
+    "private": "Your entries are private and stored only on your device"
+  },
+  "settings": {
+    "title": "Settings",
+    "reminders": "Reminders",
+    "dailyReminder": "Daily Reminder",
+    "reminderTime": "Reminder Time",
+    "access": "Access",
+    "fullAccess": "Full Access",
+    "guest": "Guest",
+    "unlock": "Unlock",
+    "enterCode": "Enter Access Code",
+    "privacy": "Privacy & Security",
+    "security": "Security",
+    "pinLock": "PIN Lock",
+    "pinEnabled": "PIN lock enabled",
+    "pinDisabled": "PIN lock disabled",
+    "autoLock": "Auto-lock",
+    "autoLockOptions": {
+      "immediately": "Immediately",
+      "after1min": "After 1 minute",
+      "after5min": "After 5 minutes",
+      "after15min": "After 15 minutes"
+    },
+    "data": "Data",
+    "exportData": "Export Data",
+    "resetProgress": "Reset Progress",
+    "resetConfirm": "Reset all progress?",
+    "resetMessage": "This will reset your journey to Day 1. Journal entries will be kept.",
+    "about": "About",
+    "aboutDescription": "TWG (Tea With God) - A 40 day Christian Devotional for Women - By Lani Butler.",
+    "version": "Version",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "contact": "Contact Support",
+    "signOut": "Sign Out",
+    "signOutConfirm": "Sign out?",
+    "signOutMessage": "You can sign back in anytime.",
+    "language": "Language",
+    "changeLanguage": "Change Language",
+    "daysCompleted": "Days Completed",
+    "daysRemaining": "Days Remaining",
+    "developer": "Developer"
+  },
+  "accessCode": {
+    "title": "Enter Access Code",
+    "subtitle": "Your code was sent to your email after purchase",
+    "placeholder": "Enter access code",
+    "verify": "Verify Code",
+    "verifying": "Verifying...",
+    "success": "Access Unlocked!",
+    "successMessage": "Welcome to your full Tea With God journey",
+    "error": "Invalid Code",
+    "errorMessage": "Please check your code and try again",
+    "getCode": "Don't have a code?",
+    "purchase": "Purchase Access",
+    "unlockYourJourney": "Unlock Your Journey",
+    "description": "Enter the access code from your book to unlock all 40 days of devotional content.",
+    "guestPreviewInfo": "As a guest, you can preview Days 1-{{days}}",
+    "enterCodeError": "Please enter an access code.",
+    "fullAccessUnlocked": "Full Access Unlocked",
+    "fullAccessMessage": "You have access to all 40 days of the journey.",
+    "unlockFullJourney": "Unlock Full Journey",
+    "whereToFind": "Where do I find my code?",
+    "helpDescription": "Your access code is printed inside the cover of \"Tea With God: A 40-Day Devotional Companion\" book."
+  },
+  "flipbook": {
+    "title": "Tea With God",
+    "subtitle": "Digital Book",
+    "page": "Page",
+    "of": "of",
+    "tableOfContents": "Table of Contents",
+    "dedication": "Dedication",
+    "introduction": "Introduction",
+    "dayPrefix": "Day",
+    "unlockTitle": "Unlock Your Digital Book",
+    "unlockMessage": "The digital flipbook is available with full access. Upgrade to read the complete Tea With God book.",
+    "upgradeNow": "Upgrade Now",
+    "rotateHint": "Rotate for best view",
+    "loadingBook": "Loading your book...",
+    "digitalBookTitle": "Tea With God Digital Book",
+    "openInBrowser": "Open in Browser",
+    "nativeMessage": "Open the flipbook in your browser for the best reading experience."
+  },
+  "music": {
+    "title": "Music",
+    "subtitle": "Songs for Your Soul",
+    "nowPlaying": "Now Playing",
+    "premiumFeature": "Premium Feature",
+    "unlockMusic": "Unlock full access to listen to all tracks",
+    "tracks": "Tracks",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "dailyReminder": "Daily Reminder",
+    "reminderTitle": "Time for Tea With God",
+    "reminderBody": "Your daily devotional is waiting for you",
+    "permissionRequired": "Permission Required",
+    "permissionMessage": "Please enable notifications to receive daily reminders",
+    "enableNotifications": "Enable Notifications",
+    "gentleReminders": "Gentle Reminders",
+    "warmInvitation": "A warm invitation each morning",
+    "enableDailyReminders": "Enable Daily Reminders",
+    "gentleNudge": "You'll receive a gentle nudge",
+    "notificationsOff": "Notifications are off",
+    "reminderTime": "Reminder Time",
+    "whenInvitation": "When would you like your invitation?",
+    "reminderNote": "These reminders are gentle invitations, never guilt-inducing. You can always turn them off.",
+    "selectTime": "Select Time"
+  },
+  "pin": {
+    "title": "Enter PIN",
+    "subtitle": "Enter your 4-digit PIN",
+    "create": "Create PIN",
+    "createSubtitle": "Create a 4-digit PIN to protect your journal",
+    "confirm": "Confirm PIN",
+    "confirmSubtitle": "Enter your PIN again to confirm",
+    "change": "Change PIN",
+    "remove": "Remove PIN",
+    "incorrect": "Incorrect PIN",
+    "tryAgain": "Please try again",
+    "pinSet": "PIN Set",
+    "pinRemoved": "PIN Removed",
+    "mismatch": "PINs do not match",
+    "forgotPin": "Forgot PIN?",
+    "lockNow": "Lock Now",
+    "enterCurrentPin": "Enter Current PIN",
+    "createNewPin": "Create New PIN",
+    "autoLockTimer": "Auto-Lock Timer",
+    "autoLockImmediately": "Immediately",
+    "autoLock1Min": "1 minute",
+    "autoLock5Min": "5 minutes",
+    "autoLock15Min": "15 minutes",
+    "autoLock30Min": "30 minutes"
+  },
+  "reEngagement": {
+    "welcomeBack": "Welcome Back",
+    "beenAWhile": "It's been a little while.",
+    "thatsOkay": "That's okay.",
+    "lifeGetsHeavy": "Life gets heavy sometimes.",
+    "youreHereNow": "You're here now, and that's what matters.",
+    "daysOfGrowth": "You've completed {{count}} day of growth.",
+    "daysOfGrowth_plural": "You've completed {{count}} days of growth.",
+    "daysStillCount": "Those days still count.",
+    "continueWhereLeft": "Continue Where I Left Off",
+    "startFresh": "Start Fresh from Day 1",
+    "noPressure": "No pressure. No judgment.",
+    "pathFeelsRight": "Take the path that feels right."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "tryAgain": "Try Again",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "done": "Done",
+    "next": "Next",
+    "back": "Back",
+    "close": "Close",
+    "continue": "Continue",
+    "skip": "Skip",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes"
+  },
+  "errors": {
+    "networkError": "Network error. Please check your connection.",
+    "serverError": "Server error. Please try again later.",
+    "unauthorized": "Please sign in to continue.",
+    "notFound": "Not found.",
+    "unknown": "An unexpected error occurred."
+  },
+  "reengagement": {
+    "title": "Welcome Back",
+    "subtitle": "We've missed you",
+    "message": "It's been a while since your last devotional. That's okay - grace meets you right where you are.",
+    "continueJourney": "Continue Journey",
+    "startFresh": "Start Fresh"
+  }
+}

@@ -26,7 +26,10 @@ import * as FileSystem from 'expo-file-system/legacy';
 import { Feather } from '@expo/vector-icons';
 import { COLORS, SPACING, TYPOGRAPHY, RADIUS, SHADOWS } from '../theme/colors';
 import { useJournal } from '../context/JournalContext';
+import { useAccess } from '../context/AccessContext';
 import AudioPlayer from './AudioPlayer';
+
+const isWeb = Platform.OS === 'web';
 
 interface Props {
   dayNumber: number;
@@ -49,6 +52,8 @@ export default function JournalInput({
     setEncryptionEnabled,
   } = useJournal();
 
+  const { canAccessVoiceRecordings } = useAccess();
+
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -61,6 +66,10 @@ export default function JournalInput({
   const [voiceNoteUri, setVoiceNoteUri] = useState<string | undefined>();
   const recordingRef = useRef<Audio.Recording | null>(null);
   const durationInterval = useRef<NodeJS.Timeout | null>(null);
+
+  // Web recording refs
+  const webMediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const webAudioChunksRef = useRef<Blob[]>([]);
 
   // Animations
   const saveAnim = useRef(new Animated.Value(0)).current;
@@ -144,7 +153,31 @@ export default function JournalInput({
 
   async function startRecording() {
     try {
-      // Request permissions
+      if (isWeb) {
+        // Web: Use MediaRecorder API
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+        webAudioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            webAudioChunksRef.current.push(event.data);
+          }
+        };
+
+        mediaRecorder.start(100); // Collect data every 100ms
+        webMediaRecorderRef.current = mediaRecorder;
+        setIsRecording(true);
+        setRecordingDuration(0);
+
+        // Update duration every second
+        durationInterval.current = setInterval(() => {
+          setRecordingDuration(prev => prev + 1);
+        }, 1000);
+        return;
+      }
+
+      // Native: Use expo-av
       const permission = await Audio.requestPermissionsAsync();
       if (!permission.granted) {
         return;
@@ -175,9 +208,37 @@ export default function JournalInput({
   }
 
   async function stopRecording() {
-    if (!recordingRef.current) return;
-
     try {
+      if (isWeb && webMediaRecorderRef.current) {
+        // Web: Stop MediaRecorder and create blob URL
+        return new Promise<void>((resolve) => {
+          const mediaRecorder = webMediaRecorderRef.current!;
+
+          mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(webAudioChunksRef.current, { type: 'audio/webm' });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            setVoiceNoteUri(audioUrl);
+            console.log('Web voice note saved:', audioUrl);
+
+            // Stop all tracks to release microphone
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            webMediaRecorderRef.current = null;
+            webAudioChunksRef.current = [];
+
+            setIsRecording(false);
+            if (durationInterval.current) {
+              clearInterval(durationInterval.current);
+            }
+            resolve();
+          };
+
+          mediaRecorder.stop();
+        });
+      }
+
+      // Native: Use expo-av
+      if (!recordingRef.current) return;
+
       await recordingRef.current.stopAndUnloadAsync();
       const tempUri = recordingRef.current.getURI();
 
@@ -225,7 +286,13 @@ export default function JournalInput({
   async function deleteVoiceNote() {
     if (voiceNoteUri) {
       try {
-        await FileSystem.deleteAsync(voiceNoteUri, { idempotent: true });
+        if (isWeb && voiceNoteUri.startsWith('blob:')) {
+          // Web: Revoke blob URL
+          URL.revokeObjectURL(voiceNoteUri);
+        } else {
+          // Native: Delete file from filesystem
+          await FileSystem.deleteAsync(voiceNoteUri, { idempotent: true });
+        }
       } catch (error) {
         console.log('Error deleting voice note file:', error);
       }
@@ -267,7 +334,15 @@ export default function JournalInput({
 
       {/* Voice Note Section */}
       <View style={styles.voiceSection}>
-        {voiceNoteUri && !isRecording ? (
+        {!canAccessVoiceRecordings() ? (
+          <View style={styles.premiumLockContainer}>
+            <Feather name="mic" size={16} color={COLORS.mutedBrown} />
+            <Text style={styles.premiumLockText}>Upgrade to Premium to add voice notes</Text>
+            <View style={styles.premiumLockBadge}>
+              <Feather name="lock" size={10} color={COLORS.gold} />
+            </View>
+          </View>
+        ) : voiceNoteUri && !isRecording ? (
           <View style={styles.voiceNotePlayer}>
             <AudioPlayer
               uri={voiceNoteUri}
@@ -447,6 +522,28 @@ const styles = StyleSheet.create({
   },
   voiceSection: {
     marginBottom: SPACING.md,
+  },
+  premiumLockContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.sm,
+    backgroundColor: COLORS.mutedBrown + '15',
+    borderRadius: RADIUS.md,
+  },
+  premiumLockText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.mutedBrown,
+    fontFamily: TYPOGRAPHY.ui,
+    marginLeft: SPACING.sm,
+  },
+  premiumLockBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   recordButton: {
     flexDirection: 'row',

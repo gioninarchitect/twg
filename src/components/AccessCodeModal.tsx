@@ -20,6 +20,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../theme/colors';
 import { useAccess, GUEST_DAY_LIMIT } from '../context/AccessContext';
 
@@ -27,18 +28,27 @@ interface Props {
   visible: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  initialCode?: string; // Pre-filled code from URL parameter
 }
 
-export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) {
+export default function AccessCodeModal({ visible, onClose, onSuccess, initialCode }: Props) {
+  const { t } = useTranslation();
   const { redeemCode, hasFullAccess } = useAccess();
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode || '');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Update code when initialCode changes (e.g., from URL parameter)
+  React.useEffect(() => {
+    if (initialCode && visible) {
+      setCode(initialCode.toUpperCase());
+    }
+  }, [initialCode, visible]);
+
   async function handleSubmit() {
     if (!code.trim()) {
-      setError('Please enter an access code.');
+      setError(t('accessCode.enterCodeError'));
       return;
     }
 
@@ -50,7 +60,7 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
       const result = await redeemCode(code);
 
       if (result.success) {
-        setSuccess(result.message);
+        setSuccess(t('accessCode.success'));
         setCode('');
 
         // Wait a moment to show success, then close
@@ -60,10 +70,10 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
           setSuccess(null);
         }, 2000);
       } else {
-        setError(result.message);
+        setError(t('accessCode.errorMessage'));
       }
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setError(t('common.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -91,12 +101,12 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
               <View style={styles.successIconContainer}>
                 <Feather name="check-circle" size={48} color={COLORS.sage} />
               </View>
-              <Text style={styles.title}>Full Access Unlocked</Text>
+              <Text style={styles.title}>{t('accessCode.fullAccessUnlocked')}</Text>
               <Text style={styles.message}>
-                You have access to all 40 days of the journey.
+                {t('accessCode.fullAccessMessage')}
               </Text>
               <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-                <Text style={styles.closeButtonText}>Continue</Text>
+                <Text style={styles.closeButtonText}>{t('common.continue')}</Text>
               </TouchableOpacity>
             </View>
           </SafeAreaView>
@@ -129,17 +139,17 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
               </View>
             </View>
 
-            <Text style={styles.title}>Unlock Your Journey</Text>
+            <Text style={styles.title}>{t('accessCode.unlockYourJourney')}</Text>
 
             <Text style={styles.description}>
-              Enter the access code from your book to unlock all 40 days of healing content.
+              {t('accessCode.description')}
             </Text>
 
             {/* Guest info */}
             <View style={styles.guestInfo}>
               <Feather name="info" size={16} color={COLORS.dustyBlue} />
               <Text style={styles.guestInfoText}>
-                As a guest, you can preview Days 1-{GUEST_DAY_LIMIT}
+                {t('accessCode.guestPreviewInfo', { days: GUEST_DAY_LIMIT })}
               </Text>
             </View>
 
@@ -152,7 +162,7 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
                   setCode(text.toUpperCase());
                   setError(null);
                 }}
-                placeholder="Enter access code"
+                placeholder={t('accessCode.placeholder')}
                 placeholderTextColor={COLORS.mutedBrown}
                 autoCapitalize="characters"
                 autoCorrect={false}
@@ -192,7 +202,7 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
                   <>
                     <Feather name="unlock" size={18} color={code.trim() ? COLORS.earth : COLORS.mutedBrown} />
                     <Text style={[styles.submitButtonText, !code.trim() && styles.submitButtonTextDisabled]}>
-                      Unlock Full Journey
+                      {t('accessCode.unlockFullJourney')}
                     </Text>
                   </>
                 )}
@@ -201,11 +211,11 @@ export default function AccessCodeModal({ visible, onClose, onSuccess }: Props) 
 
             {/* Where to find code */}
             <TouchableOpacity style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Where do I find my code?</Text>
+              <Text style={styles.helpLinkText}>{t('accessCode.whereToFind')}</Text>
             </TouchableOpacity>
 
             <Text style={styles.helpDescription}>
-              Your access code is printed inside the cover of "Tea With God: A 40-Day Healing Companion" book.
+              {t('accessCode.helpDescription')}
             </Text>
           </View>
         </SafeAreaView>

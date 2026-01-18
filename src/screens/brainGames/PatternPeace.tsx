@@ -23,6 +23,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { useWorldModel } from '../../worldModel';
 import { GAME_COLORS, GAME_ANIMATIONS } from '../../theme/brainGames';
 import {
@@ -38,6 +39,16 @@ import {
 } from '../../components/brainGames';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const isWeb = typeof window !== 'undefined' && window.innerWidth !== undefined;
+
+// Responsive grid size - max 300px on web, smaller on mobile
+const getGridSize = () => {
+  if (isWeb) {
+    return Math.min(300, SCREEN_WIDTH - 48);
+  }
+  return Math.min(SCREEN_WIDTH - 80, 320);
+};
+const GRID_DIMENSION = getGridSize();
 
 // ============================================================================
 // Types & Interfaces
@@ -90,45 +101,45 @@ const DIFFICULTY_SETTINGS: Record<DifficultyLevel, {
   stimulusDuration: number;
   interStimulusInterval: number;
   trialsPerRound: number;
-  description: string;
+  descriptionKey: string;
 }> = {
   1: {
     nBack: 1,
     stimulusDuration: 2500,
     interStimulusInterval: 500,
     trialsPerRound: 20,
-    description: '1-Back: Match the previous stimulus',
+    descriptionKey: 'brainGames.patternPeace.difficulty.level1',
   },
   2: {
     nBack: 2,
     stimulusDuration: 2000,
     interStimulusInterval: 500,
     trialsPerRound: 25,
-    description: '2-Back: Match 2 stimuli ago',
+    descriptionKey: 'brainGames.patternPeace.difficulty.level2',
   },
   3: {
     nBack: 3,
     stimulusDuration: 1800,
     interStimulusInterval: 400,
     trialsPerRound: 30,
-    description: '3-Back: Match 3 stimuli ago',
+    descriptionKey: 'brainGames.patternPeace.difficulty.level3',
   },
 };
 
-const SCRIPTURES = [
-  '"Be still, and know that I am God." - Psalm 46:10',
-  '"Peace I leave with you; my peace I give you." - John 14:27',
-  '"You will keep in perfect peace those whose minds are steadfast." - Isaiah 26:3',
-  '"Cast all your anxiety on him because he cares for you." - 1 Peter 5:7',
-  '"The Lord gives strength to his people; the Lord blesses his people with peace." - Psalm 29:11',
+const SCRIPTURE_KEYS = [
+  'brainGames.patternPeace.scriptures.psalm46',
+  'brainGames.patternPeace.scriptures.john14',
+  'brainGames.patternPeace.scriptures.isaiah26',
+  'brainGames.patternPeace.scriptures.peter5',
+  'brainGames.patternPeace.scriptures.psalm29',
 ];
 
-const ENCOURAGEMENTS = [
-  'Each trial strengthens your focus.',
-  'Your mind is becoming more peaceful.',
-  'Patience and practice bring peace.',
-  'You are training your mind for stillness.',
-  'Every moment of focus is a gift to yourself.',
+const ENCOURAGEMENT_KEYS = [
+  'brainGames.patternPeace.encouragements.focus',
+  'brainGames.patternPeace.encouragements.peaceful',
+  'brainGames.patternPeace.encouragements.patience',
+  'brainGames.patternPeace.encouragements.stillness',
+  'brainGames.patternPeace.encouragements.gift',
 ];
 
 // ============================================================================
@@ -182,6 +193,7 @@ interface ResponseButtonsProps {
   disabled: boolean;
   positionPressed: boolean;
   symbolPressed: boolean;
+  t: (key: string) => string;
 }
 
 const ResponseButtons: React.FC<ResponseButtonsProps> = ({
@@ -190,6 +202,7 @@ const ResponseButtons: React.FC<ResponseButtonsProps> = ({
   disabled,
   positionPressed,
   symbolPressed,
+  t,
 }) => {
   return (
     <View style={styles.responseButtons}>
@@ -205,7 +218,7 @@ const ResponseButtons: React.FC<ResponseButtonsProps> = ({
         activeOpacity={0.7}
       >
         <Ionicons name="grid-outline" size={28} color="#fff" />
-        <Text style={styles.buttonText}>Position Match</Text>
+        <Text style={styles.buttonText}>{t('brainGames.patternPeace.positionMatch')}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -220,7 +233,7 @@ const ResponseButtons: React.FC<ResponseButtonsProps> = ({
         activeOpacity={0.7}
       >
         <Ionicons name="shapes-outline" size={28} color="#fff" />
-        <Text style={styles.buttonText}>Symbol Match</Text>
+        <Text style={styles.buttonText}>{t('brainGames.patternPeace.symbolMatch')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -229,12 +242,13 @@ const ResponseButtons: React.FC<ResponseButtonsProps> = ({
 interface DifficultySelectProps {
   selectedLevel: DifficultyLevel;
   onSelect: (level: DifficultyLevel) => void;
+  t: (key: string, params?: Record<string, any>) => string;
 }
 
-const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedLevel, onSelect }) => {
+const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedLevel, onSelect, t }) => {
   return (
     <View style={styles.difficultyContainer}>
-      <Text style={styles.difficultyTitle}>Select Difficulty</Text>
+      <Text style={styles.difficultyTitle}>{t('brainGames.patternPeace.selectDifficulty')}</Text>
       {([1, 2, 3] as DifficultyLevel[]).map((level) => (
         <TouchableOpacity
           key={level}
@@ -249,14 +263,14 @@ const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedLevel, onSe
               styles.difficultyLevel,
               selectedLevel === level && styles.difficultyLevelSelected,
             ]}>
-              Level {level}
+              {t('brainGames.patternPeace.level', { level })}
             </Text>
             {selectedLevel === level && (
               <Ionicons name="checkmark-circle" size={20} color={GAME_COLORS.patternPeace.primary} />
             )}
           </View>
           <Text style={styles.difficultyDescription}>
-            {DIFFICULTY_SETTINGS[level].description}
+            {t(DIFFICULTY_SETTINGS[level].descriptionKey)}
           </Text>
         </TouchableOpacity>
       ))}
@@ -267,9 +281,10 @@ const DifficultySelect: React.FC<DifficultySelectProps> = ({ selectedLevel, onSe
 interface StatsDisplayProps {
   stats: GameStats;
   difficulty: DifficultyLevel;
+  t: (key: string) => string;
 }
 
-const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, difficulty }) => {
+const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, difficulty, t }) => {
   const positionAccuracy = stats.totalTrials > 0
     ? Math.round(((stats.correctPositionMatches) /
         (stats.correctPositionMatches + stats.incorrectPositionMatches + stats.missedPositionMatches || 1)) * 100)
@@ -282,32 +297,32 @@ const StatsDisplay: React.FC<StatsDisplayProps> = ({ stats, difficulty }) => {
 
   return (
     <View style={styles.statsContainer}>
-      <Text style={styles.statsTitle}>Session Results</Text>
+      <Text style={styles.statsTitle}>{t('brainGames.patternPeace.sessionResults')}</Text>
 
       <View style={styles.statRow}>
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats.totalTrials}</Text>
-          <Text style={styles.statLabel}>Trials</Text>
+          <Text style={styles.statLabel}>{t('brainGames.patternPeace.trials')}</Text>
         </View>
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{stats.accuracy}%</Text>
-          <Text style={styles.statLabel}>Overall</Text>
+          <Text style={styles.statLabel}>{t('brainGames.patternPeace.overall')}</Text>
         </View>
         <View style={styles.statItem}>
           <Text style={styles.statValue}>{difficulty}-Back</Text>
-          <Text style={styles.statLabel}>Level</Text>
+          <Text style={styles.statLabel}>{t('brainGames.patternPeace.levelLabel')}</Text>
         </View>
       </View>
 
       <View style={styles.detailStats}>
         <View style={styles.detailStatRow}>
           <Ionicons name="grid-outline" size={20} color={GAME_COLORS.patternPeace.match} />
-          <Text style={styles.detailStatLabel}>Position Matches</Text>
+          <Text style={styles.detailStatLabel}>{t('brainGames.patternPeace.positionMatches')}</Text>
           <Text style={styles.detailStatValue}>{positionAccuracy}%</Text>
         </View>
         <View style={styles.detailStatRow}>
           <Ionicons name="shapes-outline" size={20} color={GAME_COLORS.patternPeace.secondary} />
-          <Text style={styles.detailStatLabel}>Symbol Matches</Text>
+          <Text style={styles.detailStatLabel}>{t('brainGames.patternPeace.symbolMatches')}</Text>
           <Text style={styles.detailStatValue}>{symbolAccuracy}%</Text>
         </View>
       </View>
@@ -326,6 +341,7 @@ interface PatternPeaceProps {
 export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
   const navigation = useNavigation();
   const handleClose = onClose || (() => navigation.goBack());
+  const { t } = useTranslation();
 
   // World Model integration
   const { state, dispatch, recommendations } = useWorldModel();
@@ -342,8 +358,8 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
   const [symbolPressed, setSymbolPressed] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
-  const [currentScripture] = useState(SCRIPTURES[Math.floor(Math.random() * SCRIPTURES.length)]);
-  const [encouragement, setEncouragement] = useState('');
+  const [currentScriptureKey] = useState(SCRIPTURE_KEYS[Math.floor(Math.random() * SCRIPTURE_KEYS.length)]);
+  const [encouragementKey, setEncouragementKey] = useState('');
 
   // Mood check-in states
   const [showPreMoodCheck, setShowPreMoodCheck] = useState(false);
@@ -481,7 +497,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
       accuracy: 0,
     });
     setPhase('playing');
-    setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
+    setEncouragementKey(ENCOURAGEMENT_KEYS[Math.floor(Math.random() * ENCOURAGEMENT_KEYS.length)]);
   }, [generateTrials]);
 
   // Handle initiating session (shows pre-mood check first)
@@ -615,7 +631,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
           setCurrentTrialIndex((prev) => prev + 1);
           // Update encouragement occasionally
           if (Math.random() < 0.3) {
-            setEncouragement(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
+            setEncouragementKey(ENCOURAGEMENT_KEYS[Math.floor(Math.random() * ENCOURAGEMENT_KEYS.length)]);
           }
         } else {
           // Game complete - show post-mood check first
@@ -681,29 +697,28 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
           <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
             <View style={styles.introContainer}>
               <Ionicons name="grid" size={64} color={GAME_COLORS.patternPeace.primary} />
-              <Text style={styles.title}>Pattern Peace</Text>
-              <Text style={styles.subtitle}>N-Back Working Memory Training</Text>
+              <Text style={styles.title}>{t('brainGames.patternPeace.title')}</Text>
+              <Text style={styles.subtitle}>{t('brainGames.patternPeace.subtitle')}</Text>
 
               <Text style={styles.description}>
-                Train your working memory through focused attention.
-                This exercise helps quiet ruminating thoughts by engaging
-                your mind in purposeful pattern recognition.
+                {t('brainGames.patternPeace.intro.description')}
               </Text>
 
               <View style={styles.scriptureContainer}>
-                <Text style={styles.scripture}>{currentScripture}</Text>
+                <Text style={styles.scripture}>{t(currentScriptureKey)}</Text>
               </View>
 
               <DifficultySelect
                 selectedLevel={difficulty}
                 onSelect={setDifficulty}
+                t={t}
               />
 
               <TouchableOpacity
                 style={styles.startButton}
                 onPress={() => setPhase('instructions')}
               >
-                <Text style={styles.startButtonText}>Continue</Text>
+                <Text style={styles.startButtonText}>{t('brainGames.patternPeace.continue')}</Text>
                 <Ionicons name="arrow-forward" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
@@ -715,16 +730,16 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
         return (
           <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
             <View style={styles.instructionsContainer}>
-              <Text style={styles.instructionsTitle}>How to Play</Text>
+              <Text style={styles.instructionsTitle}>{t('brainGames.patternPeace.howToPlay')}</Text>
 
               <View style={styles.instructionStep}>
                 <View style={styles.stepNumber}>
                   <Text style={styles.stepNumberText}>1</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Watch the Grid</Text>
+                  <Text style={styles.stepTitle}>{t('brainGames.patternPeace.instructions.watchGrid')}</Text>
                   <Text style={styles.stepDescription}>
-                    A symbol will appear in one of the 9 squares.
+                    {t('brainGames.patternPeace.instructions.watchGridDesc')}
                   </Text>
                 </View>
               </View>
@@ -734,10 +749,11 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
                   <Text style={styles.stepNumberText}>2</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Remember {settings.nBack} Back</Text>
+                  <Text style={styles.stepTitle}>{t('brainGames.patternPeace.instructions.remember', { nBack: settings.nBack })}</Text>
                   <Text style={styles.stepDescription}>
-                    Compare the current stimulus to {settings.nBack === 1 ? 'the previous one' :
-                    `${settings.nBack} stimuli ago`}.
+                    {settings.nBack === 1
+                      ? t('brainGames.patternPeace.instructions.rememberDesc1')
+                      : t('brainGames.patternPeace.instructions.rememberDescN', { nBack: settings.nBack })}
                   </Text>
                 </View>
               </View>
@@ -747,9 +763,9 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
                   <Text style={styles.stepNumberText}>3</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Match Position</Text>
+                  <Text style={styles.stepTitle}>{t('brainGames.patternPeace.instructions.matchPosition')}</Text>
                   <Text style={styles.stepDescription}>
-                    Press "Position Match" if the square is the same as {settings.nBack} ago.
+                    {t('brainGames.patternPeace.instructions.matchPositionDesc', { nBack: settings.nBack })}
                   </Text>
                 </View>
               </View>
@@ -759,9 +775,9 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
                   <Text style={styles.stepNumberText}>4</Text>
                 </View>
                 <View style={styles.stepContent}>
-                  <Text style={styles.stepTitle}>Match Symbol</Text>
+                  <Text style={styles.stepTitle}>{t('brainGames.patternPeace.instructions.matchSymbol')}</Text>
                   <Text style={styles.stepDescription}>
-                    Press "Symbol Match" if the symbol is the same as {settings.nBack} ago.
+                    {t('brainGames.patternPeace.instructions.matchSymbolDesc', { nBack: settings.nBack })}
                   </Text>
                 </View>
               </View>
@@ -769,7 +785,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
               <View style={styles.tipBox}>
                 <Ionicons name="bulb-outline" size={20} color={GAME_COLORS.patternPeace.accent} />
                 <Text style={styles.tipText}>
-                  Both matches can happen at once! If position AND symbol match, press both buttons.
+                  {t('brainGames.patternPeace.instructions.tip')}
                 </Text>
               </View>
 
@@ -777,7 +793,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
                 style={styles.startButton}
                 onPress={handleBeginGame}
               >
-                <Text style={styles.startButtonText}>Begin Training</Text>
+                <Text style={styles.startButtonText}>{t('brainGames.patternPeace.beginTraining')}</Text>
                 <Ionicons name="play" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
@@ -788,45 +804,53 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
         const progress = trials.length > 0
           ? ((currentTrialIndex + 1) / trials.length) * 100
           : 0;
+        const playSettings = DIFFICULTY_SETTINGS[difficulty];
 
         return (
-          <View style={styles.gameContainer}>
-            {/* Progress Bar */}
-            <View style={styles.progressContainer}>
-              <View style={styles.progressBar}>
-                <View style={[styles.progressFill, { width: `${progress}%` }]} />
+          <View style={styles.gamePhaseContainer}>
+            {/* Top section: Quick instruction + Progress */}
+            <View style={styles.gameTopSection}>
+              <View style={styles.quickInstruction}>
+                <Text style={styles.quickInstructionText}>
+                  {playSettings.nBack === 1
+                    ? t('brainGames.patternPeace.quickInstruction1')
+                    : t('brainGames.patternPeace.quickInstructionN', { nBack: playSettings.nBack })}
+                </Text>
               </View>
-              <Text style={styles.progressText}>
-                {currentTrialIndex + 1} / {trials.length}
+              <View style={styles.progressContainer}>
+                <View style={styles.progressBar}>
+                  <View style={[styles.progressFill, { width: `${progress}%` }]} />
+                </View>
+                <Text style={styles.progressText}>
+                  {currentTrialIndex + 1} / {trials.length}
+                </Text>
+              </View>
+            </View>
+
+            {/* Middle section: Grid (centered, flexible) */}
+            <View style={styles.gameMiddleSection}>
+              <View style={styles.grid}>
+                {renderGrid()}
+              </View>
+            </View>
+
+            {/* Bottom section: Buttons (always visible) */}
+            <View style={styles.gameBottomSection}>
+              <Text style={styles.buttonHint}>
+                {showingStimulus ? t('brainGames.patternPeace.tapIfMatches') : t('brainGames.patternPeace.watchForNext')}
+              </Text>
+              <ResponseButtons
+                onPositionMatch={handlePositionMatch}
+                onSymbolMatch={handleSymbolMatch}
+                disabled={!showingStimulus}
+                positionPressed={positionPressed}
+                symbolPressed={symbolPressed}
+                t={t}
+              />
+              <Text style={styles.currentAccuracy}>
+                {t('brainGames.patternPeace.accuracy', { accuracy: stats.accuracy })}
               </Text>
             </View>
-
-            {/* N-Back indicator */}
-            <View style={styles.nBackIndicator}>
-              <Text style={styles.nBackText}>{difficulty}-Back</Text>
-            </View>
-
-            {/* Grid */}
-            <View style={styles.grid}>
-              {renderGrid()}
-            </View>
-
-            {/* Encouragement */}
-            <Text style={styles.encouragement}>{encouragement}</Text>
-
-            {/* Response Buttons */}
-            <ResponseButtons
-              onPositionMatch={handlePositionMatch}
-              onSymbolMatch={handleSymbolMatch}
-              disabled={!showingStimulus}
-              positionPressed={positionPressed}
-              symbolPressed={symbolPressed}
-            />
-
-            {/* Current Accuracy */}
-            <Text style={styles.currentAccuracy}>
-              Accuracy: {stats.accuracy}%
-            </Text>
           </View>
         );
 
@@ -835,20 +859,20 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
           <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.scrollContent}>
             <View style={styles.completeContainer}>
               <Ionicons name="checkmark-circle" size={80} color={GAME_COLORS.patternPeace.match} />
-              <Text style={styles.completeTitle}>Training Complete</Text>
+              <Text style={styles.completeTitle}>{t('brainGames.patternPeace.trainingComplete')}</Text>
 
-              <StatsDisplay stats={stats} difficulty={difficulty} />
+              <StatsDisplay stats={stats} difficulty={difficulty} t={t} />
 
               <View style={styles.scriptureContainer}>
-                <Text style={styles.scripture}>{currentScripture}</Text>
+                <Text style={styles.scripture}>{t(currentScriptureKey)}</Text>
               </View>
 
               <Text style={styles.completeMessage}>
                 {stats.accuracy >= 80
-                  ? 'Excellent focus! Your working memory is getting stronger.'
+                  ? t('brainGames.patternPeace.completeMessages.excellent')
                   : stats.accuracy >= 60
-                  ? 'Good effort! Consistent practice brings lasting peace.'
-                  : 'Keep practicing. Each session trains your mind for stillness.'}
+                  ? t('brainGames.patternPeace.completeMessages.good')
+                  : t('brainGames.patternPeace.completeMessages.keepPracticing')}
               </Text>
 
               <View style={styles.actionButtons}>
@@ -859,14 +883,14 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
                   }}
                 >
                   <Ionicons name="refresh" size={20} color="#fff" />
-                  <Text style={styles.playAgainText}>Play Again</Text>
+                  <Text style={styles.playAgainText}>{t('brainGames.patternPeace.playAgain')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
                   style={styles.doneButton}
                   onPress={() => navigation.goBack()}
                 >
-                  <Text style={styles.doneButtonText}>Done</Text>
+                  <Text style={styles.doneButtonText}>{t('brainGames.patternPeace.done')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -880,7 +904,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
 
   return (
     <LinearGradient
-      colors={[GAME_COLORS.patternPeace.background, '#F5F0E8']}
+      colors={[GAME_COLORS.patternPeace.background, '#151515']}
       style={styles.container}
     >
       {/* Header */}
@@ -891,7 +915,7 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
         >
           <Ionicons name="arrow-back" size={24} color={GAME_COLORS.patternPeace.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Pattern Peace</Text>
+        <Text style={styles.headerTitle}>{t('brainGames.patternPeace.title')}</Text>
         <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
       </View>
 
@@ -901,8 +925,8 @@ export const PatternPeace: React.FC<PatternPeaceProps> = ({ onClose }) => {
       <DisclaimerModal
         visible={showDisclaimer}
         onAccept={() => setShowDisclaimer(false)}
-        title="Educational Exercise"
-        content="Pattern Peace is a cognitive training exercise based on N-back research. It is educational in nature and is not a substitute for professional mental health treatment. If you're experiencing persistent cognitive difficulties, please consult a healthcare provider."
+        title={t('brainGames.patternPeace.disclaimer.title')}
+        content={t('brainGames.patternPeace.disclaimer.content')}
       />
 
       {/* Why This Works Modal */}
@@ -947,6 +971,29 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
+  gameScrollContent: {
+    flexGrow: 1,
+    paddingBottom: 120, // Increased for mobile safe area
+    alignItems: 'center',
+  },
+  // New fixed layout for game phase (no scrolling needed)
+  gamePhaseContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  gameTopSection: {
+    paddingTop: 8,
+    paddingBottom: 8,
+  },
+  gameMiddleSection: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  gameBottomSection: {
+    paddingBottom: 24,
+    alignItems: 'center',
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -982,28 +1029,30 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     marginTop: 8,
   },
   description: {
     fontSize: 16,
     lineHeight: 24,
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.textSecondary,
     textAlign: 'center',
     marginTop: 24,
     paddingHorizontal: 16,
   },
   scriptureContainer: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: GAME_COLORS.patternPeace.backgroundCard,
     borderRadius: 12,
     padding: 16,
     marginTop: 24,
     marginHorizontal: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   scripture: {
     fontSize: 14,
     fontStyle: 'italic',
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -1020,16 +1069,16 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   difficultyOption: {
-    backgroundColor: 'rgba(255,255,255,0.6)',
+    backgroundColor: GAME_COLORS.patternPeace.backgroundCard,
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   difficultyOptionSelected: {
     borderColor: GAME_COLORS.patternPeace.primary,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    backgroundColor: 'rgba(136, 152, 184, 0.2)',
   },
   difficultyHeader: {
     flexDirection: 'row',
@@ -1039,14 +1088,14 @@ const styles = StyleSheet.create({
   difficultyLevel: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.text,
   },
   difficultyLevelSelected: {
     color: GAME_COLORS.patternPeace.primary,
   },
   difficultyDescription: {
     fontSize: 14,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     marginTop: 4,
   },
   startButton: {
@@ -1103,27 +1152,29 @@ const styles = StyleSheet.create({
   stepTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.text,
     marginBottom: 4,
   },
   stepDescription: {
     fontSize: 14,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     lineHeight: 20,
   },
   tipBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(155, 143, 184, 0.2)',
+    backgroundColor: 'rgba(136, 152, 184, 0.15)',
     borderRadius: 12,
     padding: 16,
     marginTop: 16,
     gap: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   tipText: {
     flex: 1,
     fontSize: 14,
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.textSecondary,
     lineHeight: 20,
   },
 
@@ -1131,7 +1182,34 @@ const styles = StyleSheet.create({
   gameContainer: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 16,
+    width: '100%',
+    maxWidth: 400,
+  },
+  quickInstruction: {
+    backgroundColor: 'rgba(136, 152, 184, 0.15)',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 16,
+    width: '100%',
+  },
+  quickInstructionText: {
+    fontSize: 14,
+    color: GAME_COLORS.patternPeace.primary,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  responseButtonsContainer: {
+    width: '100%',
+    marginTop: 16,
+    marginBottom: 24,
+  },
+  buttonHint: {
+    fontSize: 14,
+    color: GAME_COLORS.patternPeace.textSecondary,
+    textAlign: 'center',
+    marginBottom: 12,
+    fontWeight: '500',
   },
   progressContainer: {
     width: '100%',
@@ -1143,7 +1221,7 @@ const styles = StyleSheet.create({
   progressBar: {
     flex: 1,
     height: 8,
-    backgroundColor: 'rgba(155, 143, 184, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -1154,7 +1232,7 @@ const styles = StyleSheet.create({
   },
   progressText: {
     fontSize: 14,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     minWidth: 50,
     textAlign: 'right',
   },
@@ -1171,30 +1249,37 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   grid: {
-    width: SCREEN_WIDTH - 80,
-    height: SCREEN_WIDTH - 80,
+    width: GRID_DIMENSION,
+    height: GRID_DIMENSION,
+    maxWidth: 300,
+    maxHeight: 300,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 16,
-    padding: 8,
+    padding: 6,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   gridCell: {
-    width: (SCREEN_WIDTH - 96) / 3,
-    height: (SCREEN_WIDTH - 96) / 3,
+    width: (GRID_DIMENSION - 24) / 3,
+    height: (GRID_DIMENSION - 24) / 3,
+    maxWidth: 88,
+    maxHeight: 88,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(155, 143, 184, 0.1)',
-    borderRadius: 12,
-    margin: 4,
+    backgroundColor: 'rgba(136, 152, 184, 0.15)',
+    borderRadius: 10,
+    margin: 3,
   },
   gridCellActive: {
-    backgroundColor: 'rgba(155, 143, 184, 0.3)',
+    backgroundColor: 'rgba(136, 152, 184, 0.4)',
   },
   encouragement: {
     fontSize: 14,
     fontStyle: 'italic',
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     marginTop: 20,
     marginBottom: 16,
     textAlign: 'center',
@@ -1233,7 +1318,7 @@ const styles = StyleSheet.create({
   },
   currentAccuracy: {
     fontSize: 16,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     marginTop: 20,
   },
 
@@ -1252,10 +1337,12 @@ const styles = StyleSheet.create({
   },
   statsContainer: {
     width: '100%',
-    backgroundColor: 'rgba(255,255,255,0.8)',
+    backgroundColor: GAME_COLORS.patternPeace.backgroundCard,
     borderRadius: 16,
     padding: 24,
     marginTop: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   statsTitle: {
     fontSize: 18,
@@ -1279,12 +1366,12 @@ const styles = StyleSheet.create({
   },
   statLabel: {
     fontSize: 12,
-    color: '#8B7355',
+    color: GAME_COLORS.patternPeace.textSecondary,
     marginTop: 4,
   },
   detailStats: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(155, 143, 184, 0.2)',
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
     paddingTop: 16,
   },
   detailStatRow: {
@@ -1296,7 +1383,7 @@ const styles = StyleSheet.create({
   detailStatLabel: {
     flex: 1,
     fontSize: 14,
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.text,
   },
   detailStatValue: {
     fontSize: 16,
@@ -1305,7 +1392,7 @@ const styles = StyleSheet.create({
   },
   completeMessage: {
     fontSize: 16,
-    color: '#5D4E37',
+    color: GAME_COLORS.patternPeace.textSecondary,
     textAlign: 'center',
     marginTop: 24,
     lineHeight: 24,
@@ -1331,13 +1418,15 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   doneButton: {
-    backgroundColor: 'rgba(155, 143, 184, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     paddingHorizontal: 32,
     paddingVertical: 14,
     borderRadius: 25,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   doneButtonText: {
-    color: GAME_COLORS.patternPeace.primary,
+    color: GAME_COLORS.patternPeace.text,
     fontSize: 16,
     fontWeight: '600',
   },

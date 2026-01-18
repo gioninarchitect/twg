@@ -10,70 +10,88 @@ import { COLORS, SPACING, RADIUS, ANIMATION, GRADIENTS, SHADOWS } from './colors
 // ============================================
 
 export const GAME_COLORS = {
-  // Breathe with God - Calming blue-greens
+  // Breathe with God - Calming blue-greens on dark
   breathing: {
     primary: '#88A4B8',
     secondary: '#A8C5D8',
     accent: '#6B8FA8',
-    background: '#F5F8FA',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(136, 164, 184, 0.1)',
     inhale: '#A8C5D8',
     exhale: '#88A4B8',
     hold: '#9DB8CB',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 
-  // Gratitude Garden - Warm greens and golds
+  // Gratitude Garden - Warm greens and golds on dark
   gratitude: {
     primary: '#A8B5A0',
     secondary: '#C4D4BC',
     accent: '#8FA288',
-    background: '#F8FAF7',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(168, 181, 160, 0.1)',
     flower: '#D4A574',
     leaf: '#A8B5A0',
     stem: '#8FA288',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 
-  // Thought Detective - Investigative purples and warm neutrals
+  // Thought Detective - Investigative purples and warm neutrals on dark
   thoughtDetective: {
     primary: '#9B8FB8',
     secondary: '#B8AEC8',
     accent: '#7A6E98',
-    background: '#F8F7FA',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(155, 143, 184, 0.1)',
     distortion: '#C4A882',
     reframe: '#A8B5A0',
     evidence: '#88A4B8',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 
-  // Scripture Memory Palace - Royal golds and deep earth
+  // Scripture Memory Palace - Royal golds and deep earth on dark
   scripturePalace: {
     primary: '#D4A574',
     secondary: '#E5C9A8',
     accent: '#B8956F',
-    background: '#FAF8F5',
-    room: '#EDE5D8',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(212, 165, 116, 0.1)',
+    room: 'rgba(212, 165, 116, 0.15)',
     highlight: '#D4A574',
     memorized: '#A8B5A0',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 
-  // Body Scan Release - Soothing teals and warmth
+  // Body Scan Release - Soothing teals and warmth on dark
   bodyScan: {
     primary: '#88A4A8',
     secondary: '#A8C4C8',
     accent: '#6B8A90',
-    background: '#F5F9FA',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(136, 164, 168, 0.1)',
     tension: '#C4A882',
     release: '#A8C4C8',
-    neutral: '#E0E8EA',
+    neutral: 'rgba(255, 255, 255, 0.1)',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 
-  // Pattern Peace - Focus blues and clarity
+  // Pattern Peace - Focus blues and clarity on dark
   patternPeace: {
     primary: '#8898B8',
     secondary: '#A8B8D8',
     accent: '#6878A0',
-    background: '#F5F7FA',
-    match: '#A8B5A0',
-    mismatch: '#C4A882',
-    target: '#D4A574',
+    background: '#0D0D0D',
+    backgroundCard: 'rgba(136, 152, 184, 0.1)',
+    match: '#81C784',
+    mismatch: '#E57373',
+    target: '#D4AF37',
+    text: '#FAFAFA',
+    textSecondary: 'rgba(250, 250, 250, 0.7)',
   },
 };
 

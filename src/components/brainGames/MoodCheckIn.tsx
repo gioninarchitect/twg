@@ -584,7 +584,7 @@ const POST_SESSION_MOODS: SessionMoodOption[] = [
     level: 'struggling',
     icon: 'cloud-outline',
     label: 'Still heavy',
-    subtext: 'Healing takes time',
+    subtext: 'Growth takes time',
     color: COLORS.dustyBlue,
   },
   {
@@ -748,7 +748,7 @@ interface SessionCompleteProps {
 
 const AFFIRMATIONS = [
   'You showed up for yourself today.',
-  'Healing happens in small moments like this.',
+  'Growth happens in small moments like this.',
   'You\'re doing something brave.',
   'Every step matters, even the small ones.',
   'You honored your need for peace.',

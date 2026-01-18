@@ -335,43 +335,43 @@ export interface FeedbackLoop {
  */
 
 export type PsychologicalPattern =
-  // Cognitive Behavioral Therapy (CBT) - Beck, 1960s
+  // Cognitive Behavioral Therapy (CBT)
   | 'cognitive_distortion'
   | 'automatic_negative_thought'
   | 'core_belief_activated'
 
-  // Polyvagal Theory - Porges, 1994
+  // Polyvagal Theory
   | 'ventral_vagal_engagement' // Social engagement, safety
   | 'sympathetic_activation' // Fight/flight
   | 'dorsal_vagal_shutdown' // Freeze, dissociation
 
-  // Attachment Theory - Bowlby, 1969
+  // Attachment Theory
   | 'attachment_anxiety'
   | 'attachment_avoidance'
   | 'secure_base_seeking'
 
-  // Trauma-Informed (van der Kolk, Herman)
+  // Trauma-Informed Care
   | 'hypervigilance'
   | 'emotional_flashback'
   | 'window_of_tolerance_breach'
   | 'grounding_needed'
 
-  // Positive Psychology (Seligman, Fredrickson)
+  // Positive Psychology
   | 'gratitude_practice'
   | 'broaden_and_build'
   | 'savoring_moment'
 
-  // Mindfulness-Based (Kabat-Zinn)
+  // Mindfulness-Based Approaches
   | 'present_moment_awareness'
   | 'non_judgmental_observation'
   | 'body_awareness'
 
-  // Acceptance & Commitment Therapy (ACT) - Hayes
+  // Acceptance & Commitment Therapy (ACT)
   | 'experiential_avoidance'
   | 'cognitive_fusion'
   | 'values_clarification'
 
-  // Self-Compassion - Kristin Neff
+  // Self-Compassion Research
   | 'self_criticism_loop'
   | 'common_humanity_recognition'
   | 'mindful_self_compassion';
@@ -379,7 +379,6 @@ export type PsychologicalPattern =
 export interface PsychologicalTheory {
   id: string;
   name: string;
-  founder: string;
   yearEstablished: number;
   evidenceLevel: 'strong' | 'moderate' | 'emerging';
   applicablePatterns: PsychologicalPattern[];
@@ -391,7 +390,6 @@ export const SUPPORTED_THEORIES: PsychologicalTheory[] = [
   {
     id: 'cbt',
     name: 'Cognitive Behavioral Therapy',
-    founder: 'Aaron Beck',
     yearEstablished: 1960,
     evidenceLevel: 'strong',
     applicablePatterns: ['cognitive_distortion', 'automatic_negative_thought', 'core_belief_activated'],
@@ -400,7 +398,6 @@ export const SUPPORTED_THEORIES: PsychologicalTheory[] = [
   {
     id: 'polyvagal',
     name: 'Polyvagal Theory',
-    founder: 'Stephen Porges',
     yearEstablished: 1994,
     evidenceLevel: 'moderate',
     applicablePatterns: ['ventral_vagal_engagement', 'sympathetic_activation', 'dorsal_vagal_shutdown'],
@@ -409,16 +406,14 @@ export const SUPPORTED_THEORIES: PsychologicalTheory[] = [
   {
     id: 'trauma_informed',
     name: 'Trauma-Informed Care',
-    founder: 'Bessel van der Kolk, Judith Herman',
     yearEstablished: 1992,
     evidenceLevel: 'strong',
     applicablePatterns: ['hypervigilance', 'emotional_flashback', 'window_of_tolerance_breach', 'grounding_needed'],
-    disclaimer: 'Trauma healing requires professional support. This app provides education only.',
+    disclaimer: 'Trauma recovery requires professional support. This app provides education only.',
   },
   {
     id: 'positive_psychology',
     name: 'Positive Psychology',
-    founder: 'Martin Seligman',
     yearEstablished: 1998,
     evidenceLevel: 'strong',
     applicablePatterns: ['gratitude_practice', 'broaden_and_build', 'savoring_moment'],
@@ -426,8 +421,7 @@ export const SUPPORTED_THEORIES: PsychologicalTheory[] = [
   },
   {
     id: 'self_compassion',
-    name: 'Self-Compassion',
-    founder: 'Kristin Neff',
+    name: 'Self-Compassion Research',
     yearEstablished: 2003,
     evidenceLevel: 'strong',
     applicablePatterns: ['self_criticism_loop', 'common_humanity_recognition', 'mindful_self_compassion'],

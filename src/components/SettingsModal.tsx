@@ -13,12 +13,18 @@ import {
   Modal,
   SafeAreaView,
   ScrollView,
+  Alert,
+  Platform,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../theme/colors';
 import { useAccess } from '../context/AccessContext';
 import { useProgress } from '../context/ProgressContext';
+import { usePin } from '../context/PinContext';
 import NotificationSettings from './NotificationSettings';
+import PinSettings from './PinSettings';
 
 interface Props {
   visible: boolean;
@@ -27,8 +33,10 @@ interface Props {
 }
 
 export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Props) {
+  const { t } = useTranslation();
   const { hasFullAccess, accessLevel, codeDescription, resetToGuest } = useAccess();
   const { totalDaysCompleted, resetProgress } = useProgress();
+  const { lockApp, isPinEnabled } = usePin();
 
   return (
     <Modal
@@ -40,7 +48,7 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
       <SafeAreaView style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>Settings</Text>
+          <Text style={styles.headerTitle}>{t('settings.title')}</Text>
           <TouchableOpacity onPress={onClose} style={styles.closeButton}>
             <Feather name="x" size={24} color={COLORS.earth} />
           </TouchableOpacity>
@@ -49,13 +57,13 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {/* Notification Settings */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Reminders</Text>
+            <Text style={styles.sectionTitle}>{t('settings.reminders')}</Text>
             <NotificationSettings />
           </View>
 
           {/* Access Status */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Access</Text>
+            <Text style={styles.sectionTitle}>{t('settings.access')}</Text>
             <View style={styles.card}>
               <View style={styles.accessRow}>
                 <View style={styles.accessInfo}>
@@ -72,7 +80,7 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
                       styles.accessBadgeText,
                       hasFullAccess() ? styles.accessTextFull : styles.accessTextGuest
                     ]}>
-                      {hasFullAccess() ? 'Full Access' : 'Guest'}
+                      {hasFullAccess() ? t('settings.fullAccess') : t('settings.guest')}
                     </Text>
                   </View>
                   {hasFullAccess() && codeDescription && (
@@ -88,7 +96,7 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
                     }}
                   >
                     <Feather name="key" size={16} color={COLORS.gold} />
-                    <Text style={styles.unlockText}>Unlock</Text>
+                    <Text style={styles.unlockText}>{t('settings.unlock')}</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -97,14 +105,14 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
 
           {/* Progress Summary */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Your Journey</Text>
+            <Text style={styles.sectionTitle}>{t('dashboard.yourJourney')}</Text>
             <View style={styles.card}>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Days Completed</Text>
+                <Text style={styles.statLabel}>{t('settings.daysCompleted')}</Text>
                 <Text style={styles.statValue}>{totalDaysCompleted}</Text>
               </View>
               <View style={styles.statRow}>
-                <Text style={styles.statLabel}>Days Remaining</Text>
+                <Text style={styles.statLabel}>{t('settings.daysRemaining')}</Text>
                 <Text style={styles.statValue}>{40 - totalDaysCompleted}</Text>
               </View>
             </View>
@@ -112,23 +120,27 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
 
           {/* About */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>About</Text>
+            <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
             <View style={styles.card}>
-              <Text style={styles.aboutTitle}>Tea With God</Text>
-              <Text style={styles.aboutSubtitle}>A 40-Day Healing Companion</Text>
+              <Text style={styles.aboutTitle}>{t('app.name')}</Text>
+              <Text style={styles.aboutSubtitle}>{t('app.tagline')}</Text>
               <Text style={styles.aboutText}>
-                Based on the book "Tea With God" by Kamo Thobejane.
-                A sanctuary for women walking through heartbreak,
-                guided by faith and psychological wisdom.
+                {t('settings.aboutDescription')}
               </Text>
-              <Text style={styles.versionText}>Version 1.0.0</Text>
+              <Text style={styles.versionText}>{t('settings.version')} 1.0.0</Text>
             </View>
+          </View>
+
+          {/* Security - PIN Lock */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t('settings.security')}</Text>
+            <PinSettings />
           </View>
 
           {/* Dev Tools (for testing) */}
           {__DEV__ && (
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Developer</Text>
+              <Text style={styles.sectionTitle}>{t('settings.developer')}</Text>
               <View style={styles.card}>
                 <TouchableOpacity
                   style={styles.devButton}
@@ -138,7 +150,7 @@ export default function SettingsModal({ visible, onClose, onOpenAccessCode }: Pr
                   }}
                 >
                   <Feather name="refresh-cw" size={16} color={COLORS.mutedTerracotta} />
-                  <Text style={styles.devButtonText}>Reset All Progress</Text>
+                  <Text style={styles.devButtonText}>{t('settings.resetProgress')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -304,6 +316,17 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.sm,
   },
   devButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.mutedTerracotta,
+    fontFamily: TYPOGRAPHY.ui,
+    marginLeft: SPACING.sm,
+  },
+  signOutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: SPACING.sm,
+  },
+  signOutText: {
     fontSize: TYPOGRAPHY.sizes.md,
     color: COLORS.mutedTerracotta,
     fontFamily: TYPOGRAPHY.ui,

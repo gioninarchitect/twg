@@ -14,42 +14,34 @@
  *
  * This gives guests the authentic 40-day journey experience.
  * The code is typically provided with the physical book purchase.
+ *
+ * SECURITY: All access codes are validated SERVER-SIDE via /api/v1/access/validate
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { accessApi } from '../services/api';
+import { supabase, TABLES, isOnline, getCurrentUserId } from '../services/supabase';
 
-// Storage keys
-const ACCESS_KEY = '@twg_access';
-const GUEST_START_KEY = '@twg_guest_start';
+// Storage key prefixes (userId appended at runtime)
+const ACCESS_KEY_PREFIX = '@twg_access_';
+const GUEST_START_KEY_PREFIX = '@twg_guest_start_';
 
 // Access levels
-export type AccessLevel = 'GUEST' | 'FULL';
+type AccessLevel = 'GUEST' | 'FULL';
 
-// Valid access codes (in production, these would be validated server-side)
-// For now, hardcoded codes for testing
-const VALID_CODES: { [code: string]: { level: AccessLevel; description: string } } = {
-  // Book codes - provide full access
-  'TEAWITHGOD2025': { level: 'FULL', description: 'Book Purchase Code' },
-  'HEALING40DAYS': { level: 'FULL', description: 'Book Purchase Code' },
-  'KINTSUGI2025': { level: 'FULL', description: 'Special Edition Code' },
+// Plan tiers - determines feature access
+export type PlanTier = 'book' | 'journey' | 'premium';
 
-  // Owner/Review codes - full access for testing
-  'REVIEW': { level: 'FULL', description: 'Owner Review Access' },
-  'OWNER2025': { level: 'FULL', description: 'Owner Access' },
-  'BETAREVIEW': { level: 'FULL', description: 'Beta Reviewer Access' },
-
-  // Add more codes as needed for different campaigns
-};
-
-// Guest preview limit
-export const GUEST_DAY_LIMIT = 3;
+// Guest preview limit - Day 1 only for demo
+export const GUEST_DAY_LIMIT = 1;
 
 // Milliseconds in a day (for time-locked access)
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 
 interface AccessState {
   accessLevel: AccessLevel;
+  planTier: PlanTier | null; // null for guests, 'book'/'journey'/'premium' for purchasers
   codeUsed: string | null;
   codeDescription: string | null;
   unlockedAt: string | null;
@@ -65,6 +57,14 @@ interface AccessContextType extends AccessState {
 
   // Check if user has full access
   hasFullAccess: () => boolean;
+
+  // Check if user has premium access (for music, brain games, voice recordings)
+  hasPremiumAccess: () => boolean;
+
+  // Premium feature checks
+  canAccessMusic: () => boolean;
+  canAccessBrainGames: () => boolean;
+  canAccessVoiceRecordings: () => boolean;
 
   // Get the maximum day accessible (for guests, this is time-locked)
   getMaxAccessibleDay: () => number;
@@ -84,9 +84,19 @@ interface AccessContextType extends AccessState {
 
 const AccessContext = createContext<AccessContextType | null>(null);
 
-export function AccessProvider({ children }: { children: ReactNode }) {
+interface AccessProviderProps {
+  children: ReactNode;
+  userId: string;
+}
+
+export function AccessProvider({ children, userId }: AccessProviderProps) {
+  // User-specific storage keys
+  const ACCESS_KEY = ACCESS_KEY_PREFIX + userId;
+  const GUEST_START_KEY = GUEST_START_KEY_PREFIX + userId;
+
   const [state, setState] = useState<AccessState>({
     accessLevel: 'GUEST',
+    planTier: null,
     codeUsed: null,
     codeDescription: null,
     unlockedAt: null,
@@ -94,12 +104,13 @@ export function AccessProvider({ children }: { children: ReactNode }) {
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load access state on mount
+  // Load access state on mount and when userId changes
   useEffect(() => {
     loadAccessState();
-  }, []);
+  }, [userId, ACCESS_KEY]);
 
   async function loadAccessState() {
+    setIsLoading(true);
     try {
       const stored = await AsyncStorage.getItem(ACCESS_KEY);
       if (stored) {
@@ -110,15 +121,17 @@ export function AccessProvider({ children }: { children: ReactNode }) {
         }
         setState(parsed);
       } else {
-        // First time guest - set start date
+        // First time guest for this user - set start date
         const initialState: AccessState = {
           accessLevel: 'GUEST',
+          planTier: null,
           codeUsed: null,
           codeDescription: null,
           unlockedAt: null,
           guestStartDate: new Date().toISOString(),
         };
-        await saveAccessState(initialState);
+        setState(initialState);
+        await AsyncStorage.setItem(ACCESS_KEY, JSON.stringify(initialState));
       }
     } catch (error) {
       console.error('Error loading access state:', error);
@@ -130,9 +143,40 @@ export function AccessProvider({ children }: { children: ReactNode }) {
   async function saveAccessState(newState: AccessState) {
     setState(newState);
     try {
+      // Save locally first
       await AsyncStorage.setItem(ACCESS_KEY, JSON.stringify(newState));
+      // Sync to cloud
+      syncAccessToCloud(newState);
     } catch (error) {
       console.error('Error saving access state:', error);
+    }
+  }
+
+  async function syncAccessToCloud(accessState: AccessState) {
+    try {
+      const online = await isOnline();
+      const cloudUserId = await getCurrentUserId();
+
+      if (!online || !cloudUserId) return;
+
+      const { error } = await supabase
+        .from(TABLES.USER_SETTINGS)
+        .upsert({
+          user_id: cloudUserId,
+          access_level: accessState.accessLevel === 'FULL' ? 'PILGRIM' : 'GUEST',
+          access_code: accessState.codeUsed,
+          redeemed_at: accessState.unlockedAt,
+          guest_start_time: accessState.guestStartDate,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: 'user_id',
+        });
+
+      if (error) {
+        console.log('Access state cloud sync deferred:', error.message);
+      }
+    } catch (error) {
+      console.log('Access state cloud sync failed:', error);
     }
   }
 
@@ -186,6 +230,23 @@ export function AccessProvider({ children }: { children: ReactNode }) {
     return state.accessLevel === 'FULL';
   }, [state.accessLevel]);
 
+  // Premium access check - only premium tier gets music, brain games, voice recordings
+  const hasPremiumAccess = useCallback(() => {
+    return state.planTier === 'premium';
+  }, [state.planTier]);
+
+  const canAccessMusic = useCallback(() => {
+    return state.planTier === 'premium';
+  }, [state.planTier]);
+
+  const canAccessBrainGames = useCallback(() => {
+    return state.planTier === 'premium';
+  }, [state.planTier]);
+
+  const canAccessVoiceRecordings = useCallback(() => {
+    return state.planTier === 'premium';
+  }, [state.planTier]);
+
   const getMaxAccessibleDay = useCallback(() => {
     if (state.accessLevel === 'FULL') return 40;
     return getGuestCurrentDay();
@@ -194,16 +255,6 @@ export function AccessProvider({ children }: { children: ReactNode }) {
   const redeemCode = useCallback(async (code: string): Promise<{ success: boolean; message: string }> => {
     // Normalize code (uppercase, trim whitespace)
     const normalizedCode = code.trim().toUpperCase();
-
-    // Check if code is valid
-    const codeData = VALID_CODES[normalizedCode];
-
-    if (!codeData) {
-      return {
-        success: false,
-        message: 'This code is not recognized. Please check and try again.',
-      };
-    }
 
     // Check if already using this code
     if (state.codeUsed === normalizedCode) {
@@ -221,26 +272,51 @@ export function AccessProvider({ children }: { children: ReactNode }) {
       };
     }
 
-    // Redeem the code
+    // Validate code SERVER-SIDE
+    const result = await accessApi.validateCode(normalizedCode);
+
+    if (!result.valid) {
+      return {
+        success: false,
+        message: result.error || 'This code is not recognized. Please check and try again.',
+      };
+    }
+
+    // Code is valid - update local state
+    const codeDescription = result.codeType === 'owner' ? 'Owner Access' :
+                           result.codeType === 'organization' ? 'Organization Code' :
+                           result.codeType === 'purchase' ? `${result.plan || 'Journey'} Purchase` :
+                           'Book Code';
+
+    // Determine plan tier from result (owner codes get premium by default)
+    const planTier: PlanTier = result.codeType === 'owner' ? 'premium' :
+                               (result.plan as PlanTier) || 'journey';
+
     const newState: AccessState = {
-      accessLevel: codeData.level,
+      accessLevel: 'FULL',
+      planTier: planTier,
       codeUsed: normalizedCode,
-      codeDescription: codeData.description,
+      codeDescription: codeDescription,
       unlockedAt: new Date().toISOString(),
       guestStartDate: state.guestStartDate, // Preserve existing guest start date
     };
 
     await saveAccessState(newState);
 
+    const welcomeMessage = result.firstName
+      ? `Welcome ${result.firstName}! Your full 40-day journey is now unlocked.`
+      : 'Welcome to your full 40-day journey. All content is now unlocked.';
+
     return {
       success: true,
-      message: 'Welcome to your full 40-day journey. All content is now unlocked.',
+      message: welcomeMessage,
     };
   }, [state]);
 
   const resetToGuest = useCallback(async () => {
     const guestState: AccessState = {
       accessLevel: 'GUEST',
+      planTier: null,
       codeUsed: null,
       codeDescription: null,
       unlockedAt: null,
@@ -254,6 +330,10 @@ export function AccessProvider({ children }: { children: ReactNode }) {
     canAccessDay,
     redeemCode,
     hasFullAccess,
+    hasPremiumAccess,
+    canAccessMusic,
+    canAccessBrainGames,
+    canAccessVoiceRecordings,
     getMaxAccessibleDay,
     getGuestCurrentDay,
     getTimeUntilNextDay,

@@ -70,7 +70,7 @@ const CELEBRATION_CONFIGS: Record<CelebrationType, CelebrationConfig> = {
   },
   first_game: {
     title: 'First Steps',
-    subtitle: 'Your healing journey begins',
+    subtitle: 'Your journey begins',
     icon: 'sparkles',
     color: COLORS.goldLight,
     particles: true,
@@ -89,7 +89,7 @@ const CELEBRATION_CONFIGS: Record<CelebrationType, CelebrationConfig> = {
     goldShimmer: true,
   },
   healing_stage: {
-    title: 'New Healing Stage',
+    title: 'New Growth Stage',
     subtitle: 'The gold is filling your cracks',
     icon: 'heart',
     color: COLORS.gold,

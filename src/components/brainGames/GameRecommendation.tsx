@@ -17,11 +17,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useWorldModel } from '../../worldModel';
+import { useAccess } from '../../context/AccessContext';
 import { GAME_COLORS } from '../../theme/brainGames';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../../theme/colors';
 
@@ -253,29 +256,33 @@ function getRecommendedGames(
 interface GameCardProps {
   game: GameInfo;
   isUnlocked: boolean;
+  isPremiumLocked?: boolean;
   onPress: () => void;
   variant: 'full' | 'compact' | 'inline';
 }
 
-const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant }) => {
+const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, isPremiumLocked, onPress, variant }) => {
+  // Card is fully locked if either day-locked OR premium-locked
+  const isFullyLocked = !isUnlocked || isPremiumLocked;
+
   if (variant === 'inline') {
     return (
       <TouchableOpacity
-        style={[styles.inlineCard, !isUnlocked && styles.cardLocked]}
-        onPress={isUnlocked ? onPress : undefined}
-        activeOpacity={isUnlocked ? 0.7 : 1}
+        style={[styles.inlineCard, isFullyLocked && styles.cardLocked]}
+        onPress={isPremiumLocked ? onPress : (isUnlocked ? onPress : undefined)}
+        activeOpacity={0.7}
       >
         <View style={[styles.inlineIconContainer, { backgroundColor: game.colors.primary + '20' }]}>
           <Ionicons
             name={game.icon as any}
             size={20}
-            color={isUnlocked ? game.colors.primary : '#999'}
+            color={isFullyLocked ? '#999' : game.colors.primary}
           />
         </View>
-        <Text style={[styles.inlineName, !isUnlocked && styles.textLocked]}>
+        <Text style={[styles.inlineName, isFullyLocked && styles.textLocked]}>
           {game.shortName}
         </Text>
-        {!isUnlocked && (
+        {isFullyLocked && (
           <Ionicons name="lock-closed" size={12} color="#999" style={styles.lockIcon} />
         )}
       </TouchableOpacity>
@@ -285,29 +292,35 @@ const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant 
   if (variant === 'compact') {
     return (
       <TouchableOpacity
-        style={[styles.compactCard, !isUnlocked && styles.cardLocked]}
-        onPress={isUnlocked ? onPress : undefined}
-        activeOpacity={isUnlocked ? 0.7 : 1}
+        style={[styles.compactCard, isFullyLocked && styles.cardLocked]}
+        onPress={isPremiumLocked ? onPress : (isUnlocked ? onPress : undefined)}
+        activeOpacity={0.7}
       >
         <LinearGradient
-          colors={isUnlocked
-            ? [game.colors.background, game.colors.primary + '20']
-            : ['#F5F5F5', '#EEEEEE']
+          colors={isFullyLocked
+            ? ['#F5F5F5', '#EEEEEE']
+            : [game.colors.background, game.colors.primary + '20']
           }
           style={styles.compactGradient}
         >
           <Ionicons
             name={game.icon as any}
             size={28}
-            color={isUnlocked ? game.colors.primary : '#999'}
+            color={isFullyLocked ? '#999' : game.colors.primary}
           />
-          <Text style={[styles.compactName, !isUnlocked && styles.textLocked]}>
+          <Text style={[styles.compactName, isFullyLocked && styles.textLocked]}>
             {game.shortName}
           </Text>
-          <Text style={[styles.compactDuration, !isUnlocked && styles.textLocked]}>
+          <Text style={[styles.compactDuration, isFullyLocked && styles.textLocked]}>
             {game.duration}
           </Text>
-          {!isUnlocked && (
+          {isPremiumLocked && (
+            <View style={[styles.lockedBadge, styles.premiumBadge]}>
+              <Ionicons name="star" size={10} color="#fff" />
+              <Text style={styles.lockedBadgeText}>Premium</Text>
+            </View>
+          )}
+          {!isPremiumLocked && !isUnlocked && (
             <View style={styles.lockedBadge}>
               <Ionicons name="lock-closed" size={10} color="#fff" />
               <Text style={styles.lockedBadgeText}>Day {game.unlockDay}</Text>
@@ -321,14 +334,14 @@ const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant 
   // Full variant
   return (
     <TouchableOpacity
-      style={[styles.fullCard, !isUnlocked && styles.cardLocked]}
-      onPress={isUnlocked ? onPress : undefined}
-      activeOpacity={isUnlocked ? 0.7 : 1}
+      style={[styles.fullCard, isFullyLocked && styles.cardLocked]}
+      onPress={isPremiumLocked ? onPress : (isUnlocked ? onPress : undefined)}
+      activeOpacity={0.7}
     >
       <LinearGradient
-        colors={isUnlocked
-          ? [game.colors.background, game.colors.primary + '15']
-          : ['#F5F5F5', '#EEEEEE']
+        colors={isFullyLocked
+          ? ['#F5F5F5', '#EEEEEE']
+          : [game.colors.background, game.colors.primary + '15']
         }
         style={styles.fullGradient}
       >
@@ -337,18 +350,23 @@ const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant 
             <Ionicons
               name={game.icon as any}
               size={32}
-              color={isUnlocked ? game.colors.primary : '#999'}
+              color={isFullyLocked ? '#999' : game.colors.primary}
             />
           </View>
           <View style={styles.fullHeaderText}>
-            <Text style={[styles.fullName, !isUnlocked && styles.textLocked]}>
+            <Text style={[styles.fullName, isFullyLocked && styles.textLocked]}>
               {game.name}
             </Text>
-            <Text style={[styles.fullTheory, !isUnlocked && styles.textLocked]}>
+            <Text style={[styles.fullTheory, isFullyLocked && styles.textLocked]}>
               Based on {game.theoryBasis}
             </Text>
           </View>
-          {isUnlocked ? (
+          {isPremiumLocked ? (
+            <View style={[styles.lockedIndicator, styles.premiumIndicator]}>
+              <Ionicons name="star" size={16} color={COLORS.gold} />
+              <Text style={[styles.lockedDayText, { color: COLORS.gold }]}>Premium</Text>
+            </View>
+          ) : isUnlocked ? (
             <Ionicons name="play-circle" size={32} color={game.colors.primary} />
           ) : (
             <View style={styles.lockedIndicator}>
@@ -357,7 +375,7 @@ const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant 
             </View>
           )}
         </View>
-        <Text style={[styles.fullDescription, !isUnlocked && styles.textLocked]}>
+        <Text style={[styles.fullDescription, isFullyLocked && styles.textLocked]}>
           {game.description}
         </Text>
         <View style={styles.fullFooter}>
@@ -365,13 +383,13 @@ const GameCard: React.FC<GameCardProps> = ({ game, isUnlocked, onPress, variant 
             <Ionicons
               name="sparkles"
               size={14}
-              color={isUnlocked ? game.colors.primary : '#999'}
+              color={isFullyLocked ? '#999' : game.colors.primary}
             />
-            <Text style={[styles.fullBenefitText, !isUnlocked && styles.textLocked]}>
+            <Text style={[styles.fullBenefitText, isFullyLocked && styles.textLocked]}>
               {game.benefit}
             </Text>
           </View>
-          <Text style={[styles.fullDuration, !isUnlocked && styles.textLocked]}>
+          <Text style={[styles.fullDuration, isFullyLocked && styles.textLocked]}>
             {game.duration}
           </Text>
         </View>
@@ -392,16 +410,40 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
 }) => {
   const navigation = useNavigation<any>();
   const { state: worldModelState } = useWorldModel();
+  const { canAccessBrainGames } = useAccess();
 
+  // Check if user has premium access for brain games
+  const hasPremiumAccess = canAccessBrainGames();
+
+  // Only get games that are actually unlocked and accessible
   const recommendedGames = useMemo(() => {
-    return getRecommendedGames(currentDay, worldModelState, maxRecommendations);
+    const games = getRecommendedGames(currentDay, worldModelState, maxRecommendations);
+    // Filter to ONLY show unlocked games - don't tease users with locked content
+    return games.filter(game => game.unlockDay <= currentDay);
   }, [currentDay, worldModelState, maxRecommendations]);
 
   const handleGamePress = (game: GameInfo) => {
     onGameStart?.(game.id);
-    navigation.navigate('BrainGames', { screen: game.screenName });
+    // Navigate directly to the screen (not nested - screens are in main Stack)
+    navigation.navigate(game.screenName as never);
   };
 
+  // Handle upgrade prompt for non-premium users
+  const handleUpgradePress = () => {
+    Alert.alert(
+      'Premium Feature',
+      'Brain Games are included with the Premium plan. Upgrade to access 6 evidence-based exercises for peace of mind.',
+      [
+        { text: 'Maybe Later', style: 'cancel' },
+        {
+          text: 'Upgrade Now',
+          onPress: () => Linking.openURL('https://teawithgod.com/upgrade.html'),
+        },
+      ]
+    );
+  };
+
+  // Don't show section at all if no unlocked games
   if (recommendedGames.length === 0) {
     return null;
   }
@@ -412,6 +454,12 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
         <View style={styles.inlineHeader}>
           <Feather name="zap" size={14} color={COLORS.gold} />
           <Text style={styles.inlineTitle}>Quick Brain Games</Text>
+          {!hasPremiumAccess && (
+            <View style={styles.premiumTag}>
+              <Ionicons name="star" size={10} color={COLORS.gold} />
+              <Text style={styles.premiumTagText}>Premium</Text>
+            </View>
+          )}
         </View>
         <ScrollView
           horizontal
@@ -423,7 +471,8 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
               key={game.id}
               game={game}
               isUnlocked={game.unlockDay <= currentDay}
-              onPress={() => handleGamePress(game)}
+              isPremiumLocked={!hasPremiumAccess}
+              onPress={hasPremiumAccess ? () => handleGamePress(game) : handleUpgradePress}
               variant="inline"
             />
           ))}
@@ -444,17 +493,16 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
             <Text style={styles.subtitle}>Exercises for peace of mind</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.viewAllButton}
-          onPress={() => navigation.navigate('BrainGames', { screen: 'BrainGamesHub' })}
-        >
-          <Text style={styles.viewAllText}>View All</Text>
-          <Feather name="chevron-right" size={16} color={COLORS.gold} />
-        </TouchableOpacity>
+        {!hasPremiumAccess && (
+          <View style={styles.premiumTag}>
+            <Ionicons name="star" size={10} color={COLORS.gold} />
+            <Text style={styles.premiumTagText}>Premium</Text>
+          </View>
+        )}
       </View>
 
       <Text style={styles.recommendedLabel}>
-        Recommended for Day {currentDay}
+        {hasPremiumAccess ? `Recommended for Day ${currentDay}` : 'Upgrade to access Brain Games'}
       </Text>
 
       {variant === 'compact' ? (
@@ -468,7 +516,8 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
               key={game.id}
               game={game}
               isUnlocked={game.unlockDay <= currentDay}
-              onPress={() => handleGamePress(game)}
+              isPremiumLocked={!hasPremiumAccess}
+              onPress={hasPremiumAccess ? () => handleGamePress(game) : handleUpgradePress}
               variant="compact"
             />
           ))}
@@ -480,11 +529,19 @@ export const GameRecommendation: React.FC<GameRecommendationProps> = ({
               key={game.id}
               game={game}
               isUnlocked={game.unlockDay <= currentDay}
-              onPress={() => handleGamePress(game)}
+              isPremiumLocked={!hasPremiumAccess}
+              onPress={hasPremiumAccess ? () => handleGamePress(game) : handleUpgradePress}
               variant="full"
             />
           ))}
         </View>
+      )}
+
+      {!hasPremiumAccess && (
+        <TouchableOpacity style={styles.upgradeButton} onPress={handleUpgradePress}>
+          <Ionicons name="star" size={16} color="#fff" />
+          <Text style={styles.upgradeButtonText}>Upgrade to Premium</Text>
+        </TouchableOpacity>
       )}
 
       <Text style={styles.disclaimer}>
@@ -536,14 +593,37 @@ const styles = StyleSheet.create({
     color: COLORS.mutedBrown,
     fontFamily: TYPOGRAPHY.ui,
   },
-  viewAllButton: {
+  premiumTag: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: COLORS.gold + '20',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: 4,
+    borderRadius: RADIUS.full,
+    gap: 4,
   },
-  viewAllText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
+  premiumTagText: {
+    fontSize: TYPOGRAPHY.sizes.xs,
     color: COLORS.gold,
-    fontWeight: '500',
+    fontWeight: '600',
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  upgradeButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: COLORS.gold,
+    marginHorizontal: SPACING.lg,
+    marginTop: SPACING.md,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.md,
+    gap: SPACING.xs,
+  },
+  upgradeButtonText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: '#fff',
+    fontWeight: '600',
     fontFamily: TYPOGRAPHY.ui,
   },
   recommendedLabel: {
@@ -723,6 +803,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: SPACING.sm,
   },
+  premiumBadge: {
+    backgroundColor: COLORS.gold,
+  },
   lockedBadgeText: {
     fontSize: 10,
     color: '#fff',
@@ -731,6 +814,9 @@ const styles = StyleSheet.create({
   },
   lockedIndicator: {
     alignItems: 'center',
+  },
+  premiumIndicator: {
+    // Premium uses same layout, just different colors applied inline
   },
   lockedDayText: {
     fontSize: 10,

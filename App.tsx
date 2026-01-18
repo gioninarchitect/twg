@@ -5,13 +5,42 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { TouchableOpacity, StyleSheet, View, ActivityIndicator, Text, Animated } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { TouchableOpacity, StyleSheet, View, ActivityIndicator, Text, Animated, Platform, Image } from 'react-native';
+import { NavigationContainer, useNavigationContainerRef } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SecureStore from 'expo-secure-store';
 import * as Linking from 'expo-linking';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+
+// Initialize i18n
+import './src/i18n';
+import { LanguageProvider } from './src/context/LanguageContext';
+
+// Platform-aware storage for web compatibility
+const Storage = {
+  getItem: async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    }
+    return SecureStore.getItemAsync(key);
+  },
+  setItem: async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+      return;
+    }
+    return SecureStore.setItemAsync(key, value);
+  },
+  deleteItem: async (key: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.removeItem(key);
+      return;
+    }
+    return SecureStore.deleteItemAsync(key);
+  },
+};
 // Note: Removed QueryClient - using local-first architecture
 
 import AuthScreen from './src/screens/AuthScreen';
@@ -26,6 +55,7 @@ import ScripturePalace from './src/screens/brainGames/ScripturePalace';
 import ThoughtDetective from './src/screens/brainGames/ThoughtDetective';
 import BodyScanRelease from './src/screens/brainGames/BodyScanRelease';
 import PatternPeace from './src/screens/brainGames/PatternPeace';
+import FlipbookScreen from './src/screens/FlipbookScreen';
 import ReEngagementModal from './src/components/ReEngagementModal';
 import AccessCodeModal from './src/components/AccessCodeModal';
 import SettingsModal from './src/components/SettingsModal';
@@ -35,16 +65,33 @@ import { NotificationProvider } from './src/context/NotificationContext';
 import { JournalProvider } from './src/context/JournalContext';
 import { SyncProvider } from './src/context/SyncContext';
 import { WorldModelProvider } from './src/worldModel/WorldModelContext';
+import { PinProvider, usePin } from './src/context/PinContext';
+import { SettingsProvider, useSettings } from './src/context/SettingsContext';
+import LockScreen from './src/screens/LockScreen';
 import { COLORS, TYPOGRAPHY, SHADOWS } from './src/theme/colors';
 import { supabase } from './src/services/supabase';
 
 // Deep linking configuration
+// Using /app as base path for all routes
 const linking = {
-  prefixes: [Linking.createURL('/'), 'teawithgod://'],
+  prefixes: [
+    'https://teawithgod.com',
+    'https://twg.cleva-ai.co.za',
+    'http://localhost:8081',
+    Linking.createURL('/'),
+    'teawithgod://',
+  ],
   config: {
     screens: {
-      Dashboard: 'dashboard',
-      DayModule: 'day/:dayNumber',
+      Dashboard: '/app/dashboard',
+      DayModule: '/app/day/:dayNumber',
+      BrainGamesHub: '/app/brain-games',
+      BreatheWithGod: '/app/brain-games/breathe',
+      GratitudeGarden: '/app/brain-games/gratitude',
+      ScripturePalace: '/app/brain-games/scripture',
+      ThoughtDetective: '/app/brain-games/thought',
+      BodyScanRelease: '/app/brain-games/body-scan',
+      PatternPeace: '/app/brain-games/pattern',
     },
   },
 };
@@ -52,12 +99,131 @@ const linking = {
 const Stack = createNativeStackNavigator();
 
 // Main app content (needs to be inside ProgressProvider and AccessProvider)
-function AppContent() {
+interface AppContentProps {
+  pendingDeepLink: string | null;
+  onDeepLinkHandled: () => void;
+}
+
+function AppContent({ pendingDeepLink, onDeepLinkHandled }: AppContentProps) {
+  const { t } = useTranslation();
   const { showReEngagement } = useProgress();
-  const { hasFullAccess } = useAccess();
+  const { hasFullAccess, getGuestCurrentDay, isLoading: accessLoading } = useAccess();
+  const { isLocked, isLoading: pinLoading } = usePin();
+
+  // Show lock screen if PIN is enabled and app is locked
+  if (!pinLoading && isLocked) {
+    return <LockScreen />;
+  }
   const [crisisVisible, setCrisisVisible] = React.useState(false);
   const [accessCodeVisible, setAccessCodeVisible] = React.useState(false);
-  const [settingsVisible, setSettingsVisible] = React.useState(false);
+  const [urlAccessCode, setUrlAccessCode] = React.useState<string | null>(null);
+  const { isSettingsVisible, openSettings, closeSettings } = useSettings();
+  const navigationRef = useNavigationContainerRef();
+  const [isNavigationReady, setIsNavigationReady] = React.useState(false);
+  const hasNavigated = React.useRef(false);
+  const hasCheckedUrlCode = React.useRef(false);
+
+  // Check for ?code= URL parameter on web and auto-open modal
+  React.useEffect(() => {
+    if (Platform.OS === 'web' && !hasCheckedUrlCode.current && !accessLoading) {
+      hasCheckedUrlCode.current = true;
+      const urlParams = new URLSearchParams(window.location.search);
+      const codeParam = urlParams.get('code');
+
+      if (codeParam && !hasFullAccess()) {
+        console.log('[AccessCode] Found code in URL:', codeParam);
+        setUrlAccessCode(codeParam.toUpperCase());
+        setAccessCodeVisible(true);
+        // Clean up URL by removing the code parameter
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, '', newUrl);
+      }
+    }
+  }, [accessLoading, hasFullAccess]);
+
+  // Handle deep link on web - navigate after NavigationContainer is ready AND access state is loaded
+  useEffect(() => {
+    // Wait for both navigation AND access state to be ready before handling deep links
+    if (Platform.OS === 'web' && isNavigationReady && !accessLoading && navigationRef.current && !hasNavigated.current) {
+      // Get path from prop (captured before login) or sessionStorage backup or current URL
+      const path = pendingDeepLink || sessionStorage.getItem('pendingDeepLink') || window.location.pathname;
+      console.log('[DeepLink] Navigating with path:', path);
+      console.log('[DeepLink] Access state loaded - hasFullAccess:', hasFullAccess());
+
+      // Small delay to ensure navigation is truly ready
+      const timer = setTimeout(() => {
+        // Match /app/day/:dayNumber
+        const dayMatch = path.match(/\/app\/day\/(\d+)/);
+        if (dayMatch) {
+          const dayNumber = parseInt(dayMatch[1], 10);
+          console.log('[DeepLink] Navigating to Day', dayNumber);
+
+          // Check if coming from flipbook (user already has access if they can view flipbook)
+          const urlParams = new URLSearchParams(window.location.search);
+          const fromFlipbook = urlParams.get('src') === 'flipbook';
+
+          // GUEST ACCESS CHECK: If user is GUEST and trying to access Day 2+, redirect to upgrade page
+          // Skip this check if coming from flipbook (flipbook already requires access)
+          if (!fromFlipbook && !hasFullAccess() && dayNumber > getGuestCurrentDay()) {
+            console.log('[DeepLink] GUEST trying to access Day', dayNumber, '- redirecting to upgrade');
+            hasNavigated.current = true;
+            sessionStorage.removeItem('pendingDeepLink');
+            onDeepLinkHandled();
+            // Redirect to upgrade page with return URL
+            window.location.href = `/upgrade.html?day=${dayNumber}&returnTo=${encodeURIComponent(path)}`;
+            return;
+          }
+
+          hasNavigated.current = true;
+          navigationRef.current?.reset({
+            index: 1,
+            routes: [
+              { name: 'Dashboard' },
+              { name: 'DayModule', params: { dayNumber } },
+            ],
+          });
+          // Force correct URL (React Navigation generates wrong path)
+          setTimeout(() => {
+            window.history.replaceState(null, '', `/app/day/${dayNumber}`);
+          }, 50);
+          sessionStorage.removeItem('pendingDeepLink');
+          onDeepLinkHandled();
+          return;
+        }
+
+        // Match /app/brain-games routes
+        if (path.includes('/app/brain-games/breathe')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('BreatheWithGod' as never);
+        } else if (path.includes('/app/brain-games/gratitude')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('GratitudeGarden' as never);
+        } else if (path.includes('/app/brain-games/scripture')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('ScripturePalace' as never);
+        } else if (path.includes('/app/brain-games/thought')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('ThoughtDetective' as never);
+        } else if (path.includes('/app/brain-games/body-scan')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('BodyScanRelease' as never);
+        } else if (path.includes('/app/brain-games/pattern')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('PatternPeace' as never);
+        } else if (path.includes('/app/brain-games')) {
+          hasNavigated.current = true;
+          navigationRef.current?.navigate('BrainGamesHub' as never);
+        }
+
+        if (hasNavigated.current) {
+          sessionStorage.removeItem('pendingDeepLink');
+          onDeepLinkHandled();
+        }
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isNavigationReady, pendingDeepLink, accessLoading]);
 
   // Pulsing animation for distress button
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -83,7 +249,7 @@ function AppContent() {
 
   return (
     <>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef} linking={linking} onReady={() => setIsNavigationReady(true)}>
         <Stack.Navigator
           screenOptions={{
             headerStyle: { backgroundColor: COLORS.background },
@@ -97,23 +263,32 @@ function AppContent() {
             name="Dashboard"
             component={DashboardScreen}
             options={{
-              title: 'Tea With God',
+              title: t('app.name'),
               headerLargeTitle: true,
               headerLeft: () => (
                 <TouchableOpacity
-                  onPress={() => setSettingsVisible(true)}
+                  onPress={openSettings}
                   style={styles.headerButton}
                 >
-                  <Feather name="settings" size={20} color={COLORS.textPrimary} />
+                  <Image
+                    source={require('./assets/teacup.png')}
+                    style={{ width: 28, height: 28 }}
+                    resizeMode="contain"
+                  />
                 </TouchableOpacity>
               ),
+              headerTitleStyle: {
+                fontFamily: TYPOGRAPHY.ui,
+                fontWeight: '600',
+                fontSize: 17,
+              },
               headerRight: () => !hasFullAccess() ? (
                 <TouchableOpacity
                   onPress={() => setAccessCodeVisible(true)}
                   style={styles.unlockButton}
                 >
                   <Feather name="key" size={18} color={COLORS.gold} />
-                  <Text style={styles.unlockText}>Unlock</Text>
+                  <Text style={styles.unlockText}>{t('settings.unlock')}</Text>
                 </TouchableOpacity>
               ) : null,
             }}
@@ -123,6 +298,14 @@ function AppContent() {
             component={DayModuleScreen}
             options={({ route }: any) => ({
               title: 'Day ' + route.params.dayNumber,
+              headerRight: () => (
+                <TouchableOpacity
+                  onPress={openSettings}
+                  style={{ padding: 8, marginRight: 4 }}
+                >
+                  <Feather name="settings" size={20} color={COLORS.textMuted} />
+                </TouchableOpacity>
+              ),
             })}
           />
           {/* Brain Games Hub */}
@@ -162,6 +345,12 @@ function AppContent() {
             component={PatternPeace}
             options={{ title: 'Pattern Peace', headerShown: false }}
           />
+          {/* Digital Book Flipbook */}
+          <Stack.Screen
+            name="Flipbook"
+            component={FlipbookScreen}
+            options={{ title: 'Digital Book', headerShown: false }}
+          />
         </Stack.Navigator>
 
         {/* Global Lifebuoy Button - Always Visible (PRD requirement) */}
@@ -184,13 +373,17 @@ function AppContent() {
         {/* Access Code Modal - Unlock full content */}
         <AccessCodeModal
           visible={accessCodeVisible}
-          onClose={() => setAccessCodeVisible(false)}
+          onClose={() => {
+            setAccessCodeVisible(false);
+            setUrlAccessCode(null); // Clear URL code after modal closes
+          }}
+          initialCode={urlAccessCode || undefined}
         />
 
         {/* Settings Modal */}
         <SettingsModal
-          visible={settingsVisible}
-          onClose={() => setSettingsVisible(false)}
+          visible={isSettingsVisible}
+          onClose={closeSettings}
           onOpenAccessCode={() => setAccessCodeVisible(true)}
         />
 
@@ -207,6 +400,20 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [pendingDeepLink, setPendingDeepLink] = useState<string | null>(null);
+
+  // Capture deep link URL on initial load (before auth)
+  useEffect(() => {
+    if (Platform.OS === 'web') {
+      const path = window.location.pathname;
+      console.log('[DeepLink] Initial path captured:', path);
+      if (path && path !== '/app' && path !== '/app/') {
+        setPendingDeepLink(path);
+        // Also store in sessionStorage as backup
+        sessionStorage.setItem('pendingDeepLink', path);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     checkAuthState();
@@ -219,8 +426,8 @@ export default function App() {
         try {
           const { data, error } = await supabase.auth.getSession();
           if (data.session) {
-            await SecureStore.setItemAsync('authToken', data.session.access_token);
-            await SecureStore.setItemAsync('userData', JSON.stringify(data.session.user));
+            await Storage.setItem('authToken', data.session.access_token);
+            await Storage.setItem('userData', JSON.stringify(data.session.user));
             setUser(data.session.user);
             setIsAuthenticated(true);
           }
@@ -246,8 +453,8 @@ export default function App() {
       // First check Supabase session
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        await SecureStore.setItemAsync('authToken', session.access_token);
-        await SecureStore.setItemAsync('userData', JSON.stringify(session.user));
+        await Storage.setItem('authToken', session.access_token);
+        await Storage.setItem('userData', JSON.stringify(session.user));
         setUser(session.user);
         setIsAuthenticated(true);
         setIsLoading(false);
@@ -255,8 +462,8 @@ export default function App() {
       }
 
       // Fallback to stored credentials
-      const token = await SecureStore.getItemAsync('authToken');
-      const userData = await SecureStore.getItemAsync('userData');
+      const token = await Storage.getItem('authToken');
+      const userData = await Storage.getItem('userData');
       if (token && userData) {
         setIsAuthenticated(true);
         setUser(JSON.parse(userData));
@@ -270,10 +477,9 @@ export default function App() {
 
   async function handleAuthSuccess(token: string, userData: any) {
     try {
-      if (token !== 'guest') {
-        await SecureStore.setItemAsync('authToken', token);
-        await SecureStore.setItemAsync('userData', JSON.stringify(userData));
-      }
+      // Save all auth tokens including guest
+      await Storage.setItem('authToken', token);
+      await Storage.setItem('userData', JSON.stringify(userData));
       setUser(userData);
       setIsAuthenticated(true);
     } catch (e) {
@@ -283,8 +489,8 @@ export default function App() {
 
   async function handleLogout() {
     try {
-      await SecureStore.deleteItemAsync('authToken');
-      await SecureStore.deleteItemAsync('userData');
+      await Storage.deleteItem('authToken');
+      await Storage.deleteItem('userData');
       setIsAuthenticated(false);
       setUser(null);
     } catch (e) {
@@ -310,22 +516,28 @@ export default function App() {
     );
   }
 
-  // Authenticated - wrap with providers for sync, progress, access, notifications, journal, and world model
+  // Authenticated - wrap with providers for sync, progress, access, notifications, journal, world model, PIN, settings, and language
   return (
     <SafeAreaProvider>
-      <SyncProvider>
-        <NotificationProvider>
-          <JournalProvider>
-            <AccessProvider>
-              <ProgressProvider>
-                <WorldModelProvider userId={user?.userId || user?.email || 'guest'}>
-                  <AppContent />
-                </WorldModelProvider>
-              </ProgressProvider>
-            </AccessProvider>
-          </JournalProvider>
-        </NotificationProvider>
-      </SyncProvider>
+      <LanguageProvider>
+        <PinProvider>
+          <SettingsProvider>
+            <SyncProvider>
+              <NotificationProvider>
+                <JournalProvider userId={user?.id || user?.email || 'guest'}>
+                  <AccessProvider userId={user?.id || user?.email || 'guest'}>
+                    <ProgressProvider userId={user?.id || user?.email || 'guest'}>
+                      <WorldModelProvider userId={user?.userId || user?.email || 'guest'}>
+                        <AppContent pendingDeepLink={pendingDeepLink} onDeepLinkHandled={() => setPendingDeepLink(null)} />
+                      </WorldModelProvider>
+                    </ProgressProvider>
+                  </AccessProvider>
+                </JournalProvider>
+              </NotificationProvider>
+            </SyncProvider>
+          </SettingsProvider>
+        </PinProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }
@@ -363,8 +575,12 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   headerButton: {
-    padding: 8,
-    marginLeft: -8,
+    padding: 4,
+    marginLeft: 8,
+    marginRight: 4,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 36,
   },
   unlockButton: {
     flexDirection: 'row',

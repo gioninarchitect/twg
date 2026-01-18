@@ -40,9 +40,9 @@ export function GameContainer({
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="light-content" />
       <LinearGradient
-        colors={[theme.colors.background, COLORS.cream]}
+        colors={[theme.colors.background, '#151515']}
         style={styles.gradient}
       >
         <SafeAreaView style={styles.safeArea}>
@@ -140,7 +140,7 @@ export function GameFooter({ children }: GameFooterProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.cream,
+    backgroundColor: COLORS.background,
   },
   gradient: {
     flex: 1,
@@ -158,10 +158,11 @@ const styles = StyleSheet.create({
   },
   closeButton: {
     width: 60,
+    padding: SPACING.sm,
   },
   closeText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
   },
   headerCenter: {
@@ -171,12 +172,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '600',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
   },
   subtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
     marginTop: 2,
   },
@@ -189,9 +190,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: GAME_LAYOUT.containerPadding,
   },
   card: {
-    backgroundColor: COLORS.cream,
+    backgroundColor: COLORS.backgroundCard,
     borderRadius: RADIUS.xl,
     padding: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.borderSubtle,
   },
   section: {
     marginBottom: SPACING.lg,
@@ -199,7 +202,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
-    color: COLORS.mutedBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
     textTransform: 'uppercase',
     letterSpacing: 1,

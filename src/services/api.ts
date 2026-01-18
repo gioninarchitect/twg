@@ -4,8 +4,17 @@
 
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from 'react-native';
 
-const API_URL = __DEV__ ? 'http://localhost:3000/api/v1' : 'https://twg.cleva-ai.co.za/api/v1';
+// Detect environment from hostname
+const getApiUrl = () => {
+  if (typeof window === 'undefined') return 'https://teawithgod.com/api/v1';
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost') return 'http://localhost:3000/api/v1';
+  if (hostname.includes('twg.cleva-ai.co.za')) return 'https://twg.cleva-ai.co.za/api/v1';
+  return 'https://teawithgod.com/api/v1'; // Production
+};
+const API_URL = getApiUrl();
 
 const api = axios.create({
   baseURL: API_URL,
@@ -13,9 +22,17 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+// Platform-aware token retrieval
+async function getAuthToken(): Promise<string | null> {
+  if (Platform.OS === 'web') {
+    return localStorage.getItem('authToken');
+  }
+  return SecureStore.getItemAsync('authToken');
+}
+
 // Add auth token to requests
 api.interceptors.request.use(async (config) => {
-  const token = await SecureStore.getItemAsync('authToken');
+  const token = await getAuthToken();
   if (token) {
     config.headers.Authorization = 'Bearer ' + token;
   }
@@ -64,6 +81,35 @@ export const journalApi = {
 export const crisisApi = {
   log: (sessionHash: string, accessType: string, detectedPhrases?: string[]) =>
     api.post('/crisis/log', { sessionHash, accessType, detectedPhrases }),
+};
+
+// Access Code Validation (server-side)
+export interface AccessValidationResponse {
+  valid: boolean;
+  accessLevel?: 'FULL';
+  plan?: string;
+  codeType?: 'owner' | 'organization' | 'purchase';
+  firstName?: string;
+  error?: string;
+}
+
+export const accessApi = {
+  validateCode: async (code: string): Promise<AccessValidationResponse> => {
+    try {
+      const response = await api.post('/access/validate', { code });
+      return response.data;
+    } catch (error: any) {
+      // Handle rate limiting
+      if (error.response?.status === 429) {
+        return { valid: false, error: 'Too many attempts. Try again later.' };
+      }
+      // Handle network errors gracefully
+      if (!error.response) {
+        return { valid: false, error: 'Network error. Please check your connection.' };
+      }
+      return { valid: false, error: 'Validation failed' };
+    }
+  },
 };
 
 export default api;

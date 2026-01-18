@@ -187,7 +187,7 @@ export function HealingToolkit({
         <View style={styles.header}>
           <View style={styles.headerHandle} />
           <View style={styles.headerContent}>
-            <Text style={styles.headerTitle}>Healing Toolkit</Text>
+            <Text style={styles.headerTitle}>Growth Toolkit</Text>
             <TouchableOpacity onPress={onClose} style={styles.closeButton}>
               <Ionicons name="close" size={24} color={COLORS.mutedBrown} />
             </TouchableOpacity>

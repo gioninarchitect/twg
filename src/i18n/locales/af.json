@@ -1,0 +1,1013 @@
+{
+  "app": {
+    "name": "Tee met God",
+    "tagline": "'n 40-Dag Dagstukkiemetgesel",
+    "subtitle": "Van Ruïne na Opstanding"
+  },
+  "welcome": {
+    "title": "Tee met God",
+    "subtitle": "'n 40-Dag Dagstukkiemetgesel",
+    "tagline": "Van Ruïne na Opstanding",
+    "quote": "Groei begin nie met krag nie.\nDit begin met eerlikheid—die oomblik wanneer jy\nuiteindelik uitasem en fluister,\n'God... ek weet nie hoe om aan te hou nie.'",
+    "description": "'n Stil uitnodiging om te breek, om asem te haal,\nen om Hom jou te laat ontmoet in jou eie stil plek.",
+    "beginJourney": "Begin Jou Reis",
+    "haveAccount": "Ek Het Reeds 'n Rekening"
+  },
+  "auth": {
+    "signIn": "Meld Aan",
+    "signUp": "Registreer",
+    "email": "E-pos",
+    "password": "Wagwoord",
+    "confirmPassword": "Bevestig Wagwoord",
+    "forgotPassword": "Wagwoord Vergeet?",
+    "noAccount": "Het jy nie 'n rekening nie?",
+    "haveAccount": "Het jy reeds 'n rekening?",
+    "continueAsGuest": "Gaan Voort as Gas",
+    "or": "of",
+    "emailPlaceholder": "jou@epos.com",
+    "passwordPlaceholder": "Voer jou wagwoord in",
+    "signInButton": "Meld Aan",
+    "signUpButton": "Skep Rekening",
+    "resetPassword": "Herstel Wagwoord",
+    "resetSent": "Wagwoordherstel-e-pos gestuur",
+    "enterSanctuary": "Betree Jou Heiligdom",
+    "magicLinkDesc": "Ons sal 'n toorskakel stuur om dadelik aan te meld.",
+    "sendMagicLink": "Stuur Toorskakel",
+    "noPasswordNote": "Geen wagwoord om te onthou nie. Klik net die skakel.",
+    "previewAsGuest": "Voorskou as Gas",
+    "guestDaysOnly": "(Slegs Dae 1-3)",
+    "checkEmail": "Kontroleer Jou E-pos",
+    "magicLinkSent": "Ons het 'n toorskakel gestuur na",
+    "clickLink": "Klik die skakel in die e-pos om aan te meld.\nGeen wagwoord nodig nie.",
+    "useDifferentEmail": "Gebruik 'n ander e-pos",
+    "errors": {
+      "invalidEmail": "Voer asseblief 'n geldige e-posadres in",
+      "passwordShort": "Wagwoord moet ten minste 6 karakters wees",
+      "passwordMismatch": "Wagwoorde stem nie ooreen nie",
+      "signInFailed": "Aanmelding het misluk. Kontroleer asseblief jou besonderhede.",
+      "signUpFailed": "Registrasie het misluk. Probeer asseblief weer."
+    }
+  },
+  "lockScreen": {
+    "welcomeBack": "Welkom Terug",
+    "enterPin": "Voer jou PIN in om voort te gaan",
+    "forgotPin": "PIN Vergeet?",
+    "incorrectPin": "Verkeerde PIN",
+    "attemptsRemaining": "Verkeerde PIN. {{remaining}} pogings oor.",
+    "tooManyAttempts": "Te Veel Pogings",
+    "tooManyAttemptsMessage": "Jy het die verkeerde PIN 10 keer ingevoer. Wil jy die toepassing herstel? Dit sal al jou data uitvee.",
+    "tryAgain": "Probeer Weer",
+    "resetApp": "Herstel Toepassing",
+    "forgotPinTitle": "PIN Vergeet?",
+    "forgotPinMessage": "Herstel sal AL jou data uitvee, insluitend joernaalinskrywings, vordering en toegangskode. Jy sal jou toegangskode weer moet invoer.\n\nDit kan nie ongedaan gemaak word nie.",
+    "cancel": "Kanselleer",
+    "resetEverything": "Herstel Alles"
+  },
+  "dashboard": {
+    "greeting": "Goeie môre",
+    "greetingAfternoon": "Goeie middag",
+    "greetingEvening": "Goeie aand",
+    "welcomeBack": "Welkom terug",
+    "yourDevotionalJourney": "Jou Dagstukkies-Reis",
+    "yourJourney": "Jou Reis",
+    "day": "Dag",
+    "days": "Dae",
+    "of": "van",
+    "daysCompleted": "dae voltooi",
+    "continueJourney": "Gaan Voort met Jou Reis",
+    "todaysDevotional": "Vandag se Dagstukkies",
+    "startDay": "Begin Dag",
+    "resume": "Hervat",
+    "completed": "Voltooi",
+    "locked": "Gesluit",
+    "unlocksWith": "Ontsluit met volle toegang",
+    "guestPreview": "Gas-Voorskou",
+    "guestDaysRemaining": "{{days}} voorskoudae oor",
+    "unlockFull": "Ontsluit Volle Toegang",
+    "brainGames": "Breinspeletjies",
+    "journal": "Joernaal",
+    "music": "Musiek",
+    "flipbook": "Digitale Boek",
+    "progress": "Vordering",
+    "streak": "Reeks",
+    "sessions": "Sessies",
+    "preparingSanctuary": "Berei jou heiligdom voor...",
+    "backgroundMusic": "Restore My Soul - Agtergrondmusiek",
+    "upgradeToPremium": "Opgradeer na Premium om te luister",
+    "upgradeForMusic": "Opgradeer na Premium om kalmerende agtergrondmusiek vir jou dagstukkies-reis te ontsluit.",
+    "beginTodaysReflection": "Begin Vandag se Oordenking",
+    "fortyDaysTransformation": "40 dae van transformasie",
+    "unlockFullJourney": "Ontsluit Jou Volle Reis",
+    "dayLockedMessage": "Dag {{day}} is beskikbaar met volle toegang. Opgradeer om jou dagstukkies-reis voort te sit verby die voorskou.",
+    "maybeLater": "Miskien Later",
+    "upgradeNow": "Opgradeer Nou",
+    "previewMode": "Voorskoumodus",
+    "nextDayUnlocksIn": "Volgende dag ontsluit oor {{hours}}u {{minutes}}m",
+    "previewComplete": "Voorskou voltooi! Ontsluit al 40 dae met jou boekkode.",
+    "preview": "Voorskou",
+    "premiumPlan": "Premium-Plan",
+    "journeyPlan": "Reis-Plan",
+    "bookPlan": "Boek-Plan",
+    "daysComplete": "Dae\nVoltooi",
+    "dayStreak": "Dag\nReeks",
+    "journalEntries": "Joernaal\nInskrywings",
+    "overallProgress": "Algehele Vordering",
+    "currentPhase": "Huidige Fase",
+    "quickActions": "Vinnige Aksies",
+    "growthExercises": "Groeioefeninge",
+    "upgradeToAccess": "Opgradeer vir toegang",
+    "readFullBook": "Lees die volle boek",
+    "settingsDesc": "Herinnerings, toegang & PIN",
+    "milestones": "Mylpale",
+    "week": "Week",
+    "fortyDayArchitecture": "40-Dag Argitektuur",
+    "pathFromRuinToRising": "Jou pad van ruïne na opstanding",
+    "lockApp": "Sluit Program",
+    "progressHint": {
+      "justStarted": "Jy het pas begin!",
+      "greatProgress": "Goeie vordering! Hou aan.",
+      "halfway": "Halfpad deur jou reis!",
+      "almostThere": "Amper daar! Bly sterk.",
+      "complete": "Reis voltooi! Jy het dit gedoen!"
+    },
+    "phases": {
+      "valley": "Die Vallei",
+      "valleyDesc": "Erken die pyn",
+      "waiting": "Die Wag",
+      "waitingDesc": "Leer om stil te wees",
+      "rising": "Die Opstaan",
+      "risingDesc": "Vind krag",
+      "becoming": "Die Word",
+      "becomingDesc": "Omhels heelheid"
+    }
+  },
+  "dayModule": {
+    "day": "Dag",
+    "reflection": "Oordenking",
+    "scripture": "Skrifgedeelte",
+    "thoughtOfDay": "Gedagte van die Dag",
+    "prayer": "Gebed",
+    "journal": "Joernaal",
+    "journalPrompt": "Joernaal-Aanmoediging",
+    "writeReflection": "Skryf jou oordenking...",
+    "saveEntry": "Stoor Inskrywing",
+    "entrySaved": "Inskrywing gestoor",
+    "markComplete": "Merk Dag Voltooi",
+    "dayCompleted": "Dag Voltooi",
+    "nextDay": "Gaan Voort na Dag {{day}}",
+    "backToDashboard": "Terug na Tuisblad",
+    "listenToMusic": "Luister na Musiek",
+    "playAudio": "Speel Oudio",
+    "loadingReflection": "Maak vandag se oordenking oop...",
+    "devotional": "Dagstukkies",
+    "yourJournal": "Jou Joernaal",
+    "journalPlaceholder": "Skryf jou gedagtes hier... Dit is jou veilige ruimte.",
+    "readingProgress": "Leesvordering",
+    "completeDay": "Voltooi Dag {{day}}",
+    "whyThisWorks": "Hoekom Dit Werk",
+    "scienceBehindToday": "Die Wetenskap Agter Vandag",
+    "whatThisMeansForYou": "Wat Dit Vir Jou Beteken"
+  },
+  "brainGames": {
+    "title": "Breinspeletjies",
+    "subtitle": "Bewysgebaseerde oefeninge vir emosionele welstand",
+    "unlockDay": "Ontsluit op Dag {{day}}",
+    "unlocksDay": "Ontsluit Dag {{day}}",
+    "dayOf40": "Dag {{day}} van 40",
+    "premiumOnly": "Premium-Kenmerk",
+    "startGame": "Begin",
+    "continueGame": "Gaan Voort",
+    "howToPlay": "Hoe om te Speel",
+    "whyThisWorks": "Hoekom Dit Werk",
+    "yourProgress": "Jou Vordering",
+    "sessionsCompleted": "Sessies Voltooi",
+    "currentStreak": "Huidige Reeks",
+    "bestStreak": "Beste Reeks",
+    "totalTime": "Totale Tyd",
+    "minutes": "min",
+    "unlockBrainGames": "Ontsluit Breinspeletjies",
+    "unlockDescription": "6 bewysgebaseerde oefeninge ontwerp om jou brein te herontwerp vir vrede en veerkragtigheid.",
+    "upgradeToPremium": "Opgradeer na Premium",
+    "maybeLater": "Miskien Later",
+    "phases": {
+      "gathering": "Versamel",
+      "shaping": "Vorm",
+      "refining": "Verfyn",
+      "becoming": "Word"
+    },
+    "potterVerse": "\"Die pottebakker het dit in 'n ander pot gevorm, soos dit vir hom goed gelyk het.\"",
+    "dayStreak": "{{count}} dag reeks",
+    "recommendedForYou": "Aanbeveel vir Jou",
+    "allGames": "Alle Speletjies",
+    "recommended": "Aanbeveel",
+    "disclaimer": "SLEGS VIR OPVOEDKUNDIGE DOELEINDES. Hierdie oefeninge is welstandhulpmiddels gebaseer op algemene wetenskaplike beginsels. Hulle is NIE terapie of professionele geestegesondheidsbehandeling nie. Die skeppers is nie mediese professionele persone nie. As jy in 'n krisis is, soek asseblief dadelik professionele hulp.",
+    "games": {
+      "breathing": {
+        "title": "Asem met God",
+        "subtitle": "Senuweestelselregulering",
+        "description": "Begeleide asemhalingsoefeninge om jou senuweestelsel te kalmeer en vrede te vind.",
+        "theory": "Polivagale Teorie"
+      },
+      "gratitude": {
+        "title": "Dankbaarheidstuin",
+        "subtitle": "Positiewe Sielkunde",
+        "description": "Plant saad van dankbaarheid en kyk hoe jou tuin van seëninge groei.",
+        "theory": "Positiewe Sielkunde"
+      },
+      "scripturePalace": {
+        "title": "Skrifpaleis",
+        "subtitle": "Geheue & Geloof",
+        "description": "Bou 'n geheuepaleis met Skrifgedeeltes deur antieke geheue-tegnieke te gebruik.",
+        "theory": "Metode van Loci"
+      },
+      "thoughtDetective": {
+        "title": "Gedagte-Speurder",
+        "subtitle": "Kognitiewe Herraming",
+        "description": "Ondersoek en herraam negatiewe gedagtepatrone met waarheid.",
+        "theory": "Kognitiewe Gedragsterapie"
+      },
+      "bodyScan": {
+        "title": "Liggaamskandering",
+        "subtitle": "Somatiese Bewustheid",
+        "description": "Laat spanning in jou liggaam los deur begeleide bewustheid.",
+        "theory": "Somatiese Sielkunde"
+      },
+      "patternPeace": {
+        "title": "Patroonvrede",
+        "subtitle": "Bewuste Fokus",
+        "description": "Vind kalmte deur meditatiewe patroonherkenning-oefeninge.",
+        "theory": "Bewustheid-Gebaseerde Stresvermindering"
+      }
+    },
+    "breathe": {
+      "inhale": "Asem In",
+      "hold": "Hou",
+      "exhale": "Asem Uit",
+      "rest": "Rus",
+      "rounds": "Rondtes",
+      "roundComplete": "Rondte Voltooi",
+      "sessionComplete": "Sessie Voltooi",
+      "breatheIn": "Asem vrede in...",
+      "holdGently": "Hou saggies...",
+      "releaseSlowly": "Laat stadig los...",
+      "restMoment": "Rus 'n oomblik...",
+      "findYourPeace": "Vind Jou Vrede",
+      "heroDescription": "Diep, ritmiese asemhaling aktiveer jou parasimpatiese senuweestelsel en help jou om van stres na kalmte te beweeg.",
+      "chooseYourPattern": "Kies Jou Patroon",
+      "numberOfBreaths": "Aantal Asemhalings",
+      "duration": "Duur",
+      "hapticGuidance": "Haptiese Leiding",
+      "gentleCues": "Sagte wenke by elke fase",
+      "introScripture": "\"Wees stil en weet dat Ek God is.\"",
+      "introScriptureRef": "- Psalm 46:10",
+      "beginBreathing": "Begin Asemhaling",
+      "wellDone": "Goed Gedaan",
+      "completionSubtitle": "Jy het tyd geneem om met God te asem",
+      "breaths": "Asemhalings",
+      "encouragement": "Elke asemhaling is 'n gebed. Jy leer om vrede in God se teenwoordigheid te vind.",
+      "returnToGames": "Keer Terug na Speletjies",
+      "endSession": "Beëindig Sessie",
+      "breathOf": "Asemhaling {{current}} van {{total}}",
+      "phaseInstructions": {
+        "idle": "Gereed om te begin",
+        "inhale": "Asem in",
+        "hold": "Hou",
+        "exhale": "Laat los",
+        "rest": "Rus"
+      },
+      "scripture": {
+        "idle": "\"Wees stil en weet dat Ek God is.\" - Psalm 46:10",
+        "inhale": "\"Die Here God het in sy neus die asem van die lewe geblaas.\" - Genesis 2:7",
+        "holdIn": "\"In stilte en vertroue is jou krag.\" - Jesaja 30:15",
+        "exhale": "\"Werp al julle bekommernis op Hom, want Hy sorg vir julle.\" - 1 Petrus 5:7",
+        "holdOut": "\"Kom na My toe, almal wat vermoeid en belas is, en Ek sal julle rus gee.\" - Matteus 11:28"
+      },
+      "patterns": {
+        "relaxing": {
+          "name": "Ontspannend",
+          "benefit": "Kalmeer die senuweestelsel"
+        },
+        "energizing": {
+          "name": "Opwekkend",
+          "benefit": "Verhoog alertheid & fokus"
+        },
+        "balancing": {
+          "name": "Balanseer",
+          "benefit": "Herstel ewewig"
+        },
+        "calming": {
+          "name": "Kalmerend",
+          "benefit": "Diep ontspanning & slaap"
+        }
+      },
+      "cycles": {
+        "quick": "Vinnig",
+        "standard": "Standaard",
+        "deep": "Diep",
+        "extended": "Uitgebreid"
+      }
+    },
+    "gratitude": {
+      "addGratitude": "Voeg Dankbaarheid By",
+      "whatThankful": "Waarvoor is jy vandag dankbaar?",
+      "placeholder": "Ek is dankbaar vir...",
+      "gardenGrowing": "Jou dankbaarheidstuin groei!",
+      "seedPlanted": "Saad geplant!",
+      "totalEntries": "Totale Dankbaarheid-Inskrywings"
+    },
+    "gratitudeGarden": {
+      "seedsPlanted": "Sade Geplant",
+      "gardenAwaits": "Jou tuin wag",
+      "plantSeeds": "Plant sade van dankbaarheid",
+      "placeholder": "Tik jou dankbaarheid...",
+      "harvestGratitudes": "Oes Dankbaarhede",
+      "plantMore": "Plant {{count}} Meer",
+      "gardenBlooming": "Tuin Blom!",
+      "gratitudesFlourishing": "Jou dankbaarhede floreer",
+      "completionEncouragement": "Elke dankbaarheid is 'n saad wat vreugde in jou hart laat groei. Kom môre terug om jou tuin te versorg.",
+      "scripture": "\"Wees in alles dankbaar, want dit is wat God in Christus Jesus van julle verwag.\"",
+      "scriptureRef": "- 1 Tessalonisense 5:18",
+      "prompts": {
+        "joyToday": "Wat is een klein dingetjie wat jou vandag bly gemaak het?",
+        "thankfulFor": "Wie is iemand waarvoor jy dankbaar is?",
+        "beautifulNoticed": "Wat is iets moois wat jy onlangs opgemerk het?",
+        "challengeGrew": "Wat is 'n uitdaging wat jou gehelp het om te groei?",
+        "bodyGrateful": "Waarvoor is jy dankbaar oor jou liggaam?",
+        "comfortTaken": "Wat is 'n gemak wat jy dikwels as vanselfsprekend aanvaar?",
+        "prayerAnswered": "Wat is 'n gebed wat beantwoord is?",
+        "madeSmile": "Wat het jou hierdie week laat glimlag?",
+        "learnedRecently": "Wat is iets wat jy onlangs geleer het?",
+        "kindnessShown": "Wie het onlangs vriendelikheid aan jou getoon?"
+      },
+      "encouragements": {
+        "gardenGrowing": "Pragtig! Jou tuin groei.",
+        "lovelySeed": "Wat 'n lieflike saad van dankbaarheid.",
+        "godSees": "God sien jou dankbare hart.",
+        "watersSoul": "Elke dankbaarheid besproei jou siel.",
+        "cultivatingJoy": "Jy kweek vreugde!"
+      }
+    },
+    "thoughtDetective": {
+      "identifyThought": "Identifiseer die Gedagte",
+      "whatThinking": "Watter negatiewe gedagte bly terugkom?",
+      "examineEvidence": "Ondersoek die Bewyse",
+      "evidenceFor": "Bewyse wat hierdie gedagte ondersteun",
+      "evidenceAgainst": "Bewyse teen hierdie gedagte",
+      "reframe": "Herraam met Waarheid",
+      "balancedThought": "'n Meer gebalanseerde perspektief",
+      "scriptureReminder": "Skrifherinnering",
+      "steps": {
+        "capture": "Vang",
+        "identify": "Identifiseer",
+        "investigate": "Ondersoek",
+        "reframe": "Herraam",
+        "reflect": "Bepeins"
+      },
+      "captureTitle": "Vang die Gedagte",
+      "captureSubtitle": "Wat pla jou? Skryf dit presies soos dit in jou gedagtes verskyn.",
+      "capturePlaceholder": "Skryf jou gedagte hier...",
+      "captureHint": "Wees eerlik en spesifiek. Dit is heeltemal privaat.",
+      "investigateButton": "Ondersoek Hierdie Gedagte",
+      "identifyTitle": "Identifiseer die Patroon",
+      "identifySubtitle": "Watter denkstrik kan dit wees?",
+      "detectedPatterns": "Ons het {{count}} moontlike patroon(e) opgespoor",
+      "example": "Voorbeeld",
+      "investigateTitle": "Ondersoek die Bewyse",
+      "investigateSubtitle": "Kom ons ondersoek hierdie gedagte van naderby",
+      "patternFound": "Patroon Gevind",
+      "selfCompassionCheck": "Selfmedelye-Kontrole",
+      "notesPlaceholder": "Jou gedagtes... (opsioneel)",
+      "reframeTitle": "Herraam met Medelye",
+      "reframeSubtitle": "Skryf 'n vriendeliker weergawe van hierdie gedagte",
+      "originalThought": "Oorspronklike gedagte",
+      "reframePlaceholder": "Skryf 'n vriendeliker gedagte...",
+      "reframeHint": "Probeer: \"Dit is verstaanbaar dat...\" of \"Al is dit so...\"",
+      "reflectTitle": "Saak Gesluit",
+      "reflectSubtitle": "Kyk na die transformasie",
+      "oldThought": "Ou Gedagte",
+      "newThought": "Nuwe Gedagte",
+      "selfCompassionScore": "Selfmedelye-Telling",
+      "completeInvestigation": "Voltooi Ondersoek",
+      "caseClosed": "Saak Gesluit!",
+      "solvedMystery": "Jy het die raaisel opgelos",
+      "patternLabel": "Patroon",
+      "compassionLabel": "Medelye",
+      "encouragement": "Elke keer wat jy 'n gedagte herraam, herontwerp jy jou brein vir gesonder denkpatrone.",
+      "ants": {
+        "allOrNothing": {
+          "name": "Alles-of-Niks Denke",
+          "shortName": "Alles-of-Niks",
+          "description": "Dinge in swart en wit sien, met geen middelgrond nie.",
+          "example": "\"As ek dit nie perfek kan doen nie, moet ek dit glad nie doen nie\"",
+          "reframePrompt": "Wat is 'n meer gebalanseerde manier om dit te sien? Is daar enige grys area?",
+          "selfCompassionPrompt": "Wat sou jy vir 'n vriend sê wat dieselfde fout gemaak het?",
+          "scripture": "\"Sy barmhartighede is elke môre nuut.\" - Klaagliedere 3:23"
+        },
+        "alwaysNever": {
+          "name": "Altyd/Nooit Denke",
+          "shortName": "Altyd/Nooit",
+          "description": "Oorveralgemening met woorde soos \"altyd\" of \"nooit\".",
+          "example": "\"Jy luister nooit na my nie\" of \"Ek mors altyd dinge op\"",
+          "reframePrompt": "Is dit regtig altyd of nooit? Kan jy aan een uitsondering dink?",
+          "selfCompassionPrompt": "Ons almal sukkel soms. Wat is werklik waar die meeste van die tyd?",
+          "scripture": "\"Want die geween duur 'n nag, maar die vreugde kom in die môre.\" - Psalm 30:6"
+        },
+        "focusingNegative": {
+          "name": "Fokus op die Negatiewe",
+          "shortName": "Negatiewe Fokus",
+          "description": "Net die slegte sien terwyl die goeie geïgnoreer word.",
+          "example": "9 komplimente en 1 kritiek kry, maar net die kritiek onthou",
+          "reframePrompt": "Watter goeie dinge mis jy? Wat het goed gegaan?",
+          "selfCompassionPrompt": "Jou brein is geprogrammeer om bedreigings op te merk. Hoe sou 'n gebalanseerde siening lyk?",
+          "scripture": "\"Wat ook al waar, edel, reg, rein, lieflik is... dink aan sulke dinge.\" - Filippense 4:8"
+        },
+        "fortuneTelling": {
+          "name": "Waarsêery",
+          "shortName": "Waarsêery",
+          "description": "Negatiewe voorspelling van die toekoms sonder bewyse.",
+          "example": "\"Ek weet dit gaan nie uitwerk nie\" of \"Hulle gaan my verwerp\"",
+          "reframePrompt": "Is hierdie voorspelling gebaseer op feite of vrese? Watter bewyse het jy?",
+          "selfCompassionPrompt": "Onsekerheid is moeilik. Wat as jy oop gebly het vir positiewe moontlikhede?",
+          "scripture": "\"Want Ek weet watter gedagtes Ek oor julle het... gedagtes om julle hoop en 'n toekoms te gee.\" - Jeremia 29:11"
+        },
+        "mindReading": {
+          "name": "Gedagteleser",
+          "shortName": "Gedagteleser",
+          "description": "Aanvaar dat jy weet wat ander dink.",
+          "example": "\"Hulle dink ek is dom\" of \"Sy hou nie van my nie\"",
+          "reframePrompt": "Wat weet jy werklik seker? Kan daar 'n ander verklaring wees?",
+          "selfCompassionPrompt": "Ons kan nie gedagtes lees nie. Wat het jy nodig om meer veilig te voel?",
+          "scripture": "\"Die mens kyk na die uiterlike, maar die Here kyk na die hart.\" - 1 Samuel 16:7"
+        },
+        "thinkingWithFeelings": {
+          "name": "Dink met Gevoelens",
+          "shortName": "Gevoel = Feit",
+          "description": "Glo iets is waar net omdat jy dit voel.",
+          "example": "\"Ek voel soos 'n las, so ek moet een wees\"",
+          "reframePrompt": "Net omdat jy dit voel, maak dit dit waar? Wat is die feite?",
+          "selfCompassionPrompt": "Gevoelens is werklik maar nie altyd akkuraat nie. Wat is werklik waar?",
+          "scripture": "\"Die hart is bedrieglik bo alle dinge.\" - Jeremia 17:9"
+        },
+        "guiltBeating": {
+          "name": "Skuld-klopslae",
+          "shortName": "Moet/Behoort",
+          "description": "Gebruik \"moet\" of \"behoort\" om jouself af te knou.",
+          "example": "\"Ek moes al oor dit wees\" of \"Ek behoort sterker te wees\"",
+          "reframePrompt": "Wat as jy \"moet\" vervang met \"ek wil graag\"?",
+          "selfCompassionPrompt": "Jy is hard op jouself. Wat het jy eintlik nou nodig?",
+          "scripture": "\"My genade is vir jou genoeg, want my krag word in swakheid volbring.\" - 2 Korintiërs 12:9"
+        },
+        "labeling": {
+          "name": "Etikettering",
+          "shortName": "Etikettering",
+          "description": "'n Negatiewe etiket aanheg in plaas van gedrag te beskryf.",
+          "example": "\"Ek is 'n mislukking\" in plaas van \"Ek het 'n fout gemaak\"",
+          "reframePrompt": "Sou jy dit vir 'n vriend sê? Wat is 'n vriendeliker beskrywing?",
+          "selfCompassionPrompt": "Jy is nie jou slegste oomblik nie. Wie is jy buite hierdie etiket?",
+          "scripture": "\"Jy is wonderbaarlik gemaak.\" - Psalm 139:14"
+        },
+        "blame": {
+          "name": "Blaam",
+          "shortName": "Blaam",
+          "description": "Ander of jouself blameer vir dinge buite jou beheer.",
+          "example": "\"Dit is alles my skuld\" of \"Jy laat my voel...\"",
+          "reframePrompt": "Watter dele was binne jou beheer? Watter dele was nie?",
+          "selfCompassionPrompt": "Om verantwoordelikheid te neem is anders as om blaam te neem.",
+          "scripture": "\"Werp jou las op die Here, en Hy sal jou onderhou.\" - Psalm 55:23"
+        }
+      }
+    },
+    "scripturePalace": {
+      "review": "Hersien",
+      "scriptures": "Skrifgedeeltes",
+      "dueReview": "Hersiening Nodig",
+      "add": "Voeg By",
+      "welcomeTitle": "Welkom by Jou Paleis",
+      "welcomeText": "Die Metode van Loci is 'n antieke geheue-tegniek. Plaas Skrifgedeeltes in kamers van jou geestelike paleis, en assosieer elkeen met 'n lewendige beeld. Wanneer jy die kamers herbesoek, sal die Skrifgedeeltes na jou terugkeer.",
+      "yourPalaceRooms": "Jou Paleiskamers",
+      "tapRoomHint": "Tik op 'n kamer om 'n Skrifgedeelte te plaas of te hersien",
+      "scripture": "\"Ek het u woord in my hart gebêre, dat ek teen U nie sal sondig nie.\"",
+      "scriptureRef": "- Psalm 119:11",
+      "chooseScripture": "Kies 'n Skrifgedeelte",
+      "forRoom": "vir {{room}}",
+      "allPlaced": "Alle Skrifgedeeltes geplaas!",
+      "palaceComplete": "Jou paleis is voltooi",
+      "placeInRoom": "Plaas in Kamer",
+      "tapToReveal": "Tik om die Skrifgedeelte te onthul",
+      "recallPrompt": "Het jy dit korrek onthou?",
+      "stillLearning": "Nog Besig om te Leer",
+      "gotIt": "Het Dit!",
+      "tourComplete": "Paleistoer Voltooi",
+      "tourSubtitle": "Jy het deur jou geheuepaleis gestap",
+      "reviewed": "Hersien",
+      "recalled": "Onthou",
+      "encouragement": "Elke besoek versterk jou geheue. God se woord skiet wortel in jou hart.",
+      "mastery": {
+        "planting": "Plant",
+        "sprouting": "Spruit",
+        "growing": "Groei",
+        "blooming": "Bloei",
+        "rooted": "Gewortel"
+      },
+      "rooms": {
+        "entrance": {
+          "name": "Ingangsaal",
+          "description": "Waar jou reis begin",
+          "visualScene": "Verbeel jou staan by 'n groot houtdeur. Warm goue lig vloei deur. Soos jy binnegaan, sien jy hierdie Skrifgedeelte in die klipoorboog bokant gekap.",
+          "memoryTip": "Verbeel die woorde gloeiend op die ingangklip"
+        },
+        "garden": {
+          "name": "Tuin van Eden",
+          "description": "'n Plek van vrede en skepping",
+          "visualScene": "Jy stap in 'n weelderige tuin met blomme en 'n sagte stroompie. Vlinders dans rond terwyl jy hierdie woorde op 'n antieke tuinklip lees.",
+          "memoryTip": "Sien die woorde soos wingerde op die klip groei"
+        },
+        "living": {
+          "name": "Sitkamer",
+          "description": "Waar jy bymekaarkom en rus",
+          "visualScene": "'n Gesellige kamer met 'n knapende vuurherd. Sagte kussings nooi jou om te sit. Bo die kaggel is hierdie woorde in elegante skrif geverf.",
+          "memoryTip": "Voel die warmte van die vuur terwyl jy lees"
+        },
+        "kitchen": {
+          "name": "Brood van die Lewe Kombuis",
+          "description": "Waar jy gevoed word",
+          "visualScene": "Die geur van vars brood vul die lug. 'n Houttafel hou 'n fees. Op die muur, geskryf in meelbestowwe kryt, sien jy hierdie woorde.",
+          "memoryTip": "Ruik die brood terwyl jy memoriseer"
+        },
+        "study": {
+          "name": "Wysheidstudeerkamer",
+          "description": "Waar jy in begrip groei",
+          "visualScene": "Vloer-tot-plafon boekrakke omring jou. 'n Lamp verlig 'n oop boek op die lessenaar. Hierdie woorde is op die bladsy uitgelig.",
+          "memoryTip": "Hoor die bladsye ritsel terwyl jy leer"
+        },
+        "bedroom": {
+          "name": "Ruskamer",
+          "description": "Waar jy vrede vind",
+          "visualScene": "Maanlig stroom deur gaaskussings. 'n Vredige bed wag. Op die kussing, geborduur in silwer draad, sien jy hierdie woorde.",
+          "memoryTip": "Voel die vrede oor jou spoel"
+        },
+        "tower": {
+          "name": "Wagtoring",
+          "description": "Waar jy God se perspektief sien",
+          "visualScene": "Jy klim spiraaltrappe na bo. Die uitsig strek tot die horison. In die toringmuur gekap, wat die sonlig vang, is hierdie woorde.",
+          "memoryTip": "Sien die wye uitsig terwyl jy onthou"
+        },
+        "throne": {
+          "name": "Troonsaal",
+          "description": "Waar jy die Koning ontmoet",
+          "visualScene": "Goue lig vul 'n majestueuse saal. 'n Troon van suiwer lig sit vooruit. Op die vloer voor dit, geskryf in goud, is hierdie woorde.",
+          "memoryTip": "Voel die majesteit terwyl jy buig"
+        }
+      }
+    },
+    "bodyScan": {
+      "title": "Liggaamskandering",
+      "subtitle": "Somatiese Bewustheid",
+      "focusOn": "Fokus op jou",
+      "releaseTension": "Laat enige spanning los...",
+      "breatheInto": "Asem in hierdie area...",
+      "intro": {
+        "title": "Laat Los Wat Jy Dra",
+        "description": "Ons liggame stoor emosies en spanning, dikwels sonder dat ons dit besef. Hierdie sagte skandering sal jou help om op te merk waar jy stres vashou en jou lei om dit met deernis los te laat.",
+        "scripture": "\"Kom na My toe, almal wat vermoeid en belas is, en Ek sal julle rus gee.\"",
+        "scriptureRef": "- Matteus 11:28"
+      },
+      "journey": {
+        "title": "Die Reis",
+        "step1": "Skandeer 9 liggaamstreke met aandag",
+        "step2": "Gradeer jou spanning voor & na",
+        "step3": "Volg sagte loslaat-aanwysings",
+        "step4": "Neem jou tyd - geen haas nie"
+      },
+      "regions": {
+        "head": {
+          "name": "Kop",
+          "displayName": "Kruin & Slape",
+          "instruction": "Bring aandag na jou kop. Let op enige spanning in jou voorkop, slape, of kaak.",
+          "releasePrompt": "Met elke uitaseming, laat die spanning verdwyn. Verbeel jou 'n warm, goue lig wat elke spier versag.",
+          "scripture": "\"Hy gee vrede aan jou grense.\" - Psalm 147:14"
+        },
+        "neck": {
+          "name": "Nek",
+          "displayName": "Nek & Keel",
+          "instruction": "Beweeg jou aandag na jou nek en keel. Hierdie area hou dikwels onuitgesproke woorde en spanning vas.",
+          "releasePrompt": "Rol jou kop saggies as dit help. Laat enige stytheid los met dankbaarheid vir jou stem.",
+          "scripture": "\"Laat die woorde van my mond aanneemlik wees.\" - Psalm 19:14"
+        },
+        "shoulders": {
+          "name": "Skouers",
+          "displayName": "Skouers",
+          "instruction": "Voel in jou skouers. Dit is waar ons laste en verantwoordelikhede dra.",
+          "releasePrompt": "Laat jou skouers sak. Jy hoef nie alles alleen te dra nie.",
+          "scripture": "\"Werp jou las op die Here.\" - Psalm 55:22"
+        },
+        "chest": {
+          "name": "Bors",
+          "displayName": "Hart & Bors",
+          "instruction": "Bring bewustheid na jou bors en hartruimte. Let op hoe jou asem styg en daal.",
+          "releasePrompt": "Plaas 'n hand op jou hart as jy wil. Jy is veilig. Jy word vasgehou.",
+          "scripture": "\"Hy genees die gebrokenes van hart.\" - Psalm 147:3"
+        },
+        "stomach": {
+          "name": "Maag",
+          "displayName": "Maag",
+          "instruction": "Let op jou maag. Hierdie area hou dikwels angs en \"maaggevoel\" vas.",
+          "releasePrompt": "Asem diep in jou maag. Laat dit heeltemal versag met elke asemhaling.",
+          "scripture": "\"Wees oor niks besorg nie.\" - Filippense 4:6"
+        },
+        "back": {
+          "name": "Rug",
+          "displayName": "Onderrug",
+          "instruction": "Skandeer jou onderrug. Hierdie streek ondersteun jou en hou dikwels stres vas.",
+          "releasePrompt": "Verbeel jou warmte wat deur jou onderrug sprei en alle spanning loslaat.",
+          "scripture": "\"Die Here is my krag.\" - Psalm 28:7"
+        },
+        "hands": {
+          "name": "Hande",
+          "displayName": "Arms & Hande",
+          "instruction": "Voel jou arms en hande. Is hulle geklem of ontspanne?",
+          "releasePrompt": "Maak jou handpalms oop. Laat los enigiets waaraan jy te styf vasgehou het.",
+          "scripture": "\"Ek sal jou regterhand vashou.\" - Jesaja 41:13"
+        },
+        "legs": {
+          "name": "Bene",
+          "displayName": "Bene & Bobene",
+          "instruction": "Bring aandag na jou bobene en bene. Hulle dra jou deur elke dag.",
+          "releasePrompt": "Laat jou bene swaar en gegrond voel. Jy word ondersteun.",
+          "scripture": "\"Hy maak my voete soos dié van 'n takbok.\" - Psalm 18:33"
+        },
+        "feet": {
+          "name": "Voete",
+          "displayName": "Voete",
+          "instruction": "Let laastens op jou voete. Voel hulle gegrond aan die aarde.",
+          "releasePrompt": "Verbeel jou wortels wat uit jou voete groei en jou verbind met stabiliteit en vrede.",
+          "scripture": "\"Hoe lieflik is die voete van die wat die goeie boodskap bring.\" - Romeine 10:15"
+        }
+      },
+      "tensionLevels": {
+        "relaxed": "Ontspanne",
+        "moderate": "Matig",
+        "tense": "Gespanne",
+        "none": "Geen",
+        "high": "Hoog"
+      },
+      "tensionQuestion": {
+        "before": "Hoeveel spanning voel jy hier?",
+        "after": "Hoe voel dit nou?"
+      },
+      "phases": {
+        "sensing": "Waarneming",
+        "releasing": "Loslating"
+      },
+      "tapForInstructions": "Tik vir instruksies",
+      "skipArea": "Slaan hierdie area oor",
+      "skipSubtext": "(Dit is reg om aan te beweeg)",
+      "regionProgress": "Streek {{current}} van {{total}}",
+      "complete": {
+        "title": "Skandering Voltooi",
+        "subtitle": "Jy het deur jou liggaam gereis met bewustheid",
+        "before": "Voor",
+        "after": "Na"
+      },
+      "sessionComplete": {
+        "title": "Liggaamskandering Voltooi",
+        "subtitle": "Jy het spanning losgemaak met bewustheid",
+        "subtitleSkipped": "Jy het vandag jou grense geëer",
+        "scanned": "Geskandeer",
+        "improvement": "Verbetering",
+        "encouragement": "Jou liggaam is 'n tempel. Deur daarna te luister met deernis, eer jy die geskenk wat aan jou gegee is.",
+        "encouragementSkipped": "Sommige areas was nie gereed vandag nie, en dit is heeltemal reg. Groei gebeur in jou eie tyd. Jy het moed gewys net deur op te daag.",
+        "returnToGames": "Terug na Speletjies"
+      },
+      "buttons": {
+        "beginScan": "Begin Liggaamskandering",
+        "recordRelease": "Teken Op & Laat Los",
+        "nextRegion": "Volgende Streek",
+        "completeScan": "Voltooi Skandering",
+        "finish": "Klaar"
+      },
+      "bodyParts": {
+        "head": "kop",
+        "shoulders": "skouers",
+        "arms": "arms",
+        "hands": "hande",
+        "chest": "bors",
+        "stomach": "maag",
+        "hips": "heupe",
+        "legs": "bene",
+        "feet": "voete"
+      }
+    },
+    "patternPeace": {
+      "title": "Patroonvrede",
+      "subtitle": "N-Terug Werkgeheue Opleiding",
+      "intro": {
+        "description": "Oefen jou werkgeheue deur gefokusde aandag. Hierdie oefening help om maalgedagtes stil te maak deur jou verstand te betrek in doelgerigte patroonherkenning."
+      },
+      "selectDifficulty": "Kies Moeilikheidsgraad",
+      "level": "Vlak {{level}}",
+      "difficulty": {
+        "level1": "1-Terug: Pas die vorige stimulus",
+        "level2": "2-Terug: Pas 2 stimulusse gelede",
+        "level3": "3-Terug: Pas 3 stimulusse gelede"
+      },
+      "continue": "Gaan Voort",
+      "howToPlay": "Hoe om te Speel",
+      "instructions": {
+        "watchGrid": "Kyk na die Rooster",
+        "watchGridDesc": "'n Simbool sal in een van die 9 blokkies verskyn.",
+        "remember": "Onthou {{nBack}} Terug",
+        "rememberDesc1": "Vergelyk die huidige stimulus met die vorige een.",
+        "rememberDescN": "Vergelyk die huidige stimulus met {{nBack}} stimulusse gelede.",
+        "matchPosition": "Pas Posisie",
+        "matchPositionDesc": "Druk \"Posisie Pas\" as die blokkie dieselfde is as {{nBack}} gelede.",
+        "matchSymbol": "Pas Simbool",
+        "matchSymbolDesc": "Druk \"Simbool Pas\" as die simbool dieselfde is as {{nBack}} gelede.",
+        "tip": "Albei kan gelyktydig gebeur! As posisie EN simbool pas, druk albei knoppies."
+      },
+      "beginTraining": "Begin Opleiding",
+      "quickInstruction1": "Tik as posisie OF simbool die vorige een pas",
+      "quickInstructionN": "Tik as posisie OF simbool {{nBack}} gelede pas",
+      "tapIfMatches": "Tik as dit pas!",
+      "watchForNext": "Wag vir die volgende simbool...",
+      "positionMatch": "Posisie Pas",
+      "symbolMatch": "Simbool Pas",
+      "accuracy": "Akkuraatheid: {{accuracy}}%",
+      "sessionResults": "Sessie Resultate",
+      "trials": "Toetse",
+      "overall": "Algeheel",
+      "levelLabel": "Vlak",
+      "positionMatches": "Posisie Passings",
+      "symbolMatches": "Simbool Passings",
+      "trainingComplete": "Opleiding Voltooi",
+      "completeMessages": {
+        "excellent": "Uitstekende fokus! Jou werkgeheue word sterker.",
+        "good": "Goeie poging! Konsekwente oefening bring blywende vrede.",
+        "keepPracticing": "Hou aan oefen. Elke sessie oefen jou verstand vir stilte."
+      },
+      "playAgain": "Speel Weer",
+      "done": "Klaar",
+      "scriptures": {
+        "psalm46": "\"Wees stil en weet dat Ek God is.\" - Psalm 46:10",
+        "john14": "\"Vrede laat Ek vir julle; my vrede gee Ek aan julle.\" - Johannes 14:27",
+        "isaiah26": "\"U sal hom in volkome vrede bewaar wie se gemoed op U gerig is.\" - Jesaja 26:3",
+        "peter5": "\"Werp al julle bekommernis op Hom, want Hy sorg vir julle.\" - 1 Petrus 5:7",
+        "psalm29": "\"Die Here gee krag aan sy volk; die Here seën sy volk met vrede.\" - Psalm 29:11"
+      },
+      "encouragements": {
+        "focus": "Elke toets versterk jou fokus.",
+        "peaceful": "Jou verstand word meer vreedsaam.",
+        "patience": "Geduld en oefening bring vrede.",
+        "stillness": "Jy oefen jou verstand vir stilte.",
+        "gift": "Elke oomblik van fokus is 'n geskenk aan jouself."
+      },
+      "disclaimer": {
+        "title": "Opvoedkundige Oefening",
+        "content": "Patroonvrede is 'n kognitiewe oefening gebaseer op N-terug navorsing. Dit is opvoedkundig van aard en is nie 'n plaasvervanger vir professionele geestesgesondheidsbehandeling nie. As jy aanhoudende kognitiewe probleme ervaar, raadpleeg asseblief 'n gesondheidsorgverskaffer."
+      }
+    },
+    "celebration": {
+      "wellDone": "Goed Gedaan!",
+      "sessionComplete": "Sessie Voltooi",
+      "keepGoing": "Hou aan met die goeie werk",
+      "streakMessage": "{{count}} dag reeks!",
+      "newRecord": "Nuwe persoonlike rekord!"
+    },
+    "moodCheckIn": {
+      "title": "Hoe voel jy?",
+      "subtitle": "Kyk in by jouself",
+      "moods": {
+        "great": "Uitstekend",
+        "good": "Goed",
+        "okay": "Okay",
+        "struggling": "Sukkel",
+        "crisis": "In Krisis"
+      }
+    }
+  },
+  "crisis": {
+    "title": "Krisisondersteuning",
+    "subtitle": "Jy is nie alleen nie",
+    "immediateHelp": "Dringende hulp nodig?",
+    "callNow": "Bel Nou",
+    "textLine": "SMS Krisisllyn",
+    "comfortPrayers": "Troosgebede",
+    "breathingExercise": "Asemhalingsoefening",
+    "safetyPlan": "My Veiligheidsplan",
+    "emergencyContacts": "Noodkontakte",
+    "southAfrica": {
+      "lifeline": "SADAG Lewenslyn",
+      "lifelineNumber": "0800 567 567",
+      "suicide": "Selfmoordkrisisllyn",
+      "suicideNumber": "0800 567 567"
+    },
+    "prayers": {
+      "peace": "Gebed vir Vrede",
+      "strength": "Gebed vir Krag",
+      "hope": "Gebed vir Hoop",
+      "protection": "Gebed vir Beskerming"
+    }
+  },
+  "journal": {
+    "title": "My Joernaal",
+    "newEntry": "Nuwe Inskrywing",
+    "entries": "Inskrywings",
+    "noEntries": "Nog geen joernaal-inskrywings nie",
+    "startWriting": "Begin skryf om jou gedagtes vas te vang",
+    "placeholder": "Skryf jou gedagtes...",
+    "save": "Stoor",
+    "saved": "Gestoor",
+    "delete": "Skrap",
+    "deleteConfirm": "Skrap hierdie inskrywing?",
+    "deleteMessage": "Hierdie aksie kan nie ongedaan gemaak word nie.",
+    "cancel": "Kanselleer",
+    "private": "Jou inskrywings is privaat en word slegs op jou toestel gestoor"
+  },
+  "settings": {
+    "title": "Instellings",
+    "reminders": "Herinnerings",
+    "dailyReminder": "Daaglikse Herinnering",
+    "reminderTime": "Herinnerings Tyd",
+    "access": "Toegang",
+    "fullAccess": "Volle Toegang",
+    "guest": "Gas",
+    "unlock": "Ontsluit",
+    "enterCode": "Voer Toegangskode In",
+    "privacy": "Privaatheid & Sekuriteit",
+    "security": "Sekuriteit",
+    "pinLock": "PIN-Slot",
+    "pinEnabled": "PIN-slot geaktiveer",
+    "pinDisabled": "PIN-slot gedeaktiveer",
+    "autoLock": "Outo-slot",
+    "autoLockOptions": {
+      "immediately": "Onmiddellik",
+      "after1min": "Na 1 minuut",
+      "after5min": "Na 5 minute",
+      "after15min": "Na 15 minute"
+    },
+    "data": "Data",
+    "exportData": "Voer Data Uit",
+    "resetProgress": "Herstel Vordering",
+    "resetConfirm": "Herstel alle vordering?",
+    "resetMessage": "Dit sal jou reis na Dag 1 herstel. Joernaal-inskrywings sal behou word.",
+    "about": "Oor",
+    "aboutDescription": "TWG (Tee met God) - 'n 40-dag Christelike Dagstukkies vir Vroue - Deur Lani Butler.",
+    "version": "Weergawe",
+    "termsOfService": "Diensvoorwaardes",
+    "privacyPolicy": "Privaatheidsbeleid",
+    "contact": "Kontak Ondersteuning",
+    "signOut": "Meld Af",
+    "signOutConfirm": "Afmeld?",
+    "signOutMessage": "Jy kan enige tyd weer aanmeld.",
+    "language": "Taal",
+    "changeLanguage": "Verander Taal",
+    "daysCompleted": "Dae Voltooi",
+    "daysRemaining": "Dae Oorblywend",
+    "developer": "Ontwikkelaar"
+  },
+  "accessCode": {
+    "title": "Voer Toegangskode In",
+    "subtitle": "Jou kode is per e-pos na jou aankoop gestuur",
+    "placeholder": "Voer toegangskode in",
+    "verify": "Verifieer Kode",
+    "verifying": "Besig om te verifieer...",
+    "success": "Toegang Ontsluit!",
+    "successMessage": "Welkom by jou volledige Tee met God-reis",
+    "error": "Ongeldige Kode",
+    "errorMessage": "Kontroleer asseblief jou kode en probeer weer",
+    "getCode": "Het jy nie 'n kode nie?",
+    "purchase": "Koop Toegang",
+    "unlockYourJourney": "Ontsluit Jou Reis",
+    "description": "Voer die toegangskode uit jou boek in om al 40 dae se dagstukkies-inhoud te ontsluit.",
+    "guestPreviewInfo": "As gas kan jy Dae 1-{{days}} voorskou",
+    "enterCodeError": "Voer asseblief 'n toegangskode in.",
+    "fullAccessUnlocked": "Volle Toegang Ontsluit",
+    "fullAccessMessage": "Jy het toegang tot al 40 dae van die reis.",
+    "unlockFullJourney": "Ontsluit Volle Reis",
+    "whereToFind": "Waar kry ek my kode?",
+    "helpDescription": "Jou toegangskode is binne-in die omslag van die \"Tee met God: 'n 40-Dag Dagstukkiemetgesel\"-boek gedruk."
+  },
+  "flipbook": {
+    "title": "Tee met God",
+    "subtitle": "Digitale Boek",
+    "page": "Bladsy",
+    "of": "van",
+    "tableOfContents": "Inhoudsopgawe",
+    "dedication": "Opdrag",
+    "introduction": "Inleiding",
+    "dayPrefix": "Dag",
+    "unlockTitle": "Ontsluit Jou Digitale Boek",
+    "unlockMessage": "Die digitale blaaiboek is beskikbaar met volle toegang. Opgradeer om die volledige Tee met God-boek te lees.",
+    "upgradeNow": "Opgradeer Nou",
+    "rotateHint": "Draai vir beste aansig",
+    "loadingBook": "Laai jou boek...",
+    "digitalBookTitle": "Tee met God Digitale Boek",
+    "openInBrowser": "Maak in Blaaier Oop",
+    "nativeMessage": "Maak die blaaiboek in jou blaaier oop vir die beste leeservaring."
+  },
+  "music": {
+    "title": "Musiek",
+    "subtitle": "Liedjies vir Jou Siel",
+    "nowPlaying": "Speel Nou",
+    "premiumFeature": "Premium-Kenmerk",
+    "unlockMusic": "Ontsluit volle toegang om na alle snitte te luister",
+    "tracks": "Snitte",
+    "shuffle": "Skommel",
+    "repeat": "Herhaal"
+  },
+  "notifications": {
+    "title": "Kennisgewings",
+    "dailyReminder": "Daaglikse Herinnering",
+    "reminderTitle": "Tyd vir Tee met God",
+    "reminderBody": "Jou daaglikse dagstukkies wag vir jou",
+    "permissionRequired": "Toestemming Benodig",
+    "permissionMessage": "Aktiveer asseblief kennisgewings om daaglikse herinnerings te ontvang",
+    "enableNotifications": "Aktiveer Kennisgewings",
+    "gentleReminders": "Sagte Herinnerings",
+    "warmInvitation": "'n Warm uitnodiging elke oggend",
+    "enableDailyReminders": "Aktiveer Daaglikse Herinnerings",
+    "gentleNudge": "Jy sal 'n sagte stootjie ontvang",
+    "notificationsOff": "Kennisgewings is af",
+    "reminderTime": "Herinnerings-Tyd",
+    "whenInvitation": "Wanneer wil jy jou uitnodiging hê?",
+    "reminderNote": "Hierdie herinnerings is sagte uitnodigings, nooit skuld-inducerend nie. Jy kan dit altyd afskakel.",
+    "selectTime": "Kies Tyd"
+  },
+  "pin": {
+    "title": "Voer PIN In",
+    "subtitle": "Voer jou 4-syfer PIN in",
+    "create": "Skep PIN",
+    "createSubtitle": "Skep 'n 4-syfer PIN om jou joernaal te beskerm",
+    "confirm": "Bevestig PIN",
+    "confirmSubtitle": "Voer jou PIN weer in om te bevestig",
+    "change": "Verander PIN",
+    "remove": "Verwyder PIN",
+    "incorrect": "Verkeerde PIN",
+    "tryAgain": "Probeer asseblief weer",
+    "pinSet": "PIN Gestel",
+    "pinRemoved": "PIN Verwyder",
+    "mismatch": "PIN's stem nie ooreen nie",
+    "forgotPin": "PIN Vergeet?",
+    "lockNow": "Sluit Nou",
+    "enterCurrentPin": "Voer Huidige PIN In",
+    "createNewPin": "Skep Nuwe PIN",
+    "autoLockTimer": "Outomatiese Sluit-Tydhouer",
+    "autoLockImmediately": "Onmiddellik",
+    "autoLock1Min": "1 minuut",
+    "autoLock5Min": "5 minute",
+    "autoLock15Min": "15 minute",
+    "autoLock30Min": "30 minute"
+  },
+  "reEngagement": {
+    "welcomeBack": "Welkom Terug",
+    "beenAWhile": "Dit was 'n rukkie.",
+    "thatsOkay": "Dit is reg so.",
+    "lifeGetsHeavy": "Die lewe word soms swaar.",
+    "youreHereNow": "Jy is nou hier, en dit is wat saak maak.",
+    "daysOfGrowth": "Jy het {{count}} dag van groei voltooi.",
+    "daysOfGrowth_plural": "Jy het {{count}} dae van groei voltooi.",
+    "daysStillCount": "Daardie dae tel steeds.",
+    "continueWhereLeft": "Gaan Voort Waar Ek Opgehou Het",
+    "startFresh": "Begin Vars van Dag 1",
+    "noPressure": "Geen druk nie. Geen oordeel nie.",
+    "pathFeelsRight": "Neem die pad wat reg voel."
+  },
+  "common": {
+    "loading": "Laai...",
+    "error": "Iets het verkeerd gegaan",
+    "tryAgain": "Probeer Weer",
+    "cancel": "Kanselleer",
+    "confirm": "Bevestig",
+    "save": "Stoor",
+    "delete": "Skrap",
+    "edit": "Wysig",
+    "done": "Klaar",
+    "next": "Volgende",
+    "back": "Terug",
+    "close": "Sluit",
+    "continue": "Gaan Voort",
+    "skip": "Slaan Oor",
+    "ok": "OK",
+    "yes": "Ja",
+    "no": "Nee",
+    "today": "Vandag",
+    "yesterday": "Gister",
+    "days": "dae",
+    "hours": "ure",
+    "minutes": "minute"
+  },
+  "errors": {
+    "networkError": "Netwerkfout. Kontroleer asseblief jou verbinding.",
+    "serverError": "Bedienerfout. Probeer asseblief later weer.",
+    "unauthorized": "Meld asseblief aan om voort te gaan.",
+    "notFound": "Nie gevind nie.",
+    "unknown": "n Onverwagte fout het voorgekom."
+  },
+  "reengagement": {
+    "title": "Welkom Terug",
+    "subtitle": "Ons het jou gemis",
+    "message": "Dit is 'n rukkie sedert jou laaste dagstukkies. Dit is goed - genade ontmoet jou reg waar jy is.",
+    "continueJourney": "Gaan Voort met Reis",
+    "startFresh": "Begin Vars"
+  }
+}

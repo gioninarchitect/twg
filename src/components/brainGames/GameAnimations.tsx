@@ -19,7 +19,179 @@ import { GAME_ANIMATIONS, GAME_COLORS } from '../../theme/brainGames';
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // ============================================
-// BREATHING CIRCLE
+// BREATHING RIPPLE (Concentric expanding ring)
+// ============================================
+
+interface BreathingRippleProps {
+  delay: number;
+  maxSize: number;
+  color: string;
+  phase: 'inhale' | 'holdIn' | 'exhale' | 'holdOut' | 'idle';
+}
+
+function BreathingRipple({ delay, maxSize, color, phase }: BreathingRippleProps) {
+  const scale = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0.6)).current;
+
+  useEffect(() => {
+    if (phase === 'inhale') {
+      // Ripple expands outward during inhale
+      const animation = Animated.parallel([
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          delay,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          delay,
+          useNativeDriver: true,
+        }),
+      ]);
+      animation.start();
+      return () => animation.stop();
+    } else if (phase === 'exhale') {
+      // Reset for next cycle
+      scale.setValue(0);
+      opacity.setValue(0.6);
+    }
+  }, [phase, delay]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.breathingRipple,
+        {
+          width: maxSize + 60,
+          height: maxSize + 60,
+          borderRadius: (maxSize + 60) / 2,
+          borderColor: color,
+          transform: [{ scale }],
+          opacity,
+        },
+      ]}
+    />
+  );
+}
+
+// ============================================
+// FLOATING PARTICLE (Ambient dots around circle)
+// ============================================
+
+interface FloatingParticleProps {
+  index: number;
+  maxSize: number;
+  color: string;
+  phase: 'inhale' | 'holdIn' | 'exhale' | 'holdOut' | 'idle';
+}
+
+function FloatingParticle({ index, maxSize, color, phase }: FloatingParticleProps) {
+  const angle = (index / 8) * Math.PI * 2;
+  const baseRadius = maxSize / 2 + 30;
+
+  const translateX = useRef(new Animated.Value(Math.cos(angle) * baseRadius * 0.7)).current;
+  const translateY = useRef(new Animated.Value(Math.sin(angle) * baseRadius * 0.7)).current;
+  const opacity = useRef(new Animated.Value(0.3)).current;
+  const scale = useRef(new Animated.Value(0.5)).current;
+
+  useEffect(() => {
+    let animation: Animated.CompositeAnimation;
+
+    if (phase === 'inhale') {
+      // Particles expand outward
+      animation = Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: Math.cos(angle) * baseRadius * 1.3,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: Math.sin(angle) * baseRadius * 1.3,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.8,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 1,
+          duration: GAME_ANIMATIONS.breathe.inhale,
+          useNativeDriver: true,
+        }),
+      ]);
+    } else if (phase === 'exhale') {
+      // Particles contract inward
+      animation = Animated.parallel([
+        Animated.timing(translateX, {
+          toValue: Math.cos(angle) * baseRadius * 0.7,
+          duration: GAME_ANIMATIONS.breathe.exhale,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: Math.sin(angle) * baseRadius * 0.7,
+          duration: GAME_ANIMATIONS.breathe.exhale,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 0.3,
+          duration: GAME_ANIMATIONS.breathe.exhale,
+          useNativeDriver: true,
+        }),
+        Animated.timing(scale, {
+          toValue: 0.5,
+          duration: GAME_ANIMATIONS.breathe.exhale,
+          useNativeDriver: true,
+        }),
+      ]);
+    } else if (phase === 'holdIn' || phase === 'holdOut') {
+      // Gentle float during holds
+      animation = Animated.loop(
+        Animated.sequence([
+          Animated.timing(opacity, {
+            toValue: phase === 'holdIn' ? 1 : 0.4,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity, {
+            toValue: phase === 'holdIn' ? 0.7 : 0.2,
+            duration: 800,
+            useNativeDriver: true,
+          }),
+        ])
+      );
+    } else {
+      return;
+    }
+
+    animation?.start();
+    return () => animation?.stop();
+  }, [phase, angle, baseRadius]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.floatingParticle,
+        {
+          backgroundColor: color,
+          transform: [{ translateX }, { translateY }, { scale }],
+          opacity,
+        },
+      ]}
+    />
+  );
+}
+
+// ============================================
+// BREATHING CIRCLE (Enhanced with ripples & particles)
 // ============================================
 
 interface BreathingCircleProps {
@@ -39,6 +211,7 @@ export function BreathingCircle({
 }: BreathingCircleProps) {
   const animatedSize = useRef(new Animated.Value(minSize)).current;
   const animatedOpacity = useRef(new Animated.Value(0.6)).current;
+  const glowOpacity = useRef(new Animated.Value(0.2)).current;
 
   useEffect(() => {
     let animation: Animated.CompositeAnimation;
@@ -54,6 +227,11 @@ export function BreathingCircle({
           }),
           Animated.timing(animatedOpacity, {
             toValue: 1,
+            duration: GAME_ANIMATIONS.breathe.inhale,
+            useNativeDriver: false,
+          }),
+          Animated.timing(glowOpacity, {
+            toValue: 0.5,
             duration: GAME_ANIMATIONS.breathe.inhale,
             useNativeDriver: false,
           }),
@@ -73,6 +251,11 @@ export function BreathingCircle({
             duration: GAME_ANIMATIONS.breathe.exhale,
             useNativeDriver: false,
           }),
+          Animated.timing(glowOpacity, {
+            toValue: 0.2,
+            duration: GAME_ANIMATIONS.breathe.exhale,
+            useNativeDriver: false,
+          }),
         ]);
         break;
 
@@ -81,16 +264,30 @@ export function BreathingCircle({
         // Gentle pulse during holds
         animation = Animated.loop(
           Animated.sequence([
-            Animated.timing(animatedOpacity, {
-              toValue: phase === 'holdIn' ? 0.9 : 0.7,
-              duration: 500,
-              useNativeDriver: false,
-            }),
-            Animated.timing(animatedOpacity, {
-              toValue: phase === 'holdIn' ? 1 : 0.6,
-              duration: 500,
-              useNativeDriver: false,
-            }),
+            Animated.parallel([
+              Animated.timing(animatedOpacity, {
+                toValue: phase === 'holdIn' ? 0.9 : 0.7,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+              Animated.timing(glowOpacity, {
+                toValue: phase === 'holdIn' ? 0.6 : 0.25,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+            ]),
+            Animated.parallel([
+              Animated.timing(animatedOpacity, {
+                toValue: phase === 'holdIn' ? 1 : 0.6,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+              Animated.timing(glowOpacity, {
+                toValue: phase === 'holdIn' ? 0.45 : 0.15,
+                duration: 500,
+                useNativeDriver: false,
+              }),
+            ]),
           ])
         );
         break;
@@ -106,25 +303,67 @@ export function BreathingCircle({
     };
   }, [phase, minSize, maxSize]);
 
+  const rippleColor = colors[0] || GAME_COLORS.breathing.inhale;
+  const particleColor = colors[1] || GAME_COLORS.breathing.exhale;
+
   return (
-    <Animated.View
-      style={[
-        styles.breathingCircle,
-        {
-          width: animatedSize,
-          height: animatedSize,
-          borderRadius: Animated.divide(animatedSize, 2),
-          opacity: animatedOpacity,
-        },
-      ]}
-    >
-      <LinearGradient
-        colors={colors as [string, string, ...string[]]}
-        style={styles.breathingGradient}
+    <View style={styles.breathingWrapper}>
+      {/* Concentric ripples (only during inhale) */}
+      {[0, 1, 2].map((i) => (
+        <BreathingRipple
+          key={i}
+          delay={i * 400}
+          maxSize={maxSize}
+          color={rippleColor}
+          phase={phase}
+        />
+      ))}
+
+      {/* Floating particles around the circle */}
+      {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+        <FloatingParticle
+          key={i}
+          index={i}
+          maxSize={maxSize}
+          color={particleColor}
+          phase={phase}
+        />
+      ))}
+
+      {/* Outer glow */}
+      <Animated.View
+        style={[
+          styles.breathingGlow,
+          {
+            width: animatedSize,
+            height: animatedSize,
+            borderRadius: Animated.divide(animatedSize, 2),
+            opacity: glowOpacity,
+            shadowColor: rippleColor,
+          },
+        ]}
+      />
+
+      {/* Main breathing circle */}
+      <Animated.View
+        style={[
+          styles.breathingCircle,
+          {
+            width: animatedSize,
+            height: animatedSize,
+            borderRadius: Animated.divide(animatedSize, 2),
+            opacity: animatedOpacity,
+          },
+        ]}
       >
-        {children}
-      </LinearGradient>
-    </Animated.View>
+        <LinearGradient
+          colors={colors as [string, string, ...string[]]}
+          style={styles.breathingGradient}
+        >
+          {children}
+        </LinearGradient>
+      </Animated.View>
+    </View>
   );
 }
 
@@ -526,6 +765,38 @@ export function AnimatedRing({
 // ============================================
 
 const styles = StyleSheet.create({
+  // Breathing Wrapper (container for enhanced circle)
+  breathingWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+
+  // Breathing Ripple (concentric expanding rings)
+  breathingRipple: {
+    position: 'absolute',
+    borderWidth: 2,
+    backgroundColor: 'transparent',
+  },
+
+  // Floating Particles
+  floatingParticle: {
+    position: 'absolute',
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+
+  // Breathing Glow (outer glow effect)
+  breathingGlow: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 1,
+    shadowRadius: 40,
+    elevation: 20,
+  },
+
   // Breathing Circle
   breathingCircle: {
     alignItems: 'center',

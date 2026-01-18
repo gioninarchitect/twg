@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../theme/colors';
 import { GradientButton, Button } from '../components/PremiumUI';
 
@@ -36,6 +37,7 @@ interface Props {
 }
 
 export default function WelcomeScreen({ onGetStarted, onSignIn }: Props) {
+  const { t } = useTranslation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(30)).current;
   const goldLineAnim = useRef(new Animated.Value(0)).current;
@@ -100,43 +102,39 @@ export default function WelcomeScreen({ onGetStarted, onSignIn }: Props) {
         </View>
 
         {/* Title */}
-        <Text style={styles.title}>Tea With God</Text>
-        <Text style={styles.subtitle}>A 40-Day Healing Companion</Text>
+        <Text style={styles.title}>{t('welcome.title')}</Text>
+        <Text style={styles.subtitle}>{t('welcome.subtitle')}</Text>
 
         {/* Tagline */}
         <View style={styles.taglineContainer}>
           <View style={styles.taglineLine} />
-          <Text style={styles.tagline}>From Ruin to Rising</Text>
+          <Text style={styles.tagline}>{t('welcome.tagline')}</Text>
           <View style={styles.taglineLine} />
         </View>
 
         {/* Quote */}
         <View style={styles.quoteContainer}>
           <Text style={styles.quote}>
-            "Healing doesn't begin with strength.{'\n'}
-            It begins with honesty—the moment you{'\n'}
-            finally exhale and whisper,{'\n'}
-            <Text style={styles.quoteEmphasis}>'God... I don't know how to keep going.'"</Text>
+            {t('welcome.quote')}
           </Text>
         </View>
 
         {/* Description */}
         <Text style={styles.description}>
-          A quiet invitation to pause, to breathe,{'\n'}
-          and to let Him meet you in your own quiet place.
+          {t('welcome.description')}
         </Text>
       </Animated.View>
 
       {/* Bottom actions */}
       <Animated.View style={[styles.actions, { opacity: fadeAnim }]}>
         <GradientButton
-          title="Begin Your Journey"
+          title={t('welcome.beginJourney')}
           onPress={onGetStarted}
           style={styles.primaryButton}
         />
 
         <Button
-          title="I Already Have an Account"
+          title={t('welcome.haveAccount')}
           onPress={onSignIn}
           variant="ghost"
           style={styles.secondaryButton}

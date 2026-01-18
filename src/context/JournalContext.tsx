@@ -8,14 +8,32 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import * as SecureStore from 'expo-secure-store';
 import { supabase, TABLES, isOnline, getCurrentUserId } from '../services/supabase';
 
-// Storage keys
-const JOURNAL_KEY = '@twg_journal';
-const ENCRYPTION_KEY_ID = '@twg_journal_key';
+// Platform-aware secure storage for web compatibility
+const SecureStorage = {
+  getItem: async (key: string): Promise<string | null> => {
+    if (Platform.OS === 'web') {
+      return localStorage.getItem(key);
+    }
+    return SecureStore.getItemAsync(key);
+  },
+  setItem: async (key: string, value: string): Promise<void> => {
+    if (Platform.OS === 'web') {
+      localStorage.setItem(key, value);
+      return;
+    }
+    return SecureStore.setItemAsync(key, value);
+  },
+};
+
+// Storage key prefix (userId appended at runtime)
+const JOURNAL_KEY_PREFIX = '@twg_journal_';
+const ENCRYPTION_KEY_PREFIX = '@twg_journal_key_';
 
 export interface JournalEntry {
   id: string;
@@ -86,46 +104,60 @@ async function decrypt(encryptedText: string, key: string): Promise<string> {
   }
 }
 
-// Generate a unique encryption key for this device
-async function getOrCreateEncryptionKey(): Promise<string> {
-  let key = await SecureStore.getItemAsync(ENCRYPTION_KEY_ID);
+// Generate a unique encryption key for this user on this device
+async function getOrCreateEncryptionKey(userId: string): Promise<string> {
+  const keyId = ENCRYPTION_KEY_PREFIX + userId;
+  let key = await SecureStorage.getItem(keyId);
   if (!key) {
     // Generate a random 32-character key
     const randomBytes = await Crypto.getRandomBytesAsync(16);
     key = Array.from(randomBytes)
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
-    await SecureStore.setItemAsync(ENCRYPTION_KEY_ID, key);
+    await SecureStorage.setItem(keyId, key);
   }
   return key;
 }
 
-export function JournalProvider({ children }: { children: ReactNode }) {
+interface JournalProviderProps {
+  children: ReactNode;
+  userId: string;
+}
+
+export function JournalProvider({ children, userId }: JournalProviderProps) {
+  // User-specific storage key
+  const journalKey = JOURNAL_KEY_PREFIX + userId;
   const [entries, setEntries] = useState<JournalEntry[]>([]);
   const [isEncryptionEnabled, setIsEncryptionEnabledState] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [encryptionKey, setEncryptionKey] = useState<string>('');
 
-  // Load entries on mount
+  // Load entries on mount and when userId changes
   useEffect(() => {
     loadJournal();
-  }, []);
+  }, [userId, journalKey]);
 
   async function loadJournal() {
+    setIsLoading(true);
     try {
-      // Get or create encryption key
-      const key = await getOrCreateEncryptionKey();
+      // Get or create encryption key for this user
+      const key = await getOrCreateEncryptionKey(userId);
       setEncryptionKey(key);
 
-      // Load entries
-      const stored = await AsyncStorage.getItem(JOURNAL_KEY);
+      // Load entries for this user
+      const stored = await AsyncStorage.getItem(journalKey);
       if (stored) {
         const data = JSON.parse(stored);
         setEntries(data.entries || []);
         setIsEncryptionEnabledState(data.encryptionEnabled || false);
+      } else {
+        // No entries for this user yet
+        setEntries([]);
+        setIsEncryptionEnabledState(false);
       }
     } catch (error) {
       console.error('Error loading journal:', error);
+      setEntries([]);
     } finally {
       setIsLoading(false);
     }
@@ -134,8 +166,8 @@ export function JournalProvider({ children }: { children: ReactNode }) {
   async function saveJournalData(newEntries: JournalEntry[], encryptionEnabled: boolean) {
     setEntries(newEntries);
     try {
-      // 1. Save locally first (instant, works offline)
-      await AsyncStorage.setItem(JOURNAL_KEY, JSON.stringify({
+      // 1. Save locally first (instant, works offline) - user-specific key
+      await AsyncStorage.setItem(journalKey, JSON.stringify({
         entries: newEntries,
         encryptionEnabled,
       }));

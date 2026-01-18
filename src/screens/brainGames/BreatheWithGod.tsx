@@ -2,6 +2,8 @@
  * Breathe with God
  * Guided breathing exercises based on Polyvagal Theory
  * Unlocks: Day 1
+ *
+ * Premium UI v2.0 - Immersive breathing sanctuary
  */
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
@@ -12,11 +14,15 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
+  Animated,
+  Dimensions,
+  Easing,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { Audio } from 'expo-av';
+import { useTranslation } from 'react-i18next';
 import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import {
   saveBreathingPreferences,
@@ -44,51 +50,55 @@ import {
   type SessionMoodLevel,
 } from '../../components/brainGames';
 
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+
 // ============================================
 // CONSTANTS
 // ============================================
 
-const PHASE_INSTRUCTIONS: Record<BreathPhase, string> = {
-  idle: 'Ready to begin',
-  inhale: 'Breathe in slowly',
-  holdIn: 'Hold gently',
-  exhale: 'Release slowly',
-  holdOut: 'Rest',
+const PHASE_INSTRUCTION_KEYS: Record<BreathPhase, string> = {
+  idle: 'brainGames.breathe.phaseInstructions.idle',
+  inhale: 'brainGames.breathe.phaseInstructions.inhale',
+  holdIn: 'brainGames.breathe.phaseInstructions.hold',
+  exhale: 'brainGames.breathe.phaseInstructions.exhale',
+  holdOut: 'brainGames.breathe.phaseInstructions.rest',
 };
 
-const PHASE_SCRIPTURE: Record<BreathPhase, string> = {
-  idle: '"Be still, and know that I am God." - Psalm 46:10',
-  inhale: '"The Lord God formed man and breathed into his nostrils the breath of life." - Genesis 2:7',
-  holdIn: '"In quietness and trust is your strength." - Isaiah 30:15',
-  exhale: '"Cast all your anxiety on Him because He cares for you." - 1 Peter 5:7',
-  holdOut: '"Come to me, all who are weary, and I will give you rest." - Matthew 11:28',
+const PHASE_SCRIPTURE_KEYS: Record<BreathPhase, string> = {
+  idle: 'brainGames.breathe.scripture.idle',
+  inhale: 'brainGames.breathe.scripture.inhale',
+  holdIn: 'brainGames.breathe.scripture.holdIn',
+  exhale: 'brainGames.breathe.scripture.exhale',
+  holdOut: 'brainGames.breathe.scripture.holdOut',
 };
 
-// ============================================
-// AUDIO GUIDANCE
-// ============================================
-
-// Frequency mapping for gentle tones (in Hz)
-const PHASE_FREQUENCIES: Record<BreathPhase, number> = {
-  idle: 0,
-  inhale: 396, // Liberating (Solfeggio)
-  holdIn: 528, // Love/DNA repair (Solfeggio)
-  exhale: 432, // Universal harmony
-  holdOut: 285, // Healing (Solfeggio)
+// Pattern details with icons and benefits (benefitKey for translation)
+const PATTERN_DETAILS: Record<string, { icon: string; benefitKey: string; color: string }> = {
+  relaxing: {
+    icon: 'leaf-outline',
+    benefitKey: 'brainGames.breathe.patterns.relaxing.benefit',
+    color: '#4ade80',
+  },
+  energizing: {
+    icon: 'sunny-outline',
+    benefitKey: 'brainGames.breathe.patterns.energizing.benefit',
+    color: '#fbbf24',
+  },
+  balancing: {
+    icon: 'infinite-outline',
+    benefitKey: 'brainGames.breathe.patterns.balancing.benefit',
+    color: '#60a5fa',
+  },
+  calming: {
+    icon: 'moon-outline',
+    benefitKey: 'brainGames.breathe.patterns.calming.benefit',
+    color: '#a78bfa',
+  },
 };
 
-// Duration in ms for each tone
-const TONE_DURATION = 300;
-
-// Generate a simple oscillator tone using AudioContext
-async function playGuidanceTone(frequency: number): Promise<void> {
-  // Only play if frequency is valid
-  if (frequency <= 0) return;
-
+// Audio guidance with haptics
+async function playGuidanceTone(): Promise<void> {
   try {
-    // Use expo-av to play a gentle chime
-    // Since we can't generate tones natively, we'll use haptics as fallback
-    // and provide stronger haptic feedback for audio guidance mode
     await safeHaptics.impactAsync(ImpactFeedbackStyle.Medium);
   } catch (error) {
     console.log('Audio guidance tone error:', error);
@@ -96,38 +106,245 @@ async function playGuidanceTone(frequency: number): Promise<void> {
 }
 
 // ============================================
-// PATTERN SELECTOR
+// AMBIENT PARTICLE
 // ============================================
 
-interface PatternSelectorProps {
-  selectedPattern: string;
-  onSelect: (pattern: string) => void;
+interface AmbientParticleProps {
+  delay: number;
+  duration: number;
+  size: number;
+  startX: number;
 }
 
-function PatternSelector({ selectedPattern, onSelect }: PatternSelectorProps) {
+function AmbientParticle({ delay, duration, size, startX }: AmbientParticleProps) {
+  const animation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animate = () => {
+      animation.setValue(0);
+      Animated.timing(animation, {
+        toValue: 1,
+        duration,
+        delay,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }).start(() => animate());
+    };
+    animate();
+  }, []);
+
+  const translateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [SCREEN_HEIGHT + 50, -50],
+  });
+
+  const translateX = animation.interpolate({
+    inputRange: [0, 0.25, 0.5, 0.75, 1],
+    outputRange: [0, 15, 0, -15, 0],
+  });
+
+  const opacity = animation.interpolate({
+    inputRange: [0, 0.1, 0.9, 1],
+    outputRange: [0, 0.6, 0.6, 0],
+  });
+
   return (
-    <View style={styles.patternContainer}>
-      {Object.entries(BREATHING_PATTERNS).map(([key, pattern]) => (
+    <Animated.View
+      style={[
+        styles.ambientParticle,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          left: startX,
+          opacity,
+          transform: [{ translateY }, { translateX }],
+        },
+      ]}
+    />
+  );
+}
+
+// ============================================
+// CONCENTRIC RING
+// ============================================
+
+interface ConcentricRingProps {
+  size: number;
+  delay: number;
+  phase: BreathPhase;
+}
+
+function ConcentricRing({ size, delay, phase }: ConcentricRingProps) {
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const opacityAnim = useRef(new Animated.Value(0.3)).current;
+
+  useEffect(() => {
+    const isExpanding = phase === 'inhale' || phase === 'holdIn';
+    const targetScale = isExpanding ? 1 : 0.8;
+    const duration = phase === 'idle' ? 0 : 2000;
+
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: targetScale,
+        duration,
+        delay,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: isExpanding ? 0.4 : 0.2,
+        duration,
+        delay,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, [phase, delay]);
+
+  return (
+    <Animated.View
+      style={[
+        styles.concentricRing,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          opacity: opacityAnim,
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}
+    />
+  );
+}
+
+// ============================================
+// PATTERN CARD
+// ============================================
+
+interface PatternCardProps {
+  patternKey: string;
+  pattern: typeof BREATHING_PATTERNS[keyof typeof BREATHING_PATTERNS];
+  isSelected: boolean;
+  onSelect: () => void;
+  t: (key: string) => string;
+}
+
+function PatternCard({ patternKey, pattern, isSelected, onSelect, t }: PatternCardProps) {
+  const details = PATTERN_DETAILS[patternKey] || { icon: 'ellipse-outline', benefitKey: '', color: COLORS.gold };
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  const handlePress = () => {
+    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
+    Animated.sequence([
+      Animated.timing(scaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+    onSelect();
+  };
+
+  return (
+    <TouchableOpacity onPress={handlePress} activeOpacity={0.9}>
+      <Animated.View
+        style={[
+          styles.patternCard,
+          isSelected && styles.patternCardSelected,
+          { transform: [{ scale: scaleAnim }] },
+        ]}
+      >
+        {isSelected && (
+          <LinearGradient
+            colors={[details.color + '30', details.color + '10', 'transparent']}
+            style={styles.patternCardGlow}
+          />
+        )}
+
+        <View style={styles.patternCardContent}>
+          <View style={[styles.patternIcon, { backgroundColor: details.color + '20' }]}>
+            <Ionicons name={details.icon as any} size={24} color={details.color} />
+          </View>
+
+          <View style={styles.patternInfo}>
+            <Text style={[styles.patternName, isSelected && { color: details.color }]}>
+              {t(`brainGames.breathe.patterns.${patternKey}.name`)}
+            </Text>
+            <Text style={styles.patternBenefit}>{t(details.benefitKey)}</Text>
+          </View>
+
+          <View style={styles.patternTiming}>
+            <Text style={styles.patternTimingText}>
+              {pattern.inhale}-{pattern.holdIn}-{pattern.exhale}
+              {pattern.holdOut > 0 ? `-${pattern.holdOut}` : ''}
+            </Text>
+          </View>
+        </View>
+
+        {isSelected && (
+          <View style={[styles.patternSelectedIndicator, { backgroundColor: details.color }]}>
+            <Ionicons name="checkmark" size={14} color="#fff" />
+          </View>
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+}
+
+// ============================================
+// CYCLE SELECTOR
+// ============================================
+
+interface CycleSelectorProps {
+  selected: number;
+  onSelect: (cycles: number) => void;
+  t: (key: string) => string;
+}
+
+function CycleSelector({ selected, onSelect, t }: CycleSelectorProps) {
+  const options = [
+    { cycles: 3, labelKey: 'brainGames.breathe.cycles.quick', icon: 'flash-outline' },
+    { cycles: 5, labelKey: 'brainGames.breathe.cycles.standard', icon: 'timer-outline' },
+    { cycles: 7, labelKey: 'brainGames.breathe.cycles.deep', icon: 'water-outline' },
+    { cycles: 10, labelKey: 'brainGames.breathe.cycles.extended', icon: 'infinite-outline' },
+  ];
+
+  return (
+    <View style={styles.cycleSelectorContainer}>
+      {options.map((option) => (
         <TouchableOpacity
-          key={key}
+          key={option.cycles}
           style={[
-            styles.patternCard,
-            selectedPattern === key && styles.patternCardSelected,
+            styles.cycleOption,
+            selected === option.cycles && styles.cycleOptionSelected,
           ]}
           onPress={() => {
             safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
-            onSelect(key);
+            onSelect(option.cycles);
           }}
+          activeOpacity={0.8}
         >
+          <Ionicons
+            name={option.icon as any}
+            size={20}
+            color={selected === option.cycles ? '#fff' : COLORS.textMuted}
+          />
           <Text style={[
-            styles.patternName,
-            selectedPattern === key && styles.patternNameSelected,
+            styles.cycleNumber,
+            selected === option.cycles && styles.cycleNumberSelected,
           ]}>
-            {pattern.name}
+            {option.cycles}
           </Text>
-          <Text style={styles.patternTiming}>
-            {pattern.inhale}-{pattern.holdIn}-{pattern.exhale}
-            {pattern.holdOut > 0 ? `-${pattern.holdOut}` : ''}
+          <Text style={[
+            styles.cycleLabel,
+            selected === option.cycles && styles.cycleLabelSelected,
+          ]}>
+            {t(option.labelKey)}
           </Text>
         </TouchableOpacity>
       ))}
@@ -136,7 +353,7 @@ function PatternSelector({ selectedPattern, onSelect }: PatternSelectorProps) {
 }
 
 // ============================================
-// BREATHING SCREEN
+// BREATHING SCREEN (IMMERSIVE)
 // ============================================
 
 interface BreathingScreenProps {
@@ -148,6 +365,7 @@ interface BreathingScreenProps {
   secondsRemaining: number;
   audioEnabled: boolean;
   onStop: () => void;
+  t: (key: string, options?: object) => string;
 }
 
 function BreathingScreen({
@@ -159,37 +377,68 @@ function BreathingScreen({
   secondsRemaining,
   audioEnabled,
   onStop,
+  t,
 }: BreathingScreenProps) {
   const colors = GAME_COLORS.breathing;
+  const patternDetails = PATTERN_DETAILS[pattern] || { icon: 'ellipse-outline', benefitKey: '', color: COLORS.gold };
 
   return (
     <View style={styles.breathingScreen}>
-      {/* Cycle Indicator */}
+      {/* Ambient background */}
+      <LinearGradient
+        colors={['#0a0f1a', '#0f1a2a', '#1a2a3a', '#0f1a2a', '#0a0f1a']}
+        style={styles.breathingBg}
+      />
+
+      {/* Floating particles */}
+      {[...Array(12)].map((_, i) => (
+        <AmbientParticle
+          key={i}
+          delay={i * 800}
+          duration={8000 + Math.random() * 4000}
+          size={4 + Math.random() * 4}
+          startX={Math.random() * SCREEN_WIDTH}
+        />
+      ))}
+
+      {/* Cycle indicator */}
       <View style={styles.cycleIndicator}>
+        <View style={styles.cycleProgress}>
+          {[...Array(totalCycles)].map((_, i) => (
+            <View
+              key={i}
+              style={[
+                styles.cycleDot,
+                i < currentCycle && { backgroundColor: patternDetails.color },
+                i === currentCycle - 1 && { transform: [{ scale: 1.3 }] },
+              ]}
+            />
+          ))}
+        </View>
         <Text style={styles.cycleText}>
-          Cycle {currentCycle} of {totalCycles}
+          {t('brainGames.breathe.breathOf', { current: currentCycle, total: totalCycles })}
         </Text>
-        {audioEnabled && (
-          <View style={styles.audioIndicator}>
-            <Ionicons name="volume-high" size={14} color={COLORS.gold} />
-          </View>
-        )}
       </View>
 
-      {/* Main Breathing Circle */}
+      {/* Concentric rings */}
+      <View style={styles.ringsContainer}>
+        <ConcentricRing size={340} delay={0} phase={phase} />
+        <ConcentricRing size={300} delay={100} phase={phase} />
+        <ConcentricRing size={260} delay={200} phase={phase} />
+      </View>
+
+      {/* Main breathing circle */}
       <View style={styles.circleContainer}>
         <BreathingCircle
           phase={phase}
-          minSize={140}
-          maxSize={280}
-          colors={[colors.inhale, colors.exhale]}
+          minSize={120}
+          maxSize={200}
+          colors={[patternDetails.color, colors.exhale]}
         >
           <View style={styles.circleContent}>
+            <Text style={styles.countdown}>{secondsRemaining}</Text>
             <Text style={styles.phaseInstruction}>
-              {PHASE_INSTRUCTIONS[phase]}
-            </Text>
-            <Text style={styles.countdown}>
-              {secondsRemaining}
+              {t(PHASE_INSTRUCTION_KEYS[phase])}
             </Text>
           </View>
         </BreathingCircle>
@@ -198,16 +447,14 @@ function BreathingScreen({
       {/* Scripture */}
       <FadeInView key={phase} style={styles.scriptureContainer}>
         <Text style={styles.scriptureText}>
-          {PHASE_SCRIPTURE[phase]}
+          {t(PHASE_SCRIPTURE_KEYS[phase])}
         </Text>
       </FadeInView>
 
-      {/* Stop Button */}
-      <TouchableOpacity
-        style={styles.stopButton}
-        onPress={onStop}
-      >
-        <Text style={styles.stopButtonText}>End Session</Text>
+      {/* Stop button */}
+      <TouchableOpacity style={styles.stopButton} onPress={onStop} activeOpacity={0.8}>
+        <Ionicons name="stop-circle-outline" size={24} color={COLORS.textMuted} />
+        <Text style={styles.stopButtonText}>{t('brainGames.breathe.endSession')}</Text>
       </TouchableOpacity>
     </View>
   );
@@ -222,6 +469,7 @@ interface BreatheWithGodProps {
 }
 
 export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
+  const { t } = useTranslation();
   const navigation = useNavigation();
   const handleClose = onClose || (() => navigation.goBack());
   const [selectedPattern, setSelectedPattern] = useState<keyof typeof BREATHING_PATTERNS>('relaxing');
@@ -243,7 +491,6 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
         setAudioGuidanceEnabled(prefs.audioGuidanceEnabled);
       }
       setPrefsLoaded(true);
-      // Record game session
       recordGameSession('breathing');
     }
     loadPrefs();
@@ -283,7 +530,6 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       safeHaptics.notificationAsync(NotificationFeedbackType.Success);
     },
     onComplete: () => {
-      // Calculate duration
       const totalSeconds = selectedCycles * (
         pattern.inhale + pattern.holdIn + pattern.exhale + pattern.holdOut
       );
@@ -293,31 +539,26 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
         cycles: selectedCycles,
       });
 
-      // Emit to world model
       emitBreathingSession(selectedPattern, totalSeconds, true);
-
-      // Show post-mood check instead of completion directly
       setShowPostMoodCheck(true);
     },
   });
 
-  // Audio guidance effect - play tone on phase change
+  // Audio guidance effect
   useEffect(() => {
     if (!audioGuidanceEnabled || !isActive) return;
     if (phase === lastPhaseRef.current) return;
 
     lastPhaseRef.current = phase;
 
-    // Play guidance cue for phase transition
     if (phase !== 'idle') {
-      playGuidanceTone(PHASE_FREQUENCIES[phase]);
+      playGuidanceTone();
     }
   }, [phase, audioGuidanceEnabled, isActive]);
 
   const handleStop = useCallback(() => {
     stop();
 
-    // Calculate partial duration
     const completedCycles = currentCycle - 1;
     const cycleSeconds = pattern.inhale + pattern.holdIn + pattern.exhale + pattern.holdOut;
     const totalSeconds = completedCycles * cycleSeconds;
@@ -331,37 +572,30 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       cycles: completedCycles,
     });
 
-    // Show post-mood check
     setShowPostMoodCheck(true);
   }, [stop, currentCycle, pattern, selectedPattern]);
 
-  // Handle initiating session (shows pre-mood check first)
   const handleBeginSession = useCallback(() => {
     setShowPreMoodCheck(true);
   }, []);
 
-  // Handle pre-mood selection
   const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPreMood(mood);
     setShowPreMoodCheck(false);
-    // Start the actual breathing session
     start();
   }, [start]);
 
-  // Handle pre-mood skip
   const handlePreMoodSkip = useCallback(() => {
     setShowPreMoodCheck(false);
     start();
   }, [start]);
 
-  // Handle post-mood selection
   const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPostMood(mood);
     setShowPostMoodCheck(false);
     setShowComplete(true);
   }, []);
 
-  // Handle post-mood skip
   const handlePostMoodSkip = useCallback(() => {
     setShowPostMoodCheck(false);
     setShowComplete(true);
@@ -371,7 +605,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
     setShowComplete(false);
     setPreMood(null);
     setPostMood(null);
-    setShowPreMoodCheck(true); // Start with mood check again
+    setShowPreMoodCheck(true);
   }, []);
 
   const handleContinue = useCallback(() => {
@@ -379,18 +613,24 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
     handleClose();
   }, [handleClose]);
 
-  // Format duration
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
 
+  const estimatedDuration = selectedCycles * (
+    BREATHING_PATTERNS[selectedPattern].inhale +
+    BREATHING_PATTERNS[selectedPattern].holdIn +
+    BREATHING_PATTERNS[selectedPattern].exhale +
+    BREATHING_PATTERNS[selectedPattern].holdOut
+  );
+
   return (
     <GameContainer
       gameId="breathing"
-      title="Breathe with God"
-      subtitle="Nervous System Regulation"
+      title={t('brainGames.games.breathing.title')}
+      subtitle={t('brainGames.games.breathing.subtitle')}
       onClose={isActive ? handleStop : handleClose}
       showHeader={!isActive}
     >
@@ -404,6 +644,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
           secondsRemaining={secondsRemaining}
           audioEnabled={audioGuidanceEnabled}
           onStop={handleStop}
+          t={t}
         />
       ) : (
         <ScrollView
@@ -411,106 +652,102 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
           contentContainerStyle={styles.setupContent}
           showsVerticalScrollIndicator={false}
         >
-          {/* Introduction */}
+          {/* Hero section */}
           <FadeInView delay={100}>
-            <GameCard style={styles.introCard}>
-              <Text style={styles.introTitle}>Find Your Peace</Text>
-              <Text style={styles.introText}>
-                Deep, rhythmic breathing activates your parasympathetic nervous
-                system, helping you move from stress to calm. Choose a pattern
-                and let God's peace flow through you with each breath.
-              </Text>
-              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
-            </GameCard>
+            <View style={styles.heroSection}>
+              <LinearGradient
+                colors={['#1a2a3a', '#0f1a2a', '#0a0f1a']}
+                style={styles.heroBg}
+              />
+              <View style={styles.heroContent}>
+                <View style={styles.heroIconContainer}>
+                  <Ionicons name="leaf" size={40} color={GAME_COLORS.breathing.primary} />
+                </View>
+                <Text style={styles.heroTitle}>{t('brainGames.breathe.findYourPeace')}</Text>
+                <Text style={styles.heroText}>
+                  {t('brainGames.breathe.heroDescription')}
+                </Text>
+                <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
+              </View>
+            </View>
           </FadeInView>
 
           {/* Pattern Selection */}
           <FadeInView delay={200}>
-            <GameSection title="Choose Your Pattern">
-              <PatternSelector
-                selectedPattern={selectedPattern}
-                onSelect={(p) => setSelectedPattern(p as keyof typeof BREATHING_PATTERNS)}
-              />
-            </GameSection>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>{t('brainGames.breathe.chooseYourPattern')}</Text>
+            </View>
+            <View style={styles.patternList}>
+              {Object.entries(BREATHING_PATTERNS).map(([key, pat]) => (
+                <PatternCard
+                  key={key}
+                  patternKey={key}
+                  pattern={pat}
+                  isSelected={selectedPattern === key}
+                  onSelect={() => setSelectedPattern(key as keyof typeof BREATHING_PATTERNS)}
+                  t={t}
+                />
+              ))}
+            </View>
           </FadeInView>
 
           {/* Cycle Selection */}
           <FadeInView delay={300}>
-            <GameSection title="Number of Cycles">
-              <View style={styles.cycleSelector}>
-                {[3, 5, 7, 10].map((cycles) => (
-                  <TouchableOpacity
-                    key={cycles}
-                    style={[
-                      styles.cycleOption,
-                      selectedCycles === cycles && styles.cycleOptionSelected,
-                    ]}
-                    onPress={() => {
-                      safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
-                      setSelectedCycles(cycles);
-                    }}
-                  >
-                    <Text style={[
-                      styles.cycleNumber,
-                      selectedCycles === cycles && styles.cycleNumberSelected,
-                    ]}>
-                      {cycles}
-                    </Text>
-                    <Text style={[
-                      styles.cycleLabel,
-                      selectedCycles === cycles && styles.cycleLabelSelected,
-                    ]}>
-                      {cycles === 3 ? 'Quick' :
-                       cycles === 5 ? 'Standard' :
-                       cycles === 7 ? 'Deep' : 'Extended'}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </GameSection>
-          </FadeInView>
-
-          {/* Duration Estimate */}
-          <FadeInView delay={400}>
-            <View style={styles.durationEstimate}>
-              <Text style={styles.durationLabel}>Estimated Duration</Text>
-              <Text style={styles.durationValue}>
-                {formatDuration(
-                  selectedCycles * (
-                    BREATHING_PATTERNS[selectedPattern].inhale +
-                    BREATHING_PATTERNS[selectedPattern].holdIn +
-                    BREATHING_PATTERNS[selectedPattern].exhale +
-                    BREATHING_PATTERNS[selectedPattern].holdOut
-                  )
-                )}
-              </Text>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>{t('brainGames.breathe.numberOfBreaths')}</Text>
             </View>
+            <CycleSelector
+              selected={selectedCycles}
+              onSelect={setSelectedCycles}
+              t={t}
+            />
           </FadeInView>
 
-          {/* Audio Guidance Toggle */}
-          <FadeInView delay={500}>
-            <View style={styles.audioToggleContainer}>
-              <View style={styles.audioToggleInfo}>
-                <View style={styles.audioToggleIcon}>
+          {/* Duration & Settings */}
+          <FadeInView delay={400}>
+            <View style={styles.settingsCard}>
+              {/* Duration */}
+              <View style={styles.durationRow}>
+                <View style={styles.durationInfo}>
+                  <Ionicons name="time-outline" size={20} color={COLORS.textMuted} />
+                  <Text style={styles.durationLabel}>{t('brainGames.breathe.duration')}</Text>
+                </View>
+                <Text style={styles.durationValue}>
+                  {formatDuration(estimatedDuration)}
+                </Text>
+              </View>
+
+              {/* Audio toggle */}
+              <View style={styles.audioRow}>
+                <View style={styles.audioInfo}>
                   <Ionicons
                     name={audioGuidanceEnabled ? 'volume-high' : 'volume-mute'}
                     size={20}
-                    color={audioGuidanceEnabled ? COLORS.gold : COLORS.mutedBrown}
+                    color={audioGuidanceEnabled ? GAME_COLORS.breathing.primary : COLORS.textMuted}
                   />
+                  <View>
+                    <Text style={styles.audioLabel}>{t('brainGames.breathe.hapticGuidance')}</Text>
+                    <Text style={styles.audioHint}>{t('brainGames.breathe.gentleCues')}</Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={styles.audioToggleLabel}>Audio Guidance</Text>
-                  <Text style={styles.audioToggleHint}>
-                    Gentle haptic cues at each breath phase
-                  </Text>
-                </View>
+                <Switch
+                  value={audioGuidanceEnabled}
+                  onValueChange={setAudioGuidanceEnabled}
+                  trackColor={{ false: 'rgba(255,255,255,0.1)', true: GAME_COLORS.breathing.primary + '60' }}
+                  thumbColor={audioGuidanceEnabled ? GAME_COLORS.breathing.primary : COLORS.textMuted}
+                />
               </View>
-              <Switch
-                value={audioGuidanceEnabled}
-                onValueChange={setAudioGuidanceEnabled}
-                trackColor={{ false: COLORS.warmBeige, true: COLORS.gold + '60' }}
-                thumbColor={audioGuidanceEnabled ? COLORS.gold : COLORS.cream}
-              />
+            </View>
+          </FadeInView>
+
+          {/* Scripture */}
+          <FadeInView delay={500}>
+            <View style={styles.scriptureIntro}>
+              <Ionicons name="book-outline" size={20} color={GAME_COLORS.breathing.primary} />
+              <Text style={styles.introScripture}>
+                {t('brainGames.breathe.introScripture')}
+              </Text>
+              <Text style={styles.introScriptureRef}>{t('brainGames.breathe.introScriptureRef')}</Text>
             </View>
           </FadeInView>
         </ScrollView>
@@ -520,7 +757,7 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       {!isActive && !showPreMoodCheck && (
         <GameFooter>
           <GradientButton
-            title="Begin Breathing"
+            title={t('brainGames.breathe.beginBreathing')}
             onPress={handleBeginSession}
           />
         </GameFooter>
@@ -529,16 +766,16 @@ export function BreatheWithGod({ onClose }: BreatheWithGodProps) {
       {/* Completion Modal */}
       <SessionComplete
         visible={showComplete}
-        title="Well Done"
-        subtitle="You took time to breathe with God"
+        title={t('brainGames.breathe.wellDone')}
+        subtitle={t('brainGames.breathe.completionSubtitle')}
         stats={[
-          { label: 'Duration', value: formatDuration(sessionStats.duration) },
-          { label: 'Cycles', value: sessionStats.cycles },
+          { label: t('brainGames.breathe.duration'), value: formatDuration(sessionStats.duration) },
+          { label: t('brainGames.breathe.breaths'), value: sessionStats.cycles },
         ]}
-        encouragement="Every breath is a prayer. You're learning to find peace in God's presence."
+        encouragement={t('brainGames.breathe.encouragement')}
         onContinue={handleContinue}
         onPlayAgain={handlePlayAgain}
-        continueLabel="Return to Games"
+        continueLabel={t('brainGames.breathe.returnToGames')}
       />
 
       {/* Why This Works Modal */}
@@ -580,80 +817,157 @@ const styles = StyleSheet.create({
   setupContent: {
     paddingBottom: SPACING.xxl,
   },
-  introCard: {
+
+  // Hero Section
+  heroSection: {
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
     marginBottom: SPACING.lg,
   },
-  introTitle: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '600',
-    color: COLORS.earth,
+  heroBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  heroContent: {
+    padding: SPACING.xl,
+    alignItems: 'center',
+  },
+  heroIconContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(74, 222, 128, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.md,
+  },
+  heroTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     marginBottom: SPACING.sm,
   },
-  introText: {
+  heroText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: SPACING.md,
   },
 
-  // Pattern Selector
-  patternContainer: {
+  // Section
+  sectionHeader: {
+    marginBottom: SPACING.md,
+  },
+  sectionTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+
+  // Pattern List
+  patternList: {
     gap: SPACING.sm,
+    marginBottom: SPACING.lg,
   },
   patternCard: {
-    backgroundColor: COLORS.warmBeige,
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
+    overflow: 'hidden',
   },
   patternCardSelected: {
-    backgroundColor: GAME_COLORS.breathing.primary,
+    borderColor: 'rgba(255,255,255,0.2)',
+  },
+  patternCardGlow: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  patternCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  patternIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  patternInfo: {
+    flex: 1,
   },
   patternName: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '500',
-    color: COLORS.earth,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
   },
-  patternNameSelected: {
-    color: COLORS.cream,
+  patternBenefit: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: 2,
   },
   patternTiming: {
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: RADIUS.md,
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+  },
+  patternTimingText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '500',
+  },
+  patternSelectedIndicator: {
+    position: 'absolute',
+    top: SPACING.sm,
+    right: SPACING.sm,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   // Cycle Selector
-  cycleSelector: {
+  cycleSelectorContainer: {
     flexDirection: 'row',
     gap: SPACING.sm,
+    marginBottom: SPACING.lg,
   },
   cycleOption: {
     flex: 1,
-    backgroundColor: COLORS.warmBeige,
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.08)',
   },
   cycleOptionSelected: {
     backgroundColor: GAME_COLORS.breathing.primary,
+    borderColor: GAME_COLORS.breathing.primary,
   },
   cycleNumber: {
     fontSize: TYPOGRAPHY.sizes.xxl,
     fontWeight: '700',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
+    marginTop: SPACING.xs,
   },
   cycleNumberSelected: {
-    color: COLORS.cream,
+    color: '#FFFFFF',
   },
   cycleLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
     marginTop: 2,
   },
@@ -661,60 +975,79 @@ const styles = StyleSheet.create({
     color: 'rgba(255,255,255,0.8)',
   },
 
-  // Duration Estimate
-  durationEstimate: {
+  // Settings Card
+  settingsCard: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
+    marginBottom: SPACING.lg,
+  },
+  durationRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.md,
+    justifyContent: 'space-between',
+    paddingBottom: SPACING.md,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
+    marginBottom: SPACING.md,
+  },
+  durationInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
   },
   durationLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
   },
   durationValue: {
     fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: '600',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
-    marginTop: 4,
   },
-
-  // Audio Toggle
-  audioToggleContainer: {
+  audioRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: COLORS.cream,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    marginTop: SPACING.md,
-    ...SHADOWS.soft,
   },
-  audioToggleInfo: {
+  audioInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: SPACING.sm,
     flex: 1,
   },
-  audioToggleIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: COLORS.warmBeige,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: SPACING.md,
-  },
-  audioToggleLabel: {
+  audioLabel: {
     fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
   },
-  audioToggleHint: {
+  audioHint: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
     marginTop: 2,
+  },
+
+  // Scripture Intro
+  scriptureIntro: {
+    alignItems: 'center',
+    paddingVertical: SPACING.lg,
+  },
+  introScripture: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    marginTop: SPACING.sm,
+  },
+  introScriptureRef: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: SPACING.xs,
   },
 
   // Breathing Screen
@@ -723,66 +1056,93 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  breathingBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  ambientParticle: {
+    position: 'absolute',
+    backgroundColor: 'rgba(74, 222, 128, 0.4)',
+  },
   cycleIndicator: {
     position: 'absolute',
     top: SPACING.xl,
-    flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.sm,
+  },
+  cycleProgress: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: SPACING.xs,
+  },
+  cycleDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255,255,255,0.2)',
   },
   cycleText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.richBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
   },
-  audioIndicator: {
-    backgroundColor: COLORS.gold + '20',
-    borderRadius: 12,
-    padding: 4,
+  ringsContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  concentricRing: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'rgba(74, 222, 128, 0.3)',
   },
   circleContainer: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   circleContent: {
     alignItems: 'center',
   },
+  countdown: {
+    fontSize: 56,
+    fontWeight: '200',
+    color: '#FFFFFF',
+    fontFamily: TYPOGRAPHY.ui,
+  },
   phaseInstruction: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '500',
-    color: COLORS.cream,
+    color: 'rgba(255,255,255,0.8)',
     fontFamily: TYPOGRAPHY.ui,
-    textAlign: 'center',
-    marginBottom: SPACING.sm,
-  },
-  countdown: {
-    fontSize: TYPOGRAPHY.sizes.hero,
-    fontWeight: '300',
-    color: COLORS.cream,
-    fontFamily: TYPOGRAPHY.ui,
+    marginTop: SPACING.xs,
   },
   scriptureContainer: {
+    position: 'absolute',
+    bottom: 120,
     paddingHorizontal: SPACING.xl,
-    paddingBottom: SPACING.xxl,
   },
   scriptureText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.devotional,
     fontStyle: 'italic',
     textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
+    lineHeight: 24,
   },
   stopButton: {
     position: 'absolute',
     bottom: SPACING.xxl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.xl,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   stopButtonText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
   },
 });

@@ -14,10 +14,12 @@ import {
   SafeAreaView,
   StatusBar,
   Platform,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import {
   COLORS,
@@ -34,6 +36,7 @@ import {
 } from '../../theme/brainGames';
 import { useWorldModel } from '../../worldModel';
 import { GameId, MoodLevel } from '../../worldModel/types';
+import { useAccess } from '../../context/AccessContext';
 import { Card, ProgressBar, Badge } from '../../components/PremiumUI';
 import {
   FadeInView,
@@ -50,10 +53,10 @@ import {
 
 interface GameDefinition {
   id: GameId;
-  title: string;
-  subtitle: string;
-  description: string;
-  theory: string;
+  titleKey: string;
+  subtitleKey: string;
+  descriptionKey: string;
+  theoryKey: string;
   icon: string;
   unlockDay: number;
 }
@@ -71,55 +74,55 @@ const GAME_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
 const GAMES: GameDefinition[] = [
   {
     id: 'breathing',
-    title: 'Breathe with God',
-    subtitle: 'Nervous System Regulation',
-    description: 'Guided breathing exercises to calm your nervous system and find peace.',
-    theory: 'Polyvagal Theory',
+    titleKey: 'brainGames.games.breathing.title',
+    subtitleKey: 'brainGames.games.breathing.subtitle',
+    descriptionKey: 'brainGames.games.breathing.description',
+    theoryKey: 'brainGames.games.breathing.theory',
     icon: 'leaf-outline',
     unlockDay: 1,
   },
   {
     id: 'gratitude',
-    title: 'Gratitude Garden',
-    subtitle: 'Positive Psychology',
-    description: 'Plant seeds of thankfulness and watch your garden of blessings grow.',
-    theory: 'Positive Psychology',
+    titleKey: 'brainGames.games.gratitude.title',
+    subtitleKey: 'brainGames.games.gratitude.subtitle',
+    descriptionKey: 'brainGames.games.gratitude.description',
+    theoryKey: 'brainGames.games.gratitude.theory',
     icon: 'flower-outline',
     unlockDay: 1,
   },
   {
     id: 'scripture_palace',
-    title: 'Scripture Palace',
-    subtitle: 'Memory & Faith',
-    description: 'Build a memory palace with scripture using ancient memorization techniques.',
-    theory: 'Method of Loci',
+    titleKey: 'brainGames.games.scripturePalace.title',
+    subtitleKey: 'brainGames.games.scripturePalace.subtitle',
+    descriptionKey: 'brainGames.games.scripturePalace.description',
+    theoryKey: 'brainGames.games.scripturePalace.theory',
     icon: 'library-outline',
     unlockDay: 7,
   },
   {
     id: 'thought_detective',
-    title: 'Thought Detective',
-    subtitle: 'Cognitive Reframing',
-    description: 'Identify and transform negative thought patterns with gentle investigation.',
-    theory: 'Cognitive Behavioral Therapy',
+    titleKey: 'brainGames.games.thoughtDetective.title',
+    subtitleKey: 'brainGames.games.thoughtDetective.subtitle',
+    descriptionKey: 'brainGames.games.thoughtDetective.description',
+    theoryKey: 'brainGames.games.thoughtDetective.theory',
     icon: 'search-outline',
     unlockDay: 15,
   },
   {
     id: 'body_scan',
-    title: 'Body Scan Release',
-    subtitle: 'Somatic Awareness',
-    description: 'Release stored tension by gently scanning and soothing your body.',
-    theory: 'Somatic Therapy',
+    titleKey: 'brainGames.games.bodyScan.title',
+    subtitleKey: 'brainGames.games.bodyScan.subtitle',
+    descriptionKey: 'brainGames.games.bodyScan.description',
+    theoryKey: 'brainGames.games.bodyScan.theory',
     icon: 'body-outline',
     unlockDay: 22,
   },
   {
     id: 'pattern_peace',
-    title: 'Pattern Peace',
-    subtitle: 'Focus Training',
-    description: 'Strengthen working memory and focus through peaceful pattern exercises.',
-    theory: 'N-Back Training',
+    titleKey: 'brainGames.games.patternPeace.title',
+    subtitleKey: 'brainGames.games.patternPeace.subtitle',
+    descriptionKey: 'brainGames.games.patternPeace.description',
+    theoryKey: 'brainGames.games.patternPeace.theory',
     icon: 'grid-outline',
     unlockDay: 28,
   },
@@ -136,6 +139,7 @@ interface GameCardProps {
   streak: number;
   lastPlayed?: number;
   onPress: () => void;
+  t: (key: string, options?: object) => string;
 }
 
 function GameCardItem({
@@ -145,6 +149,7 @@ function GameCardItem({
   streak,
   lastPlayed,
   onPress,
+  t,
 }: GameCardProps) {
   const theme = getGameTheme(game.id);
   const daysUntilUnlock = game.unlockDay - currentDay;
@@ -195,13 +200,13 @@ function GameCardItem({
             styles.gameTitle,
             { color: isUnlocked ? COLORS.cream : COLORS.earth },
           ]}>
-            {game.title}
+            {t(game.titleKey)}
           </Text>
           <Text style={[
             styles.gameSubtitle,
             { color: isUnlocked ? 'rgba(255,255,255,0.8)' : COLORS.richBrown },
           ]}>
-            {game.subtitle}
+            {t(game.subtitleKey)}
           </Text>
 
           {/* Status */}
@@ -218,8 +223,8 @@ function GameCardItem({
             <View style={styles.lockedInfo}>
               <Ionicons name="lock-closed" size={14} color={COLORS.mutedBrown} />
               <Text style={styles.lockText}>
-                Unlocks Day {game.unlockDay}
-                {daysUntilUnlock > 0 && ` (${daysUntilUnlock} days)`}
+                {t('brainGames.unlocksDay', { day: game.unlockDay })}
+                {daysUntilUnlock > 0 && ` (${daysUntilUnlock} ${t('common.days')})`}
               </Text>
             </View>
           )}
@@ -234,7 +239,7 @@ function GameCardItem({
             styles.theoryText,
             { color: isUnlocked ? COLORS.cream : COLORS.richBrown },
           ]}>
-            {game.theory}
+            {t(game.theoryKey)}
           </Text>
         </View>
       </LinearGradient>
@@ -260,7 +265,9 @@ const GAME_SCREEN_MAP: Record<GameId, string> = {
 // ============================================
 
 export function BrainGamesHub() {
+  const { t } = useTranslation();
   const navigation = useNavigation<any>();
+  const { canAccessBrainGames } = useAccess();
   const {
     state,
     dispatch,
@@ -271,6 +278,79 @@ export function BrainGamesHub() {
 
   const currentDay = state.journey.currentDay;
   const streakDays = state.journey.streakDays;
+
+  // Premium feature check - show upgrade prompt if not premium
+  if (!canAccessBrainGames()) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <View style={styles.premiumPrompt}>
+          <LinearGradient
+            colors={[COLORS.warmBrown, COLORS.deepBrown]}
+            style={styles.premiumGradient}
+          >
+            <View style={styles.premiumIcon}>
+              <Ionicons name="sparkles" size={48} color={COLORS.gold} />
+            </View>
+            <Text style={styles.premiumTitle}>{t('brainGames.unlockBrainGames')}</Text>
+            <Text style={styles.premiumDescription}>
+              {t('brainGames.unlockDescription')}
+            </Text>
+            <View style={styles.premiumFeatures}>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="leaf-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.breathing.title')}</Text>
+              </View>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="flower-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.gratitude.title')}</Text>
+              </View>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="search-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.thoughtDetective.title')}</Text>
+              </View>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="book-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.scripturePalace.title')}</Text>
+              </View>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="body-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.bodyScan.title')}</Text>
+              </View>
+              <View style={styles.premiumFeatureRow}>
+                <View style={styles.premiumFeatureIcon}>
+                  <Ionicons name="grid-outline" size={18} color={COLORS.gold} />
+                </View>
+                <Text style={styles.premiumFeatureItem}>{t('brainGames.games.patternPeace.title')}</Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.premiumUpgradeButton}
+              onPress={() => Linking.openURL('https://teawithgod.com/upgrade.html')}
+            >
+              <Text style={styles.premiumUpgradeButtonText}>{t('brainGames.upgradeToPremium')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.premiumButton}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.premiumButtonText}>{t('brainGames.maybeLater')}</Text>
+            </TouchableOpacity>
+          </LinearGradient>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   // ============================================
   // ENGAGEMENT STATE
@@ -382,12 +462,12 @@ export function BrainGamesHub() {
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
-            <Text style={styles.closeText}>← Back</Text>
+            <Text style={styles.closeText}>← {t('common.back')}</Text>
           </TouchableOpacity>
           <View style={styles.headerCenter}>
-            <Text style={styles.headerTitle}>Brain Games</Text>
+            <Text style={styles.headerTitle}>{t('brainGames.title')}</Text>
             <Text style={styles.headerSubtitle}>
-              Day {currentDay} of 40
+              {t('brainGames.dayOf40', { day: currentDay })}
             </Text>
           </View>
           <TouchableOpacity
@@ -403,23 +483,23 @@ export function BrainGamesHub() {
           <View style={styles.progressSection}>
             <View style={styles.progressHeader}>
               <Text style={styles.progressTitle}>
-                {currentDay <= 10 ? 'Gathering' :
-                 currentDay <= 20 ? 'Shaping' :
-                 currentDay <= 30 ? 'Refining' : 'Becoming'}
+                {currentDay <= 10 ? t('brainGames.phases.gathering') :
+                 currentDay <= 20 ? t('brainGames.phases.shaping') :
+                 currentDay <= 30 ? t('brainGames.phases.refining') : t('brainGames.phases.becoming')}
               </Text>
-              <Text style={styles.progressDay}>Day {currentDay} of 40</Text>
+              <Text style={styles.progressDay}>{t('brainGames.dayOf40', { day: currentDay })}</Text>
             </View>
             <ProgressBar
               progress={(currentDay / 40) * 100}
               height={8}
             />
             <Text style={styles.progressVerse}>
-              "The potter formed it into another pot, shaping it as seemed best to him."
+              {t('brainGames.potterVerse')}
             </Text>
             {streakDays > 0 && (
               <View style={styles.streakInfo}>
                 <Ionicons name="flame-outline" size={16} color={COLORS.gold} />
-                <Text style={styles.streakInfoText}>{streakDays} day streak</Text>
+                <Text style={styles.streakInfoText}>{t('brainGames.dayStreak', { count: streakDays })}</Text>
               </View>
             )}
           </View>
@@ -436,7 +516,7 @@ export function BrainGamesHub() {
                 <Ionicons name="bulb-outline" size={18} color={COLORS.gold} />
               </View>
               <View style={styles.recommendContent}>
-                <Text style={styles.sectionTitle}>Recommended for You</Text>
+                <Text style={styles.sectionTitle}>{t('brainGames.recommendedForYou')}</Text>
                 <Text style={styles.sectionHint}>
                   {recommendations.find((r) => r.game === recommendedGameIds[0])?.reason}
                 </Text>
@@ -452,7 +532,7 @@ export function BrainGamesHub() {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.sectionTitle}>All Games</Text>
+          <Text style={styles.sectionTitle}>{t('brainGames.allGames')}</Text>
 
           {GAMES.map((game, index) => {
             const isUnlocked = checkGameUnlock(game.id);
@@ -463,7 +543,7 @@ export function BrainGamesHub() {
               <FadeInView key={game.id} delay={300 + index * 100}>
                 {isRecommended && (
                   <Badge
-                    label="Recommended"
+                    label={t('brainGames.recommended')}
                     variant="gold"
                   />
                 )}
@@ -474,6 +554,7 @@ export function BrainGamesHub() {
                   streak={engagement?.streak || 0}
                   lastPlayed={engagement?.lastPlayed}
                   onPress={() => handleSelectGame(game.id)}
+                  t={t}
                 />
               </FadeInView>
             );
@@ -482,10 +563,7 @@ export function BrainGamesHub() {
           {/* Educational Disclaimer */}
           <View style={styles.disclaimer}>
             <Text style={styles.disclaimerText}>
-              These exercises are educational tools based on evidence-based
-              psychological principles. They are not a substitute for
-              professional mental health treatment. If you're in crisis,
-              please reach out to a mental health professional or crisis line.
+              {t('brainGames.disclaimer')}
             </Text>
           </View>
         </ScrollView>
@@ -777,6 +855,97 @@ const styles = StyleSheet.create({
     fontFamily: TYPOGRAPHY.ui,
     lineHeight: TYPOGRAPHY.sizes.xs * 1.6,
     textAlign: 'center',
+  },
+  // Premium upgrade prompt styles
+  premiumPrompt: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: SPACING.xl,
+  },
+  premiumGradient: {
+    width: '100%',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.xl,
+    alignItems: 'center',
+  },
+  premiumIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.lg,
+  },
+  premiumTitle: {
+    fontSize: TYPOGRAPHY.sizes.xxl,
+    fontWeight: '700',
+    color: COLORS.cream,
+    fontFamily: TYPOGRAPHY.heading,
+    marginBottom: SPACING.md,
+  },
+  premiumDescription: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.softIvory,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+    lineHeight: TYPOGRAPHY.sizes.md * 1.5,
+    marginBottom: SPACING.xl,
+  },
+  premiumButton: {
+    backgroundColor: COLORS.gold,
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.xl,
+    borderRadius: RADIUS.lg,
+  },
+  premiumButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    color: COLORS.deepBrown,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  premiumFeatures: {
+    marginVertical: SPACING.lg,
+    alignItems: 'center',
+  },
+  premiumFeatureRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: RADIUS.md,
+    minWidth: 220,
+  },
+  premiumFeatureIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: SPACING.sm,
+  },
+  premiumFeatureItem: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: 'rgba(250, 250, 250, 0.9)',
+    fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '500',
+  },
+  premiumUpgradeButton: {
+    backgroundColor: COLORS.gold,
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+    borderRadius: RADIUS.lg,
+    marginBottom: SPACING.sm,
+  },
+  premiumUpgradeButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: COLORS.deepBrown,
+    fontFamily: TYPOGRAPHY.ui,
   },
 });
 

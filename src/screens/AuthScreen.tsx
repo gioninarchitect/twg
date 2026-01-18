@@ -19,6 +19,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../theme/colors';
 
 // Tea cup logo using actual teacup.png image
@@ -38,6 +39,7 @@ interface Props {
 }
 
 export default function AuthScreen({ onAuthSuccess }: Props) {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -72,12 +74,12 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
 
   async function handleSendMagicLink() {
     if (!email) {
-      setError('Please enter your email');
+      setError(t('auth.errors.invalidEmail'));
       return;
     }
 
     if (!email.includes('@')) {
-      setError('Please enter a valid email');
+      setError(t('auth.errors.invalidEmail'));
       return;
     }
 
@@ -99,7 +101,7 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
         setMagicLinkSent(true);
       }
     } catch (err: any) {
-      setError('Something went wrong. Please try again.');
+      setError(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -108,6 +110,32 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
   function handleResend() {
     setMagicLinkSent(false);
     setEmail('');
+  }
+
+  async function handleGuestLogin() {
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Sign in anonymously with Supabase
+      const { data, error } = await supabase.auth.signInAnonymously();
+
+      if (error) {
+        console.error('Anonymous auth error:', error);
+        setError(t('auth.errors.signInFailed'));
+        return;
+      }
+
+      if (data.session) {
+        // Anonymous user created - onAuthStateChange will handle the rest
+        console.log('Guest signed in anonymously:', data.user?.id);
+      }
+    } catch (err: any) {
+      console.error('Guest login failed:', err);
+      setError(t('common.error'));
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Magic Link Sent View
@@ -123,18 +151,17 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
             <View style={styles.successIconContainer}>
               <Feather name="mail" size={48} color={COLORS.gold} />
             </View>
-            <Text style={styles.successTitle}>Check Your Email</Text>
+            <Text style={styles.successTitle}>{t('auth.checkEmail')}</Text>
             <Text style={styles.successMessage}>
-              We sent a magic link to{'\n'}
+              {t('auth.magicLinkSent')}{'\n'}
               <Text style={styles.emailHighlight}>{email}</Text>
             </Text>
             <Text style={styles.successHint}>
-              Click the link in the email to sign in.{'\n'}
-              No password needed.
+              {t('auth.clickLink')}
             </Text>
             <TouchableOpacity style={styles.resendButton} onPress={handleResend}>
               <Feather name="refresh-cw" size={16} color={COLORS.gold} />
-              <Text style={styles.resendText}>Use a different email</Text>
+              <Text style={styles.resendText}>{t('auth.useDifferentEmail')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -172,19 +199,19 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
               <View style={styles.logoContainer}>
                 <TeaCupIcon size={70} />
               </View>
-              <Text style={styles.title}>Tea With God</Text>
-              <Text style={styles.subtitle}>Your 40-day healing companion</Text>
+              <Text style={styles.title}>{t('welcome.title')}</Text>
+              <Text style={styles.subtitle}>{t('welcome.subtitle')}</Text>
             </View>
 
             {/* Form Card */}
             <View style={styles.formCard}>
-              <Text style={styles.formTitle}>Enter Your Sanctuary</Text>
+              <Text style={styles.formTitle}>{t('auth.enterSanctuary')}</Text>
               <Text style={styles.formSubtitle}>
-                We'll send you a magic link to sign in instantly.
+                {t('auth.magicLinkDesc')}
               </Text>
 
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Email</Text>
+                <Text style={styles.label}>{t('auth.email')}</Text>
                 <View style={styles.inputContainer}>
                   <Feather name="mail" size={18} color={COLORS.mutedBrown} style={styles.inputIcon} />
                   <TextInput
@@ -194,7 +221,7 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
                       setEmail(text);
                       setError(null);
                     }}
-                    placeholder="your@email.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor={COLORS.mutedBrown}
                     keyboardType="email-address"
                     autoCapitalize="none"
@@ -227,7 +254,7 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
                     <ActivityIndicator color={COLORS.earth} />
                   ) : (
                     <View style={styles.submitContent}>
-                      <Text style={styles.submitButtonText}>Send Magic Link</Text>
+                      <Text style={styles.submitButtonText}>{t('auth.sendMagicLink')}</Text>
                       <Feather name="send" size={18} color={COLORS.earth} />
                     </View>
                   )}
@@ -235,18 +262,19 @@ export default function AuthScreen({ onAuthSuccess }: Props) {
               </TouchableOpacity>
 
               <Text style={styles.noPasswordNote}>
-                No password to remember. Just click the link.
+                {t('auth.noPasswordNote')}
               </Text>
             </View>
 
             {/* Guest Option */}
             <TouchableOpacity
               style={styles.guestButton}
-              onPress={() => onAuthSuccess('guest', { accessLevel: 'GUEST' })}
+              onPress={handleGuestLogin}
+              disabled={loading}
             >
-              <Feather name="eye" size={16} color={COLORS.richBrown} />
-              <Text style={styles.guestButtonText}>Preview as Guest</Text>
-              <Text style={styles.guestNote}>(Days 1-3 only)</Text>
+              <Feather name="eye" size={16} color={COLORS.gameTextDark} />
+              <Text style={styles.guestButtonText}>{t('auth.previewAsGuest')}</Text>
+              <Text style={styles.guestNote}>{t('auth.guestDaysOnly')}</Text>
             </TouchableOpacity>
           </Animated.View>
         </ScrollView>

@@ -1,6 +1,7 @@
 /**
  * Audio Player - Sanctuary Sound Experience
  * Premium audio player for daily healing music
+ * Web-compatible with HTML5 Audio fallback
  */
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -11,11 +12,14 @@ import {
   StyleSheet,
   Animated,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { Audio, AVPlaybackStatus } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../theme/colors';
+
+const isWeb = Platform.OS === 'web';
 
 interface AudioPlayerProps {
   uri: string;
@@ -46,10 +50,16 @@ export default function AudioPlayer({
   const progressAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
+  // Web audio ref
+  const webAudioRef = useRef<HTMLAudioElement | null>(null);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (sound) {
+      if (isWeb && webAudioRef.current) {
+        webAudioRef.current.pause();
+        webAudioRef.current = null;
+      } else if (sound) {
         sound.unloadAsync();
       }
     };
@@ -82,24 +92,63 @@ export default function AudioPlayer({
 
     setIsLoading(true);
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: true,
-      });
+      if (isWeb) {
+        // Use HTML5 Audio for web
+        const audio = new window.Audio(uri);
+        webAudioRef.current = audio;
 
-      const { sound: newSound } = await Audio.Sound.createAsync(
-        { uri },
-        { shouldPlay: autoPlay },
-        onStatusUpdate
-      );
+        audio.addEventListener('loadedmetadata', () => {
+          setDuration(audio.duration * 1000);
+          setIsLoaded(true);
+          setIsLoading(false);
+        });
 
-      setSound(newSound);
-      setIsLoaded(true);
-      if (autoPlay) setIsPlaying(true);
+        audio.addEventListener('timeupdate', () => {
+          setPosition(audio.currentTime * 1000);
+          const progress = audio.duration ? audio.currentTime / audio.duration : 0;
+          Animated.timing(progressAnim, {
+            toValue: progress,
+            duration: 100,
+            useNativeDriver: false,
+          }).start();
+        });
+
+        audio.addEventListener('ended', () => {
+          setIsPlaying(false);
+          setPosition(0);
+        });
+
+        audio.addEventListener('error', (e) => {
+          console.error('Web audio error:', e);
+          setIsLoading(false);
+        });
+
+        audio.load();
+        if (autoPlay) {
+          audio.play();
+          setIsPlaying(true);
+        }
+      } else {
+        // Use expo-av for native
+        await Audio.setAudioModeAsync({
+          playsInSilentModeIOS: true,
+          staysActiveInBackground: true,
+        });
+
+        const { sound: newSound } = await Audio.Sound.createAsync(
+          { uri },
+          { shouldPlay: autoPlay },
+          onStatusUpdate
+        );
+
+        setSound(newSound);
+        setIsLoaded(true);
+        if (autoPlay) setIsPlaying(true);
+      }
     } catch (error) {
       console.error('Error loading audio:', error);
     } finally {
-      setIsLoading(false);
+      if (!isWeb) setIsLoading(false);
     }
   }
 
@@ -134,6 +183,22 @@ export default function AudioPlayer({
   async function togglePlayPause() {
     if (!isLoaded) {
       await loadAudio();
+      // For web, start playing after load
+      if (isWeb && webAudioRef.current) {
+        webAudioRef.current.play();
+        setIsPlaying(true);
+      }
+      return;
+    }
+
+    if (isWeb && webAudioRef.current) {
+      if (isPlaying) {
+        webAudioRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        webAudioRef.current.play();
+        setIsPlaying(true);
+      }
       return;
     }
 
@@ -147,8 +212,15 @@ export default function AudioPlayer({
   }
 
   async function seekTo(percentage: number) {
-    if (!sound || !duration) return;
+    if (!duration) return;
     const newPosition = percentage * duration;
+
+    if (isWeb && webAudioRef.current) {
+      webAudioRef.current.currentTime = newPosition / 1000;
+      return;
+    }
+
+    if (!sound) return;
     await sound.setPositionAsync(newPosition);
   }
 
@@ -210,6 +282,7 @@ export default function AudioPlayer({
 
         <View style={styles.compactInfo}>
           <Text style={styles.compactTitle} numberOfLines={1}>{title}</Text>
+          {subtitle && <Text style={styles.compactSubtitle} numberOfLines={1}>{subtitle}</Text>}
           <View style={styles.compactProgress}>
             <View style={styles.compactProgressTrack}>
               <Animated.View
@@ -536,6 +609,11 @@ const styles = StyleSheet.create({
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
     color: COLORS.earth,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  compactSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.mutedBrown,
     fontFamily: TYPOGRAPHY.ui,
     marginBottom: SPACING.xs,
   },

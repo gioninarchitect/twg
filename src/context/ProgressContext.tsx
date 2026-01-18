@@ -17,11 +17,11 @@ import { supabase, TABLES, isOnline, getCurrentUserId } from '../services/supaba
 // Hybrid Architecture: Local-first with optional cloud sync
 // All data persists locally first, then syncs to Supabase when online
 
-// Storage keys
-const STORAGE_KEYS = {
-  PROGRESS: '@twg_progress',
-  LAST_ACTIVE: '@twg_last_active',
-  UNLOCKS: '@twg_unlocks',
+// Storage key prefixes (userId appended at runtime)
+const STORAGE_KEY_PREFIXES = {
+  PROGRESS: '@twg_progress_',
+  LAST_ACTIVE: '@twg_last_active_',
+  UNLOCKS: '@twg_unlocks_',
 };
 
 // Milestone definitions - unlocks earned through gentle progression
@@ -34,7 +34,7 @@ export const MILESTONES = {
   },
   DAY_14: {
     day: 14,
-    title: 'Two Weeks of Healing',
+    title: 'Two Weeks of Growth',
     unlock: 'Momentum Audio Track',
     description: 'Two weeks of choosing yourself. You\'re building something beautiful.',
   },
@@ -55,12 +55,12 @@ export const MILESTONES = {
 // Days that have psychology modules (from PRD)
 export const PSYCHOLOGY_DAYS = [1, 7, 14, 15, 21, 22, 28, 35, 40];
 
-// Phase definitions
+// Phase definitions - uses i18n keys for translation
 export const PHASES = {
-  VALLEY: { name: 'The Valley', days: [1, 14], description: 'Acknowledging the pain' },
-  WAITING: { name: 'The Waiting', days: [15, 21], description: 'Learning to be still' },
-  RISING: { name: 'The Rising', days: [22, 33], description: 'Finding strength' },
-  BECOMING: { name: 'The Becoming', days: [34, 40], description: 'Embracing wholeness' },
+  VALLEY: { nameKey: 'dashboard.phases.valley', days: [1, 14], descriptionKey: 'dashboard.phases.valleyDesc' },
+  WAITING: { nameKey: 'dashboard.phases.waiting', days: [15, 21], descriptionKey: 'dashboard.phases.waitingDesc' },
+  RISING: { nameKey: 'dashboard.phases.rising', days: [22, 33], descriptionKey: 'dashboard.phases.risingDesc' },
+  BECOMING: { nameKey: 'dashboard.phases.becoming', days: [34, 40], descriptionKey: 'dashboard.phases.becomingDesc' },
 };
 
 export interface ProgressState {
@@ -107,7 +107,19 @@ interface ProgressContextType extends ProgressState {
 
 const ProgressContext = createContext<ProgressContextType | null>(null);
 
-export function ProgressProvider({ children }: { children: ReactNode }) {
+interface ProgressProviderProps {
+  children: ReactNode;
+  userId: string;
+}
+
+export function ProgressProvider({ children, userId }: ProgressProviderProps) {
+  // User-specific storage keys
+  const STORAGE_KEYS = {
+    PROGRESS: STORAGE_KEY_PREFIXES.PROGRESS + userId,
+    LAST_ACTIVE: STORAGE_KEY_PREFIXES.LAST_ACTIVE + userId,
+    UNLOCKS: STORAGE_KEY_PREFIXES.UNLOCKS + userId,
+  };
+
   const [state, setState] = useState<ProgressState>({
     currentDayIndex: 0,
     daysCompleted: [],
@@ -123,10 +135,10 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [newMilestone, setNewMilestone] = useState<string | null>(null);
 
-  // Load progress from local storage on mount
+  // Load progress from local storage on mount and when userId changes
   useEffect(() => {
     loadProgress();
-  }, []);
+  }, [userId, STORAGE_KEYS.PROGRESS]);
 
   // Check re-engagement when app loads
   useEffect(() => {
@@ -136,6 +148,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
   }, [isLoading]);
 
   async function loadProgress() {
+    setIsLoading(true);
     try {
       const stored = await AsyncStorage.getItem(STORAGE_KEYS.PROGRESS);
       if (stored) {
@@ -145,6 +158,19 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           ...parsed,
           currentPhase: getPhaseForDay(parsed.currentDayIndex + 1),
         }));
+      } else {
+        // No progress for this user - reset to initial state
+        setState({
+          currentDayIndex: 0,
+          daysCompleted: [],
+          totalDaysCompleted: 0,
+          lastActiveTimestamp: Date.now(),
+          journeyStartDate: new Date().toISOString().split('T')[0],
+          unlockedMilestones: [],
+          showReEngagement: false,
+          daysSinceLastActive: 0,
+          currentPhase: 'VALLEY',
+        });
       }
     } catch (error) {
       console.error('Error loading progress:', error);

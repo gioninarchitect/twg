@@ -1,7 +1,7 @@
 /**
  * Why This Works Modal
  * Displays science-backed explanations for each brain game
- * Based on Dr. Amen, Porges, van der Kolk, and Neff research
+ * Based on peer-reviewed neuroscience and psychology research
  */
 
 import React from 'react';
@@ -28,7 +28,7 @@ interface ScienceContent {
   explanation: string;
   benefits: string[];
   research: {
-    author: string;
+    source: string;
     finding: string;
   }[];
   practicalTip: string;
@@ -49,11 +49,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Dr. Stephen Porges',
+        source: 'Autonomic Neuroscience Research',
         finding: 'The vagus nerve is the key pathway between breath and emotional regulation.',
       },
       {
-        author: 'Gerritsen & Band (2018)',
+        source: 'Clinical Psychology Studies',
         finding: 'Controlled breathing practices significantly reduce stress and anxiety.',
       },
     ],
@@ -73,11 +73,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Dr. Robert Emmons',
+        source: 'Positive Psychology Research',
         finding: 'People who practice gratitude consistently report 25% more happiness.',
       },
       {
-        author: 'Kini et al. (2016)',
+        source: 'Neuroimaging Studies',
         finding: 'Gratitude practice changes brain structure, increasing gray matter in regions linked to empathy and decision-making.',
       },
     ],
@@ -97,11 +97,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Maguire et al. (2003)',
+        source: 'Cognitive Neuroscience Research',
         finding: 'Memory champions use spatial memory regions, not special brain structures.',
       },
       {
-        author: 'Legge et al. (2012)',
+        source: 'Memory Science Studies',
         finding: 'The Method of Loci improves recall by 2-3x compared to rote memorization.',
       },
     ],
@@ -121,11 +121,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Dr. Daniel Amen',
-        finding: 'Identified 9 types of ANTs (Automatic Negative Thoughts) that distort thinking.',
+        source: 'Cognitive Psychology Research',
+        finding: 'Researchers identified multiple types of ANTs (Automatic Negative Thoughts) that distort thinking.',
       },
       {
-        author: 'Beck et al. (1979)',
+        source: 'Clinical Outcome Studies',
         finding: 'CBT is as effective as medication for mild-moderate depression, with longer-lasting effects.',
       },
     ],
@@ -145,11 +145,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Dr. Bessel van der Kolk',
-        finding: '"The body keeps the score" - trauma is stored somatically and must be released through the body.',
+        source: 'Trauma Research',
+        finding: 'Trauma is stored somatically in the body and can be released through body-based practices.',
       },
       {
-        author: 'Price & Hooven (2018)',
+        source: 'Interoception Studies',
         finding: 'Interoceptive awareness (body sensing) is linked to better emotional regulation.',
       },
     ],
@@ -169,11 +169,11 @@ const SCIENCE_CONTENT: Record<GameId, ScienceContent> = {
     ],
     research: [
       {
-        author: 'Jaeggi et al. (2008)',
+        source: 'Cognitive Training Research',
         finding: 'Working memory training can improve fluid intelligence (problem-solving ability).',
       },
       {
-        author: 'Dr. Daniel Amen',
+        source: 'Brain Imaging Studies',
         finding: 'Brain exercises that challenge focus and memory increase blood flow to the prefrontal cortex.',
       },
     ],
@@ -252,10 +252,10 @@ export function WhyThisWorks({ visible, gameId, onClose }: WhyThisWorksProps) {
 
             {/* Research */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Research</Text>
+              <Text style={styles.sectionTitle}>What Research Shows</Text>
               {content.research.map((study, index) => (
                 <View key={index} style={styles.researchCard}>
-                  <Text style={styles.researchAuthor}>{study.author}</Text>
+                  <Text style={styles.researchSource}>{study.source}</Text>
                   <Text style={styles.researchFinding}>"{study.finding}"</Text>
                 </View>
               ))}
@@ -272,8 +272,9 @@ export function WhyThisWorks({ visible, gameId, onClose }: WhyThisWorksProps) {
 
             {/* Disclaimer */}
             <Text style={styles.disclaimer}>
-              This exercise is for educational purposes. It is not a substitute for
-              professional mental health treatment.
+              FOR EDUCATIONAL PURPOSES ONLY. This content is based on general scientific
+              principles. Not professional medical or psychological advice. Not a substitute
+              for professional mental health treatment.
             </Text>
           </ScrollView>
 
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
     marginBottom: SPACING.sm,
   },
-  researchAuthor: {
+  researchSource: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: '600',
     color: COLORS.earth,

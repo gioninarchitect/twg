@@ -1,22 +1,22 @@
 /**
- * Dr. Daniel Amen's 12 Principles Mapping
+ * Evidence-Based Brain Health Principles Mapping
  *
- * This file maps Dr. Amen's brain health principles to the Tea With God
- * 40-day journey. Each day's devotional content and brain games are
- * aligned with specific principles for maximum neurological benefit.
+ * This file maps established brain health principles from neuroscience research
+ * to the Tea With God 40-day journey. Each day's devotional content and brain
+ * games are aligned with specific principles for maximum neurological benefit.
  *
- * RESEARCH REFERENCE: https://www.amenclinics.com/blog/dr-daniel-amens-12-underlying-principles/
+ * Based on peer-reviewed research in neuroscience, psychology, and brain health.
  *
- * DISCLAIMER: This mapping is for educational alignment purposes.
- * We are not affiliated with Amen Clinics. These principles inform our
- * evidence-based approach but do not constitute medical advice.
+ * DISCLAIMER: This mapping is for educational purposes only.
+ * These principles inform our evidence-based approach but do not constitute
+ * medical advice.
  */
 
 // ============================================================================
-// Dr. Amen's 12 Underlying Principles
+// 12 Evidence-Based Brain Health Principles
 // ============================================================================
 
-export interface AmenPrinciple {
+export interface BrainPrinciple {
   id: number;
   name: string;
   shortName: string;
@@ -25,7 +25,7 @@ export interface AmenPrinciple {
   applicationToTWG: string;
 }
 
-export const AMEN_PRINCIPLES: AmenPrinciple[] = [
+export const BRAIN_PRINCIPLES: BrainPrinciple[] = [
   {
     id: 1,
     name: 'Your brain is involved in everything you do',
@@ -125,7 +125,7 @@ export const AMEN_PRINCIPLES: AmenPrinciple[] = [
 ];
 
 // ============================================================================
-// 40-Day Journey Mapping to Amen Principles
+// 40-Day Journey Mapping to Brain Health Principles
 // ============================================================================
 
 export interface DayMapping {
@@ -138,7 +138,7 @@ export interface DayMapping {
   devotionalTheme: string;
 }
 
-export const DAY_AMEN_MAPPING: DayMapping[] = [
+export const DAY_BRAIN_MAPPING: DayMapping[] = [
   // ========================================
   // VALLEY PHASE (Days 1-14)
   // Focus: Grounding, Safety, Hope
@@ -177,7 +177,7 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
     secondaryPrinciples: [5, 11],
     recommendedGames: ['breathing', 'gratitude'],
     brainFocus: 'Vagus Nerve (Nervous System Regulation)',
-    devotionalTheme: 'Learning what hurts and helps our healing',
+    devotionalTheme: 'Learning what hurts and helps our growth',
   },
   {
     day: 5,
@@ -213,7 +213,7 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
     secondaryPrinciples: [1, 7],
     recommendedGames: ['breathing', 'scripture_palace'],
     brainFocus: 'Mind-Body Connection',
-    devotionalTheme: 'Whole-person healing',
+    devotionalTheme: 'Whole-person growth',
   },
   {
     day: 9,
@@ -231,7 +231,7 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
     secondaryPrinciples: [9, 12],
     recommendedGames: ['breathing', 'scripture_palace', 'gratitude'],
     brainFocus: 'Self-Awareness',
-    devotionalTheme: 'Your unique path to healing',
+    devotionalTheme: 'Your unique path to growth',
   },
   {
     day: 11,
@@ -366,7 +366,7 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
     primaryPrinciple: 8, // Systems Integration
     secondaryPrinciples: [5, 1],
     recommendedGames: ['body_scan', 'gratitude'],
-    brainFocus: 'Mind-Body Healing',
+    brainFocus: 'Mind-Body Connection',
     devotionalTheme: 'Wholeness through God',
   },
   {
@@ -471,7 +471,7 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
     secondaryPrinciples: [12, 8],
     recommendedGames: ['pattern_peace', 'breathing', 'thought_detective'],
     brainFocus: 'Life Application',
-    devotionalTheme: 'Living from healing',
+    devotionalTheme: 'Living from wholeness',
   },
   {
     day: 36,
@@ -525,18 +525,18 @@ export const DAY_AMEN_MAPPING: DayMapping[] = [
 // ============================================================================
 
 export function getDayMapping(dayNumber: number): DayMapping | undefined {
-  return DAY_AMEN_MAPPING.find(d => d.day === dayNumber);
+  return DAY_BRAIN_MAPPING.find(d => d.day === dayNumber);
 }
 
-export function getPrincipleById(id: number): AmenPrinciple | undefined {
-  return AMEN_PRINCIPLES.find(p => p.id === id);
+export function getPrincipleById(id: number): BrainPrinciple | undefined {
+  return BRAIN_PRINCIPLES.find(p => p.id === id);
 }
 
-export function getDayPrinciples(dayNumber: number): AmenPrinciple[] {
+export function getDayPrinciples(dayNumber: number): BrainPrinciple[] {
   const mapping = getDayMapping(dayNumber);
   if (!mapping) return [];
 
-  const principles: AmenPrinciple[] = [];
+  const principles: BrainPrinciple[] = [];
   const primary = getPrincipleById(mapping.primaryPrinciple);
   if (primary) principles.push(primary);
 
@@ -548,8 +548,8 @@ export function getDayPrinciples(dayNumber: number): AmenPrinciple[] {
   return principles;
 }
 
-export function getPhasePrinciples(phase: string): AmenPrinciple[] {
-  const phaseDays = DAY_AMEN_MAPPING.filter(d => d.phase === phase);
+export function getPhasePrinciples(phase: string): BrainPrinciple[] {
+  const phaseDays = DAY_BRAIN_MAPPING.filter(d => d.phase === phase);
   const principleIds = new Set<number>();
 
   for (const day of phaseDays) {
@@ -559,7 +559,7 @@ export function getPhasePrinciples(phase: string): AmenPrinciple[] {
 
   return Array.from(principleIds)
     .map(id => getPrincipleById(id))
-    .filter((p): p is AmenPrinciple => p !== undefined);
+    .filter((p): p is BrainPrinciple => p !== undefined);
 }
 
 // ============================================================================
@@ -572,7 +572,7 @@ export const WHY_THIS_WORKS_TEMPLATES = {
     title: 'The Science of Sacred Breathing',
     content: `When you practice slow, rhythmic breathing, you're directly communicating with your brain through the vagus nerve. This activates your parasympathetic nervous system - the "rest and digest" mode that counters anxiety and stress.
 
-Dr. Amen's Principle #7 reminds us that "many things help the brain, many things hurt it." Breath work is one of the most accessible, free, and evidence-based tools for brain health.
+Brain research reminds us that "many things help the brain, many things hurt it." Breath work is one of the most accessible, free, and evidence-based tools for brain health.
 
 In just 3-5 minutes, you can:
 • Lower cortisol (stress hormone)
@@ -586,7 +586,7 @@ In just 3-5 minutes, you can:
     title: 'Why Gratitude Changes Your Brain',
     content: `Gratitude isn't just positive thinking - it's brain training. When you focus on blessings, you strengthen neural pathways in the prefrontal cortex and limbic system that counter anxiety and depression.
 
-Dr. Amen's research shows that what you focus on determines brain patterns. Consistent gratitude practice literally rewires your brain to notice good things more easily.
+Research shows that what you focus on determines brain patterns. Consistent gratitude practice literally rewires your brain to notice good things more easily.
 
 Studies show that gratitude practice:
 • Increases dopamine and serotonin (natural mood elevators)
@@ -600,7 +600,7 @@ Studies show that gratitude practice:
     title: 'Memory Palace and Brain Complexity',
     content: `Your hippocampus - the brain's memory center - responds powerfully to spatial and emotional encoding. The Memory Palace technique (Method of Loci) leverages this by anchoring information to places and images.
 
-Dr. Amen's Principle #3 acknowledges the brain's incredible complexity. By using visual memory techniques, you're working WITH your brain's natural design, not against it.
+Neuroscience acknowledges the brain's incredible complexity. By using visual memory techniques, you're working WITH your brain's natural design, not against it.
 
 Scripture memorization through the Memory Palace:
 • Strengthens hippocampal connections
@@ -614,7 +614,7 @@ Scripture memorization through the Memory Palace:
     title: 'Cognitive Behavioral Transformation',
     content: `Cognitive distortions - like catastrophizing, black-and-white thinking, and personalization - are patterns in the brain that can be identified and changed. This is the core of Cognitive Behavioral Therapy (CBT).
 
-Dr. Amen's Principle #9 states that "understanding your brain helps you fix problems." When you can NAME a distortion, you gain power over it. The prefrontal cortex (rational brain) can override the limbic system (emotional brain) with practice.
+Brain science principle: "understanding your brain helps you fix problems." When you can NAME a distortion, you gain power over it. The prefrontal cortex (rational brain) can override the limbic system (emotional brain) with practice.
 
 The Thought Detective process:
 • Activates metacognition (thinking about thinking)
@@ -628,7 +628,7 @@ The Thought Detective process:
     title: 'The Body-Brain Connection',
     content: `Your body stores stress and trauma in patterns of tension. The interoceptive awareness you develop through body scanning activates the insula - a brain region connecting physical sensations to emotional processing.
 
-Dr. Amen's Principle #5 emphasizes that "your brain needs proper support." Physical awareness is a form of support - teaching the brain that the body is safe, present, and worthy of attention.
+Neuroscience emphasizes that "your brain needs proper support." Physical awareness is a form of support - teaching the brain that the body is safe, present, and worthy of attention.
 
 Body Scan Release helps:
 • Reduce chronic muscle tension
@@ -642,7 +642,7 @@ Body Scan Release helps:
     title: 'Building Brain Reserve Through Focus',
     content: `N-back training targets working memory - your brain's ability to hold and manipulate information. This is primarily a function of the dorsolateral prefrontal cortex, which is also key for focus and emotional regulation.
 
-Dr. Amen's Principle #11 teaches us to "build brain reserve to handle stress." Working memory training is like building a bigger buffer - when challenges come, you have more cognitive capacity to respond wisely.
+Brain research teaches us to "build brain reserve to handle stress." Working memory training is like building a bigger buffer - when challenges come, you have more cognitive capacity to respond wisely.
 
 Pattern Peace training:
 • Strengthens working memory circuits
@@ -653,8 +653,8 @@ Pattern Peace training:
 };
 
 export default {
-  AMEN_PRINCIPLES,
-  DAY_AMEN_MAPPING,
+  BRAIN_PRINCIPLES,
+  DAY_BRAIN_MAPPING,
   WHY_THIS_WORKS_TEMPLATES,
   getDayMapping,
   getPrincipleById,

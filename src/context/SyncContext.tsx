@@ -257,6 +257,11 @@ export function SyncProvider({ children }: { children: ReactNode }) {
 
     setIsSyncing(true);
 
+    // User-specific storage keys
+    const userProgressKey = `@twg_progress_${user.id}`;
+    const userJournalKey = `@twg_journal_${user.id}`;
+    const userAccessKey = `@twg_access_${user.id}`;
+
     try {
       // Pull progress
       const { data: progressData } = await supabase
@@ -267,7 +272,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
 
       if (progressData) {
         // Merge with local - cloud wins for progress
-        await AsyncStorage.setItem('@twg_progress', JSON.stringify({
+        await AsyncStorage.setItem(userProgressKey, JSON.stringify({
           currentDayIndex: progressData.current_day_index,
           daysCompleted: progressData.days_completed,
           totalDaysCompleted: progressData.total_days_completed,
@@ -283,7 +288,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
         .eq('user_id', user.id);
 
       if (journalData && journalData.length > 0) {
-        const localJournal = await AsyncStorage.getItem('@twg_journal');
+        const localJournal = await AsyncStorage.getItem(userJournalKey);
         const local = localJournal ? JSON.parse(localJournal) : { entries: [] };
 
         // Merge entries - most recent wins
@@ -322,7 +327,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
           }
         }
 
-        await AsyncStorage.setItem('@twg_journal', JSON.stringify({
+        await AsyncStorage.setItem(userJournalKey, JSON.stringify({
           ...local,
           entries: mergedEntries,
         }));
@@ -336,7 +341,7 @@ export function SyncProvider({ children }: { children: ReactNode }) {
         .single();
 
       if (accessData) {
-        await AsyncStorage.setItem('@twg_access', JSON.stringify({
+        await AsyncStorage.setItem(userAccessKey, JSON.stringify({
           accessLevel: accessData.access_level,
           codeUsed: accessData.code_used,
           codeDescription: accessData.code_description,

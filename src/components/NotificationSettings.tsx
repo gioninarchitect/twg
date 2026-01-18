@@ -15,6 +15,7 @@ import {
   Modal,
   Platform,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { Feather } from '@expo/vector-icons';
 import { COLORS, SPACING, TYPOGRAPHY, RADIUS, SHADOWS } from '../theme/colors';
 import { useNotifications } from '../context/NotificationContext';
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function NotificationSettings({ compact = false }: Props) {
+  const { t } = useTranslation();
   const {
     enabled,
     reminderTime,
@@ -71,7 +73,7 @@ export default function NotificationSettings({ compact = false }: Props) {
           <View style={styles.iconContainer}>
             <Feather name="bell" size={18} color={COLORS.dustyBlue} />
           </View>
-          <Text style={styles.compactLabel}>Daily Reminders</Text>
+          <Text style={styles.compactLabel}>{t('notifications.dailyReminder')}</Text>
           <Switch
             value={enabled}
             onValueChange={handleToggle}
@@ -114,16 +116,16 @@ export default function NotificationSettings({ compact = false }: Props) {
           <Feather name="bell" size={20} color={COLORS.dustyBlue} />
         </View>
         <View style={styles.headerText}>
-          <Text style={styles.title}>Gentle Reminders</Text>
-          <Text style={styles.subtitle}>A warm invitation each morning</Text>
+          <Text style={styles.title}>{t('notifications.gentleReminders')}</Text>
+          <Text style={styles.subtitle}>{t('notifications.warmInvitation')}</Text>
         </View>
       </View>
 
       <View style={styles.settingRow}>
         <View>
-          <Text style={styles.settingLabel}>Enable Daily Reminders</Text>
+          <Text style={styles.settingLabel}>{t('notifications.enableDailyReminders')}</Text>
           <Text style={styles.settingHint}>
-            {enabled ? 'You\'ll receive a gentle nudge' : 'Notifications are off'}
+            {enabled ? t('notifications.gentleNudge') : t('notifications.notificationsOff')}
           </Text>
         </View>
         <Switch
@@ -140,8 +142,8 @@ export default function NotificationSettings({ compact = false }: Props) {
           onPress={() => setShowTimePicker(true)}
         >
           <View>
-            <Text style={styles.settingLabel}>Reminder Time</Text>
-            <Text style={styles.settingHint}>When would you like your invitation?</Text>
+            <Text style={styles.settingLabel}>{t('notifications.reminderTime')}</Text>
+            <Text style={styles.settingHint}>{t('notifications.whenInvitation')}</Text>
           </View>
           <View style={styles.timeButton}>
             <Text style={styles.timeText}>
@@ -153,8 +155,7 @@ export default function NotificationSettings({ compact = false }: Props) {
       )}
 
       <Text style={styles.note}>
-        These reminders are gentle invitations, never guilt-inducing.
-        You can always turn them off.
+        {t('notifications.reminderNote')}
       </Text>
 
       {/* Time Picker Modal */}
@@ -189,6 +190,7 @@ function TimePickerModal({
   timeOptions: Array<{ hour: number; minute: number }>;
   formatTime: (hour: number, minute: number) => string;
 }) {
+  const { t } = useTranslation();
   return (
     <Modal
       visible={visible}
@@ -199,7 +201,7 @@ function TimePickerModal({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
-            <Text style={styles.modalTitle}>Select Time</Text>
+            <Text style={styles.modalTitle}>{t('notifications.selectTime')}</Text>
             <TouchableOpacity onPress={onClose}>
               <Feather name="x" size={24} color={COLORS.earth} />
             </TouchableOpacity>

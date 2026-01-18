@@ -17,6 +17,7 @@ import {
   Modal,
   SafeAreaView,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../theme/colors';
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function ReEngagementModal({ visible }: Props) {
+  const { t } = useTranslation();
   const { daysSinceLastActive, totalDaysCompleted, dismissReEngagement } = useProgress();
 
   return (
@@ -50,26 +52,26 @@ export default function ReEngagementModal({ visible }: Props) {
             </View>
 
             {/* Gentle message - NO shame */}
-            <Text style={styles.title}>Welcome Back</Text>
+            <Text style={styles.title}>{t('reEngagement.welcomeBack')}</Text>
 
             <Text style={styles.message}>
-              It's been a little while.{'\n'}
-              <Text style={styles.emphasis}>That's okay.</Text>
+              {t('reEngagement.beenAWhile')}{'\n'}
+              <Text style={styles.emphasis}>{t('reEngagement.thatsOkay')}</Text>
             </Text>
 
             <Text style={styles.subMessage}>
-              Life gets heavy sometimes.{'\n'}
-              You're here now, and that's what matters.
+              {t('reEngagement.lifeGetsHeavy')}{'\n'}
+              {t('reEngagement.youreHereNow')}
             </Text>
 
             {/* Progress reminder (gentle, not accusatory) */}
             {totalDaysCompleted > 0 && (
               <View style={styles.progressReminder}>
                 <Text style={styles.progressText}>
-                  You've completed {totalDaysCompleted} day{totalDaysCompleted !== 1 ? 's' : ''} of healing.
+                  {t('reEngagement.daysOfGrowth', { count: totalDaysCompleted })}
                 </Text>
                 <Text style={styles.progressSubtext}>
-                  Those days still count.
+                  {t('reEngagement.daysStillCount')}
                 </Text>
               </View>
             )}
@@ -86,7 +88,7 @@ export default function ReEngagementModal({ visible }: Props) {
                   style={styles.continueGradient}
                 >
                   <Feather name="arrow-right" size={20} color={COLORS.earth} />
-                  <Text style={styles.continueText}>Continue Where I Left Off</Text>
+                  <Text style={styles.continueText}>{t('reEngagement.continueWhereLeft')}</Text>
                 </LinearGradient>
               </TouchableOpacity>
 
@@ -96,14 +98,14 @@ export default function ReEngagementModal({ visible }: Props) {
                 activeOpacity={0.8}
               >
                 <Feather name="refresh-cw" size={18} color={COLORS.richBrown} />
-                <Text style={styles.restartText}>Start Fresh from Day 1</Text>
+                <Text style={styles.restartText}>{t('reEngagement.startFresh')}</Text>
               </TouchableOpacity>
             </View>
 
             {/* Reassurance */}
             <Text style={styles.reassurance}>
-              No pressure. No judgment.{'\n'}
-              Take the path that feels right.
+              {t('reEngagement.noPressure')}{'\n'}
+              {t('reEngagement.pathFeelsRight')}
             </Text>
           </LinearGradient>
         </SafeAreaView>

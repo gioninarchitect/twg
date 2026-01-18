@@ -18,12 +18,14 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS, GRADIENTS } from '../theme/colors';
-import { audioService, DAILY_AUDIO_TRACKS } from '../services/audioService';
+import { audioService, DAILY_AUDIO_TRACKS, buildAudioTrack } from '../services/audioService';
 import { useProgress, PSYCHOLOGY_DAYS } from '../context/ProgressContext';
+import { useAccess } from '../context/AccessContext';
 import { Divider } from '../components/PremiumUI';
 import AudioPlayer from '../components/AudioPlayer';
 import JournalInput from '../components/JournalInput';
@@ -53,9 +55,11 @@ interface DayContent {
 }
 
 export default function DayModuleScreen() {
+  const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const { dayNumber } = route.params;
+  const { codeUsed } = useAccess();
 
   const [loading, setLoading] = useState(true);
   const [day, setDay] = useState<DayContent | null>(null);
@@ -128,25 +132,11 @@ export default function DayModuleScreen() {
     }
   }
 
-  if (loading) {
+  if (loading || !day) {
     return (
       <View style={styles.loadingContainer}>
-        <View style={styles.loadingIcon}>
-          <View style={styles.bowlShape}>
-            <View style={styles.goldCrack} />
-          </View>
-        </View>
-        <ActivityIndicator size="large" color={COLORS.gold} style={{ marginTop: SPACING.lg }} />
-        <Text style={styles.loadingText}>Opening today's reflection...</Text>
-      </View>
-    );
-  }
-
-  if (!day) {
-    return (
-      <View style={styles.loadingContainer}>
-        <Feather name="alert-circle" size={48} color={COLORS.mutedTerracotta} />
-        <Text style={styles.errorText}>Could not load this day's content.</Text>
+        <ActivityIndicator size="large" color={COLORS.gold} />
+        <Text style={styles.loadingText}>{t('dayModule.loadingReflection')}</Text>
       </View>
     );
   }
@@ -165,7 +155,7 @@ export default function DayModuleScreen() {
             color={activeTab === 'devotional' ? COLORS.gold : COLORS.mutedBrown}
           />
           <Text style={[styles.tabText, activeTab === 'devotional' && styles.tabTextActive]}>
-            Devotional
+            {t('dayModule.devotional')}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -178,10 +168,23 @@ export default function DayModuleScreen() {
             color={activeTab === 'journal' ? COLORS.gold : COLORS.mutedBrown}
           />
           <Text style={[styles.tabText, activeTab === 'journal' && styles.tabTextActive]}>
-            Journal
+            {t('dayModule.journal')}
           </Text>
         </TouchableOpacity>
       </View>
+
+      {/* Audio Player - Persistent across tab changes */}
+      {audioService.hasTrackForDay(dayNumber) && codeUsed && (
+        <View style={styles.persistentAudioPlayer}>
+          <AudioPlayer
+            uri={buildAudioTrack(dayNumber, codeUsed)?.uri || ''}
+            title={buildAudioTrack(dayNumber, codeUsed)?.title || ''}
+            subtitle={buildAudioTrack(dayNumber, codeUsed)?.subtitle}
+            dayNumber={dayNumber}
+            variant="compact"
+          />
+        </View>
+      )}
 
       {activeTab === 'devotional' ? (
         <ScrollView
@@ -196,24 +199,11 @@ export default function DayModuleScreen() {
             {/* Header */}
             <View style={styles.header}>
               <View style={[styles.phaseBadge, { backgroundColor: getPhaseColor(day.phase_name) }]}>
-                <Text style={styles.phaseBadgeText}>{day.phase_name}</Text>
+                <Text style={styles.phaseBadgeText}>{t(`dashboard.phases.${day.phase_name.toLowerCase()}`)}</Text>
               </View>
-              <Text style={styles.dayLabel}>Day {day.day_number}</Text>
+              <Text style={styles.dayLabel}>{t('dayModule.day')} {day.day_number}</Text>
               <Text style={styles.dayTitle}>{day.title}</Text>
             </View>
-
-            {/* Audio Player - Shows when audio track is available for this day */}
-            {DAILY_AUDIO_TRACKS[dayNumber] && (
-              <View style={styles.audioSection}>
-                <AudioPlayer
-                  uri={DAILY_AUDIO_TRACKS[dayNumber].uri}
-                  title={DAILY_AUDIO_TRACKS[dayNumber].title}
-                  subtitle={DAILY_AUDIO_TRACKS[dayNumber].subtitle}
-                  dayNumber={dayNumber}
-                  variant="full"
-                />
-              </View>
-            )}
 
             {/* Reflection Section */}
             <View style={styles.section}>
@@ -221,7 +211,7 @@ export default function DayModuleScreen() {
                 <View style={styles.sectionIcon}>
                   <Feather name="book-open" size={18} color={COLORS.gold} />
                 </View>
-                <Text style={styles.sectionTitle}>Reflection</Text>
+                <Text style={styles.sectionTitle}>{t('dayModule.reflection')}</Text>
               </View>
               <Text style={styles.reflectionText}>{day.reflection_content}</Text>
             </View>
@@ -234,7 +224,7 @@ export default function DayModuleScreen() {
                 <View style={styles.sectionIcon}>
                   <Feather name="bookmark" size={18} color={COLORS.gold} />
                 </View>
-                <Text style={styles.sectionTitle}>Scripture</Text>
+                <Text style={styles.sectionTitle}>{t('dayModule.scripture')}</Text>
               </View>
               <View style={styles.scriptureCard}>
                 <Text style={styles.scriptureText}>"{day.scripture_text}"</Text>
@@ -250,7 +240,7 @@ export default function DayModuleScreen() {
                 <View style={styles.sectionIcon}>
                   <Feather name="sun" size={18} color={COLORS.gold} />
                 </View>
-                <Text style={styles.sectionTitle}>Thought of the Day</Text>
+                <Text style={styles.sectionTitle}>{t('dayModule.thoughtOfDay')}</Text>
               </View>
               <View style={styles.thoughtCard}>
                 <Text style={styles.thoughtText}>{day.thought_of_day}</Text>
@@ -265,7 +255,7 @@ export default function DayModuleScreen() {
                 <View style={styles.sectionIcon}>
                   <Feather name="heart" size={18} color={COLORS.gold} />
                 </View>
-                <Text style={styles.sectionTitle}>Prayer</Text>
+                <Text style={styles.sectionTitle}>{t('dayModule.prayer')}</Text>
               </View>
               <View style={styles.prayerCard}>
                 <Text style={styles.prayerText}>{day.prayer_text}</Text>
@@ -294,9 +284,9 @@ export default function DayModuleScreen() {
                       <Feather name="info" size={18} color={COLORS.dustyBlue} />
                     </View>
                     <View>
-                      <Text style={styles.psychologyTitle}>Why This Works</Text>
+                      <Text style={styles.psychologyTitle}>{t('dayModule.whyThisWorks')}</Text>
                       <Text style={styles.psychologySubtitle}>
-                        {getPsychologyModule(dayNumber)?.subtitle || 'The Science Behind Today'}
+                        {getPsychologyModule(dayNumber)?.subtitle || t('dayModule.scienceBehindToday')}
                       </Text>
                     </View>
                   </View>
@@ -320,7 +310,7 @@ export default function DayModuleScreen() {
 
                     {/* Application */}
                     <View style={styles.applicationCard}>
-                      <Text style={styles.applicationLabel}>What This Means For You</Text>
+                      <Text style={styles.applicationLabel}>{t('dayModule.whatThisMeansForYou')}</Text>
                       <Text style={styles.applicationText}>
                         {getPsychologyModule(dayNumber)?.application}
                       </Text>
@@ -341,7 +331,7 @@ export default function DayModuleScreen() {
             {/* Progress Indicator */}
             <View style={styles.progressSection}>
               <View style={styles.progressRow}>
-                <Text style={styles.progressLabel}>Reading Progress</Text>
+                <Text style={styles.progressLabel}>{t('dayModule.readingProgress')}</Text>
                 <Text style={styles.progressValue}>{scrollDepth}%</Text>
               </View>
               <View style={styles.progressBar}>
@@ -351,7 +341,7 @@ export default function DayModuleScreen() {
                 <TouchableOpacity style={styles.completeButton} onPress={handleCompleteDay}>
                   <View style={styles.completeButtonInner}>
                     <Feather name="check-circle" size={20} color={COLORS.gold} />
-                    <Text style={styles.completeButtonText}>Complete Day {dayNumber}</Text>
+                    <Text style={styles.completeButtonText}>{t('dayModule.completeDay', { day: dayNumber })}</Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -373,14 +363,14 @@ export default function DayModuleScreen() {
           >
             <View style={styles.journalHeader}>
               <Feather name="edit-3" size={24} color={COLORS.gold} />
-              <Text style={styles.journalTitle}>Your Journal</Text>
-              <Text style={styles.journalDate}>Day {dayNumber}</Text>
+              <Text style={styles.journalTitle}>{t('dayModule.yourJournal')}</Text>
+              <Text style={styles.journalDate}>{t('dayModule.day')} {dayNumber}</Text>
             </View>
 
             <JournalInput
               dayNumber={dayNumber}
               prompt={day.journal_prompt}
-              placeholder="Write your thoughts here... This is your safe space."
+              placeholder={t('dayModule.journalPlaceholder')}
             />
 
             <View style={{ height: 100 }} />
@@ -400,47 +390,20 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: COLORS.cream,
-  },
-  loadingIcon: {
-    width: 60,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  bowlShape: {
-    width: 50,
-    height: 30,
-    borderBottomLeftRadius: 25,
-    borderBottomRightRadius: 25,
-    borderWidth: 2,
-    borderTopWidth: 0,
-    borderColor: COLORS.earth,
-    backgroundColor: COLORS.warmBeige,
-    position: 'relative',
-    overflow: 'hidden',
-  },
-  goldCrack: {
+    backgroundColor: '#0D0D0D',
     position: 'absolute',
-    width: 2,
-    height: 20,
-    backgroundColor: COLORS.gold,
-    top: 2,
-    left: 24,
-    transform: [{ rotate: '5deg' }],
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
   },
   loadingText: {
-    marginTop: SPACING.md,
-    color: COLORS.richBrown,
+    marginTop: SPACING.lg,
+    color: 'rgba(250, 250, 250, 0.6)',
     fontFamily: TYPOGRAPHY.devotional,
     fontSize: TYPOGRAPHY.sizes.md,
     fontStyle: 'italic',
-  },
-  errorText: {
-    marginTop: SPACING.lg,
-    color: COLORS.mutedTerracotta,
-    fontFamily: TYPOGRAPHY.ui,
-    fontSize: TYPOGRAPHY.sizes.md,
   },
   tabBar: {
     flexDirection: 'row',
@@ -479,8 +442,12 @@ const styles = StyleSheet.create({
   header: {
     marginBottom: SPACING.lg,
   },
-  audioSection: {
-    marginBottom: SPACING.xl,
+  persistentAudioPlayer: {
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.sm,
+    backgroundColor: COLORS.warmBeige,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.cream,
   },
   phaseBadge: {
     alignSelf: 'flex-start',

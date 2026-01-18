@@ -4,6 +4,7 @@
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { supabase, TABLES, isOnline, getCurrentUserId } from '../services/supabase';
 import {
   UserWorldState,
   JourneyState,
@@ -25,7 +26,8 @@ import {
   ScriptureMemory,
 } from './types';
 
-const WORLD_MODEL_STORAGE_KEY = '@twg_world_model';
+// Storage key prefix (userId appended at runtime)
+const WORLD_MODEL_STORAGE_KEY_PREFIX = '@twg_world_model_';
 
 // ============================================
 // INITIAL STATE FACTORY
@@ -112,21 +114,50 @@ export function createInitialWorldState(userId: string): UserWorldState {
 
 export async function saveWorldModel(state: UserWorldState): Promise<void> {
   try {
+    const storageKey = WORLD_MODEL_STORAGE_KEY_PREFIX + state.userId;
     const updated = { ...state, lastUpdated: Date.now() };
-    await AsyncStorage.setItem(WORLD_MODEL_STORAGE_KEY, JSON.stringify(updated));
+    // Save locally first
+    await AsyncStorage.setItem(storageKey, JSON.stringify(updated));
+    // Sync to cloud
+    syncWorldModelToCloud(updated);
   } catch (error) {
     console.error('Failed to save world model:', error);
   }
 }
 
+async function syncWorldModelToCloud(state: UserWorldState): Promise<void> {
+  try {
+    const online = await isOnline();
+    const userId = await getCurrentUserId();
+
+    if (!online || !userId) return;
+
+    const { error } = await supabase
+      .from(TABLES.WORLD_MODEL_STATE)
+      .upsert({
+        user_id: userId,
+        state: state,
+        version: 1,
+        updated_at: new Date().toISOString(),
+      }, {
+        onConflict: 'user_id',
+      });
+
+    if (error) {
+      console.log('World model cloud sync deferred:', error.message);
+    }
+  } catch (error) {
+    console.log('World model cloud sync failed:', error);
+  }
+}
+
 export async function loadWorldModel(userId: string): Promise<UserWorldState> {
   try {
-    const stored = await AsyncStorage.getItem(WORLD_MODEL_STORAGE_KEY);
+    const storageKey = WORLD_MODEL_STORAGE_KEY_PREFIX + userId;
+    const stored = await AsyncStorage.getItem(storageKey);
     if (stored) {
       const parsed = JSON.parse(stored);
-      if (parsed.userId === userId) {
-        return parsed;
-      }
+      return parsed;
     }
   } catch (error) {
     console.error('Failed to load world model:', error);
@@ -134,8 +165,9 @@ export async function loadWorldModel(userId: string): Promise<UserWorldState> {
   return createInitialWorldState(userId);
 }
 
-export async function clearWorldModel(): Promise<void> {
-  await AsyncStorage.removeItem(WORLD_MODEL_STORAGE_KEY);
+export async function clearWorldModel(userId: string): Promise<void> {
+  const storageKey = WORLD_MODEL_STORAGE_KEY_PREFIX + userId;
+  await AsyncStorage.removeItem(storageKey);
 }
 
 // ============================================

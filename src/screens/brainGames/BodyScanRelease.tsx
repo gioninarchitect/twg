@@ -2,6 +2,8 @@
  * Body Scan Release
  * Somatic awareness and tension release exercise
  * Unlocks: Day 22
+ *
+ * Premium UI v2.0 - Immersive body awareness experience
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
@@ -13,9 +15,12 @@ import {
   ScrollView,
   Animated,
   Dimensions,
+  Easing,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -38,235 +43,647 @@ import {
   type SessionMoodLevel,
 } from '../../components/brainGames';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 // ============================================
-// BODY REGIONS
+// BODY REGIONS WITH VISUAL POSITIONS
 // ============================================
 
 interface BodyRegion {
   id: string;
-  name: string;
-  displayName: string;
-  instruction: string;
-  releasePrompt: string;
-  scripture: string;
-  position: { top: number; left: number };
+  nameKey: string;
+  displayNameKey: string;
+  instructionKey: string;
+  releasePromptKey: string;
+  scriptureKey: string;
+  icon: string;
+  // Visual position on body silhouette (percentage)
+  visualPosition: { top: number; left: number };
 }
 
 const BODY_REGIONS: BodyRegion[] = [
   {
     id: 'head',
-    name: 'Head',
-    displayName: 'Crown & Temples',
-    instruction: 'Bring attention to your head. Notice any tension in your forehead, temples, or jaw.',
-    releasePrompt: 'With each exhale, let the tension dissolve. Imagine a warm, golden light softening every muscle.',
-    scripture: '"He gives peace to your borders." - Psalm 147:14',
-    position: { top: 5, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.head.name',
+    displayNameKey: 'brainGames.bodyScan.regions.head.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.head.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.head.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.head.scripture',
+    icon: 'sunny-outline',
+    visualPosition: { top: 8, left: 50 },
   },
   {
     id: 'neck',
-    name: 'Neck',
-    displayName: 'Neck & Throat',
-    instruction: 'Move your attention to your neck and throat. This area often holds unspoken words and tension.',
-    releasePrompt: 'Gently roll your head if it helps. Release any tightness with gratitude for your voice.',
-    scripture: '"Let the words of my mouth be acceptable." - Psalm 19:14',
-    position: { top: 15, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.neck.name',
+    displayNameKey: 'brainGames.bodyScan.regions.neck.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.neck.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.neck.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.neck.scripture',
+    icon: 'mic-outline',
+    visualPosition: { top: 18, left: 50 },
   },
   {
     id: 'shoulders',
-    name: 'Shoulders',
-    displayName: 'Shoulders',
-    instruction: 'Feel into your shoulders. This is where we carry burdens and responsibilities.',
-    releasePrompt: 'Let your shoulders drop. You don\'t have to carry everything alone.',
-    scripture: '"Cast your burden on the Lord." - Psalm 55:22',
-    position: { top: 22, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.shoulders.name',
+    displayNameKey: 'brainGames.bodyScan.regions.shoulders.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.shoulders.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.shoulders.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.shoulders.scripture',
+    icon: 'fitness-outline',
+    visualPosition: { top: 24, left: 50 },
   },
   {
     id: 'chest',
-    name: 'Chest',
-    displayName: 'Heart & Chest',
-    instruction: 'Bring awareness to your chest and heart space. Notice your breath rising and falling.',
-    releasePrompt: 'Place a hand on your heart if you wish. You are safe. You are held.',
-    scripture: '"He heals the brokenhearted." - Psalm 147:3',
-    position: { top: 32, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.chest.name',
+    displayNameKey: 'brainGames.bodyScan.regions.chest.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.chest.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.chest.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.chest.scripture',
+    icon: 'heart-outline',
+    visualPosition: { top: 35, left: 50 },
   },
   {
     id: 'stomach',
-    name: 'Stomach',
-    displayName: 'Belly',
-    instruction: 'Notice your belly. This area often holds anxiety and "gut feelings."',
-    releasePrompt: 'Breathe deeply into your belly. Let it soften completely with each breath.',
-    scripture: '"Do not be anxious about anything." - Philippians 4:6',
-    position: { top: 45, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.stomach.name',
+    displayNameKey: 'brainGames.bodyScan.regions.stomach.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.stomach.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.stomach.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.stomach.scripture',
+    icon: 'ellipse-outline',
+    visualPosition: { top: 48, left: 50 },
   },
   {
     id: 'back',
-    name: 'Back',
-    displayName: 'Lower Back',
-    instruction: 'Scan your lower back. This region supports you and often holds stress.',
-    releasePrompt: 'Imagine warmth spreading through your lower back, releasing all tension.',
-    scripture: '"The Lord is my strength." - Psalm 28:7',
-    position: { top: 55, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.back.name',
+    displayNameKey: 'brainGames.bodyScan.regions.back.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.back.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.back.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.back.scripture',
+    icon: 'shield-outline',
+    visualPosition: { top: 55, left: 50 },
   },
   {
     id: 'hands',
-    name: 'Hands',
-    displayName: 'Arms & Hands',
-    instruction: 'Feel your arms and hands. Are they clenched or relaxed?',
-    releasePrompt: 'Open your palms. Release anything you\'ve been holding onto too tightly.',
-    scripture: '"I will hold your right hand." - Isaiah 41:13',
-    position: { top: 42, left: 20 },
+    nameKey: 'brainGames.bodyScan.regions.hands.name',
+    displayNameKey: 'brainGames.bodyScan.regions.hands.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.hands.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.hands.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.hands.scripture',
+    icon: 'hand-left-outline',
+    visualPosition: { top: 45, left: 20 },
   },
   {
     id: 'legs',
-    name: 'Legs',
-    displayName: 'Legs & Thighs',
-    instruction: 'Bring attention to your thighs and legs. They carry you through each day.',
-    releasePrompt: 'Let your legs feel heavy and grounded. You are supported.',
-    scripture: '"He makes my feet like the feet of a deer." - Psalm 18:33',
-    position: { top: 65, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.legs.name',
+    displayNameKey: 'brainGames.bodyScan.regions.legs.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.legs.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.legs.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.legs.scripture',
+    icon: 'walk-outline',
+    visualPosition: { top: 68, left: 50 },
   },
   {
     id: 'feet',
-    name: 'Feet',
-    displayName: 'Feet',
-    instruction: 'Finally, notice your feet. Feel them grounded to the earth.',
-    releasePrompt: 'Imagine roots growing from your feet, connecting you to stability and peace.',
-    scripture: '"How beautiful are the feet of those who bring good news." - Romans 10:15',
-    position: { top: 85, left: 50 },
+    nameKey: 'brainGames.bodyScan.regions.feet.name',
+    displayNameKey: 'brainGames.bodyScan.regions.feet.displayName',
+    instructionKey: 'brainGames.bodyScan.regions.feet.instruction',
+    releasePromptKey: 'brainGames.bodyScan.regions.feet.releasePrompt',
+    scriptureKey: 'brainGames.bodyScan.regions.feet.scripture',
+    icon: 'footsteps-outline',
+    visualPosition: { top: 88, left: 50 },
   },
 ];
 
 // ============================================
-// TENSION SLIDER
+// ANIMATED ENERGY PARTICLE
 // ============================================
 
-interface TensionSliderProps {
+interface EnergyParticleProps {
+  delay: number;
+  color: string;
+  size: number;
+  startX: number;
+  startY: number;
+}
+
+function EnergyParticle({ delay, color, size, startX, startY }: EnergyParticleProps) {
+  const animation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const animate = () => {
+      animation.setValue(0);
+      Animated.timing(animation, {
+        toValue: 1,
+        duration: 3000 + Math.random() * 2000,
+        delay,
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }).start(() => animate());
+    };
+    animate();
+  }, []);
+
+  const translateY = animation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, -100 - Math.random() * 50],
+  });
+
+  const translateX = animation.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0, (Math.random() - 0.5) * 40, (Math.random() - 0.5) * 60],
+  });
+
+  const opacity = animation.interpolate({
+    inputRange: [0, 0.2, 0.8, 1],
+    outputRange: [0, 0.8, 0.4, 0],
+  });
+
+  const scale = animation.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.3, 1, 0.5],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.energyParticle,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          backgroundColor: color,
+          left: startX,
+          top: startY,
+          opacity,
+          transform: [{ translateY }, { translateX }, { scale }],
+        },
+      ]}
+    />
+  );
+}
+
+// ============================================
+// GLOWING BODY REGION MARKER
+// ============================================
+
+interface RegionMarkerProps {
+  region: BodyRegion;
+  isActive: boolean;
+  isScanned: boolean;
+  tensionLevel?: number;
+  onPress?: () => void;
+}
+
+function RegionMarker({ region, isActive, isScanned, tensionLevel, onPress }: RegionMarkerProps) {
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const glowAnim = useRef(new Animated.Value(0)).current;
+  const colors = GAME_COLORS.bodyScan;
+
+  useEffect(() => {
+    if (isActive) {
+      // Pulsing animation for active region
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(pulseAnim, {
+            toValue: 1.3,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+          Animated.timing(pulseAnim, {
+            toValue: 1,
+            duration: 1000,
+            easing: Easing.inOut(Easing.ease),
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+
+      // Glow animation
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(glowAnim, {
+            toValue: 1,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+          Animated.timing(glowAnim, {
+            toValue: 0.4,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    } else {
+      pulseAnim.setValue(1);
+      glowAnim.setValue(0);
+    }
+  }, [isActive]);
+
+  const getTensionColor = () => {
+    if (!tensionLevel) return colors.neutral;
+    if (tensionLevel <= 3) return colors.release;
+    if (tensionLevel <= 6) return colors.neutral;
+    return colors.tension;
+  };
+
+  const markerColor = isScanned ? getTensionColor() : isActive ? colors.primary : 'rgba(255,255,255,0.2)';
+
+  return (
+    <TouchableOpacity
+      style={[
+        styles.regionMarker,
+        {
+          top: `${region.visualPosition.top}%`,
+          left: `${region.visualPosition.left}%`,
+        },
+      ]}
+      onPress={onPress}
+      disabled={!onPress}
+      activeOpacity={0.8}
+    >
+      {isActive && (
+        <Animated.View
+          style={[
+            styles.regionGlow,
+            {
+              backgroundColor: colors.primary,
+              opacity: glowAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0.2, 0.5],
+              }),
+              transform: [{ scale: pulseAnim }],
+            },
+          ]}
+        />
+      )}
+      <Animated.View
+        style={[
+          styles.regionDot,
+          {
+            backgroundColor: markerColor,
+            transform: [{ scale: isActive ? pulseAnim : 1 }],
+            borderColor: isActive ? colors.primary : 'transparent',
+            borderWidth: isActive ? 2 : 0,
+          },
+        ]}
+      >
+        {isActive && (
+          <Ionicons name={region.icon as any} size={14} color="#fff" />
+        )}
+      </Animated.View>
+    </TouchableOpacity>
+  );
+}
+
+// ============================================
+// BODY SILHOUETTE v2
+// ============================================
+
+interface BodySilhouetteV2Props {
+  currentRegionId: string | null;
+  tensionMap: Record<string, number>;
+  showParticles?: boolean;
+}
+
+function BodySilhouetteV2({ currentRegionId, tensionMap, showParticles }: BodySilhouetteV2Props) {
+  const colors = GAME_COLORS.bodyScan;
+  const breatheAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Subtle breathing animation for the body
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(breatheAnim, {
+          toValue: 1,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(breatheAnim, {
+          toValue: 0,
+          duration: 3000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, []);
+
+  const breatheScale = breatheAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.02],
+  });
+
+  const currentRegion = BODY_REGIONS.find(r => r.id === currentRegionId);
+
+  return (
+    <View style={styles.bodyContainerV2}>
+      {/* Background glow */}
+      <View style={styles.bodyGlowBg}>
+        <LinearGradient
+          colors={['transparent', 'rgba(138, 180, 248, 0.1)', 'transparent']}
+          style={styles.bodyGlowGradient}
+        />
+      </View>
+
+      {/* Body shape */}
+      <Animated.View style={[styles.bodyShape, { transform: [{ scale: breatheScale }] }]}>
+        {/* Head */}
+        <View style={styles.bodyHead2} />
+        {/* Neck */}
+        <View style={styles.bodyNeck2} />
+        {/* Torso */}
+        <View style={styles.bodyTorso2} />
+        {/* Arms */}
+        <View style={styles.bodyArms2}>
+          <View style={styles.bodyArmLeft2} />
+          <View style={styles.bodyArmRight2} />
+        </View>
+        {/* Legs */}
+        <View style={styles.bodyLegs2}>
+          <View style={styles.bodyLegLeft2} />
+          <View style={styles.bodyLegRight2} />
+        </View>
+      </Animated.View>
+
+      {/* Region markers */}
+      {BODY_REGIONS.map((region) => (
+        <RegionMarker
+          key={region.id}
+          region={region}
+          isActive={region.id === currentRegionId}
+          isScanned={!!tensionMap[region.id]}
+          tensionLevel={tensionMap[region.id]}
+        />
+      ))}
+
+      {/* Release particles */}
+      {showParticles && currentRegion && (
+        <>
+          {[...Array(8)].map((_, i) => (
+            <EnergyParticle
+              key={i}
+              delay={i * 200}
+              color={colors.release}
+              size={6 + Math.random() * 6}
+              startX={SCREEN_WIDTH * 0.3 + Math.random() * SCREEN_WIDTH * 0.4}
+              startY={200}
+            />
+          ))}
+        </>
+      )}
+    </View>
+  );
+}
+
+// ============================================
+// VISUAL TENSION ARC
+// ============================================
+
+interface TensionArcProps {
   value: number;
   onChange: (value: number) => void;
   label: string;
+  t: (key: string) => string;
 }
 
-function TensionSlider({ value, onChange, label }: TensionSliderProps) {
+function TensionArc({ value, onChange, label, t }: TensionArcProps) {
   const colors = GAME_COLORS.bodyScan;
+  const levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   const handlePress = (newValue: number) => {
     safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
     onChange(newValue);
   };
 
+  const getColorForLevel = (level: number) => {
+    if (level <= 3) return colors.release;
+    if (level <= 6) return colors.neutral;
+    return colors.tension;
+  };
+
   return (
-    <View style={styles.sliderContainer}>
-      <Text style={styles.sliderLabel}>{label}</Text>
-      <View style={styles.sliderTrack}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
-          <TouchableOpacity
-            key={num}
-            style={[
-              styles.sliderDot,
-              num <= value && {
-                backgroundColor: num <= 3 ? colors.release :
-                                num <= 6 ? colors.neutral :
-                                colors.tension,
-              },
-            ]}
-            onPress={() => handlePress(num)}
-          />
-        ))}
+    <View style={styles.tensionArcContainer}>
+      <Text style={styles.tensionLabel}>{label}</Text>
+
+      {/* Tension level display */}
+      <View style={styles.tensionValueDisplay}>
+        <Text style={[styles.tensionValue, { color: getColorForLevel(value) }]}>
+          {value}
+        </Text>
+        <Text style={styles.tensionValueLabel}>
+          {value <= 3 ? t('brainGames.bodyScan.tensionLevels.relaxed') : value <= 6 ? t('brainGames.bodyScan.tensionLevels.moderate') : t('brainGames.bodyScan.tensionLevels.tense')}
+        </Text>
       </View>
-      <View style={styles.sliderLabels}>
-        <Text style={styles.sliderMinLabel}>None</Text>
-        <Text style={styles.sliderMaxLabel}>High</Text>
+
+      {/* Arc of orbs */}
+      <View style={styles.tensionArc}>
+        {levels.map((level) => {
+          const isSelected = level <= value;
+          const levelColor = getColorForLevel(level);
+
+          return (
+            <TouchableOpacity
+              key={level}
+              style={[
+                styles.tensionOrb,
+                isSelected && {
+                  backgroundColor: levelColor,
+                  shadowColor: levelColor,
+                  shadowOpacity: 0.6,
+                  shadowRadius: 8,
+                  elevation: 4,
+                },
+              ]}
+              onPress={() => handlePress(level)}
+              activeOpacity={0.7}
+            >
+              {isSelected && (
+                <View style={styles.tensionOrbInner} />
+              )}
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+
+      <View style={styles.tensionLabels}>
+        <Text style={styles.tensionMinLabel}>{t('brainGames.bodyScan.tensionLevels.none')}</Text>
+        <Text style={styles.tensionMaxLabel}>{t('brainGames.bodyScan.tensionLevels.high')}</Text>
       </View>
     </View>
   );
 }
 
 // ============================================
-// BODY SILHOUETTE
+// REGION JOURNEY CARD
 // ============================================
 
-interface BodySilhouetteProps {
-  currentRegion: string | null;
-  tensionMap: Record<string, number>;
-  onRegionPress?: (regionId: string) => void;
+interface RegionJourneyCardProps {
+  region: BodyRegion;
+  phase: 'sense' | 'release';
+  tension: number;
+  onTensionChange: (value: number) => void;
+  onSkip: () => void;
+  t: (key: string) => string;
 }
 
-function BodySilhouette({ currentRegion, tensionMap, onRegionPress }: BodySilhouetteProps) {
+function RegionJourneyCard({ region, phase, tension, onTensionChange, onSkip, t }: RegionJourneyCardProps) {
   const colors = GAME_COLORS.bodyScan;
+  const [isExpanded, setIsExpanded] = useState(false);
+  const expandAnim = useRef(new Animated.Value(0)).current;
 
-  const getTensionColor = (tension: number) => {
-    if (tension <= 3) return colors.release;
-    if (tension <= 6) return colors.neutral;
-    return colors.tension;
+  const toggleExpand = () => {
+    safeHaptics.impact(ImpactFeedbackStyle.Light);
+    const toValue = isExpanded ? 0 : 1;
+    Animated.spring(expandAnim, {
+      toValue,
+      friction: 8,
+      tension: 40,
+      useNativeDriver: false,
+    }).start();
+    setIsExpanded(!isExpanded);
   };
 
+  // Animate content height
+  const contentHeight = expandAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 280], // Collapsed to expanded height
+  });
+
+  const chevronRotate = expandAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
+
   return (
-    <View style={styles.bodyContainer}>
-      {/* Simple body outline representation */}
-      <View style={styles.bodyOutline}>
-        {/* Head */}
-        <View style={[styles.bodyPart, styles.bodyHead, tensionMap.head ? { backgroundColor: getTensionColor(tensionMap.head) } : undefined]}>
-          {currentRegion === 'head' && <PulsingDot size={16} color={colors.primary} />}
+    <View style={styles.journeyCard}>
+      <LinearGradient
+        colors={['#1a1a2e', '#16162a', '#0f0f1a']}
+        style={styles.journeyCardBg}
+      />
+
+      {/* Collapsible header - tap to expand */}
+      <TouchableOpacity
+        style={styles.journeyHeader}
+        onPress={toggleExpand}
+        activeOpacity={0.8}
+      >
+        <View style={[styles.journeyIcon, { backgroundColor: colors.primary + '30' }]}>
+          <Ionicons name={region.icon as any} size={24} color={colors.primary} />
         </View>
-
-        {/* Torso */}
-        <View style={styles.bodyTorso}>
-          {/* Neck */}
-          <View style={[styles.bodyNeck, tensionMap.neck ? { backgroundColor: getTensionColor(tensionMap.neck) } : undefined]}>
-            {currentRegion === 'neck' && <PulsingDot size={12} color={colors.primary} />}
-          </View>
-
-          {/* Shoulders */}
-          <View style={styles.bodyShoulders}>
-            {currentRegion === 'shoulders' && <PulsingDot size={12} color={colors.primary} />}
-          </View>
-
-          {/* Chest */}
-          <View style={[styles.bodyChest, tensionMap.chest ? { backgroundColor: getTensionColor(tensionMap.chest) } : undefined]}>
-            {currentRegion === 'chest' && <PulsingDot size={16} color={colors.primary} />}
-          </View>
-
-          {/* Stomach */}
-          <View style={[styles.bodyStomach, tensionMap.stomach ? { backgroundColor: getTensionColor(tensionMap.stomach) } : undefined]}>
-            {currentRegion === 'stomach' && <PulsingDot size={16} color={colors.primary} />}
-          </View>
+        <View style={styles.journeyTitleContainer}>
+          <Text style={styles.journeyTitle}>{t(region.displayNameKey)}</Text>
+          <Text style={styles.journeyPhase}>
+            {phase === 'sense' ? t('brainGames.bodyScan.phases.sensing') : t('brainGames.bodyScan.phases.releasing')}
+            {!isExpanded && ' - ' + t('brainGames.bodyScan.tapForInstructions')}
+          </Text>
         </View>
+        <Animated.View style={{ transform: [{ rotate: chevronRotate }] }}>
+          <Ionicons name="chevron-down" size={24} color={COLORS.textMuted} />
+        </Animated.View>
+      </TouchableOpacity>
 
-        {/* Arms */}
-        <View style={styles.bodyArms}>
-          <View style={[styles.bodyArm, tensionMap.hands ? { backgroundColor: getTensionColor(tensionMap.hands) } : undefined]} />
-          <View style={[styles.bodyArm, tensionMap.hands ? { backgroundColor: getTensionColor(tensionMap.hands) } : undefined]} />
-          {currentRegion === 'hands' && (
-            <View style={styles.armsDot}>
-              <PulsingDot size={12} color={colors.primary} />
+      {/* Collapsible content */}
+      <Animated.View style={[styles.journeyContentCollapsible, { height: contentHeight }]}>
+        {/* Phase content */}
+        {phase === 'sense' ? (
+          <View style={styles.journeyContent}>
+            <Text style={styles.journeyInstruction}>
+              {t(region.instructionKey)}
+            </Text>
+            <TensionArc
+              value={tension}
+              onChange={onTensionChange}
+              label={t('brainGames.bodyScan.tensionQuestion.before')}
+              t={t}
+            />
+          </View>
+        ) : (
+          <View style={styles.journeyContent}>
+            <View style={styles.releasePromptBox}>
+              <Text style={styles.releasePromptText}>
+                {t(region.releasePromptKey)}
+              </Text>
             </View>
-          )}
-        </View>
 
-        {/* Legs */}
-        <View style={styles.bodyLegs}>
-          <View style={[styles.bodyLeg, tensionMap.legs ? { backgroundColor: getTensionColor(tensionMap.legs) } : undefined]} />
-          <View style={[styles.bodyLeg, tensionMap.legs ? { backgroundColor: getTensionColor(tensionMap.legs) } : undefined]} />
-          {currentRegion === 'legs' && (
-            <View style={styles.legsDot}>
-              <PulsingDot size={12} color={colors.primary} />
+            <View style={styles.scriptureCard}>
+              <Ionicons name="book-outline" size={16} color={colors.primary} />
+              <Text style={styles.scriptureText}>
+                {t(region.scriptureKey)}
+              </Text>
             </View>
-          )}
-        </View>
 
-        {/* Feet */}
-        <View style={styles.bodyFeet}>
-          <View style={[styles.bodyFoot, tensionMap.feet ? { backgroundColor: getTensionColor(tensionMap.feet) } : undefined]} />
-          <View style={[styles.bodyFoot, tensionMap.feet ? { backgroundColor: getTensionColor(tensionMap.feet) } : undefined]} />
-          {currentRegion === 'feet' && (
-            <View style={styles.feetDot}>
-              <PulsingDot size={12} color={colors.primary} />
+            <TensionArc
+              value={tension}
+              onChange={onTensionChange}
+              label={t('brainGames.bodyScan.tensionQuestion.after')}
+              t={t}
+            />
+          </View>
+        )}
+
+        {/* Skip option */}
+        <TouchableOpacity style={styles.skipOption} onPress={onSkip} activeOpacity={0.7}>
+          <Ionicons name="arrow-forward-outline" size={16} color={COLORS.textMuted} />
+          <Text style={styles.skipText}>{t('brainGames.bodyScan.skipArea')}</Text>
+          <Text style={styles.skipSubtext}>{t('brainGames.bodyScan.skipSubtext')}</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
+  );
+}
+
+// ============================================
+// PROGRESS JOURNEY
+// ============================================
+
+interface ProgressJourneyProps {
+  currentIndex: number;
+  total: number;
+  scannedRegions: string[];
+  t: (key: string, params?: Record<string, any>) => string;
+}
+
+function ProgressJourney({ currentIndex, total, scannedRegions, t }: ProgressJourneyProps) {
+  const colors = GAME_COLORS.bodyScan;
+
+  return (
+    <View style={styles.progressJourney}>
+      <View style={styles.progressTrack}>
+        {BODY_REGIONS.map((region, index) => {
+          const isCompleted = scannedRegions.includes(region.id);
+          const isCurrent = index === currentIndex;
+          const isPast = index < currentIndex;
+
+          return (
+            <View key={region.id} style={styles.progressStep}>
+              <View
+                style={[
+                  styles.progressDot,
+                  isCompleted && { backgroundColor: colors.release },
+                  isCurrent && {
+                    backgroundColor: colors.primary,
+                    transform: [{ scale: 1.3 }],
+                  },
+                  !isCompleted && !isCurrent && { backgroundColor: 'rgba(255,255,255,0.2)' },
+                ]}
+              />
+              {index < BODY_REGIONS.length - 1 && (
+                <View
+                  style={[
+                    styles.progressLine,
+                    (isCompleted || isPast) && { backgroundColor: colors.release },
+                  ]}
+                />
+              )}
             </View>
-          )}
-        </View>
+          );
+        })}
       </View>
+      <Text style={styles.progressLabel}>
+        {t('brainGames.bodyScan.regionProgress', { current: currentIndex + 1, total })}
+      </Text>
     </View>
   );
 }
@@ -283,6 +700,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   const navigation = useNavigation();
   const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<'intro' | 'scan' | 'complete'>('intro');
   const [currentRegionIndex, setCurrentRegionIndex] = useState(0);
   const [preTension, setPreTension] = useState<Record<string, number>>({});
@@ -293,6 +711,7 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   const [startTime] = useState(Date.now());
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
   const [skippedRegions, setSkippedRegions] = useState<string[]>([]);
+  const [showParticles, setShowParticles] = useState(false);
 
   // Mood check-in states
   const [showPreMoodCheck, setShowPreMoodCheck] = useState(false);
@@ -311,6 +730,9 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       // Record pre-tension and show release phase
       setPreTension((prev) => ({ ...prev, [currentRegion.id]: currentTension }));
       setShowRelease(true);
+      setShowParticles(true);
+      // Hide particles after animation
+      setTimeout(() => setShowParticles(false), 3000);
     } else {
       // Record post-tension and move to next region
       setPostTension((prev) => ({ ...prev, [currentRegion.id]: currentTension }));
@@ -326,20 +748,16 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
     }
   }, [currentRegion, currentTension, showRelease, currentRegionIndex]);
 
-  // Handle skipping a region (trauma-informed option)
+  // Handle skipping a region
   const handleSkipRegion = useCallback(() => {
     safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
-
-    // Record this region as skipped
     setSkippedRegions((prev) => [...prev, currentRegion.id]);
 
-    // Move to next region
     if (currentRegionIndex < BODY_REGIONS.length - 1) {
       setCurrentRegionIndex((prev) => prev + 1);
       setShowRelease(false);
       setCurrentTension(5);
     } else {
-      // Scan complete
       setPhase('complete');
     }
   }, [currentRegion, currentRegionIndex]);
@@ -348,12 +766,10 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   const handleComplete = useCallback(() => {
     const duration = Math.floor((Date.now() - startTime) / 1000);
 
-    // Find hotspots (regions with high pre-tension that improved)
     const hotspots = Object.entries(preTension)
       .filter(([_, tension]) => tension >= 7)
       .map(([region]) => region);
 
-    // Calculate average improvement
     const improvements = Object.keys(preTension).map((region) => {
       const pre = preTension[region] || 0;
       const post = postTension[region] || 0;
@@ -361,9 +777,8 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
     });
     const avgImprovement = improvements.reduce((a, b) => a + b, 0) / improvements.length;
 
-    // Create tension entry - map body regions to proper format
     const bodyPartsData = Object.keys(preTension).map((region) => ({
-      part: region as any, // Region IDs used in this component
+      part: region as any,
       level: Math.round(preTension[region] as number) as 1 | 2 | 3 | 4 | 5,
     }));
 
@@ -376,44 +791,36 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
     };
 
     emitBodyScanCompleted(tensionEntry, duration);
-    // Show post-mood check instead of completion directly
     setShowPostMoodCheck(true);
   }, [preTension, postTension, startTime]);
 
-  // Handle initiating session (shows pre-mood check first)
   const handleBeginScan = useCallback(() => {
     setShowPreMoodCheck(true);
   }, []);
 
-  // Handle pre-mood selection
   const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPreMood(mood);
     setShowPreMoodCheck(false);
     setPhase('scan');
   }, []);
 
-  // Handle pre-mood skip
   const handlePreMoodSkip = useCallback(() => {
     setShowPreMoodCheck(false);
     setPhase('scan');
   }, []);
 
-  // Handle post-mood selection
   const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPostMood(mood);
     setShowPostMoodCheck(false);
     setShowComplete(true);
   }, []);
 
-  // Handle post-mood skip
   const handlePostMoodSkip = useCallback(() => {
     setShowPostMoodCheck(false);
     setShowComplete(true);
   }, []);
 
-  // Calculate stats (excluding skipped regions)
   const calculateStats = () => {
-    // Filter out skipped regions from calculations
     const scannedRegions = Object.keys(preTension).filter(
       (region) => !skippedRegions.includes(region)
     );
@@ -438,8 +845,8 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
   return (
     <GameContainer
       gameId="body_scan"
-      title="Body Scan Release"
-      subtitle="Somatic Awareness"
+      title={t('brainGames.bodyScan.title')}
+      subtitle={t('brainGames.bodyScan.subtitle')}
       onClose={handleClose}
     >
       {phase === 'intro' && (
@@ -449,44 +856,54 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
           showsVerticalScrollIndicator={false}
         >
           <FadeInView delay={100}>
-            <GameCard style={styles.introCard}>
-              <Text style={styles.introTitle}>Release What You Carry</Text>
-              <Text style={styles.introText}>
-                Our bodies store emotions and tension, often without us realizing.
-                This gentle scan will help you notice where you're holding stress
-                and guide you to release it with compassion.
-              </Text>
-              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
-            </GameCard>
-          </FadeInView>
-
-          <FadeInView delay={200}>
-            <View style={styles.bodyPreview}>
-              <BodySilhouette
-                currentRegion={null}
+            <View style={styles.introHero}>
+              <LinearGradient
+                colors={['#1a2a3a', '#0f1a2a', '#0a0f1a']}
+                style={styles.introHeroBg}
+              />
+              <BodySilhouetteV2
+                currentRegionId={null}
                 tensionMap={{}}
               />
             </View>
           </FadeInView>
 
+          <FadeInView delay={200}>
+            <View style={styles.introCard}>
+              <Text style={styles.introTitle}>{t('brainGames.bodyScan.intro.title')}</Text>
+              <Text style={styles.introText}>
+                {t('brainGames.bodyScan.intro.description')}
+              </Text>
+              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
+            </View>
+          </FadeInView>
+
           <FadeInView delay={300}>
-            <GameCard>
-              <Text style={styles.instructionTitle}>How It Works</Text>
-              <View style={styles.instructionList}>
-                <Text style={styles.instructionItem}>1. We'll scan 9 body regions</Text>
-                <Text style={styles.instructionItem}>2. Rate your tension before and after each</Text>
-                <Text style={styles.instructionItem}>3. Follow the release prompts</Text>
-                <Text style={styles.instructionItem}>4. Take your time - there's no rush</Text>
-              </View>
-            </GameCard>
+            <View style={styles.howItWorks}>
+              <Text style={styles.howItWorksTitle}>{t('brainGames.bodyScan.journey.title')}</Text>
+              {[
+                { icon: 'body-outline', textKey: 'brainGames.bodyScan.journey.step1' },
+                { icon: 'pulse-outline', textKey: 'brainGames.bodyScan.journey.step2' },
+                { icon: 'sparkles-outline', textKey: 'brainGames.bodyScan.journey.step3' },
+                { icon: 'time-outline', textKey: 'brainGames.bodyScan.journey.step4' },
+              ].map((item, index) => (
+                <View key={index} style={styles.howItWorksItem}>
+                  <View style={styles.howItWorksIcon}>
+                    <Ionicons name={item.icon as any} size={20} color={GAME_COLORS.bodyScan.primary} />
+                  </View>
+                  <Text style={styles.howItWorksText}>{t(item.textKey)}</Text>
+                </View>
+              ))}
+            </View>
           </FadeInView>
 
           <FadeInView delay={400}>
             <View style={styles.scriptureIntro}>
-              <Text style={styles.scriptureText}>
-                "Come to me, all who are weary and burdened, and I will give you rest."
+              <Ionicons name="book-outline" size={20} color={GAME_COLORS.bodyScan.primary} />
+              <Text style={styles.scriptureQuote}>
+                {t('brainGames.bodyScan.intro.scripture')}
               </Text>
-              <Text style={styles.scriptureRef}>- Matthew 11:28</Text>
+              <Text style={styles.scriptureRef}>{t('brainGames.bodyScan.intro.scriptureRef')}</Text>
             </View>
           </FadeInView>
         </ScrollView>
@@ -494,78 +911,33 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
 
       {phase === 'scan' && (
         <View style={styles.scanContainer}>
-          {/* Progress */}
-          <View style={styles.progressContainer}>
-            <AnimatedProgressBar
-              progress={progress}
-              height={6}
-              colors={GAME_GRADIENTS.bodyScan.colors}
-            />
-            <Text style={styles.progressText}>
-              {currentRegionIndex + 1} of {BODY_REGIONS.length}
-            </Text>
-          </View>
+          {/* Progress journey */}
+          <ProgressJourney
+            currentIndex={currentRegionIndex}
+            total={BODY_REGIONS.length}
+            scannedRegions={Object.keys(preTension)}
+            t={t}
+          />
 
           {/* Body visualization */}
-          <View style={styles.bodyVisual}>
-            <BodySilhouette
-              currentRegion={currentRegion.id}
+          <View style={styles.bodyVisualContainer}>
+            <BodySilhouetteV2
+              currentRegionId={currentRegion.id}
               tensionMap={showRelease ? postTension : preTension}
+              showParticles={showParticles}
             />
           </View>
 
-          {/* Region instruction */}
+          {/* Region journey card */}
           <FadeInView key={`${currentRegion.id}-${showRelease}`}>
-            <GameCard style={styles.regionCard}>
-              <Text style={styles.regionName}>{currentRegion.displayName}</Text>
-
-              {!showRelease ? (
-                <>
-                  <Text style={styles.regionInstruction}>
-                    {currentRegion.instruction}
-                  </Text>
-                  <TensionSlider
-                    value={currentTension}
-                    onChange={setCurrentTension}
-                    label="How much tension do you feel?"
-                  />
-                  {/* Trauma-informed skip option */}
-                  <TouchableOpacity
-                    style={styles.skipButton}
-                    onPress={handleSkipRegion}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.skipButtonText}>Skip this area</Text>
-                    <Text style={styles.skipButtonSubtext}>It's okay to move on</Text>
-                  </TouchableOpacity>
-                </>
-              ) : (
-                <>
-                  <Text style={styles.releasePrompt}>
-                    {currentRegion.releasePrompt}
-                  </Text>
-                  <View style={styles.scriptureBox}>
-                    <Text style={styles.regionScripture}>
-                      {currentRegion.scripture}
-                    </Text>
-                  </View>
-                  <TensionSlider
-                    value={currentTension}
-                    onChange={setCurrentTension}
-                    label="How does it feel now?"
-                  />
-                  {/* Trauma-informed skip option during release phase too */}
-                  <TouchableOpacity
-                    style={styles.skipButton}
-                    onPress={handleSkipRegion}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.skipButtonText}>Skip this area</Text>
-                    <Text style={styles.skipButtonSubtext}>You can return another time</Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </GameCard>
+            <RegionJourneyCard
+              region={currentRegion}
+              phase={showRelease ? 'release' : 'sense'}
+              tension={currentTension}
+              onTensionChange={setCurrentTension}
+              onSkip={handleSkipRegion}
+              t={t}
+            />
           </FadeInView>
         </View>
       )}
@@ -577,32 +949,39 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
           showsVerticalScrollIndicator={false}
         >
           <FadeInView>
-            <GameCard style={styles.completeCard}>
-              <Text style={styles.completeTitle}>Scan Complete</Text>
+            <View style={styles.completeCard}>
+              <LinearGradient
+                colors={['#1a2a3a', '#0f1a2a', '#0a0f1a']}
+                style={styles.completeCardBg}
+              />
+
+              <Ionicons name="checkmark-circle" size={64} color={GAME_COLORS.bodyScan.release} />
+              <Text style={styles.completeTitle}>{t('brainGames.bodyScan.complete.title')}</Text>
               <Text style={styles.completeSubtitle}>
-                You've journeyed through your body with awareness
+                {t('brainGames.bodyScan.complete.subtitle')}
               </Text>
 
-              <View style={styles.statsGrid}>
+              <View style={styles.statsRow}>
                 <View style={styles.statBox}>
-                  <Text style={styles.statLabel}>Before</Text>
+                  <Text style={styles.statLabel}>{t('brainGames.bodyScan.complete.before')}</Text>
                   <Text style={styles.statValue}>{calculateStats().avgPre}</Text>
                 </View>
+                <View style={styles.statDivider} />
                 <View style={styles.statBox}>
-                  <Text style={styles.statLabel}>After</Text>
-                  <Text style={[styles.statValue, styles.statValueHighlight]}>
+                  <Text style={styles.statLabel}>{t('brainGames.bodyScan.complete.after')}</Text>
+                  <Text style={[styles.statValue, { color: GAME_COLORS.bodyScan.release }]}>
                     {calculateStats().avgPost}
                   </Text>
                 </View>
               </View>
 
-              <View style={styles.bodyResultPreview}>
-                <BodySilhouette
-                  currentRegion={null}
+              <View style={styles.bodyResultContainer}>
+                <BodySilhouetteV2
+                  currentRegionId={null}
                   tensionMap={postTension}
                 />
               </View>
-            </GameCard>
+            </View>
           </FadeInView>
         </ScrollView>
       )}
@@ -611,20 +990,20 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       <GameFooter>
         {phase === 'intro' && !showPreMoodCheck && (
           <GradientButton
-            title="Begin Body Scan"
+            title={t('brainGames.bodyScan.buttons.beginScan')}
             onPress={handleBeginScan}
           />
         )}
         {phase === 'scan' && (
           <GradientButton
-            title={!showRelease ? "Record & Release" :
-                   currentRegionIndex < BODY_REGIONS.length - 1 ? "Next Region" : "Complete Scan"}
+            title={!showRelease ? t('brainGames.bodyScan.buttons.recordRelease') :
+                   currentRegionIndex < BODY_REGIONS.length - 1 ? t('brainGames.bodyScan.buttons.nextRegion') : t('brainGames.bodyScan.buttons.completeScan')}
             onPress={handleRecordTension}
           />
         )}
         {phase === 'complete' && (
           <GradientButton
-            title="Finish"
+            title={t('brainGames.bodyScan.buttons.finish')}
             onPress={handleComplete}
           />
         )}
@@ -633,22 +1012,22 @@ export function BodyScanRelease({ onClose }: BodyScanReleaseProps) {
       {/* Completion Modal */}
       <SessionComplete
         visible={showComplete}
-        title="Body Scan Complete"
+        title={t('brainGames.bodyScan.sessionComplete.title')}
         subtitle={skippedRegions.length > 0
-          ? "You honored your boundaries today"
-          : "You've released tension with awareness"}
+          ? t('brainGames.bodyScan.sessionComplete.subtitleSkipped')
+          : t('brainGames.bodyScan.sessionComplete.subtitle')}
         stats={[
-          { label: 'Scanned', value: calculateStats().scannedCount || BODY_REGIONS.length - skippedRegions.length },
-          { label: 'Improvement', value: calculateStats().improvement },
+          { label: t('brainGames.bodyScan.sessionComplete.scanned'), value: calculateStats().scannedCount || BODY_REGIONS.length - skippedRegions.length },
+          { label: t('brainGames.bodyScan.sessionComplete.improvement'), value: calculateStats().improvement },
         ]}
         encouragement={skippedRegions.length > 0
-          ? "Some areas weren't ready today, and that's perfectly okay. Healing happens in your own time. You showed courage just by showing up."
-          : "Your body is a temple. By listening to it with compassion, you honor the gift you've been given."}
+          ? t('brainGames.bodyScan.sessionComplete.encouragementSkipped')
+          : t('brainGames.bodyScan.sessionComplete.encouragement')}
         onContinue={() => {
           setShowComplete(false);
           handleClose();
         }}
-        continueLabel="Return to Games"
+        continueLabel={t('brainGames.bodyScan.sessionComplete.returnToGames')}
       />
 
       {/* Why This Works Modal */}
@@ -690,331 +1069,484 @@ const styles = StyleSheet.create({
     paddingBottom: SPACING.xxl,
   },
 
-  // Intro
+  // Intro Hero
+  introHero: {
+    height: 280,
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    marginBottom: SPACING.lg,
+  },
+  introHeroBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+
+  // Intro Card
   introCard: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.xl,
     marginBottom: SPACING.lg,
   },
   introTitle: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '600',
-    color: COLORS.earth,
+    fontSize: 24,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     marginBottom: SPACING.sm,
   },
   introText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
+    lineHeight: 24,
+    marginBottom: SPACING.md,
   },
-  bodyPreview: {
-    height: 200,
+
+  // How It Works
+  howItWorks: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.xl,
+    padding: SPACING.lg,
     marginBottom: SPACING.lg,
   },
-  instructionTitle: {
+  howItWorksTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '600',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     marginBottom: SPACING.md,
   },
-  instructionList: {
-    gap: SPACING.sm,
+  howItWorksItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.sm,
   },
-  instructionItem: {
+  howItWorksIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(138, 180, 248, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  howItWorksText: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
+    flex: 1,
   },
+
+  // Scripture Intro
   scriptureIntro: {
     alignItems: 'center',
     paddingVertical: SPACING.lg,
+    paddingHorizontal: SPACING.xl,
   },
-  scriptureText: {
+  scriptureQuote: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.devotional,
     fontStyle: 'italic',
     textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
+    lineHeight: 24,
+    marginTop: SPACING.sm,
   },
   scriptureRef: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
-    marginTop: SPACING.sm,
+    marginTop: SPACING.xs,
   },
 
-  // Scan
+  // Scan Container
   scanContainer: {
     flex: 1,
   },
-  progressContainer: {
-    marginBottom: SPACING.md,
-  },
-  progressText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
-    fontFamily: TYPOGRAPHY.ui,
-    textAlign: 'center',
-    marginTop: SPACING.xs,
-  },
-  bodyVisual: {
-    height: 180,
-    marginBottom: SPACING.lg,
-  },
-  regionCard: {},
-  regionName: {
-    fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '600',
-    color: GAME_COLORS.bodyScan.primary,
-    fontFamily: TYPOGRAPHY.ui,
-    textAlign: 'center',
-    marginBottom: SPACING.md,
-  },
-  regionInstruction: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
-    fontFamily: TYPOGRAPHY.ui,
-    textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
-    marginBottom: SPACING.lg,
-  },
-  releasePrompt: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.devotional,
-    fontStyle: 'italic',
-    textAlign: 'center',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
-    marginBottom: SPACING.md,
-  },
-  scriptureBox: {
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    marginBottom: SPACING.lg,
-  },
-  regionScripture: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.devotional,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
 
-  // Tension Slider
-  sliderContainer: {
-    marginTop: SPACING.md,
+  // Progress Journey
+  progressJourney: {
+    marginBottom: SPACING.md,
+    paddingHorizontal: SPACING.md,
   },
-  sliderLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.richBrown,
-    fontFamily: TYPOGRAPHY.ui,
-    textAlign: 'center',
-    marginBottom: SPACING.sm,
-  },
-  sliderTrack: {
+  progressTrack: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: SPACING.sm,
-  },
-  sliderDot: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: COLORS.warmBeige,
-    borderWidth: 2,
-    borderColor: COLORS.softIvory,
-  },
-  sliderLabels: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: SPACING.xs,
-    paddingHorizontal: SPACING.sm,
-  },
-  sliderMinLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
-    fontFamily: TYPOGRAPHY.ui,
-  },
-  sliderMaxLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
-    fontFamily: TYPOGRAPHY.ui,
-  },
-
-  // Body Silhouette
-  bodyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  progressStep: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  progressDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  progressLine: {
+    width: 20,
+    height: 2,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    marginHorizontal: 2,
+  },
+  progressLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    textAlign: 'center',
+    marginTop: SPACING.xs,
+  },
+
+  // Body Visual Container
+  bodyVisualContainer: {
+    height: 220,
+    marginBottom: SPACING.md,
+  },
+
+  // Body Silhouette V2
+  bodyContainerV2: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  bodyGlowBg: {
+    position: 'absolute',
+    width: 200,
+    height: 300,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bodyGlowGradient: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 100,
+  },
+  bodyShape: {
+    alignItems: 'center',
+    opacity: 0.3,
+  },
+  bodyHead2: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    marginBottom: 5,
+  },
+  bodyNeck2: {
+    width: 20,
+    height: 15,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+  },
+  bodyTorso2: {
+    width: 80,
+    height: 100,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  bodyArms2: {
+    position: 'absolute',
+    top: 75,
+    flexDirection: 'row',
+    width: 160,
+    justifyContent: 'space-between',
+  },
+  bodyArmLeft2: {
+    width: 18,
+    height: 80,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 9,
+  },
+  bodyArmRight2: {
+    width: 18,
+    height: 80,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 9,
+  },
+  bodyLegs2: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 5,
+  },
+  bodyLegLeft2: {
+    width: 25,
+    height: 90,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 10,
+  },
+  bodyLegRight2: {
+    width: 25,
+    height: 90,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    borderRadius: 10,
+  },
+
+  // Region Marker
+  regionMarker: {
+    position: 'absolute',
+    width: 36,
+    height: 36,
+    marginLeft: -18,
+    marginTop: -18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  regionGlow: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  regionDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Energy Particle
+  energyParticle: {
+    position: 'absolute',
+  },
+
+  // Journey Card
+  journeyCard: {
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    marginHorizontal: SPACING.md,
+  },
+  journeyCardBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  journeyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.08)',
+  },
+  journeyIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.md,
+  },
+  journeyTitleContainer: {
     flex: 1,
   },
-  bodyOutline: {
-    alignItems: 'center',
-    width: 100,
+  journeyTitle: {
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: '600',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
   },
-  bodyPart: {
-    backgroundColor: COLORS.warmBeige,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bodyHead: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginBottom: 4,
-  },
-  bodyNeck: {
-    width: 16,
-    height: 12,
-    backgroundColor: COLORS.warmBeige,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bodyTorso: {
-    alignItems: 'center',
-  },
-  bodyShoulders: {
-    width: 80,
-    height: 12,
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bodyChest: {
-    width: 60,
-    height: 40,
-    backgroundColor: COLORS.warmBeige,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: -2,
-  },
-  bodyStomach: {
-    width: 50,
-    height: 30,
-    backgroundColor: COLORS.warmBeige,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  bodyArms: {
-    position: 'absolute',
-    top: 60,
-    width: 120,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  bodyArm: {
-    width: 12,
-    height: 60,
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: 6,
-  },
-  armsDot: {
-    position: 'absolute',
-    left: '50%',
-    top: 20,
-  },
-  bodyLegs: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
-  },
-  bodyLeg: {
-    width: 18,
-    height: 50,
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: 8,
-  },
-  legsDot: {
-    position: 'absolute',
-    left: '50%',
-    top: 20,
-  },
-  bodyFeet: {
-    flexDirection: 'row',
-    gap: 12,
+  journeyPhase: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: GAME_COLORS.bodyScan.primary,
+    fontFamily: TYPOGRAPHY.ui,
     marginTop: 2,
   },
-  bodyFoot: {
-    width: 20,
-    height: 10,
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: 5,
+  journeyContentCollapsible: {
+    overflow: 'hidden',
   },
-  feetDot: {
-    position: 'absolute',
-    left: '50%',
-    top: 0,
+  journeyContent: {
+    padding: SPACING.lg,
+  },
+  journeyInstruction: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+    lineHeight: 24,
+    textAlign: 'center',
+    marginBottom: SPACING.lg,
   },
 
-  // Complete
-  completeCard: {
+  // Release Prompt
+  releasePromptBox: {
+    backgroundColor: 'rgba(138, 180, 248, 0.1)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.lg,
+    marginBottom: SPACING.md,
+    borderLeftWidth: 3,
+    borderLeftColor: GAME_COLORS.bodyScan.primary,
+  },
+  releasePromptText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    lineHeight: 24,
+  },
+
+  // Scripture Card
+  scriptureCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    borderRadius: RADIUS.md,
+    padding: SPACING.md,
+    marginBottom: SPACING.lg,
+    gap: SPACING.sm,
+  },
+  scriptureText: {
+    flex: 1,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    lineHeight: 20,
+  },
+
+  // Tension Arc
+  tensionArcContainer: {
     alignItems: 'center',
   },
-  completeTitle: {
-    fontSize: TYPOGRAPHY.sizes.xxl,
-    fontWeight: '600',
-    color: COLORS.earth,
+  tensionLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
+    marginBottom: SPACING.sm,
+  },
+  tensionValueDisplay: {
+    alignItems: 'center',
+    marginBottom: SPACING.md,
+  },
+  tensionValue: {
+    fontSize: 48,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  tensionValueLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  tensionArc: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
     marginBottom: SPACING.xs,
+  },
+  tensionOrb: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  tensionOrbInner: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+  },
+  tensionLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: SPACING.sm,
+  },
+  tensionMinLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  tensionMaxLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+
+  // Skip Option
+  skipOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.08)',
+    gap: SPACING.xs,
+  },
+  skipText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  skipSubtext: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    fontStyle: 'italic',
+    opacity: 0.7,
+  },
+
+  // Complete Card
+  completeCard: {
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    alignItems: 'center',
+    padding: SPACING.xl,
+  },
+  completeCardBg: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  completeTitle: {
+    fontSize: 28,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: SPACING.md,
   },
   completeSubtitle: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    marginBottom: SPACING.lg,
+    textAlign: 'center',
+    marginTop: SPACING.xs,
+    marginBottom: SPACING.xl,
   },
-  statsGrid: {
+  statsRow: {
     flexDirection: 'row',
-    gap: SPACING.xl,
-    marginBottom: SPACING.lg,
+    alignItems: 'center',
+    marginBottom: SPACING.xl,
   },
   statBox: {
     alignItems: 'center',
+    paddingHorizontal: SPACING.xl,
+  },
+  statDivider: {
+    width: 1,
+    height: 40,
+    backgroundColor: 'rgba(255,255,255,0.1)',
   },
   statLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
+    marginBottom: SPACING.xs,
   },
   statValue: {
-    fontSize: TYPOGRAPHY.sizes.display,
+    fontSize: 36,
     fontWeight: '700',
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
   },
-  statValueHighlight: {
-    color: GAME_COLORS.bodyScan.release,
-  },
-  bodyResultPreview: {
-    height: 150,
-    width: 100,
-  },
-
-  // Skip Button (trauma-informed)
-  skipButton: {
-    marginTop: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: COLORS.warmBeige,
-  },
-  skipButtonText: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
-    fontFamily: TYPOGRAPHY.ui,
-  },
-  skipButtonSubtext: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
-    fontFamily: TYPOGRAPHY.ui,
-    fontStyle: 'italic',
-    marginTop: 2,
-    opacity: 0.7,
+  bodyResultContainer: {
+    height: 200,
+    width: '100%',
   },
 });
 

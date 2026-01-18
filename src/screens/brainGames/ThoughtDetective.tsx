@@ -2,9 +2,11 @@
  * Thought Detective
  * Identify and reframe cognitive distortions using CBT principles
  * Unlocks: Day 15
+ *
+ * Premium UI v2.0 - Immersive detective investigation theme
  */
 
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -15,10 +17,13 @@ import {
   Animated,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
+  Easing,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { safeHaptics, ImpactFeedbackStyle, NotificationFeedbackType } from '../../utils/haptics';
 import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../theme/colors';
 import { GAME_COLORS, GAME_GRADIENTS } from '../../theme/brainGames';
@@ -41,139 +46,145 @@ import {
   type SessionMoodLevel,
 } from '../../components/brainGames';
 
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
 // ============================================
 // DR. AMEN'S 9 ANT TYPES
-// ANT = Automatic Negative Thoughts
-// Based on Dr. Daniel Amen's research from Amen Clinics
 // ============================================
 
 interface ANTInfo {
   id: string;
-  antNumber: number; // Dr. Amen's ANT type number
-  name: string;
-  shortName: string; // For compact display
-  description: string;
-  example: string;
-  reframePrompt: string;
-  selfCompassionPrompt: string; // Kristin Neff-inspired
-  scripture: string;
-  keywords: string[]; // For detection
+  antNumber: number;
+  nameKey: string;
+  shortNameKey: string;
+  descriptionKey: string;
+  exampleKey: string;
+  reframePromptKey: string;
+  selfCompassionPromptKey: string;
+  scriptureKey: string;
+  keywords: string[];
+  icon: string; // Ionicon name
 }
 
-// The 9 ANT Types (Dr. Daniel Amen)
 const ANT_TYPES: Record<string, ANTInfo> = {
   all_or_nothing: {
     id: 'all_or_nothing',
     antNumber: 1,
-    name: 'All-or-Nothing Thinking',
-    shortName: 'All-or-Nothing',
-    description: 'Seeing things in black and white, with no middle ground. Everything is perfect or a complete failure.',
-    example: '"If I can\'t do it perfectly, I shouldn\'t do it at all"',
-    reframePrompt: 'What\'s a more balanced way to see this? Is there any gray area?',
-    selfCompassionPrompt: 'What would you say to a friend who made the same mistake?',
-    scripture: '"His mercies are new every morning." - Lamentations 3:23',
-    keywords: ['always', 'never', 'completely', 'totally', 'perfect', 'ruined', 'every time'],
+    nameKey: 'brainGames.thoughtDetective.ants.allOrNothing.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.allOrNothing.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.allOrNothing.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.allOrNothing.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.allOrNothing.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.allOrNothing.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.allOrNothing.scripture',
+    keywords: ['always', 'never', 'completely', 'totally', 'perfect', 'ruined'],
+    icon: 'contrast-outline',
   },
   always_never: {
     id: 'always_never',
     antNumber: 2,
-    name: 'Always/Never Thinking',
-    shortName: 'Always/Never',
-    description: 'Using words like "always," "never," "everyone," or "no one" to overgeneralize.',
-    example: '"You never listen to me" or "I always mess things up"',
-    reframePrompt: 'Is this really always or never? Can you think of one exception?',
-    selfCompassionPrompt: 'We all struggle sometimes. What\'s actually true most of the time?',
-    scripture: '"Weeping may endure for a night, but joy comes in the morning." - Psalm 30:5',
-    keywords: ['always', 'never', 'everyone', 'no one', 'nothing', 'everything', 'every time'],
+    nameKey: 'brainGames.thoughtDetective.ants.alwaysNever.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.alwaysNever.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.alwaysNever.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.alwaysNever.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.alwaysNever.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.alwaysNever.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.alwaysNever.scripture',
+    keywords: ['always', 'never', 'everyone', 'no one', 'nothing', 'everything'],
+    icon: 'infinite-outline',
   },
   focusing_negative: {
     id: 'focusing_negative',
     antNumber: 3,
-    name: 'Focusing on the Negative',
-    shortName: 'Negative Focus',
-    description: 'Only seeing the bad in a situation while ignoring the good.',
-    example: 'Getting 9 compliments and 1 criticism, but only remembering the criticism',
-    reframePrompt: 'What good things are you overlooking? What went well?',
-    selfCompassionPrompt: 'Your brain is wired to notice threats. What would a balanced view look like?',
-    scripture: '"Whatever is true, noble, right, pure, lovely... think about such things." - Philippians 4:8',
-    keywords: ['but', 'however', 'except', 'bad', 'wrong', 'terrible', 'awful'],
+    nameKey: 'brainGames.thoughtDetective.ants.focusingNegative.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.focusingNegative.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.focusingNegative.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.focusingNegative.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.focusingNegative.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.focusingNegative.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.focusingNegative.scripture',
+    keywords: ['but', 'however', 'except', 'bad', 'wrong', 'terrible'],
+    icon: 'remove-circle-outline',
   },
   fortune_telling: {
     id: 'fortune_telling',
     antNumber: 4,
-    name: 'Fortune Telling',
-    shortName: 'Fortune Telling',
-    description: 'Predicting the future negatively without evidence to support it.',
-    example: '"I know this won\'t work out" or "They\'re going to reject me"',
-    reframePrompt: 'Is this prediction based on facts or fears? What evidence do you have?',
-    selfCompassionPrompt: 'Uncertainty is hard. What if you stayed open to positive possibilities?',
-    scripture: '"For I know the plans I have for you... plans to give you hope and a future." - Jeremiah 29:11',
-    keywords: ['will', 'going to', 'know', 'certain', 'bet', 'predict', 'won\'t'],
+    nameKey: 'brainGames.thoughtDetective.ants.fortuneTelling.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.fortuneTelling.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.fortuneTelling.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.fortuneTelling.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.fortuneTelling.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.fortuneTelling.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.fortuneTelling.scripture',
+    keywords: ['will', 'going to', 'know', 'certain', 'bet', 'predict'],
+    icon: 'cloudy-night-outline',
   },
   mind_reading: {
     id: 'mind_reading',
     antNumber: 5,
-    name: 'Mind Reading',
-    shortName: 'Mind Reading',
-    description: 'Assuming you know what others are thinking, usually something negative about you.',
-    example: '"They think I\'m stupid" or "She doesn\'t like me"',
-    reframePrompt: 'What do you actually know for certain? Could there be another explanation?',
-    selfCompassionPrompt: 'We can\'t read minds. What would you need to feel more secure?',
-    scripture: '"Man looks at the outward appearance, but the Lord looks at the heart." - 1 Samuel 16:7',
-    keywords: ['think', 'thinks', 'knows', 'believes', 'probably', 'must think', 'judging'],
+    nameKey: 'brainGames.thoughtDetective.ants.mindReading.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.mindReading.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.mindReading.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.mindReading.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.mindReading.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.mindReading.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.mindReading.scripture',
+    keywords: ['think', 'thinks', 'knows', 'believes', 'probably', 'must think'],
+    icon: 'eye-outline',
   },
   thinking_with_feelings: {
     id: 'thinking_with_feelings',
     antNumber: 6,
-    name: 'Thinking with Your Feelings',
-    shortName: 'Feeling = Fact',
-    description: 'Believing something is true just because you feel it strongly.',
-    example: '"I feel like a burden, so I must be one" or "I feel stupid, so I am stupid"',
-    reframePrompt: 'Just because you feel it, does that make it true? What are the facts?',
-    selfCompassionPrompt: 'Feelings are real but they\'re not always accurate. What\'s actually true?',
-    scripture: '"The heart is deceitful above all things." - Jeremiah 17:9',
+    nameKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.thinkingWithFeelings.scripture',
     keywords: ['feel like', 'feels like', 'I feel', 'must be', 'sense that'],
+    icon: 'heart-dislike-outline',
   },
   guilt_beating: {
     id: 'guilt_beating',
     antNumber: 7,
-    name: 'Guilt Beating',
-    shortName: 'Guilt/Should',
-    description: 'Using words like "should," "must," "ought to," or "have to" to beat yourself up.',
-    example: '"I should be over this by now" or "I ought to be stronger"',
-    reframePrompt: 'What if you replaced "should" with "I would like to" or "It would be nice if"?',
-    selfCompassionPrompt: 'You\'re being hard on yourself. What do you actually need right now?',
-    scripture: '"My grace is sufficient for you, for my power is made perfect in weakness." - 2 Corinthians 12:9',
-    keywords: ['should', 'shouldn\'t', 'must', 'have to', 'ought', 'need to', 'supposed to'],
+    nameKey: 'brainGames.thoughtDetective.ants.guiltBeating.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.guiltBeating.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.guiltBeating.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.guiltBeating.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.guiltBeating.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.guiltBeating.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.guiltBeating.scripture',
+    keywords: ['should', 'shouldn\'t', 'must', 'have to', 'ought', 'need to'],
+    icon: 'hammer-outline',
   },
   labeling: {
     id: 'labeling',
     antNumber: 8,
-    name: 'Labeling',
-    shortName: 'Labeling',
-    description: 'Attaching a negative label to yourself or others instead of describing the behavior.',
-    example: '"I\'m a failure" instead of "I made a mistake" or "I\'m worthless"',
-    reframePrompt: 'Would you say this to a friend? What would be a kinder, more accurate description?',
-    selfCompassionPrompt: 'You are not your worst moment. Who are you beyond this label?',
-    scripture: '"You are fearfully and wonderfully made." - Psalm 139:14',
-    keywords: ['I\'m a', 'I am', 'loser', 'failure', 'worthless', 'stupid', 'idiot', 'terrible'],
+    nameKey: 'brainGames.thoughtDetective.ants.labeling.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.labeling.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.labeling.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.labeling.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.labeling.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.labeling.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.labeling.scripture',
+    keywords: ['I\'m a', 'I am', 'loser', 'failure', 'worthless', 'stupid'],
+    icon: 'pricetag-outline',
   },
   blame: {
     id: 'blame',
     antNumber: 9,
-    name: 'Blame',
-    shortName: 'Blame',
-    description: 'Blaming others for your problems or blaming yourself for things outside your control.',
-    example: '"It\'s all my fault" or "If only they hadn\'t..." or "You make me feel..."',
-    reframePrompt: 'What parts were in your control? What parts were not? What can you do now?',
-    selfCompassionPrompt: 'Taking responsibility is different from taking blame. What\'s the difference here?',
-    scripture: '"Cast your burden on the Lord, and He shall sustain you." - Psalm 55:22',
-    keywords: ['fault', 'blame', 'because of', 'made me', 'caused', 'your fault', 'my fault'],
+    nameKey: 'brainGames.thoughtDetective.ants.blame.name',
+    shortNameKey: 'brainGames.thoughtDetective.ants.blame.shortName',
+    descriptionKey: 'brainGames.thoughtDetective.ants.blame.description',
+    exampleKey: 'brainGames.thoughtDetective.ants.blame.example',
+    reframePromptKey: 'brainGames.thoughtDetective.ants.blame.reframePrompt',
+    selfCompassionPromptKey: 'brainGames.thoughtDetective.ants.blame.selfCompassionPrompt',
+    scriptureKey: 'brainGames.thoughtDetective.ants.blame.scripture',
+    keywords: ['fault', 'blame', 'because of', 'made me', 'caused'],
+    icon: 'finger-print-outline',
   },
 };
-
-// Legacy alias for backward compatibility
-const DISTORTIONS = ANT_TYPES;
 
 // ============================================
 // STEPS
@@ -183,13 +194,219 @@ type Step = 'capture' | 'identify' | 'investigate' | 'reframe' | 'reflect';
 
 const STEPS: Step[] = ['capture', 'identify', 'investigate', 'reframe', 'reflect'];
 
-const STEP_LABELS = {
-  capture: 'Capture',
-  identify: 'Identify',
-  investigate: 'Investigate',
-  reframe: 'Reframe',
-  reflect: 'Reflect',
+const STEP_INFO = {
+  capture: { labelKey: 'brainGames.thoughtDetective.steps.capture', icon: 'document-text-outline' },
+  identify: { labelKey: 'brainGames.thoughtDetective.steps.identify', icon: 'search-outline' },
+  investigate: { labelKey: 'brainGames.thoughtDetective.steps.investigate', icon: 'analytics-outline' },
+  reframe: { labelKey: 'brainGames.thoughtDetective.steps.reframe', icon: 'refresh-outline' },
+  reflect: { labelKey: 'brainGames.thoughtDetective.steps.reflect', icon: 'checkmark-done-outline' },
 };
+
+// ============================================
+// ANIMATED MAGNIFYING GLASS
+// ============================================
+
+function MagnifyingGlass({ active }: { active: boolean }) {
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (active) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.parallel([
+            Animated.timing(scaleAnim, {
+              toValue: 1.1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(rotateAnim, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.parallel([
+            Animated.timing(scaleAnim, {
+              toValue: 1,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+            Animated.timing(rotateAnim, {
+              toValue: 0,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ]),
+        ])
+      ).start();
+    }
+  }, [active]);
+
+  const rotation = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-5deg', '5deg'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.magnifyingGlass,
+        {
+          transform: [{ scale: scaleAnim }, { rotate: rotation }],
+        },
+      ]}
+    >
+      <Ionicons name="search" size={32} color={COLORS.gold} />
+    </Animated.View>
+  );
+}
+
+// ============================================
+// STEP INDICATOR (Visual)
+// ============================================
+
+function VisualStepIndicator({ currentStep, t }: { currentStep: Step; t: (key: string) => string }) {
+  const currentIndex = STEPS.indexOf(currentStep);
+
+  return (
+    <View style={styles.stepIndicator}>
+      {STEPS.map((step, index) => {
+        const isCompleted = index < currentIndex;
+        const isCurrent = index === currentIndex;
+        const info = STEP_INFO[step];
+
+        return (
+          <View key={step} style={styles.stepItem}>
+            <View
+              style={[
+                styles.stepDot,
+                isCompleted && styles.stepDotCompleted,
+                isCurrent && styles.stepDotCurrent,
+              ]}
+            >
+              {isCompleted ? (
+                <Ionicons name="checkmark" size={14} color="#fff" />
+              ) : (
+                <Ionicons
+                  name={info.icon as keyof typeof Ionicons.glyphMap}
+                  size={14}
+                  color={isCurrent ? '#0D0D0D' : 'rgba(255,255,255,0.4)'}
+                />
+              )}
+            </View>
+            <Text
+              style={[
+                styles.stepLabel,
+                (isCompleted || isCurrent) && styles.stepLabelActive,
+              ]}
+            >
+              {t(info.labelKey)}
+            </Text>
+            {index < STEPS.length - 1 && (
+              <View
+                style={[
+                  styles.stepLine,
+                  isCompleted && styles.stepLineCompleted,
+                ]}
+              />
+            )}
+          </View>
+        );
+      })}
+    </View>
+  );
+}
+
+// ============================================
+// ANT CARD (Compact Grid Version)
+// ============================================
+
+interface ANTCardProps {
+  ant: ANTInfo;
+  isDetected: boolean;
+  isSelected: boolean;
+  onPress: () => void;
+  t: (key: string) => string;
+}
+
+function ANTCard({ ant, isDetected, isSelected, onPress, t }: ANTCardProps) {
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      delay: ant.antNumber * 50,
+      tension: 100,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  return (
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity
+        style={[
+          styles.antCard,
+          isDetected && styles.antCardDetected,
+          isSelected && styles.antCardSelected,
+        ]}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
+        {/* Detection badge */}
+        {isDetected && (
+          <View style={styles.detectionBadge}>
+            <Ionicons name="alert-circle" size={12} color="#0D0D0D" />
+          </View>
+        )}
+
+        {/* Icon */}
+        <View
+          style={[
+            styles.antIconContainer,
+            isSelected && styles.antIconContainerSelected,
+          ]}
+        >
+          <Ionicons
+            name={ant.icon as keyof typeof Ionicons.glyphMap}
+            size={20}
+            color={isSelected ? COLORS.gold : 'rgba(255,255,255,0.6)'}
+          />
+        </View>
+
+        {/* Name */}
+        <Text
+          style={[styles.antName, isSelected && styles.antNameSelected]}
+          numberOfLines={2}
+        >
+          {t(ant.shortNameKey)}
+        </Text>
+
+        {/* Selection indicator */}
+        {isSelected && (
+          <View style={styles.selectedIndicator}>
+            <Ionicons name="checkmark-circle" size={16} color={COLORS.gold} />
+          </View>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
+  );
+}
+
+// ============================================
+// CLUE CARD (Investigation Notes)
+// ============================================
+
+function ClueCard({ children, label }: { children: React.ReactNode; label: string }) {
+  return (
+    <View style={styles.clueCard}>
+      <View style={styles.clueCardPin} />
+      <Text style={styles.clueCardLabel}>{label}</Text>
+      {children}
+    </View>
+  );
+}
 
 // ============================================
 // MAIN COMPONENT
@@ -203,6 +420,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   const navigation = useNavigation();
   const handleClose = onClose || (() => navigation.goBack());
   const { state } = useWorldModel();
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<Step>('capture');
   const [originalThought, setOriginalThought] = useState('');
   const [detectedDistortions, setDetectedDistortions] = useState<string[]>([]);
@@ -215,7 +433,7 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   const [showWhyThisWorks, setShowWhyThisWorks] = useState(false);
 
   // Mood check-in states
-  const [showPreMoodCheck, setShowPreMoodCheck] = useState(true); // Show on entry
+  const [showPreMoodCheck, setShowPreMoodCheck] = useState(true);
   const [showPostMoodCheck, setShowPostMoodCheck] = useState(false);
   const [preMood, setPreMood] = useState<SessionMoodLevel | null>(null);
   const [postMood, setPostMood] = useState<SessionMoodLevel | null>(null);
@@ -249,12 +467,10 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       return;
     }
 
-    // Detect distortions
     const detected = detectDistortions(originalThought);
     const distortionIds = detected.map((d) => d.id);
     setDetectedDistortions(distortionIds);
 
-    // Auto-select first if detected
     if (distortionIds.length > 0) {
       setSelectedDistortion(distortionIds[0]);
     }
@@ -285,59 +501,49 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       return;
     }
 
-    // Calculate compassion score
     const score = scoreCompassion(reframedThought);
     setCompassionScore(score);
-
     nextStep();
   }, [reframedThought, nextStep]);
 
   // Handle completion
   const handleComplete = useCallback(() => {
-    // Emit to world model
     emitThoughtReframed(
       selectedDistortion || 'unknown',
       originalThought,
       reframedThought,
       compassionScore
     );
-
-    // Show post-mood check instead of completion directly
     setShowPostMoodCheck(true);
   }, [selectedDistortion, originalThought, reframedThought, compassionScore]);
 
-  // Handle pre-mood selection
+  // Mood handlers
   const handlePreMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPreMood(mood);
     setShowPreMoodCheck(false);
   }, []);
 
-  // Handle pre-mood skip
   const handlePreMoodSkip = useCallback(() => {
     setShowPreMoodCheck(false);
   }, []);
 
-  // Handle post-mood selection
   const handlePostMoodSelect = useCallback((mood: SessionMoodLevel) => {
     setPostMood(mood);
     setShowPostMoodCheck(false);
     setShowComplete(true);
   }, []);
 
-  // Handle post-mood skip
   const handlePostMoodSkip = useCallback(() => {
     setShowPostMoodCheck(false);
     setShowComplete(true);
   }, []);
 
-  // Handle close after completion
   const handleContinue = useCallback(() => {
     setShowComplete(false);
     handleClose();
   }, [handleClose]);
 
-  // Get current distortion info
-  const currentDistortion = selectedDistortion ? DISTORTIONS[selectedDistortion] : null;
+  const currentDistortion = selectedDistortion ? ANT_TYPES[selectedDistortion] : null;
 
   // Render step content
   const renderStepContent = () => {
@@ -345,135 +551,160 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       case 'capture':
         return (
           <FadeInView>
-            <GameCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>Capture the Thought</Text>
-              <Text style={styles.stepDescription}>
-                What negative thought is bothering you right now? Write it exactly
-                as it appears in your mind.
-              </Text>
-              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
-              <ShakeView trigger={showError}>
-                <TextInput
-                  style={styles.thoughtInput}
-                  placeholder="Write your thought here..."
-                  placeholderTextColor={COLORS.mutedBrown}
-                  value={originalThought}
-                  onChangeText={setOriginalThought}
-                  multiline
-                  maxLength={500}
-                />
-              </ShakeView>
-              <Text style={styles.hint}>
-                Be honest and specific. This is private.
-              </Text>
-            </GameCard>
-
-            <View style={styles.actionContainer}>
-              <GradientButton
-                title="Investigate This Thought"
-                onPress={handleCaptureSubmit}
-                disabled={!originalThought.trim()}
-              />
+            {/* Header with magnifying glass */}
+            <View style={styles.stepHeader}>
+              <MagnifyingGlass active={true} />
+              <View style={styles.stepHeaderText}>
+                <Text style={styles.stepTitle}>{t('brainGames.thoughtDetective.captureTitle')}</Text>
+                <Text style={styles.stepSubtitle}>
+                  {t('brainGames.thoughtDetective.captureSubtitle')}
+                </Text>
+              </View>
             </View>
+
+            <View style={styles.whyButtonRow}>
+              <WhyThisWorksButton onPress={() => setShowWhyThisWorks(true)} />
+            </View>
+
+            {/* Input */}
+            <ShakeView trigger={showError}>
+              <View style={styles.thoughtInputContainer}>
+                <LinearGradient
+                  colors={['#1a1a1a', '#141414']}
+                  style={styles.inputGradient}
+                >
+                  <TextInput
+                    style={styles.thoughtInput}
+                    placeholder={t('brainGames.thoughtDetective.capturePlaceholder')}
+                    placeholderTextColor="rgba(255,255,255,0.3)"
+                    value={originalThought}
+                    onChangeText={setOriginalThought}
+                    multiline
+                    maxLength={500}
+                  />
+                </LinearGradient>
+              </View>
+            </ShakeView>
+
+            <Text style={styles.hint}>
+              {t('brainGames.thoughtDetective.captureHint')}
+            </Text>
+
+            {/* Action */}
+            <TouchableOpacity
+              style={[
+                styles.primaryButton,
+                !originalThought.trim() && styles.primaryButtonDisabled,
+              ]}
+              onPress={handleCaptureSubmit}
+              disabled={!originalThought.trim()}
+            >
+              <LinearGradient
+                colors={originalThought.trim() ? [COLORS.gold, '#B8960F'] : ['#333', '#222']}
+                style={styles.primaryButtonGradient}
+              >
+                <Ionicons
+                  name="search"
+                  size={20}
+                  color={originalThought.trim() ? '#0D0D0D' : '#666'}
+                />
+                <Text
+                  style={[
+                    styles.primaryButtonText,
+                    !originalThought.trim() && styles.primaryButtonTextDisabled,
+                  ]}
+                >
+                  {t('brainGames.thoughtDetective.investigateButton')}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </FadeInView>
         );
 
       case 'identify':
         return (
           <FadeInView>
-            <GameCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>Identify the Distortion</Text>
-              <Text style={styles.stepDescription}>
-                Your thought may contain a "cognitive distortion" - a pattern of
-                thinking that isn't quite accurate. Which of these sounds familiar?
-              </Text>
-
-              {/* Auto-detected badge */}
-              {detectedDistortions.length > 0 && (
-                <View style={styles.detectedBadge}>
-                  <Badge label="Auto-detected patterns" variant="gold" />
-                </View>
-              )}
-
-              {/* Dr. Amen Attribution */}
-              <View style={styles.amenAttribution}>
-                <Text style={styles.amenAttributionText}>
-                  Based on Dr. Daniel Amen's 9 ANT Types
+            <View style={styles.stepHeader}>
+              <View style={styles.detectiveIcon}>
+                <Ionicons name="search-outline" size={28} color={COLORS.gold} />
+              </View>
+              <View style={styles.stepHeaderText}>
+                <Text style={styles.stepTitle}>{t('brainGames.thoughtDetective.identifyTitle')}</Text>
+                <Text style={styles.stepSubtitle}>
+                  {t('brainGames.thoughtDetective.identifySubtitle')}
                 </Text>
               </View>
+            </View>
 
-              {/* ANT Type options */}
-              <View style={styles.distortionList}>
-                {Object.values(ANT_TYPES).map((ant) => {
-                  const isDetected = detectedDistortions.includes(ant.id);
-                  const isSelected = selectedDistortion === ant.id;
-
-                  return (
-                    <TouchableOpacity
-                      key={ant.id}
-                      style={[
-                        styles.distortionCard,
-                        isDetected && styles.distortionCardDetected,
-                        isSelected && styles.distortionCardSelected,
-                      ]}
-                      onPress={() => {
-                        safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
-                        setSelectedDistortion(ant.id);
-                      }}
-                    >
-                      <View style={styles.distortionHeader}>
-                        {/* ANT Type Number Badge */}
-                        <View style={[
-                          styles.antBadge,
-                          isSelected && styles.antBadgeSelected,
-                        ]}>
-                          <Text style={[
-                            styles.antBadgeText,
-                            isSelected && styles.antBadgeTextSelected,
-                          ]}>
-                            ANT {ant.antNumber}
-                          </Text>
-                        </View>
-                        <Text style={[
-                          styles.distortionName,
-                          isSelected && styles.distortionNameSelected,
-                        ]}>
-                          {ant.shortName}
-                        </Text>
-                        {isDetected && (
-                          <View style={styles.detectedBadgeSmall}>
-                            <Ionicons name="checkmark-circle" size={16} color={COLORS.gold} />
-                          </View>
-                        )}
-                      </View>
-                      <Text style={styles.distortionDescription}>
-                        {ant.description}
-                      </Text>
-                      <Text style={styles.distortionExample}>
-                        {ant.example}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+            {/* Auto-detected notice */}
+            {detectedDistortions.length > 0 && (
+              <View style={styles.detectedNotice}>
+                <Ionicons name="bulb" size={16} color={COLORS.gold} />
+                <Text style={styles.detectedNoticeText}>
+                  {t('brainGames.thoughtDetective.detectedPatterns', { count: detectedDistortions.length })}
+                </Text>
               </View>
-            </GameCard>
+            )}
 
-            <View style={styles.actionContainer}>
-              <View style={styles.buttonRow}>
-                <Button
-                  title="Back"
-                  variant="ghost"
-                  onPress={prevStep}
-                  style={styles.backButton}
+            {/* ANT Grid */}
+            <View style={styles.antGrid}>
+              {Object.values(ANT_TYPES).map((ant) => (
+                <ANTCard
+                  key={ant.id}
+                  ant={ant}
+                  isDetected={detectedDistortions.includes(ant.id)}
+                  isSelected={selectedDistortion === ant.id}
+                  onPress={() => {
+                    safeHaptics.impactAsync(ImpactFeedbackStyle.Light);
+                    setSelectedDistortion(ant.id);
+                  }}
+                  t={t}
                 />
-                <Button
-                  title="Continue"
-                  variant="primary"
-                  onPress={handleIdentifySubmit}
-                  disabled={!selectedDistortion}
-                  style={styles.continueButton}
-                />
+              ))}
+            </View>
+
+            {/* Selected description */}
+            {currentDistortion && (
+              <View style={styles.selectedDescription}>
+                <Text style={styles.selectedDescriptionTitle}>
+                  {t(currentDistortion.nameKey)}
+                </Text>
+                <Text style={styles.selectedDescriptionText}>
+                  {t(currentDistortion.descriptionKey)}
+                </Text>
+                <Text style={styles.selectedDescriptionExample}>
+                  {t('brainGames.thoughtDetective.example')}: {t(currentDistortion.exampleKey)}
+                </Text>
               </View>
+            )}
+
+            {/* Actions */}
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.backButton} onPress={prevStep}>
+                <Ionicons name="arrow-back" size={20} color={COLORS.textSecondary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.continueButton,
+                  !selectedDistortion && styles.continueButtonDisabled,
+                ]}
+                onPress={handleIdentifySubmit}
+                disabled={!selectedDistortion}
+              >
+                <Text
+                  style={[
+                    styles.continueButtonText,
+                    !selectedDistortion && styles.continueButtonTextDisabled,
+                  ]}
+                >
+                  {t('common.continue')}
+                </Text>
+                <Ionicons
+                  name="arrow-forward"
+                  size={18}
+                  color={selectedDistortion ? '#0D0D0D' : '#666'}
+                />
+              </TouchableOpacity>
             </View>
           </FadeInView>
         );
@@ -481,69 +712,83 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       case 'investigate':
         return (
           <FadeInView>
-            <GameCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>Investigate the Evidence</Text>
+            <View style={styles.stepHeader}>
+              <View style={styles.detectiveIcon}>
+                <Ionicons name="analytics-outline" size={28} color={COLORS.gold} />
+              </View>
+              <View style={styles.stepHeaderText}>
+                <Text style={styles.stepTitle}>{t('brainGames.thoughtDetective.investigateTitle')}</Text>
+                <Text style={styles.stepSubtitle}>
+                  {t('brainGames.thoughtDetective.investigateSubtitle')}
+                </Text>
+              </View>
+            </View>
 
-              {currentDistortion && (
-                <View style={styles.distortionContext}>
-                  <Text style={styles.distortionContextLabel}>
-                    You're experiencing:
-                  </Text>
-                  <Text style={styles.distortionContextName}>
-                    {currentDistortion.name}
-                  </Text>
+            {/* Pattern identified */}
+            {currentDistortion && (
+              <ClueCard label={t('brainGames.thoughtDetective.patternFound')}>
+                <View style={styles.patternRow}>
+                  <Ionicons
+                    name={currentDistortion.icon as keyof typeof Ionicons.glyphMap}
+                    size={24}
+                    color={COLORS.gold}
+                  />
+                  <Text style={styles.patternName}>{t(currentDistortion.nameKey)}</Text>
                 </View>
-              )}
+              </ClueCard>
+            )}
 
-              <Text style={styles.investigatePrompt}>
-                {currentDistortion?.reframePrompt}
+            {/* Investigation prompt */}
+            <View style={styles.investigationPrompt}>
+              <Ionicons name="help-circle" size={20} color={COLORS.textSecondary} />
+              <Text style={styles.investigationQuestion}>
+                {currentDistortion && t(currentDistortion.reframePromptKey)}
               </Text>
+            </View>
 
-              {/* Self-Compassion Prompt */}
-              {currentDistortion?.selfCompassionPrompt && (
-                <View style={styles.selfCompassionBox}>
-                  <View style={styles.selfCompassionHeader}>
-                    <Ionicons name="heart-outline" size={18} color={COLORS.sage} />
-                    <Text style={styles.selfCompassionLabel}>Self-Compassion Check</Text>
-                  </View>
-                  <Text style={styles.selfCompassionText}>
-                    {currentDistortion.selfCompassionPrompt}
-                  </Text>
+            {/* Self-compassion prompt */}
+            {currentDistortion?.selfCompassionPromptKey && (
+              <View style={styles.compassionBox}>
+                <View style={styles.compassionHeader}>
+                  <Ionicons name="heart" size={16} color="#E8B4D8" />
+                  <Text style={styles.compassionLabel}>{t('brainGames.thoughtDetective.selfCompassionCheck')}</Text>
                 </View>
-              )}
+                <Text style={styles.compassionText}>
+                  {t(currentDistortion.selfCompassionPromptKey)}
+                </Text>
+              </View>
+            )}
 
+            {/* Notes input */}
+            <View style={styles.notesContainer}>
               <TextInput
                 style={styles.notesInput}
-                placeholder="Write your thoughts here... (optional)"
-                placeholderTextColor={COLORS.mutedBrown}
+                placeholder={t('brainGames.thoughtDetective.notesPlaceholder')}
+                placeholderTextColor="rgba(255,255,255,0.3)"
                 value={investigationNotes}
                 onChangeText={setInvestigationNotes}
                 multiline
                 maxLength={500}
               />
+            </View>
 
-              <View style={styles.scriptureBox}>
-                <Text style={styles.scriptureText}>
-                  {currentDistortion?.scripture}
-                </Text>
-              </View>
-            </GameCard>
+            {/* Scripture */}
+            <View style={styles.scriptureBox}>
+              <Text style={styles.scriptureText}>{currentDistortion && t(currentDistortion.scriptureKey)}</Text>
+            </View>
 
-            <View style={styles.actionContainer}>
-              <View style={styles.buttonRow}>
-                <Button
-                  title="Back"
-                  variant="ghost"
-                  onPress={prevStep}
-                  style={styles.backButton}
-                />
-                <Button
-                  title="Continue"
-                  variant="primary"
-                  onPress={handleInvestigateSubmit}
-                  style={styles.continueButton}
-                />
-              </View>
+            {/* Actions */}
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.backButton} onPress={prevStep}>
+                <Ionicons name="arrow-back" size={20} color={COLORS.textSecondary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.continueButton}
+                onPress={handleInvestigateSubmit}
+              >
+                <Text style={styles.continueButtonText}>{t('common.continue')}</Text>
+                <Ionicons name="arrow-forward" size={18} color="#0D0D0D" />
+              </TouchableOpacity>
             </View>
           </FadeInView>
         );
@@ -551,51 +796,75 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       case 'reframe':
         return (
           <FadeInView>
-            <GameCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>Reframe with Compassion</Text>
-              <Text style={styles.stepDescription}>
-                Now, write a kinder, more balanced version of your original thought.
-                Speak to yourself as you would to a dear friend.
-              </Text>
-
-              <View style={styles.originalThoughtBox}>
-                <Text style={styles.originalThoughtLabel}>Original thought:</Text>
-                <Text style={styles.originalThoughtText}>"{originalThought}"</Text>
+            <View style={styles.stepHeader}>
+              <View style={styles.detectiveIcon}>
+                <Ionicons name="refresh-outline" size={28} color={COLORS.gold} />
               </View>
-
-              <ShakeView trigger={showError}>
-                <TextInput
-                  style={styles.reframeInput}
-                  placeholder="Write a kinder thought..."
-                  placeholderTextColor={COLORS.mutedBrown}
-                  value={reframedThought}
-                  onChangeText={setReframedThought}
-                  multiline
-                  maxLength={500}
-                />
-              </ShakeView>
-
-              <Text style={styles.hint}>
-                Try starting with "It's understandable that..." or "Even though..."
-              </Text>
-            </GameCard>
-
-            <View style={styles.actionContainer}>
-              <View style={styles.buttonRow}>
-                <Button
-                  title="Back"
-                  variant="ghost"
-                  onPress={prevStep}
-                  style={styles.backButton}
-                />
-                <Button
-                  title="Continue"
-                  variant="primary"
-                  onPress={handleReframeSubmit}
-                  disabled={!reframedThought.trim()}
-                  style={styles.continueButton}
-                />
+              <View style={styles.stepHeaderText}>
+                <Text style={styles.stepTitle}>{t('brainGames.thoughtDetective.reframeTitle')}</Text>
+                <Text style={styles.stepSubtitle}>
+                  {t('brainGames.thoughtDetective.reframeSubtitle')}
+                </Text>
               </View>
+            </View>
+
+            {/* Original thought display */}
+            <View style={styles.originalThoughtDisplay}>
+              <Text style={styles.originalThoughtLabel}>{t('brainGames.thoughtDetective.originalThought')}:</Text>
+              <Text style={styles.originalThoughtText}>"{originalThought}"</Text>
+            </View>
+
+            {/* Reframe input */}
+            <ShakeView trigger={showError}>
+              <View style={styles.reframeInputContainer}>
+                <LinearGradient
+                  colors={['rgba(143, 188, 143, 0.15)', 'rgba(143, 188, 143, 0.05)']}
+                  style={styles.reframeGradient}
+                >
+                  <TextInput
+                    style={styles.reframeInput}
+                    placeholder={t('brainGames.thoughtDetective.reframePlaceholder')}
+                    placeholderTextColor="rgba(255,255,255,0.3)"
+                    value={reframedThought}
+                    onChangeText={setReframedThought}
+                    multiline
+                    maxLength={500}
+                  />
+                </LinearGradient>
+              </View>
+            </ShakeView>
+
+            <Text style={styles.hint}>
+              {t('brainGames.thoughtDetective.reframeHint')}
+            </Text>
+
+            {/* Actions */}
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.backButton} onPress={prevStep}>
+                <Ionicons name="arrow-back" size={20} color={COLORS.textSecondary} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.continueButton,
+                  !reframedThought.trim() && styles.continueButtonDisabled,
+                ]}
+                onPress={handleReframeSubmit}
+                disabled={!reframedThought.trim()}
+              >
+                <Text
+                  style={[
+                    styles.continueButtonText,
+                    !reframedThought.trim() && styles.continueButtonTextDisabled,
+                  ]}
+                >
+                  {t('common.continue')}
+                </Text>
+                <Ionicons
+                  name="arrow-forward"
+                  size={18}
+                  color={reframedThought.trim() ? '#0D0D0D' : '#666'}
+                />
+              </TouchableOpacity>
             </View>
           </FadeInView>
         );
@@ -603,52 +872,64 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       case 'reflect':
         return (
           <FadeInView>
-            <GameCard style={styles.stepCard}>
-              <Text style={styles.stepTitle}>Reflect on Your Work</Text>
-              <Text style={styles.stepDescription}>
-                You've transformed a painful thought into something more balanced.
-                Look at your journey:
-              </Text>
-
-              <View style={styles.journeyContainer}>
-                <View style={styles.journeyItem}>
-                  <Text style={styles.journeyLabel}>Original Thought</Text>
-                  <Text style={styles.journeyThought}>"{originalThought}"</Text>
-                </View>
-
-                <View style={styles.journeyArrow}>
-                  <Ionicons name="arrow-down" size={20} color={COLORS.mutedBrown} />
-                </View>
-
-                <View style={styles.journeyItem}>
-                  <Text style={styles.journeyLabel}>Distortion Identified</Text>
-                  <Text style={styles.journeyDistortion}>
-                    {currentDistortion?.name}
-                  </Text>
-                </View>
-
-                <View style={styles.journeyArrow}>
-                  <Ionicons name="arrow-down" size={20} color={COLORS.mutedBrown} />
-                </View>
-
-                <View style={[styles.journeyItem, styles.journeyItemHighlight]}>
-                  <Text style={styles.journeyLabel}>Reframed with Compassion</Text>
-                  <Text style={styles.journeyReframe}>"{reframedThought}"</Text>
-                </View>
+            <View style={styles.stepHeader}>
+              <View style={styles.detectiveIcon}>
+                <Ionicons name="checkmark-done-outline" size={28} color={COLORS.gold} />
               </View>
-
-              <View style={styles.compassionScoreContainer}>
-                <Text style={styles.compassionLabel}>Self-Compassion Score</Text>
-                <Text style={styles.compassionScore}>{compassionScore}/10</Text>
+              <View style={styles.stepHeaderText}>
+                <Text style={styles.stepTitle}>{t('brainGames.thoughtDetective.reflectTitle')}</Text>
+                <Text style={styles.stepSubtitle}>
+                  {t('brainGames.thoughtDetective.reflectSubtitle')}
+                </Text>
               </View>
-            </GameCard>
-
-            <View style={styles.actionContainer}>
-              <GradientButton
-                title="Complete Session"
-                onPress={handleComplete}
-              />
             </View>
+
+            {/* Journey visualization */}
+            <View style={styles.journeyBoard}>
+              {/* Original */}
+              <View style={styles.journeyCard}>
+                <View style={[styles.journeyCardHeader, styles.journeyCardHeaderOld]}>
+                  <Ionicons name="alert-circle" size={16} color="#ff6b6b" />
+                  <Text style={styles.journeyCardHeaderText}>{t('brainGames.thoughtDetective.oldThought')}</Text>
+                </View>
+                <Text style={styles.journeyCardText}>"{originalThought}"</Text>
+              </View>
+
+              {/* Arrow */}
+              <View style={styles.journeyArrow}>
+                <Ionicons name="arrow-down" size={24} color={COLORS.gold} />
+                <Text style={styles.journeyArrowLabel}>{currentDistortion && t(currentDistortion.shortNameKey)}</Text>
+              </View>
+
+              {/* Reframed */}
+              <View style={[styles.journeyCard, styles.journeyCardNew]}>
+                <View style={[styles.journeyCardHeader, styles.journeyCardHeaderNew]}>
+                  <Ionicons name="heart" size={16} color={COLORS.sage} />
+                  <Text style={styles.journeyCardHeaderText}>{t('brainGames.thoughtDetective.newThought')}</Text>
+                </View>
+                <Text style={styles.journeyCardText}>"{reframedThought}"</Text>
+              </View>
+            </View>
+
+            {/* Compassion score */}
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreLabel}>{t('brainGames.thoughtDetective.selfCompassionScore')}</Text>
+              <View style={styles.scoreCircle}>
+                <Text style={styles.scoreValue}>{compassionScore}</Text>
+                <Text style={styles.scoreMax}>/10</Text>
+              </View>
+            </View>
+
+            {/* Complete button */}
+            <TouchableOpacity style={styles.completeButton} onPress={handleComplete}>
+              <LinearGradient
+                colors={[COLORS.gold, '#B8960F']}
+                style={styles.completeButtonGradient}
+              >
+                <Ionicons name="checkmark-circle" size={22} color="#0D0D0D" />
+                <Text style={styles.completeButtonText}>{t('brainGames.thoughtDetective.completeInvestigation')}</Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </FadeInView>
         );
     }
@@ -657,22 +938,16 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
   return (
     <GameContainer
       gameId="thought_detective"
-      title="Thought Detective"
-      subtitle="Cognitive Reframing"
+      title={t('brainGames.games.thoughtDetective.title')}
+      subtitle={t('brainGames.games.thoughtDetective.subtitle')}
       onClose={handleClose}
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.container}
       >
-        {/* Progress */}
-        <View style={styles.progressContainer}>
-          <StepProgress
-            currentStep={STEPS.indexOf(currentStep)}
-            totalSteps={STEPS.length}
-            labels={STEPS.map((s) => STEP_LABELS[s])}
-          />
-        </View>
+        {/* Visual Step Indicator */}
+        <VisualStepIndicator currentStep={currentStep} t={t} />
 
         {/* Content */}
         <ScrollView
@@ -689,15 +964,15 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
       {/* Completion Modal */}
       <SessionComplete
         visible={showComplete}
-        title="Detective Work Complete"
-        subtitle="You investigated and reframed your thought"
+        title={t('brainGames.thoughtDetective.caseClosed')}
+        subtitle={t('brainGames.thoughtDetective.solvedMystery')}
         stats={[
-          { label: 'Distortion', value: currentDistortion?.name.split(' ')[0] || '-' },
-          { label: 'Compassion', value: `${compassionScore}/10` },
+          { label: t('brainGames.thoughtDetective.patternLabel'), value: currentDistortion ? t(currentDistortion.shortNameKey) : '-' },
+          { label: t('brainGames.thoughtDetective.compassionLabel'), value: `${compassionScore}/10` },
         ]}
-        encouragement="Every time you reframe a thought, you're rewiring your brain. You're not stuck with your old thinking patterns."
+        encouragement={t('brainGames.thoughtDetective.encouragement')}
         onContinue={handleContinue}
-        continueLabel="Return to Games"
+        continueLabel={t('brainGames.breathe.returnToGames')}
       />
 
       {/* Why This Works Modal */}
@@ -728,204 +1003,368 @@ export function ThoughtDetective({ onClose }: ThoughtDetectiveProps) {
 }
 
 // ============================================
-// STYLES
+// STYLES - Premium Detective UI
 // ============================================
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  progressContainer: {
-    paddingVertical: SPACING.md,
-  },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     paddingBottom: SPACING.xxl,
+    paddingHorizontal: SPACING.md,
   },
 
-  // Step Card
-  stepCard: {
+  // Step Indicator
+  stepIndicator: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.sm,
+  },
+  stepItem: {
+    alignItems: 'center',
+    flex: 1,
+    position: 'relative',
+  },
+  stepDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepDotCompleted: {
+    backgroundColor: COLORS.sage,
+    borderColor: COLORS.sage,
+  },
+  stepDotCurrent: {
+    backgroundColor: COLORS.gold,
+    borderColor: COLORS.gold,
+  },
+  stepLabel: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.4)',
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: 4,
+  },
+  stepLabelActive: {
+    color: COLORS.textPrimary,
+  },
+  stepLine: {
+    position: 'absolute',
+    top: 14,
+    left: '60%',
+    right: '-40%',
+    height: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  stepLineCompleted: {
+    backgroundColor: COLORS.sage,
+  },
+
+  // Step Header
+  stepHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: SPACING.lg,
+  },
+  stepHeaderText: {
+    flex: 1,
+    marginLeft: SPACING.md,
   },
   stepTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
-    fontWeight: '600',
-    color: COLORS.earth,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
-    marginBottom: SPACING.sm,
   },
-  stepDescription: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.richBrown,
+  stepSubtitle: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    lineHeight: TYPOGRAPHY.sizes.md * 1.6,
-    marginBottom: SPACING.lg,
+    marginTop: 2,
+  },
+  magnifyingGlass: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  detectiveIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
-  // Inputs
-  thoughtInput: {
-    backgroundColor: COLORS.softIvory,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.lg,
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.ui,
-    minHeight: 120,
-    textAlignVertical: 'top',
-    lineHeight: TYPOGRAPHY.sizes.md * 1.5,
+  whyButtonRow: {
+    alignItems: 'flex-start',
+    marginBottom: SPACING.md,
   },
-  notesInput: {
-    backgroundColor: COLORS.softIvory,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
+
+  // Thought Input
+  thoughtInputContainer: {
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    marginBottom: SPACING.sm,
+  },
+  inputGradient: {
+    padding: SPACING.lg,
+  },
+  thoughtInput: {
     fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     minHeight: 100,
-    textAlignVertical: 'top',
-    marginBottom: SPACING.lg,
-  },
-  reframeInput: {
-    backgroundColor: COLORS.softIvory,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.lg,
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.ui,
-    minHeight: 120,
     textAlignVertical: 'top',
     lineHeight: TYPOGRAPHY.sizes.md * 1.5,
   },
   hint: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
-    marginTop: SPACING.sm,
     textAlign: 'center',
+    marginBottom: SPACING.lg,
   },
 
-  // Dr. Amen Attribution
-  amenAttribution: {
-    backgroundColor: 'rgba(212, 175, 55, 0.1)',
+  // Primary Button
+  primaryButton: {
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
+  },
+  primaryButtonDisabled: {
+    opacity: 0.6,
+  },
+  primaryButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    gap: SPACING.sm,
+  },
+  primaryButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#0D0D0D',
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  primaryButtonTextDisabled: {
+    color: '#666',
+  },
+
+  // Detection Notice
+  detectedNotice: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
     borderRadius: RADIUS.md,
     padding: SPACING.sm,
     marginBottom: SPACING.md,
-    alignItems: 'center',
+    gap: SPACING.xs,
   },
-  amenAttributionText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
+  detectedNoticeText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
     color: COLORS.gold,
     fontFamily: TYPOGRAPHY.ui,
-    fontWeight: '500',
-    letterSpacing: 0.5,
   },
 
-  // ANT Badge
-  antBadge: {
-    backgroundColor: COLORS.backgroundCard,
-    borderRadius: RADIUS.sm,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 2,
-    marginRight: SPACING.sm,
+  // ANT Grid
+  antGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
   },
-  antBadgeSelected: {
-    backgroundColor: GAME_COLORS.thoughtDetective.primary,
+  antCard: {
+    width: (SCREEN_WIDTH - SPACING.md * 4 - SPACING.sm * 2) / 3,
+    aspectRatio: 1,
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.sm,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    position: 'relative',
   },
-  antBadgeText: {
-    fontSize: TYPOGRAPHY.sizes.xs,
+  antCardDetected: {
+    borderColor: COLORS.gold,
+  },
+  antCardSelected: {
+    backgroundColor: 'rgba(212, 175, 55, 0.15)',
+    borderColor: COLORS.gold,
+    borderWidth: 2,
+  },
+  detectionBadge: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: COLORS.gold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  antIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  antIconContainerSelected: {
+    backgroundColor: 'rgba(212, 175, 55, 0.2)',
+  },
+  antName: {
+    fontSize: 10,
     color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    fontWeight: '700',
+    textAlign: 'center',
   },
-  antBadgeTextSelected: {
-    color: COLORS.background,
+  antNameSelected: {
+    color: COLORS.gold,
+    fontWeight: '600',
   },
-  detectedBadgeSmall: {
-    marginLeft: 'auto',
+  selectedIndicator: {
+    position: 'absolute',
+    bottom: 4,
+    right: 4,
   },
 
-  // Distortion List
-  detectedBadge: {
-    marginBottom: SPACING.md,
-  },
-  distortionList: {
-    gap: SPACING.sm,
-  },
-  distortionCard: {
-    backgroundColor: COLORS.softIvory,
+  // Selected Description
+  selectedDescription: {
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    marginBottom: SPACING.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(212, 175, 55, 0.3)',
   },
-  distortionCardDetected: {
-    borderColor: COLORS.goldLight,
-  },
-  distortionCardSelected: {
-    backgroundColor: GAME_COLORS.thoughtDetective.secondary,
-    borderColor: GAME_COLORS.thoughtDetective.primary,
-  },
-  distortionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.xs,
-  },
-  distortionName: {
+  selectedDescriptionTitle: {
     fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.ui,
-    flex: 1,
-  },
-  distortionNameSelected: {
-    color: GAME_COLORS.thoughtDetective.accent,
-  },
-  detectedLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
     color: COLORS.gold,
     fontFamily: TYPOGRAPHY.ui,
-    fontWeight: '600',
+    marginBottom: 4,
   },
-  distortionDescription: {
+  selectedDescriptionText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.richBrown,
+    color: COLORS.textSecondary,
     fontFamily: TYPOGRAPHY.ui,
-    marginBottom: SPACING.xs,
+    marginBottom: 8,
   },
-  distortionExample: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
+  selectedDescriptionExample: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
   },
 
-  // Self-Compassion
-  selfCompassionBox: {
-    backgroundColor: 'rgba(143, 188, 143, 0.15)',
+  // Action Row
+  actionRow: {
+    flexDirection: 'row',
+    gap: SPACING.md,
+  },
+  backButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  continueButton: {
+    flex: 1,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: COLORS.gold,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.xs,
+  },
+  continueButtonDisabled: {
+    backgroundColor: '#333',
+  },
+  continueButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '600',
+    color: '#0D0D0D',
+    fontFamily: TYPOGRAPHY.ui,
+  },
+  continueButtonTextDisabled: {
+    color: '#666',
+  },
+
+  // Clue Card
+  clueCard: {
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    marginBottom: SPACING.lg,
-    borderLeftWidth: 3,
-    borderLeftColor: COLORS.sage,
+    marginBottom: SPACING.md,
+    position: 'relative',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
-  selfCompassionHeader: {
+  clueCardPin: {
+    position: 'absolute',
+    top: -6,
+    left: 20,
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: COLORS.gold,
+  },
+  clueCardLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: SPACING.sm,
+  },
+  patternRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.sm,
-    marginBottom: SPACING.xs,
   },
-  selfCompassionLabel: {
-    fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.sage,
-    fontFamily: TYPOGRAPHY.ui,
+  patternName: {
+    fontSize: TYPOGRAPHY.sizes.md,
     fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
   },
-  selfCompassionText: {
+
+  // Investigation
+  investigationPrompt: {
+    flexDirection: 'row',
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    gap: SPACING.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  investigationQuestion: {
+    flex: 1,
     fontSize: TYPOGRAPHY.sizes.md,
     color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.devotional,
@@ -933,106 +1372,148 @@ const styles = StyleSheet.create({
     lineHeight: TYPOGRAPHY.sizes.md * 1.5,
   },
 
-  // Investigate Step
-  distortionContext: {
-    backgroundColor: GAME_COLORS.thoughtDetective.secondary + '50',
+  // Compassion Box
+  compassionBox: {
+    backgroundColor: 'rgba(232, 180, 216, 0.1)',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-    marginBottom: SPACING.lg,
+    marginBottom: SPACING.md,
+    borderLeftWidth: 3,
+    borderLeftColor: '#E8B4D8',
   },
-  distortionContextLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.richBrown,
+  compassionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    marginBottom: SPACING.xs,
+  },
+  compassionLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: '#E8B4D8',
     fontFamily: TYPOGRAPHY.ui,
-  },
-  distortionContextName: {
-    fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: '600',
-    color: GAME_COLORS.thoughtDetective.accent,
-    fontFamily: TYPOGRAPHY.ui,
-    marginTop: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
-  investigatePrompt: {
-    fontSize: TYPOGRAPHY.sizes.lg,
-    color: COLORS.earth,
+  compassionText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.devotional,
     fontStyle: 'italic',
-    textAlign: 'center',
-    marginBottom: SPACING.lg,
-    lineHeight: TYPOGRAPHY.sizes.lg * 1.5,
-  },
-  scriptureBox: {
-    backgroundColor: COLORS.warmBeige,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-  },
-  scriptureText: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.devotional,
-    fontStyle: 'italic',
-    textAlign: 'center',
+    lineHeight: TYPOGRAPHY.sizes.sm * 1.5,
   },
 
-  // Reframe Step
-  originalThoughtBox: {
-    backgroundColor: COLORS.mutedTerracotta + '20',
+  // Notes
+  notesContainer: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  notesInput: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+    minHeight: 80,
+    textAlignVertical: 'top',
+  },
+
+  // Scripture
+  scriptureBox: {
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  scriptureText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.devotional,
+    fontStyle: 'italic',
+    textAlign: 'center',
+    lineHeight: TYPOGRAPHY.sizes.sm * 1.5,
+  },
+
+  // Reframe
+  originalThoughtDisplay: {
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+    borderRadius: RADIUS.lg,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 107, 107, 0.2)',
   },
   originalThoughtLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
+    color: 'rgba(255, 107, 107, 0.8)',
     fontFamily: TYPOGRAPHY.ui,
     textTransform: 'uppercase',
     letterSpacing: 1,
-    marginBottom: SPACING.xs,
+    marginBottom: 4,
   },
   originalThoughtText: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
   },
+  reframeInputContainer: {
+    borderRadius: RADIUS.xl,
+    overflow: 'hidden',
+    marginBottom: SPACING.sm,
+  },
+  reframeGradient: {
+    padding: SPACING.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(143, 188, 143, 0.3)',
+    borderRadius: RADIUS.xl,
+  },
+  reframeInput: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    color: COLORS.textPrimary,
+    fontFamily: TYPOGRAPHY.ui,
+    minHeight: 100,
+    textAlignVertical: 'top',
+    lineHeight: TYPOGRAPHY.sizes.md * 1.5,
+  },
 
-  // Reflect Step
-  journeyContainer: {
+  // Journey Board
+  journeyBoard: {
     marginBottom: SPACING.lg,
   },
-  journeyItem: {
-    backgroundColor: COLORS.softIvory,
+  journeyCard: {
+    backgroundColor: '#1a1a1a',
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
-  },
-  journeyItemHighlight: {
-    backgroundColor: COLORS.sage + '30',
     borderWidth: 1,
-    borderColor: COLORS.sage,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
-  journeyLabel: {
+  journeyCardNew: {
+    borderColor: 'rgba(143, 188, 143, 0.3)',
+    backgroundColor: 'rgba(143, 188, 143, 0.1)',
+  },
+  journeyCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    marginBottom: SPACING.xs,
+  },
+  journeyCardHeaderOld: {},
+  journeyCardHeaderNew: {},
+  journeyCardHeaderText: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.mutedBrown,
+    color: COLORS.textMuted,
     fontFamily: TYPOGRAPHY.ui,
     textTransform: 'uppercase',
     letterSpacing: 1,
-    marginBottom: SPACING.xs,
   },
-  journeyThought: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
-    fontFamily: TYPOGRAPHY.ui,
-    fontStyle: 'italic',
-  },
-  journeyDistortion: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    fontWeight: '600',
-    color: GAME_COLORS.thoughtDetective.accent,
-    fontFamily: TYPOGRAPHY.ui,
-  },
-  journeyReframe: {
-    fontSize: TYPOGRAPHY.sizes.md,
-    color: COLORS.earth,
+  journeyCardText: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textPrimary,
     fontFamily: TYPOGRAPHY.ui,
     fontStyle: 'italic',
   },
@@ -1040,40 +1521,65 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: SPACING.sm,
   },
-  arrowText: {
-    fontSize: 16,
-    color: COLORS.mutedBrown,
-  },
-  compassionScoreContainer: {
-    alignItems: 'center',
-    paddingVertical: SPACING.lg,
-  },
-  compassionLabel: {
-    fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.mutedBrown,
+  journeyArrowLabel: {
+    fontSize: TYPOGRAPHY.sizes.xs,
+    color: COLORS.gold,
     fontFamily: TYPOGRAPHY.ui,
+    fontWeight: '600',
+    marginTop: 2,
   },
-  compassionScore: {
-    fontSize: TYPOGRAPHY.sizes.display,
+
+  // Score
+  scoreContainer: {
+    alignItems: 'center',
+    marginBottom: SPACING.lg,
+  },
+  scoreLabel: {
+    fontSize: TYPOGRAPHY.sizes.sm,
+    color: COLORS.textSecondary,
+    fontFamily: TYPOGRAPHY.ui,
+    marginBottom: SPACING.sm,
+  },
+  scoreCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(143, 188, 143, 0.15)',
+    borderWidth: 3,
+    borderColor: COLORS.sage,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  scoreValue: {
+    fontSize: 28,
     fontWeight: '700',
     color: COLORS.sage,
     fontFamily: TYPOGRAPHY.ui,
-    marginTop: 4,
+  },
+  scoreMax: {
+    fontSize: 12,
+    color: COLORS.textMuted,
+    fontFamily: TYPOGRAPHY.ui,
+    marginTop: -4,
   },
 
-  // Actions
-  actionContainer: {
-    paddingHorizontal: SPACING.lg,
+  // Complete Button
+  completeButton: {
+    borderRadius: RADIUS.lg,
+    overflow: 'hidden',
   },
-  buttonRow: {
+  completeButtonGradient: {
     flexDirection: 'row',
-    gap: SPACING.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: SPACING.md,
+    gap: SPACING.sm,
   },
-  backButton: {
-    flex: 1,
-  },
-  continueButton: {
-    flex: 2,
+  completeButtonText: {
+    fontSize: TYPOGRAPHY.sizes.md,
+    fontWeight: '700',
+    color: '#0D0D0D',
+    fontFamily: TYPOGRAPHY.ui,
   },
 });
 

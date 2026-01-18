@@ -325,9 +325,25 @@ export function useGratitudeSession({
   dayNumber,
   onComplete,
 }: UseGratitudeSessionOptions) {
-  const { dispatch } = useWorldModel();
-  const [gratitudes, setGratitudes] = useState<string[]>([]);
+  const { dispatch, state } = useWorldModel();
+
+  // Load existing gratitudes for today from world model state
+  const todaysGratitudes = state.brainGames.gratitudeEntries
+    .filter(entry => entry.dayNumber === dayNumber)
+    .flatMap(entry => entry.gratitudes);
+
+  const [gratitudes, setGratitudes] = useState<string[]>(todaysGratitudes);
   const [currentInput, setCurrentInput] = useState('');
+
+  // Sync with world model if it updates (e.g., on reload)
+  useEffect(() => {
+    const savedGratitudes = state.brainGames.gratitudeEntries
+      .filter(entry => entry.dayNumber === dayNumber)
+      .flatMap(entry => entry.gratitudes);
+    if (savedGratitudes.length > 0 && gratitudes.length === 0) {
+      setGratitudes(savedGratitudes);
+    }
+  }, [state.brainGames.gratitudeEntries, dayNumber]);
 
   const addGratitude = useCallback((text: string) => {
     if (text.trim()) {
@@ -360,6 +376,10 @@ export function useGratitudeSession({
     }
   }, [gratitudes, dayNumber, dispatch, onComplete]);
 
+  // Calculate total lifetime gratitudes for evolution system
+  const totalLifetimeGratitudes = state.brainGames.gratitudeEntries
+    .reduce((sum, entry) => sum + entry.gratitudes.length, 0);
+
   return {
     gratitudes,
     currentInput,
@@ -369,5 +389,7 @@ export function useGratitudeSession({
     submitGratitudes,
     progress: gratitudes.length / targetCount,
     isComplete: gratitudes.length >= targetCount,
+    totalLifetimeGratitudes,
+    gardenLevel: state.brainGames.gardenLevel,
   };
 }

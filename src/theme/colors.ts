@@ -25,6 +25,10 @@ export const COLORS = {
   richBrown: 'rgba(250, 250, 250, 0.8)',
   mutedBrown: 'rgba(250, 250, 250, 0.6)',
 
+  // Game-specific text (light text for dark game backgrounds)
+  gameTextDark: '#FAFAFA',
+  gameTextMuted: 'rgba(250, 250, 250, 0.6)',
+
   // Accent - Kintsugi Gold (matches website)
   gold: '#D4AF37',
   goldLight: '#F4E4BC',

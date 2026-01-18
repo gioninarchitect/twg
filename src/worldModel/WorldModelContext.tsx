@@ -305,9 +305,9 @@ export function WorldModelProvider({ userId, children }: WorldModelProviderProps
     return predictions;
   }, [state]);
 
-  // Check if game is unlocked
+  // Check if game is unlocked based on journey progress
+  // Games unlock at specific days - no separate access gate needed
   const checkGameUnlock = useCallback((gameId: GameId): boolean => {
-    if (!state.brainGames.hasAccess) return false;
     const unlockDay = GAME_UNLOCK_DAYS[gameId];
     return state.journey.currentDay >= unlockDay;
   }, [state]);
